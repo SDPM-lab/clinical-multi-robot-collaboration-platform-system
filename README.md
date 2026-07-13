@@ -9,6 +9,6 @@ A medical multi-robot collaboration platform designed for task scheduling and pa
 - OPEN-RMF
 - Docker desktop
 
-##commit 風個
+## commit 風格
 > commit 風格請依照此篇(請詳讀！！！)：<br>
 > https://wadehuanglearning.blogspot.com/2019/05/commit-commit-commit-why-what-commit.html
