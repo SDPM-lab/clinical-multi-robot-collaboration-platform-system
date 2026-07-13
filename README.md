@@ -6,8 +6,9 @@ A medical multi-robot collaboration platform designed for task scheduling and pa
 - .net 8.0
 - postgresql
 - ROS2 Jazzy
-- OPEN-RMF
-- Docker desktop
+- Open-RMF
+- Docker wsl
+- ubuntu 24.04
 
 ## commit 風格
 > commit 風格請依照此篇(請詳讀！！！)：<br>
