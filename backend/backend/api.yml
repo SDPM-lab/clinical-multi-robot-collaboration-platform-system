@@ -1,0 +1,277 @@
+openapi: '3.1.0'
+info:
+  title: 人機協作平台 API
+  version: '1.0'
+servers:
+  - url: http://localhost:5000/api/v1
+tags:
+  - name: 任務管理
+    description: 查詢或編輯任務資訊
+  - name: 地點查詢
+    description: 提供地點資訊
+  - name: 機器人查詢
+    description: 提供機器人基本資訊
+
+paths:
+  /task:
+    post:
+      tags: ["任務管理"]
+      description: 新增一個任務給機器人
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - items
+                - place
+              properties:
+                title:
+                  $ref: "#/components/schemas/Task/properties/title"
+                robot:
+                  type: ["string", "null"]
+                  description: 指派機器人的 id，預設為 "系統指定"
+                place:
+                  $ref: "#/components/schemas/Place/properties/id"
+                startTime:
+                  type: ["string", "null"]
+                  format: time
+                  description: 任務預計開始時間，預設為 "系統指定"
+                items:
+                  $ref: "#/components/schemas/Task/properties/items"
+                note:
+                  $ref: "#/components/schemas/Task/properties/note"
+
+      responses:
+        '201':
+          description: 新增任務成功
+        '400':
+          description: |
+            傳送資料格式不符：<錯誤原因> </br>
+            錯誤原因有以下:
+            * 標題不可為空白
+            * 任務地點不可為空白
+            * 時間格式不符
+            * 開始時間不可早於現在
+            * 系統不處理該事項
+    get:
+      tags: ["任務管理"]
+      description: 取得所有任務紀錄
+      responses:
+        '200':
+          description: 查詢該範圍中的任務紀錄
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+
+  /task/{task_id}:
+    get:
+      tags: ["任務管理"]
+      description: 取得該任務記錄
+      parameters:
+        - $ref: "#/components/parameters/TaskIdPath"
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        '404':
+          $ref: "#/components/responses/TaskNotFound"
+    delete:
+      tags: ["任務管理"]
+      description: 刪除該未處理的任務
+      parameters:
+        - $ref: "#/components/parameters/TaskIdPath"
+      responses:
+        '204':
+          description: 刪除成功
+        '403':
+          description: 任務已被處理無法刪除
+        '404':
+          $ref: "#/components/responses/TaskNotFound"
+  /task/{task_id}/abort:
+    patch:
+      tags: ["任務管理"]
+      parameters:
+        - $ref: "#/components/parameters/TaskIdPath"
+      description: 中斷該任務
+      responses:
+        '200':
+          description: 中斷成功
+        '404':
+          $ref: "#/components/responses/TaskNotFound"
+  /task/{task_id}/confirm:
+    get:
+      tags: ["任務管理"]
+      parameters:
+        - $ref: "#/components/parameters/TaskIdPath"
+      description: 查詢該任務是否被確認
+      responses:
+        '200':
+          description: 查詢成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  confirmed:
+                    type: boolean
+        '404':
+          $ref: "#/components/responses/TaskNotFound"
+    patch:
+      tags: ["任務管理"]
+      parameters:
+        - $ref: "#/components/parameters/TaskIdPath"
+      description: 確認該任務
+      responses:
+        '200':
+          description: 確認成功
+        '400':
+          description: 任務尚未結束，無法確認
+        '404':
+          $ref: "#/components/responses/TaskNotFound"
+  /task/event/trace:
+    get:
+      tags: ["任務管理"]
+      description: 追蹤所有任務的進度
+      responses:
+        '200':
+          description: 正在追蹤任務進度
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: |
+                  以 JSON 字串表示，提供當前所有任務的更新狀態</br>
+                  ```
+                    [
+                      {
+                        id: <task id>,
+                        old: <old status>,
+                        new: <new status>
+                      }
+                      ...
+                    ]
+                  ```
+  /place:
+    get:
+      tags: ["地點查詢"]
+      description: 取得所有地點的基本資訊
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Place"
+            
+  /robot:
+    get:
+      tags: ["機器人查詢"]
+      description: 取得所有機器人的基本資訊
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Robot"
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 任務的 ID
+        title:
+          type: string
+          description: 任務標題
+        place:
+          $ref: "#/components/schemas/Place/properties/id"
+        items:
+          $ref: "#/components/schemas/TaskItems"
+        start:
+          type: ["string", "null"]
+          format: date-time
+          description: 任務開始工作日期時間
+        note:
+          type: ["string", "null"]
+          description: 任務備註內容
+        robot:
+          type: ["string", "null"]
+          description: 機器人 id
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+        end:
+          type: ["string", "null"]
+          format: date-time
+          description: 任務結束結束日期時間
+    TaskItems:
+      type: array
+      minItems: 1
+      maxItems: 3
+      items:
+        type: string
+      description: |
+        任務處理事項，目前提供以下選項
+        * 清物 = clean-object
+        * 清汙 = clean-stain
+        * 鍍膜殺菌 = coat-sterilize
+    TaskStatus:
+      type: string
+      enum: ["idle", "process", "complete", "abort", "timeout"]
+      description: |
+        任務的執行狀態
+        * 待處理 "idle"
+        * 進行中 "process"
+        * 完成 "complete"
+        * 中斷 "abort"
+        * 超時 "timeout"
+    
+    Robot:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 機器人 id
+        name:
+          type: string
+          description: 機器人的名稱
+
+    Place:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 工作地點 id
+        name:
+          type: string
+          description: 地點名稱
+        type:
+          type: string
+          description: 地點類型
+
+  parameters:
+    TaskIdPath:
+      in: path
+      name: task_id
+      required: true
+      schema:
+        type: string
+
+  responses:
+    TaskNotFound:
+      description: 查無此任務

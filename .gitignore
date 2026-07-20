@@ -1,0 +1,36 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
+# ROS 2 / colcon
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Logs / env
+*.log
+.env
+.env.local
+
+# RMF runtime cache
+run/
