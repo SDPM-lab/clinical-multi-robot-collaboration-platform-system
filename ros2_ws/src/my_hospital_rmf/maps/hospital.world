@@ -6,6 +6,10 @@
     </physics>
     <plugin filename="libgz-sim-physics-system.so" name="gz::sim::systems::Physics">
     </plugin>
+    <plugin filename="libgz-sim-sensors-system.so" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
     <plugin filename="libgz-sim-user-commands-system.so" name="gz::sim::systems::UserCommands">
     </plugin>
     <plugin filename="libgz-sim-scene-broadcaster-system.so" name="gz::sim::systems::SceneBroadcaster">
@@ -244,6 +248,15 @@
       <uri>model://hospital_L1</uri>
       <pose>0 0 0.0 0 0 0</pose>
     </include>
-    <rmf_charger_waypoints name="charger_waypoints" />
+    <include>
+      <name>hospital_nav_overlay</name>
+      <uri>model://hospital_nav_overlay</uri>
+    </include>
+<rmf_charger_waypoints name="charger_waypoints" />
+    <include>
+      <name>hospital_slam_robot</name>
+      <uri>model://hospital_slam_robot</uri>
+      <pose>9 -16 0.05 0 0 0</pose>
+    </include>
   </world>
 </sdf>

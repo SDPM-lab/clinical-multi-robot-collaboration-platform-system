@@ -1,0 +1,359 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="hospital_props">
+    <static>true</static>
+
+    <link name="ward_a_bed_base">
+      <pose>7.7 -3.4 0.25 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.85 0.85 0.9 1</ambient>
+          <diffuse>0.85 0.85 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_a_bed_pillow">
+      <pose>7.2 -3.4 0.45 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.95 0.95 1.0 1</ambient>
+          <diffuse>0.95 0.95 1.0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_b_bed_base">
+      <pose>7.7 -7.3 0.25 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.85 0.85 0.9 1</ambient>
+          <diffuse>0.85 0.85 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_b_bed_pillow">
+      <pose>7.2 -7.3 0.45 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.95 0.95 1.0 1</ambient>
+          <diffuse>0.95 0.95 1.0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_c_bed_base">
+      <pose>7.7 -11.0 0.25 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.85 0.85 0.9 1</ambient>
+          <diffuse>0.85 0.85 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_c_bed_pillow">
+      <pose>7.2 -11.0 0.45 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.95 0.95 1.0 1</ambient>
+          <diffuse>0.95 0.95 1.0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_d_bed_base">
+      <pose>7.7 -14.8 0.25 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.85 0.85 0.9 1</ambient>
+          <diffuse>0.85 0.85 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.75 0.25</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ward_d_bed_pillow">
+      <pose>7.2 -14.8 0.45 0 0 1.57</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.95 0.95 1.0 1</ambient>
+          <diffuse>0.95 0.95 1.0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.35 0.65 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="nurse_station_counter">
+      <pose>9.8 -10.5 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.45 0.9</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.2 0.5 1.0 1</ambient>
+          <diffuse>0.2 0.5 1.0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.45 0.9</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="pharmacy_shelf_1">
+      <pose>30.9 -5.2 0.8 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.4 0.3 1.6</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1.0 0.8 0.25 1</ambient>
+          <diffuse>1.0 0.8 0.25 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.4 0.3 1.6</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="pharmacy_shelf_2">
+      <pose>30.9 -4.4 0.8 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.4 0.3 1.6</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1.0 0.8 0.25 1</ambient>
+          <diffuse>1.0 0.8 0.25 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.4 0.3 1.6</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="lab_table">
+      <pose>13.1 -5.3 0.4 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.4 0.7 0.8</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.6 0.6 1</ambient>
+          <diffuse>0.6 0.6 0.6 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.4 0.7 0.8</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="blood_draw_chair">
+      <pose>17.3 -5.3 0.3 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.55 0.55 0.6</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.3 0.7 0.9 1</ambient>
+          <diffuse>0.3 0.7 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.55 0.55 0.6</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="procedure_room_bed">
+      <pose>23.4 -5.2 0.35 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.7 0.35</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.9 0.9 0.95 1</ambient>
+          <diffuse>0.9 0.9 0.95 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.7 0.35</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="storage_shelf">
+      <pose>28.3 -15.1 0.9 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.6 0.35 1.8</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.55 0.35 0.2 1</ambient>
+          <diffuse>0.55 0.35 0.2 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.6 0.35 1.8</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="meeting_table">
+      <pose>30.2 -21.8 0.4 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.8 0.9 0.8</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.45 0.28 0.15 1</ambient>
+          <diffuse>0.45 0.28 0.15 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1.8 0.9 0.8</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+  </model>
+</sdf>

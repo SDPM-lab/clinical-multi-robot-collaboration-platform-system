@@ -36,11 +36,11 @@ public class TaskService : ITaskService
     private static IEnumerable<KeyValuePair<string, RobotTask>> SeedData() =>
         new[]
         {
-            Seed("task-1", "3F 病房清物消汙",  "ward-3f",     ["clean-object", "clean-stain"],         9, 45, "robot-a", RobotTaskStatus.Process),
-            Seed("task-2", "2F 病房鍍膜殺菌", "ward-2f",     ["coat-sterilize"],                      10,  0, "robot-b", RobotTaskStatus.Idle),
-            Seed("task-3", "急診室清汙作業",  "emergency",   ["clean-stain"],                         11, 15, "robot-b", RobotTaskStatus.Idle),
-            Seed("task-4", "1F 走廊鍍膜清物", "corridor-1f", ["coat-sterilize", "clean-object"],       8,  0, "robot-a", RobotTaskStatus.Complete, endHour: 9,  endMinute: 30, confirmed: true),
-            Seed("task-5", "急診室鍍膜殺菌",  "emergency",   ["coat-sterilize"],                       7, 30, "robot-b", RobotTaskStatus.Abort,    endHour: 8,  endMinute:  0),
+            Seed("task-1", "病房 A 清物消汙",  "ward_a",         ["clean-object", "clean-stain"],         9, 45, "robot-a", RobotTaskStatus.Process),
+            Seed("task-2", "病房 B 鍍膜殺菌",  "ward_b",         ["coat-sterilize"],                      10,  0, "robot-b", RobotTaskStatus.Idle),
+            Seed("task-3", "處置室清汙作業",  "procedure_room", ["clean-stain"],                         11, 15, "robot-b", RobotTaskStatus.Idle),
+            Seed("task-4", "護理站鍍膜清物",  "nurse_station",  ["coat-sterilize", "clean-object"],       8,  0, "robot-a", RobotTaskStatus.Complete, endHour: 9,  endMinute: 30, confirmed: true),
+            Seed("task-5", "藥局鍍膜殺菌",    "pharmacy",       ["coat-sterilize"],                       7, 30, "robot-b", RobotTaskStatus.Abort,    endHour: 8,  endMinute:  0),
         }.Select(t => new KeyValuePair<string, RobotTask>(t.Id, t));
 
     private static RobotTask Seed(
@@ -109,7 +109,7 @@ public class TaskService : ITaskService
         var bridgeBaseUrl = _configuration["RosBridge:BaseUrl"] ?? "http://localhost:5050";
         var bridgeUrl = $"{bridgeBaseUrl}/api/hospital/tasks";
 
-        var target = MapPlaceToRmfWaypoint(task.Place);
+        var target = task.Place;
 
         var payload = new
         {
@@ -147,21 +147,6 @@ public class TaskService : ITaskService
         {
             _logger.LogError(ex, "Failed to forward task to ROS bridge");
         }
-    }
-
-    private static string MapPlaceToRmfWaypoint(string place)
-    {
-        return place switch
-        {
-            // 如果學長平台地點已經跟 RMF waypoint 一樣，會直接走 default。
-            // 如果不一樣，就在這裡加對照。
-            "ward-3f" => "ward_a",
-            "ward-2f" => "ward_b",
-            "emergency" => "procedure_room",
-            "corridor-1f" => "nurse_station",
-
-            _ => place
-        };
     }
 
     public Task<DeleteTaskResult> DeleteTaskAsync(string taskId)

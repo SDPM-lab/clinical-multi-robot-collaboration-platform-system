@@ -13,8 +13,17 @@ export const ITEM_LABEL = {
 }
 
 export const PLACE_LABEL = {
-  'ward-3f':     '3F 病房',
-  'ward-2f':     '2F 病房',
-  'emergency':   '急診',
-  'corridor-1f': '1F 走廊',
+  'ward_a':         '病房 A',
+  'ward_b':         '病房 B',
+  'ward_c':         '病房 C',
+  'ward_d':         '病房 D',
+  'nurse_station':  '護理站',
+  'pharmacy':       '藥局',
+  'lab':            '檢驗室',
+  'consult_1':      '診間 1',
+  'consult_2':      '診間 2',
+  'consult_3':      '診間 3',
+  'blood_draw':     '抽血區',
+  'procedure_room': '處置室',
+  'storage':        '倉儲區',
 }
