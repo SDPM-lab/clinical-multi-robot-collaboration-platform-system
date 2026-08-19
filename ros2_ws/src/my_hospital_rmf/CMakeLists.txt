@@ -13,4 +13,13 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(PROGRAMS scripts/hospital_fake_robot_state_publisher.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_fake_robot_state_publisher)
+install(PROGRAMS scripts/hospital_ros_api_bridge.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_ros_api_bridge)
+install(PROGRAMS scripts/hospital_rosbridge_ws_adapter.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_rosbridge_ws_adapter)
+install(PROGRAMS scripts/hospital_rule_dispatcher.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_rule_dispatcher)
+
 ament_package()

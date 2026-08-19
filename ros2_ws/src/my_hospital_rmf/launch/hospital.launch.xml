@@ -1,24 +1,62 @@
 <?xml version='1.0' ?>
 
 <launch>
-  <arg name="use_sim_time" default="true"/>
+  <arg name="use_sim_time" default="false"/>
   <arg name="server_uri" default=""/>
 
-  <!-- Common RMF launch -->
-  <include file="$(find-pkg-share rmf_demos)/common.launch.xml">
+  <!-- RMF Traffic Schedule (路徑規劃核心) -->
+  <node pkg="rmf_traffic_ros2" exec="rmf_traffic_schedule" output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
+  <!-- RMF Blockade (碰撞協調) -->
+  <node pkg="rmf_traffic_ros2" exec="rmf_traffic_blockade" output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
+  <!-- Robot State Aggregator: 把 /robot_state 聚合成 /fleet_states -->
+  <node pkg="rmf_fleet_adapter" exec="robot_state_aggregator" output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+    <param name="fleet_name" value="hospital_fleet"/>
+    <param name="robot_prefix" value="hospital"/>
+  </node>
+
+  <!-- Hospital Fleet Adapter -->
+  <include file="$(find-pkg-share rmf_demos_fleet_adapter)/launch/fleet_adapter.launch.xml">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="viz_config_file" value="$(find-pkg-share rmf_demos)/include/clinic/clinic.rviz"/>
-    <arg name="config_file" value="$(find-pkg-share my_hospital_rmf)/maps/hospital.building.yaml"/>
+    <arg name="server_uri" value="$(var server_uri)"/>
+    <arg name="nav_graph_file" value="$(find-pkg-share my_hospital_rmf)/nav_graphs/0.yaml"/>
+    <arg name="config_file" value="$(find-pkg-share my_hospital_rmf)/config/fleet_config.yaml"/>
   </include>
 
-  <!-- Hospital fleet adapter -->
-  <group>
-    <include file="$(find-pkg-share rmf_demos_fleet_adapter)/launch/fleet_adapter.launch.xml">
-      <arg name="use_sim_time" value="$(var use_sim_time)"/>
-      <arg name="server_uri" value="$(var server_uri)"/>
-      <arg name="nav_graph_file" value="$(find-pkg-share my_hospital_rmf)/nav_graphs/0.yaml"/>
-      <arg name="config_file" value="$(find-pkg-share my_hospital_rmf)/config/fleet_config.yaml"/>
-    </include>
-  </group>
+  <!-- 模擬機器人 -->
+  <node pkg="my_hospital_rmf" exec="hospital_fake_robot_state_publisher" output="screen"/>
+
+  <!-- WebSocket 推播 (:9090) -->
+  <node pkg="my_hospital_rmf" exec="hospital_rosbridge_ws_adapter" output="screen"/>
+
+  <!-- HTTP API Bridge (:5050) -->
+  <node pkg="my_hospital_rmf" exec="hospital_ros_api_bridge" output="screen"/>
+
+  <!-- 任務派遣規則 -->
+  <node pkg="my_hospital_rmf" exec="hospital_rule_dispatcher" output="screen"/>
+
+  <!-- 地圖發布 (nav2_map_server → /map topic) -->
+  <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen">
+    <param name="yaml_filename" value="$(find-pkg-share my_hospital_rmf)/maps/hospital_map.yaml"/>
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
+  <!-- 讓 map_server 進入 active 狀態 -->
+  <node pkg="nav2_lifecycle_manager" exec="lifecycle_manager" name="lifecycle_manager_map" output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+    <param name="autostart" value="true"/>
+    <param name="node_names" value="['map_server']"/>
+  </node>
+
+  <!-- Rosbridge WebSocket Server (port 9091，供前端 roslib 連線) -->
+  <node pkg="rosbridge_server" exec="rosbridge_websocket" name="rosbridge_websocket" output="screen">
+    <param name="port" value="9091"/>
+  </node>
 
 </launch>

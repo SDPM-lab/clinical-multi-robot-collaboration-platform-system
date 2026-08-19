@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ==========================================================
+# 訂閱 ROS2 的 /fleet_states topic，並提供 HTTP API 以便外部系統可以透過 RESTful API 與 ROS2 進行互動。此外並且把消息轉成中文狀態
+# ，在通過websocket或HTTP API提供給外部系統使用。這個程式主要用於醫院環境中，讓外部系統可以方便地與 ROS2 進行通信，並且獲取機器人的狀態和任務信息。
+# ===========================================================
 
 import json
 import threading
@@ -20,7 +24,7 @@ ROS_TASK_TOPIC_NAME = "/hospital_task_request"
 ROS_FLEET_TOPIC_NAME = "/fleet_states"
 
 
-class HospitalTaskRequest(BaseModel):
+class HospitalTaskRequest(BaseModel): #Pydantic model for validating incoming task requests                                     
     target: str
     priority: int = 1
     task_type: str = "go_to_place"
@@ -61,16 +65,16 @@ class HospitalRosBridge(Node):
         }
 
         if task.note:
-            payload["note"] = task.note
+            payload["note"] = task.note 
 
         msg = String()
-        msg.data = json.dumps(payload)
+        msg.data = json.dumps(payload) # dict 轉成 JSON 字串
 
-        self.task_pub.publish(msg)
+        self.task_pub.publish(msg) # 發布到 /hospital_task_request topic
 
         self.get_logger().info(f"Published hospital task: {msg.data}")
 
-        return payload
+        return payload  # 回傳給 HTTP endpoint，讓前端知道發了什麼
 
     def fleet_state_cb(self, msg: FleetState):
         robots = []
@@ -112,7 +116,7 @@ class HospitalRosBridge(Node):
                 "modeText": mode_text,
                 "taskId": task_id,
             })
-
+        #ROS callback 和 HTTP endpoint 是不同時間點執行的,需要一個地方存資料 
         self.latest_fleet = {
             "fleet": msg.name,
             "robots": robots,
@@ -127,8 +131,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["*"], #權限開放所有來源的跨域請求
+    allow_credentials=True,  # 允許帶 cookie/auth header
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -206,16 +210,16 @@ def main():
     ros_bridge_node = HospitalRosBridge()
 
     ros_thread = threading.Thread(
-        target=spin_ros_node,
+        target=spin_ros_node, # 讓 ROS2 的 spin() 在背景執行，避免阻塞 FastAPI 的主線程
         args=(ros_bridge_node,),
-        daemon=True,
+        daemon=True, #主 thread 死掉時，這個 thread 跟著死
     )
     ros_thread.start()
 
     uvicorn.run(
         app,
-        host="0.0.0.0",
-        port=5050,
+        host="0.0.0.0", #接受所有網路介面的連線（不只是 localhost）
+        port=5050, #對外開放的埠號
     )
 
     ros_bridge_node.destroy_node()

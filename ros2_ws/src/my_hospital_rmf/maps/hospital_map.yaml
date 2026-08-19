@@ -1,0 +1,6 @@
+image: hospital_floor_real.png
+resolution: 0.02775 #每個像素代表幾公尺（1/36px≈0.028m）
+origin: [0.0, -30.142, 0.0]  # 圖片左下角在世界座標的位置 [x, y, 角度]
+negate: 0 # 0=白色是空地、黑色是牆；1=反過來
+occupied_thresh: 0.65 # 像素亮度低於此值 → 視為障礙物 
+free_thresh: 0.196  # 像素亮度高於此值 → 視為可通行

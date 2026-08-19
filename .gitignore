@@ -31,6 +31,7 @@ venv/
 *.log
 .env
 .env.local
+vertex-env.sh
 
 # RMF runtime cache
 run/
