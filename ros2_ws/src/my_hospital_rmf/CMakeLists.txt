@@ -10,6 +10,7 @@ install(
     nav_graphs
     config
     models
+    rviz
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -21,5 +22,9 @@ install(PROGRAMS scripts/hospital_rosbridge_ws_adapter.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_rosbridge_ws_adapter)
 install(PROGRAMS scripts/hospital_rule_dispatcher.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_rule_dispatcher)
+install(PROGRAMS scripts/hospital_cleanup_gazebo_runtime.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_cleanup_gazebo_runtime)
+install(PROGRAMS tools/sync_gazebo_to_traffic_editor.py
+  DESTINATION lib/${PROJECT_NAME} RENAME sync_gazebo_to_traffic_editor)
 
 ament_package()

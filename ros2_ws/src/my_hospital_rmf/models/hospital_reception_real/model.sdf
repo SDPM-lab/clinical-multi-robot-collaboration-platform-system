@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <model name="hospital_reception_real">
+    <static>true</static>
+    <link name="top_bar">
+      <pose>0 0 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>9.1 0.7 1.26</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>9.1 0.7 1.26</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+    <link name="left_arm">
+      <pose>-4.2 2.604 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.7 5.208 1.26</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.7 5.208 1.26</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+    <link name="right_arm">
+      <pose>4.2 2.604 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.7 5.208 1.26</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.7 5.208 1.26</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+    <link name="corner_tl">
+      <pose>-4.55 -0 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+    <link name="corner_tr">
+      <pose>4.55 -0 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+    <link name="corner_bl">
+      <pose>-4.55 5.208 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+    <link name="corner_br">
+      <pose>4.55 5.208 0.63 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.88 0.84 0.76 1</ambient>
+          <diffuse>0.88 0.84 0.76 1</diffuse>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.35</radius>
+            <length>1.26</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.5">
+  <model name="Bookshelf_real">
+    <static>true</static>
+    <link name="link">
+      <inertial>
+        <mass>1.0</mass>
+      </inertial>
+      <collision name="back">
+        <pose>0 0.007 0.84 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.26 0.014 1.68</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual1">
+        <pose>0 0.007 0.84 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.26 0.014 1.68</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="left_side">
+        <pose>0.63 -0.273 0.84 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.028 0.56 1.68</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual2">
+        <pose>0.63 -0.273 0.84 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.028 0.56 1.68</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="right_side">
+        <pose>-0.63 -0.273 0.84 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.028 0.56 1.68</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual3">
+        <pose>-0.63 -0.273 0.84 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.028 0.56 1.68</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="bottom">
+        <pose>0 -0.273 0.042 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.084</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual4">
+        <pose>0 -0.273 0.042 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.084</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="top">
+        <pose>0 -0.273 1.666 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.028</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual5">
+        <pose>0 -0.273 1.666 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.028</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="low_shelf">
+        <pose>0 -0.273 0.602 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.028</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual6">
+        <pose>0 -0.273 0.602 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.028</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="high_shelf">
+        <pose>0 -0.273 1.12 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.028</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual7">
+        <pose>0 -0.273 1.12 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.232 0.56 0.028</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Wood</name>
+          </script>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/bookshelf/4/files/bookshelf_diffuse.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

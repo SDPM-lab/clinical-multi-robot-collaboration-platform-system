@@ -49,11 +49,11 @@
     </link>
 
     <link name="lane_3_4">
-      <pose>29.207734 -18.975930 0.08 0 0 -1.570796</pose>
+      <pose>29.205916 -18.998648 0.08 0 0 -1.571456</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>5.464343 0.08 0.04</size>
+            <size>5.509781 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -64,11 +64,11 @@
     </link>
 
     <link name="lane_4_5">
-      <pose>29.719942 -21.739660 0.08 0 0 -0.061535</pose>
+      <pose>29.713364 -21.744601 0.08 0 0 0.017548</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.026359 0.08 0.04</size>
+            <size>1.018689 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -94,11 +94,11 @@
     </link>
 
     <link name="lane_6_7">
-      <pose>30.829029 -16.183708 0.08 0 0 -0.079842</pose>
+      <pose>30.814193 -16.140506 0.08 0 0 0.006516</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.003995 0.08 0.04</size>
+            <size>0.971146 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -109,11 +109,11 @@
     </link>
 
     <link name="lane_7_8">
-      <pose>31.294802 -16.381483 0.08 0 0 -1.786883</pose>
+      <pose>31.286877 -16.360958 0.08 0 0 -1.628326</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>0.322986 0.08 0.04</size>
+            <size>0.447973 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -124,11 +124,11 @@
     </link>
 
     <link name="lane_6_9">
-      <pose>30.328631 -15.613254 0.08 0 0 1.570796</pose>
+      <pose>30.318944 -15.628062 0.08 0 0 1.589581</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.060833 0.08 0.04</size>
+            <size>1.031399 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -139,11 +139,11 @@
     </link>
 
     <link name="lane_9_10">
-      <pose>30.328631 -14.902701 0.08 0 0 1.570796</pose>
+      <pose>30.318944 -14.917509 0.08 0 0 1.521147</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>0.360272 0.08 0.04</size>
+            <size>0.390369 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -214,11 +214,11 @@
     </link>
 
     <link name="lane_14_15">
-      <pose>26.874984 -6.295079 0.08 0 0 -3.135535</pose>
+      <pose>26.850073 -6.287585 0.08 0 0 -3.137747</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>6.863786 0.08 0.04</size>
+            <size>6.913533 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -229,11 +229,11 @@
     </link>
 
     <link name="lane_15_16">
-      <pose>21.264270 -6.334812 0.08 0 0 -3.132899</pose>
+      <pose>21.244771 -6.292706 0.08 0 0 3.137788</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>4.357933 0.08 0.04</size>
+            <size>4.297153 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -244,11 +244,11 @@
     </link>
 
     <link name="lane_16_17">
-      <pose>18.201830 -6.324806 0.08 0 0 3.108840</pose>
+      <pose>18.207243 -6.290194 0.08 0 0 -3.135223</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.768059 0.08 0.04</size>
+            <size>1.777972 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -514,11 +514,11 @@
     </link>
 
     <link name="lane_34_35">
-      <pose>8.309315 -3.433468 0.08 0 0 -0.033398</pose>
+      <pose>8.272428 -3.495572 0.08 0 0 0.011640</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.205253 0.08 0.04</size>
+            <size>1.266174 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -529,11 +529,11 @@
     </link>
 
     <link name="lane_35_19">
-      <pose>8.918309 -4.898094 0.08 0 0 -1.566156</pose>
+      <pose>8.915242 -4.915400 0.08 0 0 -1.563951</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>2.889038 0.08 0.04</size>
+            <size>2.854462 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -559,11 +559,11 @@
     </link>
 
     <link name="lane_37_17">
-      <pose>17.322424 -5.800024 0.08 0 0 -1.579165</pose>
+      <pose>17.320148 -5.782496 0.08 0 0 -1.574446</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>0.991700 0.08 0.04</size>
+            <size>1.026727 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -574,11 +574,11 @@
     </link>
 
     <link name="lane_38_15">
-      <pose>23.423087 -5.773323 0.08 0 0 -1.533825</pose>
+      <pose>23.398176 -5.765829 0.08 0 0 -1.579848</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.085833 0.08 0.04</size>
+            <size>1.070147 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -679,11 +679,11 @@
     </link>
 
     <link name="lane_45_9">
-      <pose>29.307419 -15.085891 0.08 0 0 0.002990</pose>
+      <pose>29.260151 -15.106278 0.08 0 0 -0.005887</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>2.042431 0.08 0.04</size>
+            <size>2.098248 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -694,11 +694,11 @@
     </link>
 
     <link name="lane_16_1">
-      <pose>19.062001 -11.268281 0.08 0 0 -1.575555</pose>
+      <pose>19.067414 -11.233669 0.08 0 0 -1.576615</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>9.829162 0.08 0.04</size>
+            <size>9.898442 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -773,7 +773,7 @@
     </link>
 
     <link name="marker_4_meeting_room_junction">
-      <pose>29.207734 -21.708102 0.18 0 0 0</pose>
+      <pose>29.204098 -21.753538 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -789,7 +789,7 @@
     </link>
 
     <link name="marker_5_meeting_room">
-      <pose>30.232151 -21.771219 0.18 0 0 0</pose>
+      <pose>30.222631 -21.735663 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -821,7 +821,7 @@
     </link>
 
     <link name="marker_7_director_room_junction">
-      <pose>31.329427 -16.223746 0.18 0 0 0</pose>
+      <pose>31.299756 -16.137342 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -837,7 +837,7 @@
     </link>
 
     <link name="marker_8_director_room">
-      <pose>31.260176 -16.539221 0.18 0 0 0</pose>
+      <pose>31.273998 -16.584574 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -853,7 +853,7 @@
     </link>
 
     <link name="marker_9_storage_junction">
-      <pose>30.328631 -15.082838 0.18 0 0 0</pose>
+      <pose>30.309257 -15.112453 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -949,7 +949,7 @@
     </link>
 
     <link name="marker_15_procedure_room_junction">
-      <pose>23.443154 -6.315868 0.18 0 0 0</pose>
+      <pose>23.393332 -6.300880 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -965,7 +965,7 @@
     </link>
 
     <link name="marker_16_center_top_junction">
-      <pose>19.085386 -6.353755 0.18 0 0 0</pose>
+      <pose>19.096210 -6.284532 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1253,7 +1253,7 @@
     </link>
 
     <link name="marker_34_ward_a">
-      <pose>7.707025 -3.413345 0.18 0 0 0</pose>
+      <pose>7.639383 -3.502941 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1269,7 +1269,7 @@
     </link>
 
     <link name="marker_35_ward_a_junction">
-      <pose>8.911606 -3.453591 0.18 0 0 0</pose>
+      <pose>8.905472 -3.488202 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1301,7 +1301,7 @@
     </link>
 
     <link name="marker_37_blood_draw">
-      <pose>17.326574 -5.304191 0.18 0 0 0</pose>
+      <pose>17.322022 -5.269136 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1429,7 +1429,7 @@
     </link>
 
     <link name="marker_45_storage">
-      <pose>28.286208 -15.088944 0.18 0 0 0</pose>
+      <pose>28.211045 -15.100102 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>

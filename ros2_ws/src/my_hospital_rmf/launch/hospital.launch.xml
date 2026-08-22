@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 
 <launch>
-  <arg name="use_sim_time" default="false"/>
+  <arg name="use_sim_time" default="false"/> 
   <arg name="server_uri" default=""/>
 
   <!-- RMF Traffic Schedule (路徑規劃核心) -->

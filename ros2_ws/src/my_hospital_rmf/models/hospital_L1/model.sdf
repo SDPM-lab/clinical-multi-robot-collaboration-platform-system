@@ -39,5 +39,116 @@
       </collision>
       <pose>0.871303530835482 -26.445343460059323 0 0 0 0</pose>
     </link>
+    <link name="wall_2">
+      <visual name="wall_2">
+        <geometry>
+          <mesh>
+            <uri>model://hospital_L1/meshes/wall_2.obj</uri>
+          </mesh>
+        </geometry>
+        <transparency>0.0</transparency>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>0.1 0.1 0.1</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <albedo_map>model://hospital_L1/meshes/default.png</albedo_map>
+            </metal>
+          </pbr>
+          <script>
+            <uri>model://hospital_L1/meshes/</uri>
+            <name>wall_2_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://hospital_L1/meshes/wall_2.obj</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>0x01</collide_bitmask>
+          </contact>
+        </surface>
+      </collision>
+      <pose>21.772129783887625 -15.533076916154249 0 0 0 0</pose>
+    </link>
+    <link name="wall_3">
+      <visual name="wall_3">
+        <geometry>
+          <mesh>
+            <uri>model://hospital_L1/meshes/wall_3.obj</uri>
+          </mesh>
+        </geometry>
+        <transparency>0.0</transparency>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>0.1 0.1 0.1</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <albedo_map>model://hospital_L1/meshes/default.png</albedo_map>
+            </metal>
+          </pbr>
+          <script>
+            <uri>model://hospital_L1/meshes/</uri>
+            <name>wall_3_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://hospital_L1/meshes/wall_3.obj</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>0x01</collide_bitmask>
+          </contact>
+        </surface>
+      </collision>
+      <pose>10.359524825838589 -18.462437006627205 0 0 0 0</pose>
+    </link>
+    <link name="wall_4">
+      <visual name="wall_4">
+        <geometry>
+          <mesh>
+            <uri>model://hospital_L1/meshes/wall_4.obj</uri>
+          </mesh>
+        </geometry>
+        <transparency>0.0</transparency>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>0.1 0.1 0.1</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <albedo_map>model://hospital_L1/meshes/default.png</albedo_map>
+            </metal>
+          </pbr>
+          <script>
+            <uri>model://hospital_L1/meshes/</uri>
+            <name>wall_4_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://hospital_L1/meshes/wall_4.obj</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>0x01</collide_bitmask>
+          </contact>
+        </surface>
+      </collision>
+      <pose>10.353449288339013 -18.44879783406199 0 0 0 0</pose>
+    </link>
   </model>
 </sdf>

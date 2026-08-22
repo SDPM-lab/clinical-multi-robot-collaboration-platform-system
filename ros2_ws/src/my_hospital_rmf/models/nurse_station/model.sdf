@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="nurse_station">
+    <static>true</static>
+
+    <!-- 前檯橫條（沿走廊方向，朝左開口） -->
+    <link name="front_bar">
+      <pose>0 0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>5.0 0.5 0.9</size></box></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>5.0 0.5 0.9</size></box></geometry>
+      </collision>
+    </link>
+
+    <!-- 左側延伸臂（伸入房間） -->
+    <link name="left_arm">
+      <pose>-2.25 1.0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>0.5 2.0 0.9</size></box></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>0.5 2.0 0.9</size></box></geometry>
+      </collision>
+    </link>
+
+    <!-- 右側延伸臂（伸入房間） -->
+    <link name="right_arm">
+      <pose>2.25 1.0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>0.5 2.0 0.9</size></box></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>0.5 2.0 0.9</size></box></geometry>
+      </collision>
+    </link>
+
+    <!-- 圓角：左前 -->
+    <link name="corner_fl">
+      <pose>-2.5 0.0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+      </collision>
+    </link>
+
+    <!-- 圓角：右前 -->
+    <link name="corner_fr">
+      <pose>2.5 0.0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+      </collision>
+    </link>
+
+    <!-- 圓角：左後 -->
+    <link name="corner_bl">
+      <pose>-2.5 2.0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+      </collision>
+    </link>
+
+    <!-- 圓角：右後 -->
+    <link name="corner_br">
+      <pose>2.5 2.0 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+        <material><ambient>0.88 0.84 0.76 1</ambient><diffuse>0.88 0.84 0.76 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><cylinder><radius>0.25</radius><length>0.9</length></cylinder></geometry>
+      </collision>
+    </link>
+
+  </model>
+</sdf>

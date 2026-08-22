@@ -28,6 +28,7 @@ from rmf_fleet_msgs.msg import RobotState, RobotMode, Location, PathRequest
 
 # 導航圖路徑（記錄所有路點名稱與 XY 座標）
 NAV_GRAPH = os.path.join(get_package_share_directory("my_hospital_rmf"), "nav_graphs", "0.yaml")
+FLEET_CFG = os.path.join(get_package_share_directory("my_hospital_rmf"), "config", "fleet_config.yaml")
 FLEET_NAME = "hospital_fleet"
 MAP_NAME = "L1"
 
@@ -37,11 +38,17 @@ TIMER_PERIOD = 0.2     # 狀態更新頻率（秒）
 BATTERY_PERCENT = 0.99 # 固定電量（模擬用，不做電量消耗）
 
 
-# 各機器人的初始停靠路點
-ROBOT_STARTS = {
-    "hospital_robot_1": "charging_station_junction",
-    "hospital_robot_2": "storage_junction",
-}
+def _load_robot_starts():
+    """從 fleet_config.yaml 讀取各機器人的初始停靠路點，新增機器人只需改 yaml。"""
+    with open(FLEET_CFG) as f:
+        cfg = yaml.safe_load(f)
+    return {
+        name: info["start_waypoint"]
+        for name, info in cfg["rmf_fleet"]["robots"].items()
+    }
+
+
+ROBOT_STARTS = _load_robot_starts()
 
 
 def get_param_name(params):

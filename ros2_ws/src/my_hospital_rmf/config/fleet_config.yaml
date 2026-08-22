@@ -27,7 +27,7 @@ rmf_fleet:
   recharge_soc: 0.9
   max_delay: 15.0
   publish_fleet_state: 10.0
-  account_for_battery_drain: true
+  account_for_battery_drain: false #每 10 秒刷一次電池警告
   task_capabilities:
     loop: true
     delivery: true
@@ -35,8 +35,16 @@ rmf_fleet:
   robots:
     hospital_robot_1:
       charger: charging_station
+      start_waypoint: charging_station_junction
+      start_pose: [9.0, -16.0, 0.05, 0.0, 0.0, 0.0]
     hospital_robot_2:
       charger: charging_station
+      start_waypoint: storage_junction
+      start_pose: [11.0, -16.0, 0.05, 0.0, 0.0, 0.0]
+    hospital_robot_3:
+      charger: charging_station
+      start_waypoint: center_mid_junction
+      start_pose: [19.0, -16.0, 0.05, 0.0, 0.0, 0.0]
 fleet_manager:
   ip: 127.0.0.1
   port: 22013

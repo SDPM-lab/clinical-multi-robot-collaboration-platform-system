@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="hospital_wardrobe">
+    <static>true</static>
+    <!-- Local +X is the front of the wardrobe. -->
+    <link name="cabinet">
+      <pose>0 0 1.0 0 0 0</pose>
+      <collision name="collision">
+        <geometry><box><size>0.55 1.40 2.00</size></box></geometry>
+      </collision>
+      <visual name="body">
+        <geometry><box><size>0.55 1.40 2.00</size></box></geometry>
+        <material>
+          <ambient>0.72 0.76 0.78 1</ambient>
+          <diffuse>0.72 0.76 0.78 1</diffuse>
+          <pbr><metal><metalness>0.15</metalness><roughness>0.55</roughness></metal></pbr>
+        </material>
+      </visual>
+      <visual name="left_door">
+        <pose>0.28125 0.3525 0 0 0 0</pose>
+        <geometry><box><size>0.0125 0.685 1.90</size></box></geometry>
+        <material><ambient>0.90 0.92 0.92 1</ambient><diffuse>0.90 0.92 0.92 1</diffuse></material>
+      </visual>
+      <visual name="right_door">
+        <pose>0.28125 -0.3525 0 0 0 0</pose>
+        <geometry><box><size>0.0125 0.685 1.90</size></box></geometry>
+        <material><ambient>0.90 0.92 0.92 1</ambient><diffuse>0.90 0.92 0.92 1</diffuse></material>
+      </visual>
+      <visual name="left_handle">
+        <pose>0.302 0.075 0 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.018</radius><length>0.045</length></cylinder></geometry>
+        <material><ambient>0.15 0.17 0.18 1</ambient><diffuse>0.15 0.17 0.18 1</diffuse></material>
+      </visual>
+      <visual name="right_handle">
+        <pose>0.302 -0.075 0 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.018</radius><length>0.045</length></cylinder></geometry>
+        <material><ambient>0.15 0.17 0.18 1</ambient><diffuse>0.15 0.17 0.18 1</diffuse></material>
+      </visual>
+      <visual name="base">
+        <pose>0 0 -0.975 0 0 0</pose>
+        <geometry><box><size>0.62 1.46 0.05</size></box></geometry>
+        <material><ambient>0.25 0.28 0.30 1</ambient><diffuse>0.25 0.28 0.30 1</diffuse></material>
+      </visual>
+    </link>
+  </model>
+</sdf>

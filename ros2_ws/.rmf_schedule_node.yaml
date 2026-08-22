@@ -28,3 +28,18 @@
       shape_context:
         - 0.34999999999999998
         - 0.59999999999999998
+- operation: Add
+  participant_description:
+    name: hospital_robot_3
+    group: hospital_fleet
+    responsiveness: Responsive
+    profile:
+      footprint:
+        type: Circle
+        index: 0
+      vicinity:
+        type: Circle
+        index: 1
+      shape_context:
+        - 0.34999999999999998
+        - 0.59999999999999998
