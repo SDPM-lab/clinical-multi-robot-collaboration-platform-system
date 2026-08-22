@@ -1,0 +1,117 @@
+# Gazebo Fuel 模型清單
+# 格式：name（唯一）, uri（Fuel URL）, pose（[x, y, z, roll, pitch, yaw]）
+# 座標系與 nav_graph 相同（公尺，原點 = 地圖左上角，Y 往上為正）
+#
+# 搜尋更多模型：https://app.gazebosim.org/fuel/models
+# 新增後跑 rebuild_gazebo_scene.sh 即可同步進 hospital.world
+  # 使用方式：
+  # 1. 去 https://app.gazebosim.org/fuel/models 搜尋模型
+  # 2. 點進去後複製頁面上的「Include tag」裡的 URI
+  # 3. 貼到下面，格式如下：
+  #
+  # - name: 唯一名稱（英文，不能有空格）
+  #   uri: "https://fuel.gazebosim.org/1.0/{owner}/models/{model_name}"
+  #   pose: [x, y, z, roll, pitch, yaw]   # 座標系同 nav_graph（公尺）
+
+# 所有場景家具、設備與人物的預設倍率。
+# 建築、導航 overlay 與機器人會由 patch_props.py 排除。
+scene_scale: [1.4, 1.4, 1.4]
+
+props:
+  - name: hospital_reception
+    uri: "model://hospital_reception"
+    pose: [18.6700000762939, -22.4299182891846, 0, 0, 0, 0]
+
+  - name: monitor_left
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard"
+    pose: [16.2215671539307, -22.6546096801758, 1.36381995677948, 0, 0, -1.57000000423402]
+
+  - name: monitor_center
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard"
+    pose: [18.6712341308594, -22.6705837249756, 1.27678000926971, 0, 0, -1.57000000423402]
+
+  - name: monitor_right
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/MonitorAndKeyboard"
+    pose: [20.8393993377686, -22.639799118042, 1.27161192893982, 0, 0, -1.57000000423402]
+
+  # Traffic Editor 產生的候診椅：倍率統一沿用上方 scene_scale。
+  # 名稱必須和 hospital.world 內的 <name> 完全相同。
+  - name: OpenRobotics/PotatoChipChair
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [11.568183899878706, -23.816388783262045, 0, 0, 0, 1.5708]
+
+  - name: OpenRobotics/PotatoChipChair_2
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [13.835599899292, -23.8160362243652, 0, 0, 0, 1.57080003571763]
+
+  - name: OpenRobotics/PotatoChipChair_3
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [13.81130027771, -25.1385364532471, 0, 0, 0, 1.57080003571763]
+
+  - name: OpenRobotics/PotatoChipChair_4
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [11.540761012870437, -25.139265521825898, 0, 0, 0, 1.5708]
+
+  - name: OpenRobotics/PotatoChipChair_5
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [23.658031463623, -23.8551998138428, 0, 0, 0, 1.57080003571763]
+
+  - name: OpenRobotics/PotatoChipChair_6
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [25.911214239916955, -23.863046549518018, 0, 0, 0, 1.5708]
+
+  - name: OpenRobotics/PotatoChipChair_7
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [25.926785332641284, -25.131160781940864, 0, 0, 0, 1.5708]
+
+  - name: OpenRobotics/PotatoChipChair_8
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/PotatoChipChair"
+    pose: [23.6723308563232, -25.1312007904053, 0, 0, 0, 1.57080003571763]
+
+  # 一般候診椅：倍率統一沿用上方 scene_scale。
+  - name: OpenRobotics/Chair
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [24.0649013519287, -17.711633682251, 0, 0, 0, -1.57080003571763]
+
+  - name: OpenRobotics/Chair_2
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [24.9874019622803, -17.709659576416, 0, 0, 0, -1.57080003571763]
+
+  - name: OpenRobotics/Chair_3
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [18.78, -3.79, 0, 0, 0, -1.57]
+
+  - name: OpenRobotics/Chair_4
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [20.13411679152222, -3.779834185903859, 0, 0, 0, -1.5665]
+
+  - name: OpenRobotics/Chair_5
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [21.47472958757421, -3.7839143118048866, 0, 0, 0, -1.5693]
+
+  - name: OpenRobotics/Chair_6
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [13.327883913479125, -17.657508125556852, 0, 0, 0, -1.57]
+
+  - name: OpenRobotics/Chair_7
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [12.484768917767422, -17.65009728463458, 0, 0, 0, -1.5648]
+
+  - name: OpenRobotics/Chair_8
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [11.709100901235972, -17.636385841130444, 0, 0, 0, -1.5682]
+
+  - name: OpenRobotics/Chair_11
+    uri: "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Chair"
+    pose: [25.8515586853027, -17.7250308990479, 0, 0, 0, -1.55359994901696]
+
+  # 護理站：保留原位置，改為與主 reception 相同的米色櫃台風格。
+  - name: OpenRobotics/NurseTable
+    uri: "model://nurse_station"
+    pose: [14.1177473068237, -15.1698141098022, -1.1102199806005e-16, 0, 0, 0.00154397000068562]
+
+  - name: OpenRobotics/NurseTable_3
+    uri: "model://nurse_station"
+    pose: [14.0347108840942, -7.64025211334229, -2.22045001971725e-16, 0, 0, -3.13875000001217]
+
+  # 抽血站：原本三張 Desk 改為米色櫃台。

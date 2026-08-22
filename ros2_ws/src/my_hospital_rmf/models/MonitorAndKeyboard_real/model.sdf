@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.6">
+  <model name="MonitorAndKeyboard_real">
+    <link name="body">
+      <pose>0 0 0 0 0 0</pose>
+      <visual name="visual_monitor">
+        <geometry>
+          <mesh>
+            <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/monitorandkeyboard/2/files/meshes/monitor.obj</uri>
+            <scale>0.28 0.28 0.28</scale>
+          </mesh>
+        </geometry>
+        <pose>0 0 0 0 0 0</pose>
+      </visual>
+      <collision name="collision_monitor">
+        <geometry>
+          <mesh>
+            <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/monitorandkeyboard/2/files/meshes/monitor.obj</uri>
+            <scale>0.28 0.28 0.28</scale>
+          </mesh>
+        </geometry>
+        <pose>0 0 0 0 0 0</pose>
+      </collision>
+      <visual name="visual_keyboard">
+        <geometry>
+          <mesh>
+            <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/monitorandkeyboard/2/files/meshes/keyboard.obj</uri>
+            <scale>0.28 0.28 0.28</scale>
+          </mesh>
+        </geometry>
+        <pose>-0.378 0 0 0 0 0</pose>
+      </visual>
+      <collision name="collision_keyboard">
+        <geometry>
+          <mesh>
+            <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/monitorandkeyboard/2/files/meshes/keyboard.obj</uri>
+            <scale>0.28 0.28 0.28</scale>
+          </mesh>
+        </geometry>
+        <pose>-0.378 0 0 0 0 0</pose>
+      </collision>
+    </link>
+  </model>
+</sdf>

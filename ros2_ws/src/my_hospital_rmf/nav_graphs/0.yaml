@@ -1,6 +1,165 @@
-# 自動產生，供 Fleet Adapter 使用 
 building_name: hospital
-doors: {}
+doors:
+  charging_station_door:
+    endpoints:
+    - [28.15128662745675, -7.5960564334148435]
+    - [28.192559737761705, -8.773464193425724]
+    map: L1
+  consult_2_door:
+    endpoints:
+    - [7.705747981447917, -23.006192354343668]
+    - [7.716406269515908, -21.78279297108107]
+    map: L1
+  consult_3_door:
+    endpoints:
+    - [7.712326143614881, -24.125673428943358]
+    - [7.717100168478668, -25.33630507129118]
+    map: L1
+  consult_a_door:
+    endpoints:
+    - [7.694368038458655, -19.28639430669779]
+    - [7.701973171090503, -18.058998065409693]
+    map: L1
+  direct_room_door:
+    endpoints:
+    - [30.622316345761526, -16.57594169028236]
+    - [31.824038325427512, -16.56245229444631]
+    map: L1
+  ecg_door:
+    endpoints:
+    - [32.307630390554095, -9.97243833319918]
+    - [32.31953769675505, -11.196781419051135]
+    map: L1
+  lab_door:
+    endpoints:
+    - [12.567009822833716, -5.238770633085657]
+    - [13.742835493209503, -5.250122820116408]
+    map: L1
+  main_entrance:
+    endpoints:
+    - [17.413561006209008, -26.319199074061224]
+    - [19.75985544696808, -26.319199074061224]
+    map: L1
+  meeting_room_door:
+    endpoints:
+    - [30.216663012132127, -21.16983038333754]
+    - [30.221131721452302, -22.4027223044107]
+    map: L1
+  men door:
+    endpoints:
+    - [20.58501233752356, -15.420599917287243]
+    - [20.578628467066167, -14.424022226971575]
+    map: L1
+  men_door_1:
+    endpoints:
+    - [23.149995975386013, -12.998948049172455]
+    - [21.90938789784697, -13.005137627920274]
+    map: L1
+  men_door_2:
+    endpoints:
+    - [24.206693071835193, -13.002389788027745]
+    - [23.149995975386013, -12.998948049172455]
+    map: L1
+  men_door_3:
+    endpoints:
+    - [25.28351323820441, -13.00208447248413]
+    - [24.206693071835193, -13.002389788027745]
+    map: L1
+  men_door_4:
+    endpoints:
+    - [23.133814251574456, -13.988281434316912]
+    - [21.93336904599995, -14.001049175231694]
+    map: L1
+  men_door_5:
+    endpoints:
+    - [24.269588073819747, -13.988558993902014]
+    - [23.133814251574456, -13.988281434316912]
+    map: L1
+  men_door_6:
+    endpoints:
+    - [25.2800159874321, -13.977983973709556]
+    - [24.269588073819747, -13.988558993902014]
+    map: L1
+  'null':
+    endpoints:
+    - [22.82638925511334, -5.242101348106905]
+    - [24.00723875397951, -5.242101348106905]
+    map: L1
+  pharmacy_door:
+    endpoints:
+    - [30.334431544091725, -5.217731616534779]
+    - [31.51122867301538, -5.205852066292331]
+    map: L1
+  storage_door:
+    endpoints:
+    - [28.189090242947906, -15.616529228412107]
+    - [28.20146940044354, -14.512896806121853]
+    map: L1
+  therapy_room_door:
+    endpoints:
+    - [32.290754767779774, -14.104884216019073]
+    - [32.290754767779774, -15.379798658276965]
+    map: L1
+  ultrasound_door:
+    endpoints:
+    - [32.307630390554095, -8.379607142163245]
+    - [32.307630390554095, -7.1671713625122475]
+    map: L1
+  ward_a_door:
+    endpoints:
+    - [7.699974742077755, -4.142937635136823]
+    - [7.694451306334187, -2.9011915632988514]
+    map: L1
+  ward_b_door:
+    endpoints:
+    - [7.692813704782074, -7.8800276449346764]
+    - [7.685708179403414, -6.650799510384892]
+    map: L1
+  ward_c_door:
+    endpoints:
+    - [7.6963109555543845, -11.590777250106166]
+    - [7.700280057621369, -10.372207403624373]
+    map: L1
+  ward_d_door:
+    endpoints:
+    - [7.686735149868298, -15.375468728749343]
+    - [7.694368038458655, -14.186181418496014]
+    map: L1
+  women door:
+    endpoints:
+    - [20.557478426681246, -11.365981742130492]
+    - [20.557478426681246, -10.307924603714302]
+    map: L1
+  women_door_1:
+    endpoints:
+    - [23.069753499332467, -9.077447451031551]
+    - [21.823039110921137, -9.086273845837855]
+    map: L1
+  women_door_2:
+    endpoints:
+    - [24.245995509085912, -9.086273845837855]
+    - [23.069753499332467, -9.077447451031551]
+    map: L1
+  women_door_3:
+    endpoints:
+    - [25.29889003921917, -9.081860648434702]
+    - [24.245995509085912, -9.086273845837855]
+    map: L1
+  women_door_4:
+    endpoints:
+    - [23.102005923121546, -9.870074358212849]
+    - [21.895731966259856, -9.868492268577757]
+    map: L1
+  women_door_5:
+    endpoints:
+    - [24.18390542989816, -9.864967261846937]
+    - [23.102005923121546, -9.870074358212849]
+    map: L1
+  women_door_6:
+    endpoints:
+    - [25.26630454392797, -9.864967261846937]
+    - [24.18390542989816, -9.864967261846937]
+    map: L1
 levels:
   L1:
     lanes:
@@ -30,10 +189,10 @@ levels:
       - {}
     - - 4
       - 5
-      - {}
+      - {door_name: meeting_room_door}
     - - 5
       - 4
-      - {}
+      - {door_name: meeting_room_door}
     - - 3
       - 6
       - {}
@@ -48,10 +207,10 @@ levels:
       - {}
     - - 7
       - 8
-      - {}
+      - {door_name: direct_room_door}
     - - 8
       - 7
-      - {}
+      - {door_name: direct_room_door}
     - - 6
       - 9
       - {}
@@ -168,10 +327,10 @@ levels:
       - {}
     - - 26
       - 27
-      - {}
+      - {door_name: consult_3_door}
     - - 27
       - 26
-      - {}
+      - {door_name: consult_3_door}
     - - 28
       - 25
       - {}
@@ -210,10 +369,10 @@ levels:
       - {}
     - - 34
       - 35
-      - {}
+      - {door_name: ward_a_door}
     - - 35
       - 34
-      - {}
+      - {door_name: ward_a_door}
     - - 35
       - 19
       - {}
@@ -234,10 +393,10 @@ levels:
       - {}
     - - 38
       - 15
-      - {}
+      - {door_name: 'null'}
     - - 15
       - 38
-      - {}
+      - {door_name: 'null'}
     - - 39
       - 40
       - {}
@@ -258,10 +417,10 @@ levels:
       - {}
     - - 42
       - 13
-      - {}
+      - {door_name: ultrasound_door}
     - - 13
       - 42
-      - {}
+      - {door_name: ultrasound_door}
     - - 43
       - 11
       - {}
@@ -270,10 +429,10 @@ levels:
       - {}
     - - 44
       - 10
-      - {}
+      - {door_name: therapy_room_door}
     - - 10
       - 44
-      - {}
+      - {door_name: therapy_room_door}
     - - 45
       - 9
       - {}
@@ -289,141 +448,140 @@ levels:
     vertices:
     - - 8.953017489029458
       - -16.19954313692292
-      - name: left_mid_junction
+      - {name: left_mid_junction}
     - - 19.038616865075507
       - -16.18280629394115
-      - name: center_mid_junction
+      - {name: center_mid_junction}
     - - 19.0802508028411
       - -18.097329044112545
-      - name: reception_back
+      - {name: reception_back}
     - - 29.20773392027934
       - -16.243758378829977
-      - name: right_mid_junction
-    - - 29.20773392027934
-      - -21.7081016867296
-      - name: meeting_room_junction
-    - - 30.232150836980928
-      - -21.77121873638223
-      - name: meeting_room
+      - {name: right_mid_junction}
+    - - 29.204097889714472
+      - -21.753538190811113
+      - {name: meeting_room_junction}
+    - - 30.22263054321186
+      - -21.73566335353042
+      - {name: meeting_room}
     - - 30.32863054876306
       - -16.143670392441496
-      - name: right_bottom_junction
-    - - 31.329427144772307
-      - -16.223746332743982
-      - name: director_room_junction
-    - - 31.26017602828887
-      - -16.53922055717311
-      - name: director_room
-    - - 30.32863054876306
-      - -15.082837658174268
-      - name: storage_junction
+      - {name: right_bottom_junction}
+    - - 31.29975602512469
+      - -16.137342033901128
+      - {name: director_room_junction}
+    - - 31.273998495627048
+      - -16.584573793379093
+      - {name: director_room}
+    - - 30.3092568897228
+      - -15.112453265904858
+      - {name: storage_junction}
     - - 30.32863054876306
       - -14.722565316709364
-      - name: therapy_room_junction
+      - {name: therapy_room_junction}
     - - 30.308590746718554
       - -10.65931503845588
-      - name: ecg_junction
+      - {name: ecg_junction}
     - - 30.34864259484905
       - -8.29744950497248
-      - name: charging_station_junction
+      - {name: charging_station_junction}
     - - 30.34864259484905
       - -7.977201255679562
-      - name: ultrasound_junction
+      - {name: ultrasound_junction}
     - - 30.306814365373885
       - -6.274289933191407
-      - name: right_top_junction
-    - - 23.443154409172788
-      - -6.315868359039977
-      - name: procedure_room_junction
-    - - 19.085385655165524
-      - -6.353755242406663
-      - name: center_top_junction
+      - {name: right_top_junction}
+    - - 23.393332463646633
+      - -6.300880141444364
+      - {name: procedure_room_junction}
+    - - 19.096210478984577
+      - -6.284531881881742
+      - {name: center_top_junction}
     - - 17.318274800642826
       - -6.295856312953983
-      - name: blood_draw_junction
+      - {name: blood_draw_junction}
     - - 13.154964291959377
       - -6.33588040512597
-      - name: lab_junction
+      - {name: lab_junction}
     - - 8.925011726892471
       - -6.342597347085485
-      - name: left_top_junction
+      - {name: left_top_junction}
     - - 8.931617645017944
       - -7.376701093307205
-      - name: ward_b_junction
+      - {name: ward_b_junction}
     - - 8.911605598931951
       - -10.499190913809421
-      - name: nurse_station_junction
+      - {name: nurse_station_junction}
     - - 8.911605598931951
       - -11.019615135879294
-      - name: ward_c_junction
+      - {name: ward_c_junction}
     - - 8.951629691103937
       - -14.842637593225325
-      - name: ward_d_junction
+      - {name: ward_d_junction}
     - - 8.931617645017944
       - -18.74573599087384
-      - name: consult_1_junction
+      - {name: consult_1_junction}
     - - 8.97164173718993
       - -22.488738019834408
-      - name: consult_2_junction
+      - {name: consult_2_junction}
     - - 8.97164173718993
       - -24.870615599403802
-      - name: consult_3_junction
+      - {name: consult_3_junction}
     - - 7.707024755539395
       - -24.928764332483073
-      - name: consult_3
+      - {name: consult_3}
     - - 7.7253992000732765
       - -22.468809241623948
-      - name: consult_2
+      - {name: consult_2}
     - - 7.707024755539395
       - -18.76052991675988
-      - name: consult_1
+      - {name: consult_1}
     - - 7.743745888648646
       - -14.813577104664942
-      - name: ward_d
+      - {name: ward_d}
     - - 7.707024755539395
       - -10.995134380473129
-      - name: ward_c
+      - {name: ward_c}
     - - 9.836545160332294
       - -10.536189606503775
-      - name: nurse_station
+      - {name: nurse_station}
     - - 7.7253992000732765
       - -7.341922877293682
-      - name: ward_b
-    - - 7.707024755539395
-      - -3.4133445097326267
-      - name: ward_a
-    - - 8.911605598931951
-      - -3.453590649572697
-      - name: ward_a_junction
+      - {name: ward_b}
+    - - 7.639383484649566
+      - -3.502940743804176
+      - {name: ward_a}
+    - - 8.905471532101153
+      - -3.4882023298351577
+      - {name: ward_a_junction}
     - - 13.122600844336258
       - -5.285844738719284
-      - name: lab
-    - - 17.326573832237433
-      - -5.304191427294654
-      - name: blood_draw
+      - {name: lab}
+    - - 17.32202185504173
+      - -5.269135651696027
+      - {name: blood_draw}
     - - 23.40301929316676
       - -5.230776917034664
-      - name: procedure_room
+      - {name: procedure_room}
     - - 30.893020209113388
       - -5.230776917034664
-      - name: pharmacy
+      - {name: pharmacy}
     - - 30.869039060960414
       - -6.255832220781996
-      - name: pharmacy_junction
+      - {name: pharmacy_junction}
     - - 28.23114052009115
       - -8.223091292123136
-      - name: charging_station
-        is_charger: true
+      - {is_charger: true, name: charging_station}
     - - 32.32495010866458
       - -7.9293777391661555
-      - name: ultrasound
+      - {name: ultrasound}
     - - 32.3065756641307
       - -10.664699694406897
-      - name: ecg
+      - {name: ecg}
     - - 32.32495010866458
       - -14.721788149871072
-      - name: therapy_room
-    - - 28.286208341775772
-      - -15.088943969046555
-      - name: storage
+      - {name: therapy_room}
+    - - 28.211045206129626
+      - -15.100101864367732
+      - {name: storage}
 lifts: {}
