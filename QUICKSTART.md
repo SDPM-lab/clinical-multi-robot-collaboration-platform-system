@@ -88,4 +88,13 @@ build my_hospital_rmf
 
 同步工具會更新 `hospital.building.yaml` 和 `props.yaml`，並在 `backups/` 保留最近 5 次備份。Gazebo 中被刪除的模型也會從來源設定移除，因此執行前先確認 SDF 內容完整。
 
+## 5. blender
+
+```bash
+cd ~/clinical-multi-robot-collaboration-platform-system
+blender --background --python ros2_ws/src/my_hospital_rmf/tools/blender_import_hospital_proxy.py
+blender --python ros2_ws/src/my_hospital_rmf/tools/blender_import_hospital_proxy.py
+blender ./hospital_raw.blend
+```
+
 詳細資料：[tools.md](ros2_ws/src/my_hospital_rmf/tools/tools.md)、[maps.md](ros2_ws/src/my_hospital_rmf/maps/maps.md)、[launch.md](ros2_ws/src/my_hospital_rmf/launch/launch.md)、[models.md](ros2_ws/src/my_hospital_rmf/models/models.md)。
