@@ -18,7 +18,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTask([FromForm] CreateTaskRequest request)
+    public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
     {
         try
         {
@@ -96,7 +96,7 @@ public class TaskController : ControllerBase
     [HttpPatch("{task_id}/abort")]
     public async Task<IActionResult> AbortTask(string task_id)
     {
-        var found = await _taskService.UpdateTaskStatusAsync(task_id, RobotTaskStatus.Abort);
+        var found = await _taskService.UpdateTaskStatusAsync(task_id, RobotTaskStatus.Cancelled);
         return found ? Ok() : NotFound("查無此任務");
     }
 

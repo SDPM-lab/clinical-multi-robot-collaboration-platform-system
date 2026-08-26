@@ -1,22 +1,36 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using Server.Services;
-using Xunit;
 
 namespace Server.Tests.Unit.Services;
 
 public class TaskServiceTests
 {
-    private readonly TaskService _sut = new();
-
-    public TaskServiceTests()
+    private static TaskService CreateService()
     {
-        TaskService.ResetForTests();
+        var httpClientFactory = new TestHttpClientFactory();
+
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["RosBridge:BaseUrl"] = "http://localhost:5050"
+            })
+            .Build();
+
+        var logger = NullLogger<TaskService>.Instance;
+
+        return new TaskService(
+            httpClientFactory,
+            configuration,
+            logger
+        );
     }
 
-    [Fact]
-    public async Task GetTasksAsync_WhenCalled_ReturnsSeededTasks()
+    private sealed class TestHttpClientFactory : IHttpClientFactory
     {
-        var result = await _sut.GetTasksAsync();
-
-        Assert.Equal(5, result.Count);
+        public HttpClient CreateClient(string name)
+        {
+            return new HttpClient();
+        }
     }
 }

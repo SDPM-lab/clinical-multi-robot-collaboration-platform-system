@@ -1,21 +1,25 @@
 using System.ComponentModel.DataAnnotations;
+using Server.Models;
 
 namespace Server.Requests;
 
 public class CreateTaskRequest
 {
     [Required]
-    public string Title { get; set; } = string.Empty;
-
-    public string? Robot { get; set; }
+    public TaskType TaskType { get; set; }
 
     [Required]
-    public string Place { get; set; } = string.Empty;
+    public string Source { get; set; } = string.Empty;
 
+    [Required]
+    public string Destination { get; set; } = string.Empty;
+
+    [Required]
+    public TaskPriority Priority { get; set; } = TaskPriority.Normal;
+
+    // 舊前端欄位暫時保留
+    public string Title { get; set; } = string.Empty;
     public string? StartTime { get; set; }
-
-    [Required, MinLength(1), MaxLength(3)]
     public List<string> Items { get; set; } = [];
-
     public string? Note { get; set; }
 }

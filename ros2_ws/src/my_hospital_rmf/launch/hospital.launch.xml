@@ -15,11 +15,11 @@
   </node>
 
   <!-- Robot State Aggregator: 把 /robot_state 聚合成 /fleet_states -->
-  <node pkg="rmf_fleet_adapter" exec="robot_state_aggregator" output="screen">
+  <!-- <node pkg="rmf_fleet_adapter" exec="robot_state_aggregator" output="screen">
     <param name="use_sim_time" value="$(var use_sim_time)"/>
     <param name="fleet_name" value="hospital_fleet"/>
     <param name="robot_prefix" value="hospital"/>
-  </node>
+  </node> -->
 
   <!-- Hospital Fleet Adapter -->
   <include file="$(find-pkg-share rmf_demos_fleet_adapter)/launch/fleet_adapter.launch.xml">

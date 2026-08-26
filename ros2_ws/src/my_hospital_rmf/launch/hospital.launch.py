@@ -93,16 +93,16 @@ def generate_launch_description():
     )
 
     # ── Robot State Aggregator（/robot_state → /fleet_states
-    state_aggregator = Node(
-        package="rmf_fleet_adapter",
-        executable="robot_state_aggregator",
-        output="screen",
-        parameters=[{
-            "use_sim_time": use_sim_time,
-            "fleet_name": "hospital_fleet",
-            "robot_prefix": "hospital",
-        }],
-    )
+    # state_aggregator = Node(
+    #     package="rmf_fleet_adapter",
+    #     executable="robot_state_aggregator",
+    #     output="screen",
+    #     parameters=[{
+    #         "use_sim_time": use_sim_time,
+    #         "fleet_name": "hospital_fleet",
+    #         "robot_prefix": "hospital",
+    #     }],
+    # )
 
     # ── Hospital Fleet Adapter ───────────────────────────────────
     fleet_adapter_pkg = get_package_share_directory("rmf_demos_fleet_adapter")
@@ -206,7 +206,7 @@ def generate_launch_description():
         # RMF 核心
         traffic_schedule,
         traffic_blockade,
-        state_aggregator,
+        # state_aggregator,
         fleet_adapter,
         # 自定義節點
         fake_robot,
