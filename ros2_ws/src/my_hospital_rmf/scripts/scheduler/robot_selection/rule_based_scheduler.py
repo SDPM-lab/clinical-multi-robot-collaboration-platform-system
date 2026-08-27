@@ -1,11 +1,7 @@
 import math
 
-from .base_scheduler import BaseScheduler
-from .models import (
-    Task,
-    RobotState,
-    Assignment,
-)
+from ..base_scheduler import BaseScheduler
+from scheduler.models import Task, RobotState, Assignment
 
 
 class RuleBasedScheduler(BaseScheduler):

@@ -41,11 +41,17 @@ def generate_launch_description():
         "launch_rviz", default_value="true",
         description="是否啟動 RViz2"
     )
+    robot_scheduler_arg = DeclareLaunchArgument(
+        "robot_scheduler",
+        default_value="rule_based",
+        description="Robot selection scheduler: rule_based or nearest"
+    )
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     server_uri   = LaunchConfiguration("server_uri")
     launch_gazebo = LaunchConfiguration("launch_gazebo")
     launch_rviz   = LaunchConfiguration("launch_rviz")
+    robot_scheduler = LaunchConfiguration("robot_scheduler")
 
     # ── Gz Sim（Gazebo Harmonic）────────────────────────────────
     gz_sim = ExecuteProcess(
@@ -144,6 +150,9 @@ def generate_launch_description():
         package="my_hospital_rmf",
         executable="hospital_rule_dispatcher",
         output="screen",
+        parameters=[{
+            "robot_scheduler": robot_scheduler,
+        }],
     )
 
     # ── 地圖發布（/map topic）────────────────────────────────────
@@ -219,4 +228,6 @@ def generate_launch_description():
         rosbridge,
         # gz sim 完全退出後才清理 runtime logs
         gazebo_exit_cleanup,
+        # robot 排班規則選擇
+        robot_scheduler_arg,
     ])
