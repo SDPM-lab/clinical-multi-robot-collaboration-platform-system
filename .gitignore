@@ -35,3 +35,4 @@ vertex-env.sh
 
 # RMF runtime cache
 run/
+ros2_ws/src/my_hospital_rmf/scripts/experiment/results/plots/
