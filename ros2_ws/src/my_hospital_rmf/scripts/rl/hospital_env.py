@@ -78,11 +78,13 @@ class HospitalRLEnv:
         scenario,
         robot_speed: float = 1.0,
         service_time: float = 5.0,
+        enable_dynamic_reassignment: bool = False,
     ):
         self.original_scenario = copy.deepcopy(scenario)
 
         self.robot_speed = robot_speed
         self.fixed_service_time = service_time
+        self.enable_dynamic_reassignment = enable_dynamic_reassignment
 
         self.robot_ids = sorted(
             robot.robot_id
@@ -90,6 +92,19 @@ class HospitalRLEnv:
         )
         self.robot_count = len(self.robot_ids)
         self.task_count = len(scenario.tasks)
+
+        # 保存 Task 原始到達/FCFS 次序。
+        #
+        # Task 即使被 Reassignment，
+        # 也不會因為重新排隊而變成
+        # 「最新到達的 Task」。
+        self.task_fcfs_order = {
+            task.task_id: index
+            for index, task
+            in enumerate(
+                scenario.tasks
+            )
+        }
 
         self.scenario = None
         self.waypoints = None
@@ -105,6 +120,31 @@ class HospitalRLEnv:
         self.completed_task_count = 0
 
         self.execution_records = None
+
+        # task_id -> RLReassignmentContext
+        #
+        # 代表哪些 Task 現在不是第一次派工，
+        # 而是因為被插隊重新進入 RL Decision。
+        self.reassignment_context = None
+
+        # 紀錄實際發生的重新派工。
+        self.reassignment_events = None
+
+        # root_trigger_task_id
+        #     ->
+        # set(
+        #     (task_id, robot_id)
+        # )
+        #
+        # 防止同一條 Cascade 中：
+        #
+        # B@robot1
+        # -> robot2
+        # -> robot1
+        # -> robot2
+        #
+        # 無限震盪。
+        self.processed_reassignment_states = None
 
         self.total_reward = 0.0
         self.done = False
@@ -156,6 +196,12 @@ class HospitalRLEnv:
         self.completed_task_count = 0
 
         self.execution_records = []
+        
+        self.reassignment_context = {}
+
+        self.reassignment_events = []
+
+        self.processed_reassignment_states = {}
 
         self.total_reward = 0.0
         self.done = False
@@ -223,6 +269,293 @@ class HospitalRLEnv:
             running.completion_time
             - self.current_time,
         )
+
+
+    # ======================================================
+    # Project Waiting Queue Order
+    #
+    # 不修改真正 waiting_tasks。
+    # 使用目前 Priority Queue Policy 模擬執行順序。
+    # ======================================================
+
+    def get_projected_queue_order(
+        self,
+        tasks,
+    ):
+
+        projected_queue = list(
+            tasks
+        )
+
+        ordered_tasks = []
+
+        while projected_queue:
+
+            selected_task = (
+                self._select_priority_task(
+                    projected_queue
+                )
+            )
+
+            if selected_task is None:
+                break
+
+            ordered_tasks.append(
+                selected_task
+            )
+
+            projected_queue.remove(
+                selected_task
+            )
+
+        return ordered_tasks
+
+
+    # ======================================================
+    # Detect Displaced Waiting Tasks
+    #
+    # 只有 new_task 加入後，
+    # execution order 真的往後移的既有 Task
+    # 才算 displaced。
+    # ======================================================
+
+    def get_displaced_tasks(
+        self,
+        sim_state,
+        new_task,
+    ):
+
+        existing_tasks = list(
+            sim_state.waiting_tasks
+        )
+
+        if not existing_tasks:
+            return []
+
+        before_order = (
+            self.get_projected_queue_order(
+                existing_tasks
+            )
+        )
+
+        after_tasks = list(
+            existing_tasks
+        )
+
+        after_tasks.append(
+            new_task
+        )
+
+        after_order = (
+            self.get_projected_queue_order(
+                after_tasks
+            )
+        )
+
+        before_index = {
+            task.task_id: index
+            for index, task
+            in enumerate(
+                before_order
+            )
+        }
+
+        after_index = {
+            task.task_id: index
+            for index, task
+            in enumerate(
+                after_order
+            )
+        }
+
+        displaced_tasks = [
+            task
+            for task
+            in before_order
+            if (
+                after_index[
+                    task.task_id
+                ]
+                >
+                before_index[
+                    task.task_id
+                ]
+            )
+        ]
+
+        return displaced_tasks
+
+
+    # ======================================================
+    # Insert Waiting Task With Original FCFS Order
+    #
+    # Reassignment 不改變 Task 原始 arrival order。
+    # ======================================================
+
+    def insert_waiting_task(
+        self,
+        sim_state,
+        task,
+    ):
+
+        task_key = (
+            self.task_arrival_times[
+                task.task_id
+            ],
+            self.task_fcfs_order.get(
+                task.task_id,
+                len(
+                    self.task_fcfs_order
+                ),
+            ),
+        )
+
+        insert_index = len(
+            sim_state.waiting_tasks
+        )
+
+        for index, existing_task in enumerate(
+            sim_state.waiting_tasks
+        ):
+
+            existing_key = (
+                self.task_arrival_times[
+                    existing_task.task_id
+                ],
+                self.task_fcfs_order.get(
+                    existing_task.task_id,
+                    len(
+                        self.task_fcfs_order
+                    ),
+                ),
+            )
+
+            if task_key < existing_key:
+
+                insert_index = index
+                break
+
+        sim_state.waiting_tasks.insert(
+            insert_index,
+            task,
+        )
+
+
+    # ======================================================
+    # Queue Displaced Tasks For RL Reassignment
+    #
+    # displaced task 不是直接交給 Rule-based。
+    #
+    # 它會：
+    # 1. 從原 Robot waiting queue 移除
+    # 2. 放回 pending_tasks
+    # 3. 建立 Reassignment Context
+    # 4. 下一個 RL step 再重新選 Robot
+    # ======================================================
+
+    def queue_displaced_tasks_for_reassignment(
+        self,
+        displaced_tasks,
+        from_robot_id,
+        root_trigger_task_id,
+        direct_trigger_task_id,
+        cascade_depth,
+    ):
+
+        if not displaced_tasks:
+            return
+
+        sim_state = (
+            self.robot_states[
+                from_robot_id
+            ]
+        )
+
+        root_processed = (
+            self.processed_reassignment_states
+            .setdefault(
+                root_trigger_task_id,
+                set(),
+            )
+        )
+
+        queued_tasks = []
+
+        for task in displaced_tasks:
+
+            state_signature = (
+                task.task_id,
+                from_robot_id,
+            )
+
+            # 同一條 Cascade 中：
+            # 同一 Task 在同一 Robot
+            # 最多重新評估一次。
+            if (
+                state_signature
+                in root_processed
+            ):
+                continue
+
+            remove_index = next(
+                (
+                    index
+                    for index, item
+                    in enumerate(
+                        sim_state.waiting_tasks
+                    )
+                    if (
+                        item.task_id
+                        ==
+                        task.task_id
+                    )
+                ),
+                None,
+            )
+
+            if remove_index is None:
+                continue
+
+            sim_state.waiting_tasks.pop(
+                remove_index
+            )
+
+            root_processed.add(
+                state_signature
+            )
+
+            self.reassignment_context[
+                task.task_id
+            ] = RLReassignmentContext(
+                root_trigger_task_id=(
+                    root_trigger_task_id
+                ),
+                direct_trigger_task_id=(
+                    direct_trigger_task_id
+                ),
+                from_robot_id=(
+                    from_robot_id
+                ),
+                cascade_depth=(
+                    cascade_depth
+                ),
+            )
+
+            queued_tasks.append(
+                task
+            )
+
+        # Reassignment 優先立刻解決。
+        #
+        # 原 pending_tasks 如果還有同時間新到任務，
+        # 先處理受目前決策影響的 Tasks，
+        # 再繼續新的 Assignment。
+        self.pending_tasks = (
+            queued_tasks
+            +
+            self.pending_tasks
+        )    
+
 
     # ======================================================
     # Task-specific Projection
@@ -1161,6 +1494,18 @@ class HospitalRLEnv:
 
         task = self.current_task
 
+        reassignment_context = (
+            self.reassignment_context.pop(
+                task.task_id,
+                None,
+            )
+        )
+
+        is_reassignment = (
+            reassignment_context
+            is not None
+        )
+
         robot_id = (
             self.robot_ids[action]
         )
@@ -1228,17 +1573,178 @@ class HospitalRLEnv:
 
         self.total_reward += reward
 
-        # Assignment：
-        # 只加入 selected Robot 的 local queue。
-        sim_state.waiting_tasks.append(
-            task
-        )
+        # ==================================================
+        # Dynamic Assignment / Reassignment
+        # ==================================================
 
+        displaced_tasks = []
+
+        # ------------------------------------------
+        # Dynamic Reassignment 開啟時：
+        # 在 Task 真正插入前，
+        # 先檢查它會不會插隊現有 Queue。
+        # ------------------------------------------
+
+        if self.enable_dynamic_reassignment:
+
+            # 第一次 Assignment：
+            #
+            # D -> Robot1
+            #
+            # 如果插隊 B/C，
+            # displaced = [B, C]
+            #
+            # Reassignment：
+            #
+            # B -> Robot2
+            #
+            # 只有 B 真的換 Robot 時，
+            # 才允許它觸發 Robot2 的 cascade。
+            if (
+                not is_reassignment
+                or (
+                    reassignment_context
+                    is not None
+                    and robot_id
+                    !=
+                    reassignment_context
+                    .from_robot_id
+                )
+            ):
+
+                displaced_tasks = (
+                    self.get_displaced_tasks(
+                        sim_state,
+                        task,
+                    )
+                )
+
+            self.insert_waiting_task(
+                sim_state,
+                task,
+            )
+
+        else:
+
+            # RL v1 原始語意。
+            sim_state.waiting_tasks.append(
+                task
+            )
+
+        # Task 已完成本次 RL Decision。
         self.pending_tasks.remove(
             task
         )
 
-        self.assigned_task_count += 1
+        # ------------------------------------------
+        # Assignment Count
+        #
+        # 只計第一次 Assignment。
+        # Reassignment 不重複增加。
+        # ------------------------------------------
+
+        if not is_reassignment:
+
+            self.assigned_task_count += 1
+
+        # ------------------------------------------
+        # Reassignment Event
+        # ------------------------------------------
+
+        if is_reassignment:
+
+            changed_robot = (
+                robot_id
+                !=
+                reassignment_context
+                .from_robot_id
+            )
+
+            self.reassignment_events.append(
+                {
+                    "root_trigger_task_id":
+                        reassignment_context
+                        .root_trigger_task_id,
+
+                    "direct_trigger_task_id":
+                        reassignment_context
+                        .direct_trigger_task_id,
+
+                    "task_id":
+                        task.task_id,
+
+                    "from_robot_id":
+                        reassignment_context
+                        .from_robot_id,
+
+                    "to_robot_id":
+                        robot_id,
+
+                    "changed_robot":
+                        changed_robot,
+
+                    "cascade_depth":
+                        reassignment_context
+                        .cascade_depth,
+
+                    "decision_time":
+                        self.current_time,
+                }
+            )
+
+        # ------------------------------------------
+        # Queue Newly Displaced Tasks
+        # ------------------------------------------
+
+        if (
+            self.enable_dynamic_reassignment
+            and displaced_tasks
+        ):
+
+            if is_reassignment:
+
+                root_trigger_task_id = (
+                    reassignment_context
+                    .root_trigger_task_id
+                )
+
+                cascade_depth = (
+                    reassignment_context
+                    .cascade_depth
+                    + 1
+                )
+
+            else:
+
+                # 第一次 Assignment 的 Task
+                # 本身就是 root trigger。
+                root_trigger_task_id = (
+                    task.task_id
+                )
+
+                cascade_depth = 1
+
+            self.queue_displaced_tasks_for_reassignment(
+                displaced_tasks=(
+                    displaced_tasks
+                ),
+
+                from_robot_id=(
+                    robot_id
+                ),
+
+                root_trigger_task_id=(
+                    root_trigger_task_id
+                ),
+
+                direct_trigger_task_id=(
+                    task.task_id
+                ),
+
+                cascade_depth=(
+                    cascade_depth
+                ),
+            )
 
         arrival_time = (
             self.task_arrival_times[
@@ -1300,6 +1806,45 @@ class HospitalRLEnv:
 
             "reward":
                 reward,
+
+            "is_reassignment":
+                is_reassignment,
+
+            "reassignment_from_robot":
+                (
+                    None
+                    if reassignment_context
+                    is None
+                    else reassignment_context
+                    .from_robot_id
+                ),
+
+            "reassignment_root_trigger":
+                (
+                    None
+                    if reassignment_context
+                    is None
+                    else reassignment_context
+                    .root_trigger_task_id
+                ),
+
+            "reassignment_direct_trigger":
+                (
+                    None
+                    if reassignment_context
+                    is None
+                    else reassignment_context
+                    .direct_trigger_task_id
+                ),
+
+            "reassignment_cascade_depth":
+                (
+                    None
+                    if reassignment_context
+                    is None
+                    else reassignment_context
+                    .cascade_depth
+                ),
         }
 
         self._prepare_next_decision()
@@ -1329,3 +1874,35 @@ class HospitalRLEnv:
             self.done,
             info,
         )
+
+@dataclass
+class RLReassignmentContext:
+    """
+    一筆 Waiting Task 因為被插隊，
+    再次進入 RL Decision 時的資訊。
+    """
+
+    # 最初觸發整條 Cascade 的 Task。
+    #
+    # 例如：
+    #
+    # D -> B -> E
+    #
+    # root = D
+    root_trigger_task_id: str
+
+    # 直接造成這筆 Task 被延後的 Task。
+    #
+    # B:
+    # direct = D
+    #
+    # E:
+    # direct = B
+    direct_trigger_task_id: str
+
+    # 重新派工前所在 Robot。
+    from_robot_id: str
+
+    # 第一層被影響 = 1
+    # 第二層 Cascade = 2
+    cascade_depth: int
