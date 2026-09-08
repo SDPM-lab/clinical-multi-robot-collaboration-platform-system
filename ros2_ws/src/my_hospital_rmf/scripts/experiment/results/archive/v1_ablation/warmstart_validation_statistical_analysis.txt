@@ -1,0 +1,1570 @@
+========================================================================================================================
+WARM-START 30-SEED PAIRED STATISTICAL ANALYSIS
+========================================================================================================================
+Raw CSV: /home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/scripts/experiment/results/warmstart_validation_30seed_raw_results.csv
+
+
+########################################################################################################################
+METRIC: average_waiting_time
+########################################################################################################################
+
+========================================================================================================================
+Warm-start vs Old PPO
+========================================================================================================================
+ 20 tasks | low    | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 50.3075
+  B mean       : 42.9184
+  A - B        : +7.3891
+  Bootstrap CI : [-1.6194, +17.0143]
+  W / L / T    : 8 / 21 / 1
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.022534
+  Cohen dz     : +0.2900
+
+ 20 tasks | medium | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 97.8008
+  B mean       : 84.2514
+  A - B        : +13.5494
+  Bootstrap CI : [+5.7603, +21.5370]
+  W / L / T    : 9 / 19 / 2
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.004748
+  Cohen dz     : +0.6069
+
+ 20 tasks | high   | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 136.8218
+  B mean       : 122.9839
+  A - B        : +13.8379
+  Bootstrap CI : [+5.2830, +23.2720]
+  W / L / T    : 10 / 19 / 1
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.015909
+  Cohen dz     : +0.5399
+
+ 50 tasks | low    | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 93.9500
+  B mean       : 80.6018
+  A - B        : +13.3482
+  Bootstrap CI : [+0.9755, +25.8674]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.016431
+  Cohen dz     : +0.3827
+
+ 50 tasks | medium | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 226.1222
+  B mean       : 198.6453
+  A - B        : +27.4769
+  Bootstrap CI : [+11.9481, +42.9393]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.001864
+  Cohen dz     : +0.6352
+
+ 50 tasks | high   | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 336.1259
+  B mean       : 324.1864
+  A - B        : +11.9395
+  Bootstrap CI : [-0.8166, +24.4097]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.057688
+  Cohen dz     : +0.3324
+
+100 tasks | low    | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 137.4577
+  B mean       : 110.6755
+  A - B        : +26.7822
+  Bootstrap CI : [+7.6952, +46.1351]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.009932
+  Cohen dz     : +0.4949
+
+100 tasks | medium | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 406.7900
+  B mean       : 367.7224
+  A - B        : +39.0676
+  Bootstrap CI : [+19.1124, +58.8266]
+  W / L / T    : 8 / 22 / 0
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.001131
+  Cohen dz     : +0.6936
+
+100 tasks | high   | average_waiting_time        
+  Warm-start vs Old PPO
+  A mean       : 692.0085
+  B mean       : 657.4400
+  A - B        : +34.5685
+  Bootstrap CI : [+12.8833, +56.4755]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.005383
+  Cohen dz     : +0.5619
+
+
+========================================================================================================================
+Warm-start vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 50.3075
+  B mean       : 39.1227
+  A - B        : +11.1849
+  Bootstrap CI : [+0.2756, +24.3149]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.069893
+  Cohen dz     : +0.3323
+
+ 20 tasks | medium | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 97.8008
+  B mean       : 82.5953
+  A - B        : +15.2055
+  Bootstrap CI : [+3.3457, +28.2788]
+  W / L / T    : 8 / 22 / 0
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.022099
+  Cohen dz     : +0.4389
+
+ 20 tasks | high   | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 136.8218
+  B mean       : 125.9912
+  A - B        : +10.8306
+  Bootstrap CI : [+1.1821, +21.1627]
+  W / L / T    : 12 / 18 / 0
+  Win rate     : 40.00%
+  Wilcoxon p   : 0.076721
+  Cohen dz     : +0.3805
+
+ 50 tasks | low    | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 93.9500
+  B mean       : 70.1815
+  A - B        : +23.7685
+  Bootstrap CI : [+9.9320, +38.8899]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.004665
+  Cohen dz     : +0.5819
+
+ 50 tasks | medium | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 226.1222
+  B mean       : 192.8834
+  A - B        : +33.2388
+  Bootstrap CI : [+15.8245, +51.0018]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.000798
+  Cohen dz     : +0.6764
+
+ 50 tasks | high   | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 336.1259
+  B mean       : 326.1376
+  A - B        : +9.9883
+  Bootstrap CI : [-3.9483, +23.7860]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.228553
+  Cohen dz     : +0.2537
+
+100 tasks | low    | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 137.4577
+  B mean       : 92.5662
+  A - B        : +44.8915
+  Bootstrap CI : [+22.0527, +68.7504]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.000730
+  Cohen dz     : +0.6769
+
+100 tasks | medium | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 406.7900
+  B mean       : 359.6299
+  A - B        : +47.1600
+  Bootstrap CI : [+25.8558, +68.5725]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.000460
+  Cohen dz     : +0.7824
+
+100 tasks | high   | average_waiting_time        
+  Warm-start vs Rule-based
+  A mean       : 692.0085
+  B mean       : 684.2491
+  A - B        : +7.7594
+  Bootstrap CI : [-12.2539, +26.8850]
+  W / L / T    : 15 / 15 / 0
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.489846
+  Cohen dz     : +0.1427
+
+
+========================================================================================================================
+Old PPO vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 42.9184
+  B mean       : 39.1227
+  A - B        : +3.7957
+  Bootstrap CI : [-1.6231, +9.6111]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.220647
+  Cohen dz     : +0.2413
+
+ 20 tasks | medium | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 84.2514
+  B mean       : 82.5953
+  A - B        : +1.6561
+  Bootstrap CI : [-6.7340, +10.6931]
+  W / L / T    : 16 / 14 / 0
+  Win rate     : 53.33%
+  Wilcoxon p   : 1.000000
+  Cohen dz     : +0.0672
+
+ 20 tasks | high   | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 122.9839
+  B mean       : 125.9912
+  A - B        : -3.0073
+  Bootstrap CI : [-10.1065, +4.2702]
+  W / L / T    : 17 / 13 / 0
+  Win rate     : 56.67%
+  Wilcoxon p   : 0.349211
+  Cohen dz     : -0.1461
+
+ 50 tasks | low    | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 80.6018
+  B mean       : 70.1815
+  A - B        : +10.4203
+  Bootstrap CI : [+1.5791, +19.4847]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.054922
+  Cohen dz     : +0.4026
+
+ 50 tasks | medium | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 198.6453
+  B mean       : 192.8834
+  A - B        : +5.7619
+  Bootstrap CI : [-4.6405, +17.3208]
+  W / L / T    : 14 / 16 / 0
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.529105
+  Cohen dz     : +0.1855
+
+ 50 tasks | high   | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 324.1864
+  B mean       : 326.1376
+  A - B        : -1.9512
+  Bootstrap CI : [-12.8764, +8.9761]
+  W / L / T    : 18 / 12 / 0
+  Win rate     : 60.00%
+  Wilcoxon p   : 0.640825
+  Cohen dz     : -0.0627
+
+100 tasks | low    | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 110.6755
+  B mean       : 92.5662
+  A - B        : +18.1093
+  Bootstrap CI : [+3.6651, +34.3125]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.066665
+  Cohen dz     : +0.4165
+
+100 tasks | medium | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 367.7224
+  B mean       : 359.6299
+  A - B        : +8.0925
+  Bootstrap CI : [-5.6117, +22.4314]
+  W / L / T    : 16 / 14 / 0
+  Win rate     : 53.33%
+  Wilcoxon p   : 0.569858
+  Cohen dz     : +0.2020
+
+100 tasks | high   | average_waiting_time        
+  Old PPO vs Rule-based
+  A mean       : 657.4400
+  B mean       : 684.2491
+  A - B        : -26.8091
+  Bootstrap CI : [-44.6827, -9.4927]
+  W / L / T    : 20 / 10 / 0
+  Win rate     : 66.67%
+  Wilcoxon p   : 0.005383
+  Cohen dz     : -0.5298
+
+
+########################################################################################################################
+METRIC: emergency_waiting_time
+########################################################################################################################
+
+========================================================================================================================
+Warm-start vs Old PPO
+========================================================================================================================
+ 20 tasks | low    | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 16.2222
+  B mean       : 14.6007
+  A - B        : +1.6214
+  Bootstrap CI : [-3.4214, +6.9223]
+  W / L / T    : 11 / 10 / 6
+  Win rate     : 40.74%
+  Wilcoxon p   : 0.767658
+  Cohen dz     : +0.1159
+
+ 20 tasks | medium | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 17.6011
+  B mean       : 18.7248
+  A - B        : -1.1237
+  Bootstrap CI : [-5.4898, +3.2207]
+  W / L / T    : 12 / 8 / 7
+  Win rate     : 44.44%
+  Wilcoxon p   : 0.601213
+  Cohen dz     : -0.0941
+
+ 20 tasks | high   | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 24.4238
+  B mean       : 23.5849
+  A - B        : +0.8389
+  Bootstrap CI : [-2.8202, +4.4609]
+  W / L / T    : 3 / 7 / 17
+  Win rate     : 11.11%
+  Wilcoxon p   : 0.507624
+  Cohen dz     : +0.0840
+
+ 50 tasks | low    | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 20.3724
+  B mean       : 21.2294
+  A - B        : -0.8570
+  Bootstrap CI : [-3.6770, +1.8472]
+  W / L / T    : 15 / 13 / 2
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.665264
+  Cohen dz     : -0.1068
+
+ 50 tasks | medium | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 26.3591
+  B mean       : 23.5638
+  A - B        : +2.7953
+  Bootstrap CI : [-1.8313, +7.8515]
+  W / L / T    : 14 / 15 / 1
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.429968
+  Cohen dz     : +0.2031
+
+ 50 tasks | high   | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 34.4539
+  B mean       : 34.2660
+  A - B        : +0.1879
+  Bootstrap CI : [-3.8287, +4.3835]
+  W / L / T    : 11 / 12 / 7
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.927298
+  Cohen dz     : +0.0163
+
+100 tasks | low    | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 23.9151
+  B mean       : 23.2968
+  A - B        : +0.6184
+  Bootstrap CI : [-2.1155, +3.3636]
+  W / L / T    : 14 / 16 / 0
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.761065
+  Cohen dz     : +0.0788
+
+100 tasks | medium | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 26.8191
+  B mean       : 24.5737
+  A - B        : +2.2454
+  Bootstrap CI : [-0.6652, +5.2690]
+  W / L / T    : 12 / 18 / 0
+  Win rate     : 40.00%
+  Wilcoxon p   : 0.170598
+  Cohen dz     : +0.2666
+
+100 tasks | high   | emergency_waiting_time      
+  Warm-start vs Old PPO
+  A mean       : 40.0947
+  B mean       : 39.5573
+  A - B        : +0.5374
+  Bootstrap CI : [-4.4347, +5.3053]
+  W / L / T    : 15 / 14 / 1
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.673279
+  Cohen dz     : +0.0393
+
+
+========================================================================================================================
+Warm-start vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 16.2222
+  B mean       : 13.9719
+  A - B        : +2.2502
+  Bootstrap CI : [-2.5851, +7.2094]
+  W / L / T    : 11 / 13 / 3
+  Win rate     : 40.74%
+  Wilcoxon p   : 0.492893
+  Cohen dz     : +0.1685
+
+ 20 tasks | medium | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 17.6011
+  B mean       : 18.6889
+  A - B        : -1.0878
+  Bootstrap CI : [-6.5323, +4.3231]
+  W / L / T    : 14 / 10 / 3
+  Win rate     : 51.85%
+  Wilcoxon p   : 0.647568
+  Cohen dz     : -0.0726
+
+ 20 tasks | high   | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 24.4238
+  B mean       : 23.6886
+  A - B        : +0.7352
+  Bootstrap CI : [-4.8305, +7.3933]
+  W / L / T    : 12 / 9 / 6
+  Win rate     : 44.44%
+  Wilcoxon p   : 0.715145
+  Cohen dz     : +0.0450
+
+ 50 tasks | low    | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 20.3724
+  B mean       : 19.3704
+  A - B        : +1.0020
+  Bootstrap CI : [-3.1998, +5.1807]
+  W / L / T    : 14 / 16 / 0
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.612006
+  Cohen dz     : +0.0838
+
+ 50 tasks | medium | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 26.3591
+  B mean       : 22.5101
+  A - B        : +3.8489
+  Bootstrap CI : [-0.4835, +8.3361]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.134735
+  Cohen dz     : +0.3007
+
+ 50 tasks | high   | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 34.4539
+  B mean       : 31.4762
+  A - B        : +2.9778
+  Bootstrap CI : [-2.7029, +9.1092]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.452164
+  Cohen dz     : +0.1775
+
+100 tasks | low    | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 23.9151
+  B mean       : 22.2148
+  A - B        : +1.7004
+  Bootstrap CI : [-1.5955, +5.0480]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.359878
+  Cohen dz     : +0.1779
+
+100 tasks | medium | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 26.8191
+  B mean       : 26.8713
+  A - B        : -0.0522
+  Bootstrap CI : [-3.4729, +3.5038]
+  W / L / T    : 16 / 14 / 0
+  Win rate     : 53.33%
+  Wilcoxon p   : 0.823577
+  Cohen dz     : -0.0052
+
+100 tasks | high   | emergency_waiting_time      
+  Warm-start vs Rule-based
+  A mean       : 40.0947
+  B mean       : 35.6397
+  A - B        : +4.4550
+  Bootstrap CI : [-2.1719, +11.1735]
+  W / L / T    : 15 / 15 / 0
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.328470
+  Cohen dz     : +0.2330
+
+
+========================================================================================================================
+Old PPO vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 14.6007
+  B mean       : 13.9719
+  A - B        : +0.6288
+  Bootstrap CI : [-4.0976, +5.5532]
+  W / L / T    : 13 / 8 / 6
+  Win rate     : 48.15%
+  Wilcoxon p   : 0.958420
+  Cohen dz     : +0.0487
+
+ 20 tasks | medium | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 18.7248
+  B mean       : 18.6889
+  A - B        : +0.0358
+  Bootstrap CI : [-3.5728, +3.6967]
+  W / L / T    : 9 / 7 / 11
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.958761
+  Cohen dz     : +0.0036
+
+ 20 tasks | high   | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 23.5849
+  B mean       : 23.6886
+  A - B        : -0.1037
+  Bootstrap CI : [-5.5551, +6.4291]
+  W / L / T    : 10 / 6 / 11
+  Win rate     : 37.04%
+  Wilcoxon p   : 0.569494
+  Cohen dz     : -0.0064
+
+ 50 tasks | low    | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 21.2294
+  B mean       : 19.3704
+  A - B        : +1.8590
+  Bootstrap CI : [-2.6532, +6.3059]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.308521
+  Cohen dz     : +0.1452
+
+ 50 tasks | medium | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 23.5638
+  B mean       : 22.5101
+  A - B        : +1.0537
+  Bootstrap CI : [-2.7444, +4.9209]
+  W / L / T    : 15 / 15 / 0
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.502761
+  Cohen dz     : +0.0982
+
+ 50 tasks | high   | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 34.2660
+  B mean       : 31.4762
+  A - B        : +2.7899
+  Bootstrap CI : [-3.7506, +9.6702]
+  W / L / T    : 13 / 15 / 2
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.538668
+  Cohen dz     : +0.1461
+
+100 tasks | low    | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 23.2968
+  B mean       : 22.2148
+  A - B        : +1.0820
+  Bootstrap CI : [-1.2553, +3.3938]
+  W / L / T    : 15 / 15 / 0
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.416130
+  Cohen dz     : +0.1616
+
+100 tasks | medium | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 24.5737
+  B mean       : 26.8713
+  A - B        : -2.2976
+  Bootstrap CI : [-5.0066, +0.2979]
+  W / L / T    : 18 / 12 / 0
+  Win rate     : 60.00%
+  Wilcoxon p   : 0.124134
+  Cohen dz     : -0.3104
+
+100 tasks | high   | emergency_waiting_time      
+  Old PPO vs Rule-based
+  A mean       : 39.5573
+  B mean       : 35.6397
+  A - B        : +3.9176
+  Bootstrap CI : [-2.2507, +10.3749]
+  W / L / T    : 12 / 18 / 0
+  Win rate     : 40.00%
+  Wilcoxon p   : 0.289366
+  Cohen dz     : +0.2162
+
+
+########################################################################################################################
+METRIC: makespan
+########################################################################################################################
+
+========================================================================================================================
+Warm-start vs Old PPO
+========================================================================================================================
+ 20 tasks | low    | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 592.4607
+  B mean       : 575.8143
+  A - B        : +16.6465
+  Bootstrap CI : [-3.7062, +37.3932]
+  W / L / T    : 11 / 15 / 4
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.081901
+  Cohen dz     : +0.2894
+
+ 20 tasks | medium | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 527.1729
+  B mean       : 492.4367
+  A - B        : +34.7362
+  Bootstrap CI : [+12.7463, +56.2178]
+  W / L / T    : 9 / 20 / 1
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.007101
+  Cohen dz     : +0.5579
+
+ 20 tasks | high   | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 513.3158
+  B mean       : 475.5278
+  A - B        : +37.7880
+  Bootstrap CI : [+9.1659, +67.9845]
+  W / L / T    : 10 / 18 / 2
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.038247
+  Cohen dz     : +0.4512
+
+ 50 tasks | low    | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 1395.3087
+  B mean       : 1351.5901
+  A - B        : +43.7187
+  Bootstrap CI : [+8.4112, +78.0133]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.003475
+  Cohen dz     : +0.4456
+
+ 50 tasks | medium | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 1224.4703
+  B mean       : 1162.0516
+  A - B        : +62.4187
+  Bootstrap CI : [+13.5325, +112.2468]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.023410
+  Cohen dz     : +0.4465
+
+ 50 tasks | high   | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 1168.2138
+  B mean       : 1140.3889
+  A - B        : +27.8249
+  Bootstrap CI : [-18.5663, +71.8702]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.170598
+  Cohen dz     : +0.2155
+
+100 tasks | low    | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 2645.4801
+  B mean       : 2539.1337
+  A - B        : +106.3464
+  Bootstrap CI : [+48.6020, +169.1734]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.001131
+  Cohen dz     : +0.6266
+
+100 tasks | medium | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 2270.0305
+  B mean       : 2190.5977
+  A - B        : +79.4328
+  Bootstrap CI : [+11.9239, +142.3636]
+  W / L / T    : 8 / 22 / 0
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.024786
+  Cohen dz     : +0.4267
+
+100 tasks | high   | makespan                    
+  Warm-start vs Old PPO
+  A mean       : 2342.6024
+  B mean       : 2282.0209
+  A - B        : +60.5814
+  Bootstrap CI : [-30.9358, +150.3179]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.177193
+  Cohen dz     : +0.2362
+
+
+========================================================================================================================
+Warm-start vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 592.4607
+  B mean       : 560.8441
+  A - B        : +31.6167
+  Bootstrap CI : [+3.6170, +61.7827]
+  W / L / T    : 10 / 19 / 1
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.045484
+  Cohen dz     : +0.3919
+
+ 20 tasks | medium | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 527.1729
+  B mean       : 480.5196
+  A - B        : +46.6533
+  Bootstrap CI : [+15.8848, +78.9276]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.010598
+  Cohen dz     : +0.5289
+
+ 20 tasks | high   | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 513.3158
+  B mean       : 470.2021
+  A - B        : +43.1137
+  Bootstrap CI : [+10.6944, +75.8080]
+  W / L / T    : 8 / 22 / 0
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.026229
+  Cohen dz     : +0.4626
+
+ 50 tasks | low    | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 1395.3087
+  B mean       : 1334.1834
+  A - B        : +61.1253
+  Bootstrap CI : [+21.7161, +101.6273]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.012048
+  Cohen dz     : +0.5449
+
+ 50 tasks | medium | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 1224.4703
+  B mean       : 1120.1454
+  A - B        : +104.3248
+  Bootstrap CI : [+50.1378, +160.4139]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.001457
+  Cohen dz     : +0.6725
+
+ 50 tasks | high   | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 1168.2138
+  B mean       : 1125.8636
+  A - B        : +42.3502
+  Bootstrap CI : [-13.5317, +99.6281]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.164184
+  Cohen dz     : +0.2655
+
+100 tasks | low    | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 2645.4801
+  B mean       : 2492.8479
+  A - B        : +152.6322
+  Bootstrap CI : [+79.9059, +231.6247]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.000153
+  Cohen dz     : +0.7138
+
+100 tasks | medium | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 2270.0305
+  B mean       : 2109.1581
+  A - B        : +160.8724
+  Bootstrap CI : [+98.7329, +225.8978]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.000039
+  Cohen dz     : +0.8993
+
+100 tasks | high   | makespan                    
+  Warm-start vs Rule-based
+  A mean       : 2342.6024
+  B mean       : 2312.8823
+  A - B        : +29.7200
+  Bootstrap CI : [-54.3457, +111.7598]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.542528
+  Cohen dz     : +0.1293
+
+
+========================================================================================================================
+Old PPO vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 575.8143
+  B mean       : 560.8441
+  A - B        : +14.9702
+  Bootstrap CI : [-3.7517, +34.2079]
+  W / L / T    : 11 / 16 / 3
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.163484
+  Cohen dz     : +0.2814
+
+ 20 tasks | medium | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 492.4367
+  B mean       : 480.5196
+  A - B        : +11.9171
+  Bootstrap CI : [-10.8289, +35.7435]
+  W / L / T    : 14 / 16 / 0
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.612006
+  Cohen dz     : +0.1814
+
+ 20 tasks | high   | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 475.5278
+  B mean       : 470.2021
+  A - B        : +5.3256
+  Bootstrap CI : [-18.7738, +29.9732]
+  W / L / T    : 17 / 13 / 0
+  Win rate     : 56.67%
+  Wilcoxon p   : 0.823577
+  Cohen dz     : +0.0763
+
+ 50 tasks | low    | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 1351.5901
+  B mean       : 1334.1834
+  A - B        : +17.4067
+  Bootstrap CI : [-18.1509, +52.8910]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.427955
+  Cohen dz     : +0.1709
+
+ 50 tasks | medium | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 1162.0516
+  B mean       : 1120.1454
+  A - B        : +41.9061
+  Bootstrap CI : [+5.0885, +82.6610]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.057688
+  Cohen dz     : +0.3785
+
+ 50 tasks | high   | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 1140.3889
+  B mean       : 1125.8636
+  A - B        : +14.5252
+  Bootstrap CI : [-30.0590, +60.9985]
+  W / L / T    : 13 / 17 / 0
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.556113
+  Cohen dz     : +0.1124
+
+100 tasks | low    | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 2539.1337
+  B mean       : 2492.8479
+  A - B        : +46.2858
+  Bootstrap CI : [-0.6859, +94.6347]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.091950
+  Cohen dz     : +0.3444
+
+100 tasks | medium | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 2190.5977
+  B mean       : 2109.1581
+  A - B        : +81.4396
+  Bootstrap CI : [+31.8050, +131.0183]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.008143
+  Cohen dz     : +0.5773
+
+100 tasks | high   | makespan                    
+  Old PPO vs Rule-based
+  A mean       : 2282.0209
+  B mean       : 2312.8823
+  A - B        : -30.8614
+  Bootstrap CI : [-126.0668, +60.7779]
+  W / L / T    : 16 / 14 / 0
+  Win rate     : 53.33%
+  Wilcoxon p   : 0.792159
+  Cohen dz     : -0.1144
+
+
+########################################################################################################################
+METRIC: total_travel_distance
+########################################################################################################################
+
+========================================================================================================================
+Warm-start vs Old PPO
+========================================================================================================================
+ 20 tasks | low    | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 876.8363
+  B mean       : 882.8826
+  A - B        : -6.0463
+  Bootstrap CI : [-15.7144, +3.8108]
+  W / L / T    : 17 / 10 / 3
+  Win rate     : 56.67%
+  Wilcoxon p   : 0.248828
+  Cohen dz     : -0.2202
+
+ 20 tasks | medium | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 873.4940
+  B mean       : 874.2695
+  A - B        : -0.7754
+  Bootstrap CI : [-10.1211, +8.4836]
+  W / L / T    : 14 / 13 / 3
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.923441
+  Cohen dz     : -0.0291
+
+ 20 tasks | high   | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 874.9295
+  B mean       : 876.1488
+  A - B        : -1.2194
+  Bootstrap CI : [-9.4590, +6.6298]
+  W / L / T    : 11 / 16 / 3
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.961676
+  Cohen dz     : -0.0533
+
+ 50 tasks | low    | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 2303.4552
+  B mean       : 2311.1995
+  A - B        : -7.7443
+  Bootstrap CI : [-24.8530, +9.9486]
+  W / L / T    : 18 / 12 / 0
+  Win rate     : 60.00%
+  Wilcoxon p   : 0.381798
+  Cohen dz     : -0.1573
+
+ 50 tasks | medium | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 2278.9109
+  B mean       : 2292.9928
+  A - B        : -14.0819
+  Bootstrap CI : [-28.1349, +0.4215]
+  W / L / T    : 18 / 12 / 0
+  Win rate     : 60.00%
+  Wilcoxon p   : 0.057688
+  Cohen dz     : -0.3445
+
+ 50 tasks | high   | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 2272.6758
+  B mean       : 2289.5741
+  A - B        : -16.8983
+  Bootstrap CI : [-32.4264, -0.9663]
+  W / L / T    : 19 / 11 / 0
+  Win rate     : 63.33%
+  Wilcoxon p   : 0.060565
+  Cohen dz     : -0.3737
+
+100 tasks | low    | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 4651.2414
+  B mean       : 4655.2761
+  A - B        : -4.0347
+  Bootstrap CI : [-35.5626, +27.5320]
+  W / L / T    : 17 / 13 / 0
+  Win rate     : 56.67%
+  Wilcoxon p   : 0.887195
+  Cohen dz     : -0.0458
+
+100 tasks | medium | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 4606.2732
+  B mean       : 4611.2440
+  A - B        : -4.9708
+  Bootstrap CI : [-26.3530, +15.2403]
+  W / L / T    : 14 / 16 / 0
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.839393
+  Cohen dz     : -0.0841
+
+100 tasks | high   | total_travel_distance       
+  Warm-start vs Old PPO
+  A mean       : 4596.5665
+  B mean       : 4570.4546
+  A - B        : +26.1119
+  Bootstrap CI : [+4.1532, +47.0957]
+  W / L / T    : 11 / 19 / 0
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.038418
+  Cohen dz     : +0.4334
+
+
+========================================================================================================================
+Warm-start vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 876.8363
+  B mean       : 898.2075
+  A - B        : -21.3712
+  Bootstrap CI : [-42.4013, -1.7911]
+  W / L / T    : 21 / 9 / 0
+  Win rate     : 70.00%
+  Wilcoxon p   : 0.063556
+  Cohen dz     : -0.3707
+
+ 20 tasks | medium | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 873.4940
+  B mean       : 899.8978
+  A - B        : -26.4037
+  Bootstrap CI : [-39.7051, -13.0940]
+  W / L / T    : 23 / 7 / 0
+  Win rate     : 76.67%
+  Wilcoxon p   : 0.000872
+  Cohen dz     : -0.7025
+
+ 20 tasks | high   | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 874.9295
+  B mean       : 891.6119
+  A - B        : -16.6824
+  Bootstrap CI : [-29.5306, -3.9748]
+  W / L / T    : 21 / 9 / 0
+  Win rate     : 70.00%
+  Wilcoxon p   : 0.029326
+  Cohen dz     : -0.4679
+
+ 50 tasks | low    | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 2303.4552
+  B mean       : 2332.0062
+  A - B        : -28.5510
+  Bootstrap CI : [-56.0593, -0.3974]
+  W / L / T    : 19 / 11 / 0
+  Win rate     : 63.33%
+  Wilcoxon p   : 0.060565
+  Cohen dz     : -0.3621
+
+ 50 tasks | medium | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 2278.9109
+  B mean       : 2344.1349
+  A - B        : -65.2240
+  Bootstrap CI : [-86.1975, -44.5157]
+  W / L / T    : 26 / 4 / 0
+  Win rate     : 86.67%
+  Wilcoxon p   : 0.000002
+  Cohen dz     : -1.1024
+
+ 50 tasks | high   | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 2272.6758
+  B mean       : 2316.4723
+  A - B        : -43.7966
+  Bootstrap CI : [-63.4947, -24.1685]
+  W / L / T    : 21 / 9 / 0
+  Win rate     : 70.00%
+  Wilcoxon p   : 0.000345
+  Cohen dz     : -0.7840
+
+100 tasks | low    | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 4651.2414
+  B mean       : 4749.8925
+  A - B        : -98.6510
+  Bootstrap CI : [-142.8554, -53.0844]
+  W / L / T    : 27 / 3 / 0
+  Win rate     : 90.00%
+  Wilcoxon p   : 0.000035
+  Cohen dz     : -0.7854
+
+100 tasks | medium | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 4606.2732
+  B mean       : 4723.0820
+  A - B        : -116.8088
+  Bootstrap CI : [-149.0279, -83.6276]
+  W / L / T    : 27 / 3 / 0
+  Win rate     : 90.00%
+  Wilcoxon p   : 0.000001
+  Cohen dz     : -1.2505
+
+100 tasks | high   | total_travel_distance       
+  Warm-start vs Rule-based
+  A mean       : 4596.5665
+  B mean       : 4638.0645
+  A - B        : -41.4980
+  Bootstrap CI : [-66.6781, -15.4950]
+  W / L / T    : 23 / 7 / 0
+  Win rate     : 76.67%
+  Wilcoxon p   : 0.004338
+  Cohen dz     : -0.5688
+
+
+========================================================================================================================
+Old PPO vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 882.8826
+  B mean       : 898.2075
+  A - B        : -15.3249
+  Bootstrap CI : [-33.6410, +1.7081]
+  W / L / T    : 18 / 10 / 2
+  Win rate     : 60.00%
+  Wilcoxon p   : 0.135810
+  Cohen dz     : -0.3045
+
+ 20 tasks | medium | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 874.2695
+  B mean       : 899.8978
+  A - B        : -25.6283
+  Bootstrap CI : [-40.3650, -11.8692]
+  W / L / T    : 19 / 11 / 0
+  Win rate     : 63.33%
+  Wilcoxon p   : 0.002987
+  Cohen dz     : -0.6250
+
+ 20 tasks | high   | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 876.1488
+  B mean       : 891.6119
+  A - B        : -15.4630
+  Bootstrap CI : [-26.7105, -4.1372]
+  W / L / T    : 20 / 10 / 0
+  Win rate     : 66.67%
+  Wilcoxon p   : 0.015460
+  Cohen dz     : -0.4833
+
+ 50 tasks | low    | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 2311.1995
+  B mean       : 2332.0062
+  A - B        : -20.8067
+  Bootstrap CI : [-49.1129, +6.2242]
+  W / L / T    : 19 / 11 / 0
+  Win rate     : 63.33%
+  Wilcoxon p   : 0.140283
+  Cohen dz     : -0.2643
+
+ 50 tasks | medium | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 2292.9928
+  B mean       : 2344.1349
+  A - B        : -51.1421
+  Bootstrap CI : [-73.3929, -27.8619]
+  W / L / T    : 22 / 8 / 0
+  Win rate     : 73.33%
+  Wilcoxon p   : 0.000209
+  Cohen dz     : -0.7938
+
+ 50 tasks | high   | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 2289.5741
+  B mean       : 2316.4723
+  A - B        : -26.8982
+  Bootstrap CI : [-49.1707, -5.5468]
+  W / L / T    : 18 / 12 / 0
+  Win rate     : 60.00%
+  Wilcoxon p   : 0.040490
+  Cohen dz     : -0.4271
+
+100 tasks | low    | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 4655.2761
+  B mean       : 4749.8925
+  A - B        : -94.6164
+  Bootstrap CI : [-129.0438, -62.7778]
+  W / L / T    : 27 / 3 / 0
+  Win rate     : 90.00%
+  Wilcoxon p   : 0.000001
+  Cohen dz     : -1.0047
+
+100 tasks | medium | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 4611.2440
+  B mean       : 4723.0820
+  A - B        : -111.8380
+  Bootstrap CI : [-144.1142, -78.8064]
+  W / L / T    : 25 / 5 / 0
+  Win rate     : 83.33%
+  Wilcoxon p   : 0.000001
+  Cohen dz     : -1.2011
+
+100 tasks | high   | total_travel_distance       
+  Old PPO vs Rule-based
+  A mean       : 4570.4546
+  B mean       : 4638.0645
+  A - B        : -67.6099
+  Bootstrap CI : [-93.7201, -40.0200]
+  W / L / T    : 25 / 5 / 0
+  Win rate     : 83.33%
+  Wilcoxon p   : 0.000099
+  Cohen dz     : -0.8895
+
+
+########################################################################################################################
+METRIC: task_load_std
+########################################################################################################################
+
+========================================================================================================================
+Warm-start vs Old PPO
+========================================================================================================================
+ 20 tasks | low    | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 4.0022
+  B mean       : 3.8738
+  A - B        : +0.1284
+  Bootstrap CI : [-0.1490, +0.4187]
+  W / L / T    : 8 / 14 / 8
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.363267
+  Cohen dz     : +0.1595
+
+ 20 tasks | medium | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 3.5176
+  B mean       : 3.0091
+  A - B        : +0.5085
+  Bootstrap CI : [+0.1927, +0.8131]
+  W / L / T    : 6 / 19 / 5
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.005135
+  Cohen dz     : +0.5668
+
+ 20 tasks | high   | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 3.2112
+  B mean       : 2.6120
+  A - B        : +0.5992
+  Bootstrap CI : [+0.2822, +0.9148]
+  W / L / T    : 6 / 20 / 4
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.002205
+  Cohen dz     : +0.6599
+
+ 50 tasks | low    | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 8.9586
+  B mean       : 8.8187
+  A - B        : +0.1399
+  Bootstrap CI : [-0.3877, +0.6472]
+  W / L / T    : 13 / 15 / 2
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.466194
+  Cohen dz     : +0.0943
+
+ 50 tasks | medium | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 6.9494
+  B mean       : 5.5042
+  A - B        : +1.4452
+  Bootstrap CI : [+0.7487, +2.1300]
+  W / L / T    : 8 / 22 / 0
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.000798
+  Cohen dz     : +0.7424
+
+ 50 tasks | high   | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 5.9875
+  B mean       : 5.2538
+  A - B        : +0.7336
+  Bootstrap CI : [+0.0045, +1.3931]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.022099
+  Cohen dz     : +0.3722
+
+100 tasks | low    | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 16.4509
+  B mean       : 15.9119
+  A - B        : +0.5390
+  Bootstrap CI : [-0.3666, +1.4958]
+  W / L / T    : 13 / 13 / 4
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.258388
+  Cohen dz     : +0.2035
+
+100 tasks | medium | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 11.1132
+  B mean       : 9.0326
+  A - B        : +2.0806
+  Bootstrap CI : [+1.1374, +3.0031]
+  W / L / T    : 6 / 24 / 0
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.000283
+  Cohen dz     : +0.7811
+
+100 tasks | high   | task_load_std               
+  Warm-start vs Old PPO
+  A mean       : 11.7273
+  B mean       : 9.7369
+  A - B        : +1.9904
+  Bootstrap CI : [+0.7920, +3.1443]
+  W / L / T    : 8 / 22 / 0
+  Win rate     : 26.67%
+  Wilcoxon p   : 0.003223
+  Cohen dz     : +0.6022
+
+
+========================================================================================================================
+Warm-start vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 4.0022
+  B mean       : 3.8454
+  A - B        : +0.1568
+  Bootstrap CI : [-0.2907, +0.6175]
+  W / L / T    : 11 / 16 / 3
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.420897
+  Cohen dz     : +0.1225
+
+ 20 tasks | medium | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 3.5176
+  B mean       : 2.9552
+  A - B        : +0.5623
+  Bootstrap CI : [+0.1154, +1.0206]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.024786
+  Cohen dz     : +0.4425
+
+ 20 tasks | high   | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 3.2112
+  B mean       : 2.7736
+  A - B        : +0.4376
+  Bootstrap CI : [+0.0587, +0.8175]
+  W / L / T    : 9 / 19 / 2
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.043863
+  Cohen dz     : +0.4069
+
+ 50 tasks | low    | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 8.9586
+  B mean       : 8.5917
+  A - B        : +0.3669
+  Bootstrap CI : [-0.3188, +1.0144]
+  W / L / T    : 11 / 18 / 1
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.284462
+  Cohen dz     : +0.1922
+
+ 50 tasks | medium | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 6.9494
+  B mean       : 5.3056
+  A - B        : +1.6437
+  Bootstrap CI : [+0.8805, +2.3671]
+  W / L / T    : 5 / 24 / 1
+  Win rate     : 16.67%
+  Wilcoxon p   : 0.000975
+  Cohen dz     : +0.7831
+
+ 50 tasks | high   | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 5.9875
+  B mean       : 5.3612
+  A - B        : +0.6263
+  Bootstrap CI : [-0.1989, +1.3890]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.104840
+  Cohen dz     : +0.2754
+
+100 tasks | low    | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 16.4509
+  B mean       : 14.9243
+  A - B        : +1.5265
+  Bootstrap CI : [+0.3275, +2.7159]
+  W / L / T    : 9 / 21 / 0
+  Win rate     : 30.00%
+  Wilcoxon p   : 0.026229
+  Cohen dz     : +0.4454
+
+100 tasks | medium | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 11.1132
+  B mean       : 8.7964
+  A - B        : +2.3169
+  Bootstrap CI : [+1.3213, +3.3040]
+  W / L / T    : 6 / 22 / 2
+  Win rate     : 20.00%
+  Wilcoxon p   : 0.000294
+  Cohen dz     : +0.8115
+
+100 tasks | high   | task_load_std               
+  Warm-start vs Rule-based
+  A mean       : 11.7273
+  B mean       : 11.5647
+  A - B        : +0.1625
+  Bootstrap CI : [-1.0418, +1.3631]
+  W / L / T    : 16 / 14 / 0
+  Win rate     : 53.33%
+  Wilcoxon p   : 0.745655
+  Cohen dz     : +0.0487
+
+
+========================================================================================================================
+Old PPO vs Rule-based
+========================================================================================================================
+ 20 tasks | low    | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 3.8738
+  B mean       : 3.8454
+  A - B        : +0.0284
+  Bootstrap CI : [-0.2586, +0.3120]
+  W / L / T    : 11 / 14 / 5
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.736571
+  Cohen dz     : +0.0355
+
+ 20 tasks | medium | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 3.0091
+  B mean       : 2.9552
+  A - B        : +0.0538
+  Bootstrap CI : [-0.2962, +0.4077]
+  W / L / T    : 11 / 16 / 3
+  Win rate     : 36.67%
+  Wilcoxon p   : 0.847575
+  Cohen dz     : +0.0543
+
+ 20 tasks | high   | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 2.6120
+  B mean       : 2.7736
+  A - B        : -0.1617
+  Bootstrap CI : [-0.4593, +0.1375]
+  W / L / T    : 14 / 14 / 2
+  Win rate     : 46.67%
+  Wilcoxon p   : 0.294813
+  Cohen dz     : -0.1934
+
+ 50 tasks | low    | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 8.8187
+  B mean       : 8.5917
+  A - B        : +0.2270
+  Bootstrap CI : [-0.3369, +0.7915]
+  W / L / T    : 12 / 17 / 1
+  Win rate     : 40.00%
+  Wilcoxon p   : 0.537722
+  Cohen dz     : +0.1409
+
+ 50 tasks | medium | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 5.5042
+  B mean       : 5.3056
+  A - B        : +0.1985
+  Bootstrap CI : [-0.3262, +0.7202]
+  W / L / T    : 13 / 16 / 1
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.509570
+  Cohen dz     : +0.1335
+
+ 50 tasks | high   | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 5.2538
+  B mean       : 5.3612
+  A - B        : -0.1074
+  Bootstrap CI : [-0.7775, +0.5297]
+  W / L / T    : 13 / 14 / 3
+  Win rate     : 43.33%
+  Wilcoxon p   : 0.942542
+  Cohen dz     : -0.0576
+
+100 tasks | low    | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 15.9119
+  B mean       : 14.9243
+  A - B        : +0.9875
+  Bootstrap CI : [+0.0585, +1.8990]
+  W / L / T    : 10 / 20 / 0
+  Win rate     : 33.33%
+  Wilcoxon p   : 0.057688
+  Cohen dz     : +0.3729
+
+100 tasks | medium | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 9.0326
+  B mean       : 8.7964
+  A - B        : +0.2363
+  Bootstrap CI : [-0.5594, +1.0558]
+  W / L / T    : 15 / 15 / 0
+  Win rate     : 50.00%
+  Wilcoxon p   : 0.715133
+  Cohen dz     : +0.1051
+
+100 tasks | high   | task_load_std               
+  Old PPO vs Rule-based
+  A mean       : 9.7369
+  B mean       : 11.5647
+  A - B        : -1.8279
+  Bootstrap CI : [-2.9688, -0.7825]
+  W / L / T    : 22 / 8 / 0
+  Win rate     : 73.33%
+  Wilcoxon p   : 0.004338
+  Cohen dz     : -0.5822
+
