@@ -1,0 +1,347 @@
+========================================================================================================================
+FINAL TEST
+========================================================================================================================
+Task Counts: [20, 50, 100]
+Loads: ['low', 'medium', 'high']
+Test Seeds: 2000 ~ 2029
+Battery Profile: stress
+Capability Profile: competitive
+Old PPO: /home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/scripts/rl/models/maskable_ppo_hospital_33d_reward_v3_50k.zip
+Total runs: 810
+
+========================================================================================================================
+START CONDITION | tasks=20 | load=low
+========================================================================================================================
+[   3/810] tasks=20  | load=low    | seed=2000 | wait: Near=34.94 Rule=34.48 Old=32.65
+[   6/810] tasks=20  | load=low    | seed=2001 | wait: Near=42.55 Rule=48.41 Old=55.83
+[   9/810] tasks=20  | load=low    | seed=2002 | wait: Near=19.62 Rule=107.64 Old=27.86
+[  12/810] tasks=20  | load=low    | seed=2003 | wait: Near=17.92 Rule=14.48 Old=9.59
+[  15/810] tasks=20  | load=low    | seed=2004 | wait: Near=56.36 Rule=59.72 Old=64.41
+[  18/810] tasks=20  | load=low    | seed=2005 | wait: Near=49.01 Rule=34.95 Old=23.78
+[  21/810] tasks=20  | load=low    | seed=2006 | wait: Near=54.26 Rule=50.49 Old=60.63
+[  24/810] tasks=20  | load=low    | seed=2007 | wait: Near=28.53 Rule=15.95 Old=9.73
+[  27/810] tasks=20  | load=low    | seed=2008 | wait: Near=13.02 Rule=9.83 Old=21.43
+[  30/810] tasks=20  | load=low    | seed=2009 | wait: Near=46.04 Rule=27.55 Old=21.03
+[  33/810] tasks=20  | load=low    | seed=2010 | wait: Near=34.71 Rule=40.70 Old=33.20
+[  36/810] tasks=20  | load=low    | seed=2011 | wait: Near=26.54 Rule=58.43 Old=51.36
+[  39/810] tasks=20  | load=low    | seed=2012 | wait: Near=66.02 Rule=32.23 Old=23.16
+[  42/810] tasks=20  | load=low    | seed=2013 | wait: Near=22.68 Rule=27.13 Old=18.49
+[  45/810] tasks=20  | load=low    | seed=2014 | wait: Near=71.14 Rule=22.41 Old=24.55
+[  48/810] tasks=20  | load=low    | seed=2015 | wait: Near=17.62 Rule=26.81 Old=29.86
+[  51/810] tasks=20  | load=low    | seed=2016 | wait: Near=19.13 Rule=14.97 Old=11.52
+[  54/810] tasks=20  | load=low    | seed=2017 | wait: Near=57.07 Rule=18.13 Old=26.64
+[  57/810] tasks=20  | load=low    | seed=2018 | wait: Near=55.95 Rule=70.80 Old=60.24
+[  60/810] tasks=20  | load=low    | seed=2019 | wait: Near=37.40 Rule=39.31 Old=47.87
+[  63/810] tasks=20  | load=low    | seed=2020 | wait: Near=121.70 Rule=49.61 Old=52.30
+[  66/810] tasks=20  | load=low    | seed=2021 | wait: Near=65.57 Rule=65.47 Old=38.35
+[  69/810] tasks=20  | load=low    | seed=2022 | wait: Near=38.58 Rule=91.10 Old=27.28
+[  72/810] tasks=20  | load=low    | seed=2023 | wait: Near=29.55 Rule=32.50 Old=18.47
+[  75/810] tasks=20  | load=low    | seed=2024 | wait: Near=85.28 Rule=48.53 Old=28.35
+[  78/810] tasks=20  | load=low    | seed=2025 | wait: Near=35.37 Rule=28.02 Old=86.34
+[  81/810] tasks=20  | load=low    | seed=2026 | wait: Near=8.03 Rule=19.77 Old=17.50
+[  84/810] tasks=20  | load=low    | seed=2027 | wait: Near=34.60 Rule=53.98 Old=10.29
+[  87/810] tasks=20  | load=low    | seed=2028 | wait: Near=41.16 Rule=62.78 Old=38.64
+[  90/810] tasks=20  | load=low    | seed=2029 | wait: Near=60.42 Rule=63.62 Old=47.61
+========================================================================================================================
+START CONDITION | tasks=20 | load=medium
+========================================================================================================================
+[  93/810] tasks=20  | load=medium | seed=2000 | wait: Near=46.54 Rule=65.71 Old=72.38
+[  96/810] tasks=20  | load=medium | seed=2001 | wait: Near=58.93 Rule=84.61 Old=85.81
+[  99/810] tasks=20  | load=medium | seed=2002 | wait: Near=98.70 Rule=120.31 Old=88.39
+[ 102/810] tasks=20  | load=medium | seed=2003 | wait: Near=59.04 Rule=66.14 Old=75.56
+[ 105/810] tasks=20  | load=medium | seed=2004 | wait: Near=117.02 Rule=119.50 Old=90.08
+[ 108/810] tasks=20  | load=medium | seed=2005 | wait: Near=75.68 Rule=63.74 Old=60.60
+[ 111/810] tasks=20  | load=medium | seed=2006 | wait: Near=86.25 Rule=75.14 Old=95.46
+[ 114/810] tasks=20  | load=medium | seed=2007 | wait: Near=37.43 Rule=84.56 Old=103.86
+[ 117/810] tasks=20  | load=medium | seed=2008 | wait: Near=41.44 Rule=73.10 Old=62.65
+[ 120/810] tasks=20  | load=medium | seed=2009 | wait: Near=55.23 Rule=46.27 Old=59.93
+[ 123/810] tasks=20  | load=medium | seed=2010 | wait: Near=93.56 Rule=103.14 Old=69.86
+[ 126/810] tasks=20  | load=medium | seed=2011 | wait: Near=51.95 Rule=87.43 Old=70.38
+[ 129/810] tasks=20  | load=medium | seed=2012 | wait: Near=121.23 Rule=110.81 Old=91.37
+[ 132/810] tasks=20  | load=medium | seed=2013 | wait: Near=55.35 Rule=79.27 Old=89.78
+[ 135/810] tasks=20  | load=medium | seed=2014 | wait: Near=138.33 Rule=57.72 Old=51.66
+[ 138/810] tasks=20  | load=medium | seed=2015 | wait: Near=37.13 Rule=66.79 Old=33.78
+[ 141/810] tasks=20  | load=medium | seed=2016 | wait: Near=48.12 Rule=75.66 Old=84.53
+[ 144/810] tasks=20  | load=medium | seed=2017 | wait: Near=98.33 Rule=118.42 Old=120.90
+[ 147/810] tasks=20  | load=medium | seed=2018 | wait: Near=81.27 Rule=80.41 Old=88.25
+[ 150/810] tasks=20  | load=medium | seed=2019 | wait: Near=88.89 Rule=69.17 Old=81.87
+[ 153/810] tasks=20  | load=medium | seed=2020 | wait: Near=206.37 Rule=95.04 Old=73.21
+[ 156/810] tasks=20  | load=medium | seed=2021 | wait: Near=113.31 Rule=98.20 Old=52.62
+[ 159/810] tasks=20  | load=medium | seed=2022 | wait: Near=89.52 Rule=137.90 Old=97.03
+[ 162/810] tasks=20  | load=medium | seed=2023 | wait: Near=53.27 Rule=70.46 Old=74.29
+[ 165/810] tasks=20  | load=medium | seed=2024 | wait: Near=103.63 Rule=85.68 Old=87.00
+[ 168/810] tasks=20  | load=medium | seed=2025 | wait: Near=60.41 Rule=74.29 Old=109.73
+[ 171/810] tasks=20  | load=medium | seed=2026 | wait: Near=36.98 Rule=74.98 Old=68.31
+[ 174/810] tasks=20  | load=medium | seed=2027 | wait: Near=103.18 Rule=62.05 Old=71.43
+[ 177/810] tasks=20  | load=medium | seed=2028 | wait: Near=85.07 Rule=95.90 Old=106.93
+[ 180/810] tasks=20  | load=medium | seed=2029 | wait: Near=107.76 Rule=83.16 Old=109.71
+========================================================================================================================
+START CONDITION | tasks=20 | load=high
+========================================================================================================================
+[ 183/810] tasks=20  | load=high   | seed=2000 | wait: Near=129.49 Rule=104.32 Old=109.10
+[ 186/810] tasks=20  | load=high   | seed=2001 | wait: Near=94.11 Rule=120.52 Old=102.07
+[ 189/810] tasks=20  | load=high   | seed=2002 | wait: Near=86.68 Rule=153.29 Old=150.27
+[ 192/810] tasks=20  | load=high   | seed=2003 | wait: Near=101.84 Rule=99.40 Old=131.82
+[ 195/810] tasks=20  | load=high   | seed=2004 | wait: Near=156.97 Rule=137.42 Old=128.98
+[ 198/810] tasks=20  | load=high   | seed=2005 | wait: Near=128.76 Rule=105.52 Old=96.62
+[ 201/810] tasks=20  | load=high   | seed=2006 | wait: Near=136.58 Rule=119.38 Old=153.47
+[ 204/810] tasks=20  | load=high   | seed=2007 | wait: Near=145.69 Rule=113.98 Old=153.58
+[ 207/810] tasks=20  | load=high   | seed=2008 | wait: Near=75.37 Rule=113.01 Old=126.84
+[ 210/810] tasks=20  | load=high   | seed=2009 | wait: Near=87.31 Rule=82.94 Old=93.05
+[ 213/810] tasks=20  | load=high   | seed=2010 | wait: Near=96.70 Rule=146.33 Old=111.73
+[ 216/810] tasks=20  | load=high   | seed=2011 | wait: Near=93.97 Rule=118.59 Old=105.31
+[ 219/810] tasks=20  | load=high   | seed=2012 | wait: Near=119.92 Rule=118.89 Old=131.22
+[ 222/810] tasks=20  | load=high   | seed=2013 | wait: Near=115.96 Rule=122.67 Old=143.18
+[ 225/810] tasks=20  | load=high   | seed=2014 | wait: Near=171.33 Rule=85.07 Old=100.56
+[ 228/810] tasks=20  | load=high   | seed=2015 | wait: Near=77.46 Rule=82.32 Old=76.37
+[ 231/810] tasks=20  | load=high   | seed=2016 | wait: Near=83.27 Rule=98.32 Old=112.07
+[ 234/810] tasks=20  | load=high   | seed=2017 | wait: Near=109.33 Rule=152.28 Old=221.53
+[ 237/810] tasks=20  | load=high   | seed=2018 | wait: Near=116.40 Rule=132.12 Old=126.80
+[ 240/810] tasks=20  | load=high   | seed=2019 | wait: Near=200.11 Rule=115.51 Old=149.12
+[ 243/810] tasks=20  | load=high   | seed=2020 | wait: Near=258.30 Rule=128.70 Old=130.50
+[ 246/810] tasks=20  | load=high   | seed=2021 | wait: Near=139.84 Rule=103.03 Old=106.95
+[ 249/810] tasks=20  | load=high   | seed=2022 | wait: Near=113.27 Rule=192.85 Old=133.59
+[ 252/810] tasks=20  | load=high   | seed=2023 | wait: Near=103.72 Rule=110.82 Old=105.63
+[ 255/810] tasks=20  | load=high   | seed=2024 | wait: Near=150.55 Rule=120.61 Old=117.09
+[ 258/810] tasks=20  | load=high   | seed=2025 | wait: Near=116.99 Rule=123.64 Old=166.89
+[ 261/810] tasks=20  | load=high   | seed=2026 | wait: Near=91.20 Rule=107.73 Old=108.06
+[ 264/810] tasks=20  | load=high   | seed=2027 | wait: Near=139.04 Rule=114.46 Old=147.17
+[ 267/810] tasks=20  | load=high   | seed=2028 | wait: Near=120.03 Rule=167.84 Old=142.57
+[ 270/810] tasks=20  | load=high   | seed=2029 | wait: Near=141.53 Rule=133.63 Old=171.74
+========================================================================================================================
+START CONDITION | tasks=50 | load=low
+========================================================================================================================
+[ 273/810] tasks=50  | load=low    | seed=2000 | wait: Near=75.65 Rule=30.30 Old=29.24
+[ 276/810] tasks=50  | load=low    | seed=2001 | wait: Near=60.12 Rule=107.81 Old=96.65
+[ 279/810] tasks=50  | load=low    | seed=2002 | wait: Near=85.04 Rule=132.77 Old=65.56
+[ 282/810] tasks=50  | load=low    | seed=2003 | wait: Near=54.35 Rule=52.54 Old=64.49
+[ 285/810] tasks=50  | load=low    | seed=2004 | wait: Near=94.24 Rule=104.52 Old=139.12
+[ 288/810] tasks=50  | load=low    | seed=2005 | wait: Near=119.26 Rule=39.33 Old=38.90
+[ 291/810] tasks=50  | load=low    | seed=2006 | wait: Near=83.85 Rule=80.89 Old=107.20
+[ 294/810] tasks=50  | load=low    | seed=2007 | wait: Near=89.68 Rule=39.16 Old=49.91
+[ 297/810] tasks=50  | load=low    | seed=2008 | wait: Near=43.67 Rule=40.70 Old=78.37
+[ 300/810] tasks=50  | load=low    | seed=2009 | wait: Near=177.91 Rule=50.05 Old=36.54
+[ 303/810] tasks=50  | load=low    | seed=2010 | wait: Near=112.32 Rule=67.04 Old=48.75
+[ 306/810] tasks=50  | load=low    | seed=2011 | wait: Near=33.59 Rule=81.93 Old=50.21
+[ 309/810] tasks=50  | load=low    | seed=2012 | wait: Near=167.13 Rule=62.27 Old=53.69
+[ 312/810] tasks=50  | load=low    | seed=2013 | wait: Near=112.88 Rule=63.66 Old=68.83
+[ 315/810] tasks=50  | load=low    | seed=2014 | wait: Near=226.66 Rule=72.56 Old=81.21
+[ 318/810] tasks=50  | load=low    | seed=2015 | wait: Near=127.65 Rule=69.88 Old=99.25
+[ 321/810] tasks=50  | load=low    | seed=2016 | wait: Near=53.66 Rule=29.75 Old=39.11
+[ 324/810] tasks=50  | load=low    | seed=2017 | wait: Near=173.24 Rule=43.18 Old=89.78
+[ 327/810] tasks=50  | load=low    | seed=2018 | wait: Near=65.88 Rule=107.41 Old=114.25
+[ 330/810] tasks=50  | load=low    | seed=2019 | wait: Near=50.74 Rule=45.62 Old=75.63
+[ 333/810] tasks=50  | load=low    | seed=2020 | wait: Near=206.20 Rule=95.54 Old=133.21
+[ 336/810] tasks=50  | load=low    | seed=2021 | wait: Near=217.84 Rule=75.19 Old=75.25
+[ 339/810] tasks=50  | load=low    | seed=2022 | wait: Near=135.06 Rule=108.21 Old=84.40
+[ 342/810] tasks=50  | load=low    | seed=2023 | wait: Near=38.52 Rule=46.66 Old=63.40
+[ 345/810] tasks=50  | load=low    | seed=2024 | wait: Near=201.07 Rule=50.15 Old=20.68
+[ 348/810] tasks=50  | load=low    | seed=2025 | wait: Near=123.84 Rule=72.87 Old=149.93
+[ 351/810] tasks=50  | load=low    | seed=2026 | wait: Near=31.62 Rule=33.77 Old=52.64
+[ 354/810] tasks=50  | load=low    | seed=2027 | wait: Near=100.30 Rule=103.49 Old=48.02
+[ 357/810] tasks=50  | load=low    | seed=2028 | wait: Near=90.27 Rule=94.82 Old=118.53
+[ 360/810] tasks=50  | load=low    | seed=2029 | wait: Near=53.37 Rule=69.76 Old=70.83
+========================================================================================================================
+START CONDITION | tasks=50 | load=medium
+========================================================================================================================
+[ 363/810] tasks=50  | load=medium | seed=2000 | wait: Near=140.21 Rule=147.96 Old=149.69
+[ 366/810] tasks=50  | load=medium | seed=2001 | wait: Near=145.05 Rule=177.79 Old=216.21
+[ 369/810] tasks=50  | load=medium | seed=2002 | wait: Near=192.91 Rule=188.36 Old=196.55
+[ 372/810] tasks=50  | load=medium | seed=2003 | wait: Near=263.73 Rule=172.01 Old=229.68
+[ 375/810] tasks=50  | load=medium | seed=2004 | wait: Near=312.36 Rule=261.05 Old=240.13
+[ 378/810] tasks=50  | load=medium | seed=2005 | wait: Near=197.88 Rule=133.24 Old=142.20
+[ 381/810] tasks=50  | load=medium | seed=2006 | wait: Near=221.13 Rule=194.03 Old=228.23
+[ 384/810] tasks=50  | load=medium | seed=2007 | wait: Near=124.45 Rule=200.30 Old=184.61
+[ 387/810] tasks=50  | load=medium | seed=2008 | wait: Near=154.84 Rule=175.65 Old=204.97
+[ 390/810] tasks=50  | load=medium | seed=2009 | wait: Near=195.76 Rule=171.65 Old=175.98
+[ 393/810] tasks=50  | load=medium | seed=2010 | wait: Near=187.56 Rule=188.02 Old=166.22
+[ 396/810] tasks=50  | load=medium | seed=2011 | wait: Near=190.33 Rule=176.50 Old=167.59
+[ 399/810] tasks=50  | load=medium | seed=2012 | wait: Near=295.24 Rule=226.74 Old=214.08
+[ 402/810] tasks=50  | load=medium | seed=2013 | wait: Near=143.14 Rule=162.47 Old=210.42
+[ 405/810] tasks=50  | load=medium | seed=2014 | wait: Near=405.38 Rule=192.34 Old=294.82
+[ 408/810] tasks=50  | load=medium | seed=2015 | wait: Near=154.30 Rule=162.77 Old=158.83
+[ 411/810] tasks=50  | load=medium | seed=2016 | wait: Near=119.70 Rule=148.23 Old=219.26
+[ 414/810] tasks=50  | load=medium | seed=2017 | wait: Near=256.85 Rule=209.97 Old=271.89
+[ 417/810] tasks=50  | load=medium | seed=2018 | wait: Near=156.69 Rule=253.56 Old=193.89
+[ 420/810] tasks=50  | load=medium | seed=2019 | wait: Near=207.19 Rule=179.40 Old=189.02
+[ 423/810] tasks=50  | load=medium | seed=2020 | wait: Near=302.04 Rule=229.04 Old=246.22
+[ 426/810] tasks=50  | load=medium | seed=2021 | wait: Near=317.72 Rule=176.05 Old=172.22
+[ 429/810] tasks=50  | load=medium | seed=2022 | wait: Near=174.60 Rule=247.17 Old=199.39
+[ 432/810] tasks=50  | load=medium | seed=2023 | wait: Near=155.22 Rule=170.18 Old=161.28
+[ 435/810] tasks=50  | load=medium | seed=2024 | wait: Near=307.03 Rule=169.72 Old=153.55
+[ 438/810] tasks=50  | load=medium | seed=2025 | wait: Near=165.52 Rule=178.06 Old=210.91
+[ 441/810] tasks=50  | load=medium | seed=2026 | wait: Near=143.60 Rule=158.81 Old=163.94
+[ 444/810] tasks=50  | load=medium | seed=2027 | wait: Near=246.77 Rule=196.41 Old=224.61
+[ 447/810] tasks=50  | load=medium | seed=2028 | wait: Near=225.72 Rule=221.96 Old=281.46
+[ 450/810] tasks=50  | load=medium | seed=2029 | wait: Near=236.28 Rule=137.68 Old=179.11
+========================================================================================================================
+START CONDITION | tasks=50 | load=high
+========================================================================================================================
+[ 453/810] tasks=50  | load=high   | seed=2000 | wait: Near=334.46 Rule=290.07 Old=278.76
+[ 456/810] tasks=50  | load=high   | seed=2001 | wait: Near=282.54 Rule=347.66 Old=353.27
+[ 459/810] tasks=50  | load=high   | seed=2002 | wait: Near=260.25 Rule=310.81 Old=282.32
+[ 462/810] tasks=50  | load=high   | seed=2003 | wait: Near=304.05 Rule=283.78 Old=360.50
+[ 465/810] tasks=50  | load=high   | seed=2004 | wait: Near=433.99 Rule=364.12 Old=360.55
+[ 468/810] tasks=50  | load=high   | seed=2005 | wait: Near=321.20 Rule=267.25 Old=273.14
+[ 471/810] tasks=50  | load=high   | seed=2006 | wait: Near=351.53 Rule=338.34 Old=404.40
+[ 474/810] tasks=50  | load=high   | seed=2007 | wait: Near=299.41 Rule=314.01 Old=345.10
+[ 477/810] tasks=50  | load=high   | seed=2008 | wait: Near=253.88 Rule=322.83 Old=346.02
+[ 480/810] tasks=50  | load=high   | seed=2009 | wait: Near=312.12 Rule=298.16 Old=282.19
+[ 483/810] tasks=50  | load=high   | seed=2010 | wait: Near=358.93 Rule=381.16 Old=293.62
+[ 486/810] tasks=50  | load=high   | seed=2011 | wait: Near=284.14 Rule=309.08 Old=276.79
+[ 489/810] tasks=50  | load=high   | seed=2012 | wait: Near=327.52 Rule=376.80 Old=322.20
+[ 492/810] tasks=50  | load=high   | seed=2013 | wait: Near=294.77 Rule=322.71 Old=327.77
+[ 495/810] tasks=50  | load=high   | seed=2014 | wait: Near=430.87 Rule=353.25 Old=375.94
+[ 498/810] tasks=50  | load=high   | seed=2015 | wait: Near=245.63 Rule=292.88 Old=283.05
+[ 501/810] tasks=50  | load=high   | seed=2016 | wait: Near=241.70 Rule=263.54 Old=317.54
+[ 504/810] tasks=50  | load=high   | seed=2017 | wait: Near=372.18 Rule=379.73 Old=478.58
+[ 507/810] tasks=50  | load=high   | seed=2018 | wait: Near=336.88 Rule=374.01 Old=396.67
+[ 510/810] tasks=50  | load=high   | seed=2019 | wait: Near=383.93 Rule=313.59 Old=337.66
+[ 513/810] tasks=50  | load=high   | seed=2020 | wait: Near=407.95 Rule=316.28 Old=402.58
+[ 516/810] tasks=50  | load=high   | seed=2021 | wait: Near=436.36 Rule=323.21 Old=281.36
+[ 519/810] tasks=50  | load=high   | seed=2022 | wait: Near=346.41 Rule=373.35 Old=331.64
+[ 522/810] tasks=50  | load=high   | seed=2023 | wait: Near=263.27 Rule=295.86 Old=306.74
+[ 525/810] tasks=50  | load=high   | seed=2024 | wait: Near=417.14 Rule=302.68 Old=298.81
+[ 528/810] tasks=50  | load=high   | seed=2025 | wait: Near=306.91 Rule=313.60 Old=305.59
+[ 531/810] tasks=50  | load=high   | seed=2026 | wait: Near=325.37 Rule=285.84 Old=309.34
+[ 534/810] tasks=50  | load=high   | seed=2027 | wait: Near=408.40 Rule=362.17 Old=362.64
+[ 537/810] tasks=50  | load=high   | seed=2028 | wait: Near=301.85 Rule=366.51 Old=405.04
+[ 540/810] tasks=50  | load=high   | seed=2029 | wait: Near=338.09 Rule=304.87 Old=322.00
+========================================================================================================================
+START CONDITION | tasks=100 | load=low
+========================================================================================================================
+[ 543/810] tasks=100 | load=low    | seed=2000 | wait: Near=223.53 Rule=43.25 Old=52.94
+[ 546/810] tasks=100 | load=low    | seed=2001 | wait: Near=114.08 Rule=127.95 Old=175.92
+[ 549/810] tasks=100 | load=low    | seed=2002 | wait: Near=139.58 Rule=181.41 Old=113.30
+[ 552/810] tasks=100 | load=low    | seed=2003 | wait: Near=138.82 Rule=91.99 Old=128.97
+[ 555/810] tasks=100 | load=low    | seed=2004 | wait: Near=99.58 Rule=119.80 Old=145.59
+[ 558/810] tasks=100 | load=low    | seed=2005 | wait: Near=142.87 Rule=68.44 Old=52.45
+[ 561/810] tasks=100 | load=low    | seed=2006 | wait: Near=149.34 Rule=114.31 Old=157.76
+[ 564/810] tasks=100 | load=low    | seed=2007 | wait: Near=166.58 Rule=91.68 Old=103.00
+[ 567/810] tasks=100 | load=low    | seed=2008 | wait: Near=102.63 Rule=94.25 Old=95.53
+[ 570/810] tasks=100 | load=low    | seed=2009 | wait: Near=221.47 Rule=65.24 Old=55.44
+[ 573/810] tasks=100 | load=low    | seed=2010 | wait: Near=261.61 Rule=71.22 Old=95.00
+[ 576/810] tasks=100 | load=low    | seed=2011 | wait: Near=120.32 Rule=112.65 Old=95.97
+[ 579/810] tasks=100 | load=low    | seed=2012 | wait: Near=396.37 Rule=89.94 Old=82.95
+[ 582/810] tasks=100 | load=low    | seed=2013 | wait: Near=189.61 Rule=93.59 Old=104.19
+[ 585/810] tasks=100 | load=low    | seed=2014 | wait: Near=421.39 Rule=95.04 Old=128.22
+[ 588/810] tasks=100 | load=low    | seed=2015 | wait: Near=179.65 Rule=92.22 Old=161.54
+[ 591/810] tasks=100 | load=low    | seed=2016 | wait: Near=138.35 Rule=109.43 Old=146.51
+[ 594/810] tasks=100 | load=low    | seed=2017 | wait: Near=204.52 Rule=75.90 Old=137.80
+[ 597/810] tasks=100 | load=low    | seed=2018 | wait: Near=115.30 Rule=151.51 Old=115.45
+[ 600/810] tasks=100 | load=low    | seed=2019 | wait: Near=140.68 Rule=70.94 Old=125.00
+[ 603/810] tasks=100 | load=low    | seed=2020 | wait: Near=290.52 Rule=110.28 Old=215.34
+[ 606/810] tasks=100 | load=low    | seed=2021 | wait: Near=228.06 Rule=75.27 Old=102.86
+[ 609/810] tasks=100 | load=low    | seed=2022 | wait: Near=266.52 Rule=125.62 Old=105.59
+[ 612/810] tasks=100 | load=low    | seed=2023 | wait: Near=96.35 Rule=62.79 Old=98.07
+[ 615/810] tasks=100 | load=low    | seed=2024 | wait: Near=190.27 Rule=52.25 Old=51.63
+[ 618/810] tasks=100 | load=low    | seed=2025 | wait: Near=203.11 Rule=134.41 Old=188.42
+[ 621/810] tasks=100 | load=low    | seed=2026 | wait: Near=177.53 Rule=69.29 Old=149.71
+[ 624/810] tasks=100 | load=low    | seed=2027 | wait: Near=114.51 Rule=162.27 Old=75.09
+[ 627/810] tasks=100 | load=low    | seed=2028 | wait: Near=98.55 Rule=90.37 Old=88.19
+[ 630/810] tasks=100 | load=low    | seed=2029 | wait: Near=83.22 Rule=109.08 Old=107.38
+========================================================================================================================
+START CONDITION | tasks=100 | load=medium
+========================================================================================================================
+[ 633/810] tasks=100 | load=medium | seed=2000 | wait: Near=329.96 Rule=282.65 Old=293.82
+[ 636/810] tasks=100 | load=medium | seed=2001 | wait: Near=350.86 Rule=350.33 Old=436.27
+[ 639/810] tasks=100 | load=medium | seed=2002 | wait: Near=461.12 Rule=370.91 Old=389.16
+[ 642/810] tasks=100 | load=medium | seed=2003 | wait: Near=362.38 Rule=331.50 Old=405.68
+[ 645/810] tasks=100 | load=medium | seed=2004 | wait: Near=499.44 Rule=397.43 Old=452.32
+[ 648/810] tasks=100 | load=medium | seed=2005 | wait: Near=359.71 Rule=272.14 Old=290.90
+[ 651/810] tasks=100 | load=medium | seed=2006 | wait: Near=507.46 Rule=358.60 Old=423.64
+[ 654/810] tasks=100 | load=medium | seed=2007 | wait: Near=387.99 Rule=390.06 Old=364.05
+[ 657/810] tasks=100 | load=medium | seed=2008 | wait: Near=403.72 Rule=341.83 Old=371.51
+[ 660/810] tasks=100 | load=medium | seed=2009 | wait: Near=365.55 Rule=311.17 Old=306.64
+[ 663/810] tasks=100 | load=medium | seed=2010 | wait: Near=351.30 Rule=357.45 Old=317.22
+[ 666/810] tasks=100 | load=medium | seed=2011 | wait: Near=362.37 Rule=299.59 Old=312.32
+[ 669/810] tasks=100 | load=medium | seed=2012 | wait: Near=508.23 Rule=436.04 Old=432.64
+[ 672/810] tasks=100 | load=medium | seed=2013 | wait: Near=321.05 Rule=315.70 Old=401.81
+[ 675/810] tasks=100 | load=medium | seed=2014 | wait: Near=629.53 Rule=370.58 Old=429.89
+[ 678/810] tasks=100 | load=medium | seed=2015 | wait: Near=406.74 Rule=307.88 Old=361.97
+[ 681/810] tasks=100 | load=medium | seed=2016 | wait: Near=307.57 Rule=337.44 Old=452.37
+[ 684/810] tasks=100 | load=medium | seed=2017 | wait: Near=447.23 Rule=390.17 Old=464.22
+[ 687/810] tasks=100 | load=medium | seed=2018 | wait: Near=295.59 Rule=330.19 Old=292.52
+[ 690/810] tasks=100 | load=medium | seed=2019 | wait: Near=580.28 Rule=315.34 Old=402.96
+[ 693/810] tasks=100 | load=medium | seed=2020 | wait: Near=603.65 Rule=417.08 Old=435.37
+[ 696/810] tasks=100 | load=medium | seed=2021 | wait: Near=548.10 Rule=314.14 Old=309.89
+[ 699/810] tasks=100 | load=medium | seed=2022 | wait: Near=383.18 Rule=400.17 Old=376.69
+[ 702/810] tasks=100 | load=medium | seed=2023 | wait: Near=365.48 Rule=334.90 Old=305.23
+[ 705/810] tasks=100 | load=medium | seed=2024 | wait: Near=395.41 Rule=336.69 Old=286.06
+[ 708/810] tasks=100 | load=medium | seed=2025 | wait: Near=441.48 Rule=365.45 Old=464.08
+[ 711/810] tasks=100 | load=medium | seed=2026 | wait: Near=410.93 Rule=335.82 Old=399.90
+[ 714/810] tasks=100 | load=medium | seed=2027 | wait: Near=490.20 Rule=401.35 Old=424.78
+[ 717/810] tasks=100 | load=medium | seed=2028 | wait: Near=363.14 Rule=360.38 Old=377.22
+[ 720/810] tasks=100 | load=medium | seed=2029 | wait: Near=392.13 Rule=304.32 Old=389.60
+========================================================================================================================
+START CONDITION | tasks=100 | load=high
+========================================================================================================================
+[ 723/810] tasks=100 | load=high   | seed=2000 | wait: Near=740.79 Rule=648.91 Old=598.70
+[ 726/810] tasks=100 | load=high   | seed=2001 | wait: Near=638.22 Rule=677.87 Old=769.74
+[ 729/810] tasks=100 | load=high   | seed=2002 | wait: Near=655.25 Rule=688.75 Old=636.46
+[ 732/810] tasks=100 | load=high   | seed=2003 | wait: Near=599.04 Rule=642.76 Old=653.60
+[ 735/810] tasks=100 | load=high   | seed=2004 | wait: Near=754.45 Rule=705.34 Old=688.10
+[ 738/810] tasks=100 | load=high   | seed=2005 | wait: Near=783.05 Rule=618.71 Old=569.12
+[ 741/810] tasks=100 | load=high   | seed=2006 | wait: Near=795.33 Rule=721.67 Old=822.38
+[ 744/810] tasks=100 | load=high   | seed=2007 | wait: Near=676.41 Rule=738.32 Old=713.68
+[ 747/810] tasks=100 | load=high   | seed=2008 | wait: Near=585.54 Rule=657.51 Old=638.18
+[ 750/810] tasks=100 | load=high   | seed=2009 | wait: Near=659.10 Rule=600.66 Old=573.85
+[ 753/810] tasks=100 | load=high   | seed=2010 | wait: Near=668.01 Rule=723.78 Old=587.42
+[ 756/810] tasks=100 | load=high   | seed=2011 | wait: Near=693.37 Rule=645.65 Old=620.94
+[ 759/810] tasks=100 | load=high   | seed=2012 | wait: Near=738.42 Rule=796.33 Old=703.03
+[ 762/810] tasks=100 | load=high   | seed=2013 | wait: Near=696.58 Rule=651.71 Old=732.59
+[ 765/810] tasks=100 | load=high   | seed=2014 | wait: Near=780.33 Rule=696.39 Old=663.24
+[ 768/810] tasks=100 | load=high   | seed=2015 | wait: Near=562.47 Rule=585.91 Old=590.29
+[ 771/810] tasks=100 | load=high   | seed=2016 | wait: Near=618.94 Rule=632.05 Old=695.59
+[ 774/810] tasks=100 | load=high   | seed=2017 | wait: Near=764.10 Rule=746.15 Old=787.28
+[ 777/810] tasks=100 | load=high   | seed=2018 | wait: Near=657.65 Rule=606.49 Old=559.48
+[ 780/810] tasks=100 | load=high   | seed=2019 | wait: Near=951.91 Rule=701.62 Old=690.14
+[ 783/810] tasks=100 | load=high   | seed=2020 | wait: Near=898.42 Rule=713.93 Old=690.45
+[ 786/810] tasks=100 | load=high   | seed=2021 | wait: Near=617.21 Rule=620.82 Old=616.73
+[ 789/810] tasks=100 | load=high   | seed=2022 | wait: Near=693.17 Rule=758.15 Old=691.02
+[ 792/810] tasks=100 | load=high   | seed=2023 | wait: Near=649.39 Rule=655.70 Old=633.55
+[ 795/810] tasks=100 | load=high   | seed=2024 | wait: Near=623.71 Rule=628.58 Old=618.95
+[ 798/810] tasks=100 | load=high   | seed=2025 | wait: Near=786.22 Rule=682.11 Old=733.75
+[ 801/810] tasks=100 | load=high   | seed=2026 | wait: Near=621.79 Rule=663.22 Old=651.49
+[ 804/810] tasks=100 | load=high   | seed=2027 | wait: Near=853.62 Rule=736.87 Old=737.94
+[ 807/810] tasks=100 | load=high   | seed=2028 | wait: Near=593.70 Rule=646.56 Old=672.81
+[ 810/810] tasks=100 | load=high   | seed=2029 | wait: Near=682.16 Rule=657.11 Old=673.50
+
+========================================================================================================================
+FINAL TEST SUMMARY
+========================================================================================================================
+  20 tasks | low    | Priority + Nearest                               | wait=43.03 ± 24.02 | P3=12.53 ± 14.12 | makespan=604.38
+  20 tasks | low    | Priority + Rule-based                            | wait=42.33 ± 23.30 | P3=14.91 ± 12.24 | makespan=589.60
+  20 tasks | low    | Priority + PPO 33D Reward v3 50K                 | wait=33.97 ± 18.96 | P3=12.91 ± 15.29 | makespan=566.66
+  20 tasks | medium | Priority + Nearest                               | wait=81.66 ± 36.94 | P3=21.45 ± 18.01 | makespan=498.04
+  20 tasks | medium | Priority + Rule-based                            | wait=84.19 ± 21.23 | P3=23.07 ± 17.56 | makespan=506.49
+  20 tasks | medium | Priority + PPO 33D Reward v3 50K                 | wait=80.91 ± 19.60 | P3=23.94 ± 17.55 | makespan=494.13
+  20 tasks | high   | Priority + Nearest                               | wait=123.39 ± 38.64 | P3=22.52 ± 14.60 | makespan=481.50
+  20 tasks | high   | Priority + Rule-based                            | wait=120.84 ± 24.34 | P3=24.41 ± 13.52 | makespan=463.45
+  20 tasks | high   | Priority + PPO 33D Reward v3 50K                 | wait=128.46 ± 29.03 | P3=25.20 ± 12.76 | makespan=487.20
+  50 tasks | low    | Priority + Nearest                               | wait=106.85 ± 58.17 | P3=17.24 ± 9.49 | makespan=1449.47
+  50 tasks | low    | Priority + Rule-based                            | wait=69.06 ± 27.80 | P3=21.10 ± 13.05 | makespan=1327.57
+  50 tasks | low    | Priority + PPO 33D Reward v3 50K                 | wait=74.79 ± 33.28 | P3=22.18 ± 13.36 | makespan=1373.19
+  50 tasks | medium | Priority + Nearest                               | wait=211.31 ± 70.23 | P3=25.33 ± 16.30 | makespan=1217.55
+  50 tasks | medium | Priority + Rule-based                            | wait=186.90 ± 32.66 | P3=27.72 ± 13.47 | makespan=1122.24
+  50 tasks | medium | Priority + PPO 33D Reward v3 50K                 | wait=201.57 ± 39.28 | P3=31.10 ± 13.64 | makespan=1172.91
+  50 tasks | high   | Priority + Nearest                               | wait=332.72 ± 57.91 | P3=32.07 ± 15.85 | makespan=1182.20
+  50 tasks | high   | Priority + Rule-based                            | wait=324.94 ± 35.08 | P3=32.91 ± 16.65 | makespan=1124.72
+  50 tasks | high   | Priority + PPO 33D Reward v3 50K                 | wait=334.06 ± 49.32 | P3=35.13 ± 21.37 | makespan=1179.81
+ 100 tasks | low    | Priority + Nearest                               | wait=180.50 ± 82.97 | P3=19.83 ± 6.27 | makespan=2767.57
+ 100 tasks | low    | Priority + Rule-based                            | wait=98.41 ± 32.23 | P3=23.93 ± 9.15 | makespan=2505.88
+ 100 tasks | low    | Priority + PPO 33D Reward v3 50K                 | wait=115.19 ± 40.66 | P3=22.96 ± 8.77 | makespan=2571.69
+ 100 tasks | medium | Priority + Nearest                               | wait=421.06 ± 88.77 | P3=27.64 ± 13.12 | makespan=2409.53
+ 100 tasks | medium | Priority + Rule-based                            | wait=347.91 ± 40.46 | P3=30.55 ± 8.23 | makespan=2098.43
+ 100 tasks | medium | Priority + PPO 33D Reward v3 50K                 | wait=379.02 ± 58.48 | P3=34.38 ± 12.61 | makespan=2235.30
+ 100 tasks | high   | Priority + Nearest                               | wait=701.28 ± 94.54 | P3=39.80 ± 17.14 | makespan=2406.31
+ 100 tasks | high   | Priority + Rule-based                            | wait=674.99 ± 51.29 | P3=38.73 ± 15.89 | makespan=2276.57
+ 100 tasks | high   | Priority + PPO 33D Reward v3 50K                 | wait=667.13 ± 66.02 | P3=41.34 ± 23.47 | makespan=2328.01
+
+========================================================================================================================
+FINAL TEST COMPLETED
+========================================================================================================================
+Raw results: /home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/scripts/experiment/results/final_test_30seed_raw_results.csv
+Summary: /home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/scripts/experiment/results/final_test_30seed_summary.csv
+Total raw runs: 810
+Summary rows: 27
