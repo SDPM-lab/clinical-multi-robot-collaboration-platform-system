@@ -134,6 +134,7 @@ class BaselineSimulator:
         robot_scheduler,
         robot_speed: float = 1.0,
         service_time: float = 5.0,
+        enable_dynamic_reassignment: bool = False,
     ):
 
         self.scenario = scenario
@@ -158,11 +159,32 @@ class BaselineSimulator:
             service_time
         )
 
+        # Dynamic Reassignment 預設關閉，
+        # 以保留 RL v1 / 舊 Baseline 的實驗語意。
+        self.enable_dynamic_reassignment = (
+            enable_dynamic_reassignment
+        )
+
         self.task_arrival_times = (
             copy.deepcopy(
                 scenario.task_arrival_times
             )
         )
+
+        # 每筆 Task 原始 FCFS 次序。
+        # Dynamic Reassignment 後仍保留原始到達順序，
+        # 不把 reassignment 時間當成新的 arrival time。
+        self.task_fcfs_order = {
+            task.task_id: index
+            for index, task
+            in enumerate(
+                scenario.tasks
+            )
+        }
+
+        # 紀錄 Dynamic Reassignment，
+        # 方便之後做測試與統計。
+        self.reassignment_events = []
 
         self.future_tasks = sorted(
             copy.deepcopy(
@@ -311,6 +333,585 @@ class BaselineSimulator:
             destination_x,
             destination_y,
         )
+
+
+    # ======================================================
+    # Project Waiting Queue Order
+    #
+    # 不修改真正的 waiting_tasks。
+    # 依目前 Task Scheduler 規則，
+    # 模擬這批 waiting tasks 真正會以什麼順序執行。
+    # ======================================================
+
+    def get_projected_queue_order(
+        self,
+        tasks,
+    ):
+
+        projected_queue = list(
+            tasks
+        )
+
+        ordered_tasks = []
+
+        while projected_queue:
+
+            selected_task = (
+                self.task_scheduler.select(
+                    projected_queue
+                )
+            )
+
+            if selected_task is None:
+                break
+
+            ordered_tasks.append(
+                selected_task
+            )
+
+            projected_queue.remove(
+                selected_task
+            )
+
+        return ordered_tasks
+
+
+    # ======================================================
+    # Detect Displaced Waiting Tasks
+    #
+    # 判斷 new_task 加入 selected Robot 的 waiting queue 後，
+    # 是否因 Priority 關係插到既有 Task 前面。
+    #
+    # 只回傳「因 new_task 插入而被往後推」的既有 Task。
+    #
+    # 若 new_task 只是排在原 queue 尾端：
+    #   -> 回傳空 list
+    #   -> 不觸發 Dynamic Reassignment
+    # ======================================================
+
+    def get_displaced_tasks(
+        self,
+        sim_state,
+        new_task,
+    ):
+
+        existing_tasks = list(
+            sim_state.waiting_tasks
+        )
+
+        if not existing_tasks:
+            return []
+
+        before_order = (
+            self.get_projected_queue_order(
+                existing_tasks
+            )
+        )
+
+        after_tasks = list(
+            existing_tasks
+        )
+
+        after_tasks.append(
+            new_task
+        )
+
+        after_order = (
+            self.get_projected_queue_order(
+                after_tasks
+            )
+        )
+
+        new_task_index = next(
+            (
+                index
+                for index, task
+                in enumerate(after_order)
+                if (
+                    task.task_id
+                    ==
+                    new_task.task_id
+                )
+            ),
+            None,
+        )
+
+        if new_task_index is None:
+            raise RuntimeError(
+                "New task not found in "
+                "projected queue order: "
+                f"{new_task.task_id}"
+            )
+
+        displaced_tasks = []
+
+        for task in before_order:
+
+            before_index = next(
+                index
+                for index, item
+                in enumerate(before_order)
+                if item.task_id == task.task_id
+            )
+
+            after_index = next(
+                index
+                for index, item
+                in enumerate(after_order)
+                if item.task_id == task.task_id
+            )
+
+            # new_task 加入後，
+            # 原 Task 的 index 變大，
+            # 表示它真的被往後推。
+            if after_index > before_index:
+                displaced_tasks.append(
+                    task
+                )
+
+        return displaced_tasks
+
+
+    # ======================================================
+    # Insert Waiting Task With Original FCFS Order
+    #
+    # waiting_tasks 本身維持原始 arrival order。
+    #
+    # PriorityScheduler 仍會：
+    #   Priority 高者先選
+    #   同 Priority 時依 list order -> FCFS
+    #
+    # FCFSScheduler 也能直接使用。
+    # ======================================================
+
+    def insert_waiting_task(
+        self,
+        sim_state,
+        task,
+    ):
+
+        task_key = (
+            self.task_arrival_times[
+                task.task_id
+            ],
+            self.task_fcfs_order.get(
+                task.task_id,
+                len(
+                    self.task_fcfs_order
+                ),
+            ),
+        )
+
+        insert_index = len(
+            sim_state.waiting_tasks
+        )
+
+        for index, existing_task in enumerate(
+            sim_state.waiting_tasks
+        ):
+
+            existing_key = (
+                self.task_arrival_times[
+                    existing_task.task_id
+                ],
+                self.task_fcfs_order.get(
+                    existing_task.task_id,
+                    len(
+                        self.task_fcfs_order
+                    ),
+                ),
+            )
+
+            if task_key < existing_key:
+
+                insert_index = index
+                break
+
+        sim_state.waiting_tasks.insert(
+            insert_index,
+            task,
+        )
+
+
+    # ======================================================
+    # Find Waiting Task Robot
+    # ======================================================
+
+    def find_waiting_task_robot(
+        self,
+        task_id,
+    ):
+
+        for robot_id, sim_state in (
+            self.robot_states.items()
+        ):
+
+            for task in (
+                sim_state.waiting_tasks
+            ):
+
+                if (
+                    task.task_id
+                    ==
+                    task_id
+                ):
+                    return robot_id
+
+        return None
+
+
+    # ======================================================
+    # Cascade Reassignment For Displaced Waiting Tasks
+    #
+    # 規則：
+    #
+    # 1. 只有真的被插隊延後的 Waiting Task 才重新評估。
+    #
+    # 2. Running Task 永遠不重新派工。
+    #
+    # 3. 如果 Task 搬到新 Robot 後，
+    #    又插隊影響該 Robot 原本的 Waiting Tasks，
+    #    只有那些被影響的 Tasks 繼續 Cascade Reassignment。
+    #
+    # 4. 如果搬過去沒有影響既有 Queue，
+    #    Cascade 到此停止。
+    #
+    # 5. 使用 processed_states + max_steps
+    #    防止同一 Cascade 發生無限震盪。
+    # ======================================================
+
+    def reassign_displaced_tasks(
+        self,
+        displaced_tasks,
+        trigger_task_id,
+    ):
+
+        # ------------------------------------------
+        # Pending Reassignment Queue
+        #
+        # 每筆：
+        #
+        # (
+        #     task,
+        #     direct_trigger_task_id,
+        #     cascade_depth,
+        # )
+        #
+        # root trigger 例如：
+        #
+        # D -> B -> E
+        #
+        # trigger_task_id = D
+        #
+        # B 的 direct trigger = D
+        # E 的 direct trigger = B
+        # ------------------------------------------
+
+        pending_reassignments = [
+            (
+                task,
+                trigger_task_id,
+                1,
+            )
+            for task in displaced_tasks
+        ]
+
+        # ------------------------------------------
+        # 防止：
+        #
+        # B@robot1
+        # -> robot2
+        # -> 又回 robot1
+        # -> 又重新處理
+        #
+        # 同一 Cascade 中，
+        # 同一 Task 在同一 Robot 最多重新評估一次。
+        # ------------------------------------------
+
+        processed_states = set()
+
+        # 任務數 * Robot 數 * 2
+        # 作為 Cascade 安全上限。
+        max_steps = max(
+            10,
+            len(
+                self.task_fcfs_order
+            )
+            *
+            max(
+                1,
+                len(
+                    self.robot_states
+                ),
+            )
+            *
+            2,
+        )
+
+        steps = 0
+
+        while pending_reassignments:
+
+            steps += 1
+
+            if steps > max_steps:
+
+                raise RuntimeError(
+                    "Dynamic reassignment "
+                    "exceeded maximum cascade steps. "
+                    f"root_trigger={trigger_task_id}, "
+                    f"max_steps={max_steps}"
+                )
+
+            (
+                task,
+                direct_trigger_task_id,
+                cascade_depth,
+            ) = pending_reassignments.pop(
+                0
+            )
+
+            # --------------------------------------
+            # 找這筆 Waiting Task 目前在哪台 Robot。
+            # --------------------------------------
+
+            current_robot_id = (
+                self.find_waiting_task_robot(
+                    task.task_id
+                )
+            )
+
+            if current_robot_id is None:
+                continue
+
+            state_signature = (
+                task.task_id,
+                current_robot_id,
+            )
+
+            if (
+                state_signature
+                in processed_states
+            ):
+                continue
+
+            processed_states.add(
+                state_signature
+            )
+
+            current_sim_state = (
+                self.robot_states[
+                    current_robot_id
+                ]
+            )
+
+            # --------------------------------------
+            # 暫時從原 Robot 移除。
+            #
+            # 否則 projection 會把 task
+            # 同時算成 existing + candidate。
+            # --------------------------------------
+
+            remove_index = next(
+                (
+                    index
+                    for index, item
+                    in enumerate(
+                        current_sim_state
+                        .waiting_tasks
+                    )
+                    if (
+                        item.task_id
+                        ==
+                        task.task_id
+                    )
+                ),
+                None,
+            )
+
+            if remove_index is None:
+                continue
+
+            current_sim_state.waiting_tasks.pop(
+                remove_index
+            )
+
+            # --------------------------------------
+            # 重新計算所有 Robot。
+            # --------------------------------------
+
+            all_robots = (
+                self.prepare_robots_for_scheduling(
+                    task
+                )
+            )
+
+            candidates = (
+                capability_matching(
+                    task.required_capabilities,
+                    all_robots,
+                )
+            )
+
+            # 防呆：
+            # 如果沒有 Candidate，
+            # 放回原 Robot。
+            if not candidates:
+
+                self.insert_waiting_task(
+                    current_sim_state,
+                    task,
+                )
+
+                continue
+
+            assignment = (
+                self.robot_scheduler.schedule(
+                    task,
+                    candidates,
+                )
+            )
+
+            if (
+                assignment.decision_status
+                != "assigned"
+                or assignment.robot_id
+                is None
+            ):
+
+                self.insert_waiting_task(
+                    current_sim_state,
+                    task,
+                )
+
+                continue
+
+            new_robot_id = (
+                assignment.robot_id
+            )
+
+            new_sim_state = (
+                self.robot_states[
+                    new_robot_id
+                ]
+            )
+
+            changed_robot = (
+                new_robot_id
+                !=
+                current_robot_id
+            )
+
+            # --------------------------------------
+            # Cascade Trigger
+            #
+            # 只有真的搬到「另一台 Robot」時，
+            # 才檢查這筆 Task 是否插隊影響
+            # 新 Robot 原本的 Waiting Tasks。
+            #
+            # 如果最後仍留在原 Robot，
+            # 只是把剛剛暫時移除的 Task 放回去，
+            # 不視為新的插隊事件。
+            # --------------------------------------
+
+            if changed_robot:
+
+                newly_displaced_tasks = (
+                    self.get_displaced_tasks(
+                        new_sim_state,
+                        task,
+                    )
+                )
+
+            else:
+
+                newly_displaced_tasks = []
+
+            # --------------------------------------
+            # 正式放入新的 Queue。
+            # --------------------------------------
+
+            self.insert_waiting_task(
+                new_sim_state,
+                task,
+            )
+
+            # --------------------------------------
+            # Reassignment Log
+            # --------------------------------------
+
+            self.reassignment_events.append(
+                {
+                    # 最初觸發整個 Cascade 的 Task。
+                    #
+                    # 例如：
+                    # D -> B -> E
+                    #
+                    # D
+                    "trigger_task_id":
+                        trigger_task_id,
+
+                    # 直接造成此 Task 被重新評估的 Task。
+                    #
+                    # B：
+                    # direct = D
+                    #
+                    # E：
+                    # direct = B
+                    "direct_trigger_task_id":
+                        direct_trigger_task_id,
+
+                    "task_id":
+                        task.task_id,
+
+                    "from_robot_id":
+                        current_robot_id,
+
+                    "to_robot_id":
+                        new_robot_id,
+
+                    "changed_robot":
+                        changed_robot,
+
+                    "cascade_depth":
+                        cascade_depth,
+                }
+            )
+
+            # --------------------------------------
+            # 只有新 Robot 上真的有人被插隊，
+            # 才繼續 Cascade。
+            #
+            # B -> Robot2
+            #
+            # 若：
+            #
+            # B E F
+            #
+            # newly_displaced = [E, F]
+            #
+            # 若：
+            #
+            # E F B
+            #
+            # newly_displaced = []
+            # -> Cascade 停止。
+            # --------------------------------------
+
+            for displaced_task in (
+                newly_displaced_tasks
+            ):
+
+                pending_reassignments.append(
+                    (
+                        displaced_task,
+
+                        # E/F 是被 B 直接影響。
+                        task.task_id,
+
+                        cascade_depth + 1,
+                    )
+                )
 
 
     # ======================================================
@@ -660,9 +1261,47 @@ class BaselineSimulator:
             ]
         )
 
-        sim_state.waiting_tasks.append(
-            task
-        )
+        # ------------------------------------------
+        # Dynamic Reassignment
+        #
+        # 關閉：
+        #   完全維持 RL v1 舊語意，
+        #   Task 直接 append 到原 Robot queue。
+        #
+        # 開啟：
+        #   只有 new task 真的插隊，
+        #   才重新評估被延後的 waiting tasks。
+        # ------------------------------------------
+
+        if self.enable_dynamic_reassignment:
+
+            displaced_tasks = (
+                self.get_displaced_tasks(
+                    sim_state,
+                    task,
+                )
+            )
+
+            self.insert_waiting_task(
+                sim_state,
+                task,
+            )
+
+            if displaced_tasks:
+
+                self.reassign_displaced_tasks(
+                    displaced_tasks,
+                    trigger_task_id=(
+                        task.task_id
+                    ),
+                )
+
+        else:
+
+            # RL v1 / 舊 Baseline 行為。
+            sim_state.waiting_tasks.append(
+                task
+            )
 
 
     # ======================================================

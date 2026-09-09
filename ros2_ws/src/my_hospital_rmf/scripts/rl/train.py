@@ -43,7 +43,7 @@ LOG_DIR = os.path.join(
 
 MODEL_PATH = os.path.join(
     MODEL_DIR,
-    "maskable_ppo_hospital_33d_reward_v3_balanced_multidist_100k",
+    "maskable_ppo_hospital_dynamic_v2_33d_reward_v3",
 )
 
 
@@ -106,7 +106,9 @@ def main():
     # ======================================================
 
     env = (
-        RandomizedHospitalGymEnv()
+        RandomizedHospitalGymEnv(
+            enable_dynamic_reassignment=True,
+        )
     )
 
     env = Monitor(

@@ -61,6 +61,7 @@ class RandomizedHospitalGymEnv(
         task_counts=None,
         task_count_weights=None,
         loads=None,
+        enable_dynamic_reassignment: bool = False,
     ):
 
         # ==================================================
@@ -118,6 +119,14 @@ class RandomizedHospitalGymEnv(
 
         self.loads = list(
             loads
+        )
+
+        # ==================================================
+        # Dynamic Reassignment Mode
+        # ==================================================
+
+        self.enable_dynamic_reassignment = (
+            enable_dynamic_reassignment
         )
 
         # ==================================================
@@ -238,6 +247,10 @@ class RandomizedHospitalGymEnv(
 
             service_time=(
                 SERVICE_TIME
+            ),
+
+            enable_dynamic_reassignment=(
+                self.enable_dynamic_reassignment
             ),
         )
 
@@ -400,6 +413,10 @@ class RandomizedHospitalGymEnv(
 
                 service_time=(
                     SERVICE_TIME
+                ),
+
+                enable_dynamic_reassignment=(
+                    self.enable_dynamic_reassignment
                 ),
             )
         )
