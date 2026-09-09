@@ -31,9 +31,25 @@ class HospitalGymEnv(
         scenario,
         robot_speed: float = 1.0,
         service_time: float = 5.0,
+        enable_dynamic_reassignment: bool = False,
     ):
 
         super().__init__()
+
+        # ==================================================
+        # Dynamic Reassignment
+        #
+        # False:
+        #   RL v1 舊語意
+        #
+        # True:
+        #   Waiting Task 被插隊後，
+        #   可以重新進入 RL Decision Flow。
+        # ==================================================
+
+        self.enable_dynamic_reassignment = (
+            enable_dynamic_reassignment
+        )
 
         # ==================================================
         # Core Environment
@@ -50,6 +66,10 @@ class HospitalGymEnv(
 
                 service_time=(
                     service_time
+                ),
+
+                enable_dynamic_reassignment=(
+                    self.enable_dynamic_reassignment
                 ),
             )
         )

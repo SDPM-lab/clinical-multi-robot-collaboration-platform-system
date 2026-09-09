@@ -1080,6 +1080,39 @@ class HospitalRLEnv:
         )
 
     # ======================================================
+    # Observation Size
+    #
+    # RL v1:
+    #
+    #   6 Task features
+    #   + 9 features / Robot
+    #
+    # Dynamic RL v2 額外：
+    #
+    #   1. is_reassignment
+    #   2. from_robot one-hot
+    # ======================================================
+
+    @property
+    def observation_size(
+        self,
+    ):
+
+        observation_size = (
+            self.observation_size
+        )
+
+        if self.enable_dynamic_reassignment:
+
+            size += (
+                1
+                +
+                self.robot_count
+            )
+
+        return size
+
+    # ======================================================
     # Normalization
     # ======================================================
 
