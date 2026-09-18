@@ -190,13 +190,6 @@ def generate_launch_description():
         output="screen",
     )
 
-    # ── Scheduler v2 任務派遣 ──────────────────────────────────────
-    scheduler_dispatcher = Node(
-        package="my_hospital_rmf",
-        executable="hospital_scheduler_dispatcher_v2",
-        output="screen",
-    )
-
     # ── 地圖發布（/map topic）────────────────────────────────────
     map_server = LifecycleNode(
         package="nav2_map_server",
@@ -268,7 +261,6 @@ def generate_launch_description():
         fake_robot,
         ws_adapter,
         api_bridge,
-        scheduler_dispatcher,
         # 地圖
         map_server,
         lifecycle_manager,

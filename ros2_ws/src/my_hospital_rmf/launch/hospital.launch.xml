@@ -75,9 +75,6 @@
   <!-- HTTP API Bridge (:5050) -->
   <node pkg="my_hospital_rmf" exec="hospital_ros_api_bridge" output="screen"/>
 
-  <!-- Scheduler v2 任務派遣 -->
-  <node pkg="my_hospital_rmf" exec="hospital_scheduler_dispatcher_v2" output="screen"/>
-
   <!-- 地圖發布 (nav2_map_server → /map topic) -->
   <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen">
     <param name="yaml_filename" value="$(find-pkg-share my_hospital_rmf)/maps/hospital_map.yaml"/>
