@@ -174,9 +174,9 @@ public class TaskService : ITaskService
             Note = request.Note
         };
 
-        _store[task.Id] = task;
-
         await SendTaskToRosBridgeAsync(task);
+
+        _store[task.Id] = task;
     }
 
     private static List<RobotCapability> GetRequiredCapabilities(TaskType taskType)
@@ -241,6 +241,12 @@ public class TaskService : ITaskService
                     .Select(ToSnakeCase)
                     .ToList(),
 
+            created_at =
+                new DateTimeOffset(
+                    task.CreatedAt
+                ).ToUnixTimeMilliseconds()
+                / 1000.0,
+
             note = task.Note
         };
 
@@ -280,7 +286,18 @@ public class TaskService : ITaskService
                     responseBody
                 );
 
-                return;
+                var statusCode = (int)response.StatusCode;
+
+                if (statusCode >= 400 && statusCode < 500)
+                {
+                    throw new ArgumentException(
+                        $"ROS bridge rejected task: {statusCode} {responseBody}"
+                    );
+                }
+
+                throw new InvalidOperationException(
+                    $"ROS bridge unavailable: {statusCode} {responseBody}"
+                );
             }
 
             _logger.LogInformation(
@@ -288,11 +305,24 @@ public class TaskService : ITaskService
                 responseBody
             );
         }
+        catch (ArgumentException)
+        {
+            throw;
+        }
+        catch (InvalidOperationException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(
                 ex,
                 "Failed to forward task to ROS bridge"
+            );
+
+            throw new InvalidOperationException(
+                "Failed to connect to ROS bridge",
+                ex
             );
         }
     }

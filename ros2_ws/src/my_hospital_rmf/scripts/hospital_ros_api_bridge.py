@@ -26,6 +26,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import uvicorn
 
+from ament_index_python.packages import (
+    get_package_share_directory,
+)
+
+from scheduler_v2.backend_task_adapter import (
+    build_scheduler_task,
+)
+
+from scheduler_v2.capabilities import (
+    VALID_TASK_TYPES,
+    VALID_CAPABILITIES,
+)
+
+from scheduler_v2.rmf_places import (
+    load_places_from_nav_graph,
+)
+
 
 ROS_TASK_TOPIC_NAME = "/hospital_task_request"
 ROS_FLEET_TOPIC_NAME = "/fleet_states"
@@ -58,6 +75,11 @@ class HospitalTaskRequest(BaseModel):
         default_factory=list
     )
 
+    # Unix timestamp，單位為秒。
+    # Backend 尚未提供時可為 None，
+    # Scheduler Adapter 會使用收到任務的時間。
+    created_at: Optional[float] = None
+
     note: Optional[str] = None
 
 
@@ -69,6 +91,31 @@ class HospitalRosBridge(Node):
 
     def __init__(self):
         super().__init__("hospital_ros_api_bridge")
+
+        # ==================================================
+        # Scheduler RMF Places
+        # ==================================================
+
+        package_share = (
+            get_package_share_directory(
+                "my_hospital_rmf"
+            )
+        )
+
+        nav_graph_path = (
+            f"{package_share}/nav_graphs/0.yaml"
+        )
+
+        self.scheduler_places = (
+            load_places_from_nav_graph(
+                nav_graph_path
+            )
+        )
+
+        self.get_logger().info(
+            "Loaded Scheduler RMF places: "
+            f"{len(self.scheduler_places)}"
+        )
 
         # 將 Backend 的 Task 發布到 ROS2
         self.task_pub = self.create_publisher(
@@ -104,6 +151,33 @@ class HospitalRosBridge(Node):
         )
 
     # ======================================================
+    # Backend Task -> Scheduler Task
+    # ======================================================
+
+    def build_scheduler_task(
+        self,
+        task: HospitalTaskRequest,
+    ):
+        """
+        將 Backend HTTP Task
+        驗證並轉成 scheduler_v2.models.Task。
+        """
+
+        return build_scheduler_task(
+            task_id=task.task_id,
+            task_type=task.task_type,
+            source=task.source,
+            destination=task.destination,
+            priority=task.priority,
+            required_capabilities=(
+                task.required_capabilities
+            ),
+            places=self.scheduler_places,
+            created_at=task.created_at,
+        )
+
+
+    # ======================================================
     # Publish Task
     # ======================================================
 
@@ -125,6 +199,9 @@ class HospitalRosBridge(Node):
             "priority": task.priority,
             "required_capabilities":
                 task.required_capabilities,
+
+            "created_at":
+                task.created_at,
         }
 
         if task.note:
@@ -319,14 +396,7 @@ def create_hospital_task(
     # 驗證 task type
     # ----------------------------------------------
 
-    valid_task_types = {
-        "medicine_delivery",
-        "specimen_delivery",
-        "general_delivery",
-        "waste_collection",
-    }
-
-    if task.task_type not in valid_task_types:
+    if task.task_type not in VALID_TASK_TYPES:
         raise HTTPException(
             status_code=400,
             detail=(
@@ -339,19 +409,11 @@ def create_hospital_task(
     # 驗證 capabilities
     # ----------------------------------------------
 
-    valid_capabilities = {
-        "navigation",
-        "general_delivery",
-        "medicine_delivery",
-        "specimen_delivery",
-        "manipulation",
-    }
-
     invalid_capabilities = [
         capability
         for capability
         in task.required_capabilities
-        if capability not in valid_capabilities
+        if capability not in VALID_CAPABILITIES
     ]
 
     if invalid_capabilities:
@@ -364,6 +426,29 @@ def create_hospital_task(
                 )
             ),
         )
+
+    # ----------------------------------------------
+    # Scheduler validation
+    #
+    # 這一步會額外驗證：
+    # - source 存在 RMF nav graph
+    # - destination 存在 RMF nav graph
+    # - Scheduler Task model 合法
+    # ----------------------------------------------
+
+    try:
+
+        scheduler_task = (
+            ros_bridge_node
+            .build_scheduler_task(task)
+        )
+
+    except ValueError as exc:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
 
     payload = (
         ros_bridge_node

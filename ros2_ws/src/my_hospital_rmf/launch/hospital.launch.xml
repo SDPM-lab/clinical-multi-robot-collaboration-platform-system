@@ -21,13 +21,50 @@
     <param name="robot_prefix" value="hospital"/>
   </node> -->
 
+  <!-- Hospital Fleet Manager -->
+  <node pkg="rmf_demos_fleet_adapter"
+        exec="fleet_manager"
+        args="--config_file $(find-pkg-share my_hospital_rmf)/config/fleet_config.yaml --nav_graph $(find-pkg-share my_hospital_rmf)/nav_graphs/0.yaml"
+        output="both">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
   <!-- Hospital Fleet Adapter -->
-  <include file="$(find-pkg-share rmf_demos_fleet_adapter)/launch/fleet_adapter.launch.xml">
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="server_uri" value="$(var server_uri)"/>
-    <arg name="nav_graph_file" value="$(find-pkg-share my_hospital_rmf)/nav_graphs/0.yaml"/>
-    <arg name="config_file" value="$(find-pkg-share my_hospital_rmf)/config/fleet_config.yaml"/>
-  </include>
+  <group>
+    <group if="$(var use_sim_time)">
+      <node pkg="my_hospital_rmf"
+            exec="hospital_fleet_adapter"
+            args="-c $(find-pkg-share my_hospital_rmf)/config/fleet_config.yaml -n $(find-pkg-share my_hospital_rmf)/nav_graphs/0.yaml -sim"
+            output="both">
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+        <param name="server_uri" value="$(var server_uri)"/>
+      </node>
+    </group>
+
+    <group unless="$(var use_sim_time)">
+      <node pkg="my_hospital_rmf"
+            exec="hospital_fleet_adapter"
+            args="-c $(find-pkg-share my_hospital_rmf)/config/fleet_config.yaml -n $(find-pkg-share my_hospital_rmf)/nav_graphs/0.yaml"
+            output="both">
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+        <param name="server_uri" value="$(var server_uri)"/>
+      </node>
+    </group>
+  </group>
+
+  <!-- RMF Door Supervisor -->
+  <node pkg="rmf_fleet_adapter"
+        exec="door_supervisor"
+        output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
+  <!-- 模擬門設備：回應 /door_requests 並發布 /door_states -->
+  <node pkg="my_hospital_rmf"
+        exec="hospital_fake_door_adapter"
+        output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
 
   <!-- 模擬機器人 -->
   <node pkg="my_hospital_rmf" exec="hospital_fake_robot_state_publisher" output="screen"/>
@@ -38,8 +75,8 @@
   <!-- HTTP API Bridge (:5050) -->
   <node pkg="my_hospital_rmf" exec="hospital_ros_api_bridge" output="screen"/>
 
-  <!-- 任務派遣規則 -->
-  <node pkg="my_hospital_rmf" exec="hospital_rule_dispatcher" output="screen"/>
+  <!-- Scheduler v2 任務派遣 -->
+  <node pkg="my_hospital_rmf" exec="hospital_scheduler_dispatcher_v2" output="screen"/>
 
   <!-- 地圖發布 (nav2_map_server → /map topic) -->
   <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen">
