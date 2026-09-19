@@ -43,5 +43,11 @@ ros2_ws/src/my_hospital_rmf/scripts/experiment/results/plots/
 # RL generated training logs
 ros2_ws/src/my_hospital_rmf/scripts/rl/logs/
 
+# Version 2 experiment outputs and local backups
+ros2_ws/src/my_hospital_rmf/scripts/experiment_v2/results/
+ros2_ws/src/my_hospital_rmf/scripts/rl_v2/models/
+ros2_ws/src/my_hospital_rmf/scripts/rl_v2/results/
+*.bak_*
+
 # RL generated training logs
 ros2_ws/src/my_hospital_rmf/scripts/rl/logs/

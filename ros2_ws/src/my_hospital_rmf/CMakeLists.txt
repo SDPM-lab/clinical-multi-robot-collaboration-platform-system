@@ -17,14 +17,14 @@ install(
 install(PROGRAMS scripts/hospital_fake_robot_state_publisher.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_fake_robot_state_publisher)
 
+install(PROGRAMS scripts/hospital_fake_door_adapter.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_fake_door_adapter)
+
 install(PROGRAMS scripts/hospital_ros_api_bridge.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_ros_api_bridge)
 
 install(PROGRAMS scripts/hospital_rosbridge_ws_adapter.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_rosbridge_ws_adapter)
-
-install(PROGRAMS scripts/hospital_rule_dispatcher.py
-  DESTINATION lib/${PROJECT_NAME} RENAME hospital_rule_dispatcher)
 
 install(PROGRAMS scripts/hospital_cleanup_gazebo_runtime.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_cleanup_gazebo_runtime)
@@ -32,11 +32,7 @@ install(PROGRAMS scripts/hospital_cleanup_gazebo_runtime.py
 install(PROGRAMS tools/sync_gazebo_to_traffic_editor.py
   DESTINATION lib/${PROJECT_NAME} RENAME sync_gazebo_to_traffic_editor)
 
-install(
-  DIRECTORY scripts/scheduler/
-  DESTINATION lib/${PROJECT_NAME}/scheduler
-  FILES_MATCHING
-    PATTERN "*.py"
-)
+install(PROGRAMS scripts/hospital_fleet_adapter.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_fleet_adapter)
 
 ament_package()

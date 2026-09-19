@@ -2,7 +2,7 @@ rmf_fleet:
   name: hospital_fleet
   limits:
     linear:
-    - 0.7
+    - 1.0
     - 0.75
     angular:
     - 0.6
@@ -45,6 +45,10 @@ rmf_fleet:
       charger: charging_station
       start_waypoint: center_mid_junction
       start_pose: [19.0, -16.0, 0.05, 0.0, 0.0, 0.0]
+    hospital_robot_4:
+      charger: charging_station
+      start_waypoint: left_mid_junction
+      start_pose: [8.9530, -16.1995, 0.05, 0.0, 0.0, 0.0]
 fleet_manager:
   ip: 127.0.0.1
   port: 22013

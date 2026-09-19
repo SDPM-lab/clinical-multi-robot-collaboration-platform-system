@@ -1,11 +1,10 @@
 from launch import LaunchDescription
 from launch.actions import (
-    DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription,
+    DeclareLaunchArgument, ExecuteProcess,
     RegisterEventHandler
 )
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
-from launch.launch_description_sources import AnyLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node, LifecycleNode
 from ament_index_python.packages import get_package_prefix, get_package_share_directory
@@ -41,17 +40,10 @@ def generate_launch_description():
         "launch_rviz", default_value="true",
         description="是否啟動 RViz2"
     )
-    robot_scheduler_arg = DeclareLaunchArgument(
-        "robot_scheduler",
-        default_value="rule_based",
-        description="Robot selection scheduler: rule_based or nearest"
-    )
-
     use_sim_time = LaunchConfiguration("use_sim_time")
     server_uri   = LaunchConfiguration("server_uri")
     launch_gazebo = LaunchConfiguration("launch_gazebo")
     launch_rviz   = LaunchConfiguration("launch_rviz")
-    robot_scheduler = LaunchConfiguration("robot_scheduler")
 
     # ── Gz Sim（Gazebo Harmonic）────────────────────────────────
     gz_sim = ExecuteProcess(
@@ -110,18 +102,71 @@ def generate_launch_description():
     #     }],
     # )
 
-    # ── Hospital Fleet Adapter ───────────────────────────────────
-    fleet_adapter_pkg = get_package_share_directory("rmf_demos_fleet_adapter")
-    fleet_adapter = IncludeLaunchDescription( #把別人寫好的 launch檔直接嵌進來用
-        AnyLaunchDescriptionSource(
-            os.path.join(fleet_adapter_pkg, "launch", "fleet_adapter.launch.xml")
-        ),
-        launch_arguments={
+    # ── Hospital Fleet Manager ───────────────────────────────────
+    fleet_manager = Node(
+        package="rmf_demos_fleet_adapter",
+        executable="fleet_manager",
+        output="both",
+        arguments=[
+            "--config_file", fleet_cfg,
+            "--nav_graph", nav_graph,
+        ],
+        parameters=[{
             "use_sim_time": use_sim_time,
-            "server_uri":   server_uri,
-            "nav_graph_file": nav_graph,
-            "config_file":  fleet_cfg,
-        }.items(),
+        }],
+    )
+
+    # ── Hospital Fleet Adapter ───────────────────────────────────
+    # use_sim_time=true 時加入 -sim，與 hospital.launch.xml 保持一致。
+    hospital_fleet_adapter_sim = Node(
+        package="my_hospital_rmf",
+        executable="hospital_fleet_adapter",
+        output="both",
+        arguments=[
+            "-c", fleet_cfg,
+            "-n", nav_graph,
+            "-sim",
+        ],
+        parameters=[{
+            "use_sim_time": use_sim_time,
+            "server_uri": server_uri,
+        }],
+        condition=IfCondition(use_sim_time),
+    )
+
+    hospital_fleet_adapter_real = Node(
+        package="my_hospital_rmf",
+        executable="hospital_fleet_adapter",
+        output="both",
+        arguments=[
+            "-c", fleet_cfg,
+            "-n", nav_graph,
+        ],
+        parameters=[{
+            "use_sim_time": use_sim_time,
+            "server_uri": server_uri,
+        }],
+        condition=UnlessCondition(use_sim_time),
+    )
+
+    # ── RMF Door Supervisor ───────────────────────────────────────
+    door_supervisor = Node(
+        package="rmf_fleet_adapter",
+        executable="door_supervisor",
+        output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+        }],
+    )
+
+    # ── 模擬門設備 ────────────────────────────────────────────────
+    fake_door = Node(
+        package="my_hospital_rmf",
+        executable="hospital_fake_door_adapter",
+        output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+        }],
     )
 
     # ── 模擬機器人狀態發布者 ──────────────────────────────────────
@@ -143,16 +188,6 @@ def generate_launch_description():
         package="my_hospital_rmf",
         executable="hospital_ros_api_bridge",
         output="screen",
-    )
-
-    # ── 任務派遣規則 ─────────────────────────────────────────────
-    rule_dispatcher = Node(
-        package="my_hospital_rmf",
-        executable="hospital_rule_dispatcher",
-        output="screen",
-        parameters=[{
-            "robot_scheduler": robot_scheduler,
-        }],
     )
 
     # ── 地圖發布（/map topic）────────────────────────────────────
@@ -216,18 +251,20 @@ def generate_launch_description():
         traffic_schedule,
         traffic_blockade,
         # state_aggregator,
-        fleet_adapter,
+        fleet_manager,
+        hospital_fleet_adapter_sim,
+        hospital_fleet_adapter_real,
+        # Door infrastructure
+        door_supervisor,
+        fake_door,
         # 自定義節點
         fake_robot,
         ws_adapter,
         api_bridge,
-        rule_dispatcher,
         # 地圖
         map_server,
         lifecycle_manager,
         rosbridge,
         # gz sim 完全退出後才清理 runtime logs
         gazebo_exit_cleanup,
-        # robot 排班規則選擇
-        robot_scheduler_arg,
     ])

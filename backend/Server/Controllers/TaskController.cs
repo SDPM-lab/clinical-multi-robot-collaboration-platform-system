@@ -29,6 +29,13 @@ public class TaskController : ControllerBase
         {
             return BadRequest($"傳送資料格式不符：{ex.Message}");
         }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(
+                503,
+                $"任務派送服務目前無法使用：{ex.Message}"
+            );
+        }
     }
 
     [HttpGet]

@@ -32,10 +32,10 @@ FLEET_CFG = os.path.join(get_package_share_directory("my_hospital_rmf"), "config
 FLEET_NAME = "hospital_fleet"
 MAP_NAME = "L1"
 
-MOVE_SPEED = 0.6       # 機器人移動速度（公尺/秒）
+MOVE_SPEED = 1.0       # 正式 RMF nominal linear speed（公尺/秒）
 ARRIVE_DISTANCE = 0.15 # 距離目標點小於此值視為「到達」（公尺）
 TIMER_PERIOD = 0.2     # 狀態更新頻率（秒）
-BATTERY_PERCENT = 0.99 # 固定電量（模擬用，不做電量消耗）
+BATTERY_PERCENT = 99.0 # 固定電量百分比（模擬用，不做電量消耗）
 
 
 def _load_robot_starts():
