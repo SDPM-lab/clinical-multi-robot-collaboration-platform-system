@@ -34,19 +34,19 @@ rmf_fleet:
   finishing_request: nothing
   robots:
     hospital_robot_1:
-      charger: charging_station
+      charger: charging_station_2
       start_waypoint: charging_station_junction
       start_pose: [9.0, -16.0, 0.05, 0.0, 0.0, 0.0]
     hospital_robot_2:
-      charger: charging_station
+      charger: charging_station_2
       start_waypoint: storage_junction
       start_pose: [11.0, -16.0, 0.05, 0.0, 0.0, 0.0]
     hospital_robot_3:
-      charger: charging_station
+      charger: charging_station_2
       start_waypoint: center_mid_junction
       start_pose: [19.0, -16.0, 0.05, 0.0, 0.0, 0.0]
     hospital_robot_4:
-      charger: charging_station
+      charger: charging_station_2
       start_waypoint: left_mid_junction
       start_pose: [8.9530, -16.1995, 0.05, 0.0, 0.0, 0.0]
 fleet_manager:

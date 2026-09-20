@@ -817,7 +817,7 @@
       </visual>
     </link>
 
-    <link name="marker_4_storage_junction">
+    <link name="marker_4_waste_return_junction">
       <pose>30.309257 -15.112453 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1265,7 +1265,7 @@
       </visual>
     </link>
 
-    <link name="marker_32_storage_1">
+    <link name="marker_32_waste_return_1">
       <pose>26.981595 -15.183647 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1313,23 +1313,23 @@
       </visual>
     </link>
 
-    <link name="marker_35_recycling_juction">
+    <link name="marker_35_clothes_return_junction">
       <pose>20.120988 -14.927515 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
-            <radius>0.24</radius>
+            <radius>0.18</radius>
             <length>0.16</length>
           </cylinder>
         </geometry>
         <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
+          <ambient>0.1 0.45 1.0 1</ambient>
+          <diffuse>0.1 0.45 1.0 1</diffuse>
         </material>
       </visual>
     </link>
 
-    <link name="marker_36_recycling_juction_1">
+    <link name="marker_36_clothes_return_1">
       <pose>23.663759 -14.929264 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1345,7 +1345,7 @@
       </visual>
     </link>
 
-    <link name="marker_37_recycling_juction_2">
+    <link name="marker_37_clothes_return_2">
       <pose>23.674445 -12.783118 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1377,7 +1377,7 @@
       </visual>
     </link>
 
-    <link name="marker_39_storage_2">
+    <link name="marker_39_waste_return_2">
       <pose>27.015096 -13.538552 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
