@@ -993,7 +993,7 @@
       </visual>
     </link>
 
-    <link name="marker_15_ward_d_junction">
+    <link name="marker_15_consult_2_junction">
       <pose>8.951630 -14.842638 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1041,7 +1041,7 @@
       </visual>
     </link>
 
-    <link name="marker_18_ward_d_1">
+    <link name="marker_18_consult_2_1">
       <pose>6.587516 -14.789957 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1057,7 +1057,7 @@
       </visual>
     </link>
 
-    <link name="marker_19_ward_c_1">
+    <link name="marker_19_consult_3_1">
       <pose>6.438550 -11.044929 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1073,7 +1073,7 @@
       </visual>
     </link>
 
-    <link name="marker_20_ward_c_junction">
+    <link name="marker_20_consult_3_junction">
       <pose>8.977221 -11.072268 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1457,7 +1457,7 @@
       </visual>
     </link>
 
-    <link name="marker_44_ward_c_2">
+    <link name="marker_44_consult_3_2">
       <pose>6.421480 -9.362806 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1473,7 +1473,7 @@
       </visual>
     </link>
 
-    <link name="marker_45_ward_d_2">
+    <link name="marker_45_consult_2_2">
       <pose>6.576663 -13.259715 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
