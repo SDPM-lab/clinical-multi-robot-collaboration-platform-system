@@ -443,7 +443,7 @@ levels:
       - {name: right_bottom_junction}
     - - 30.3092568897228
       - -15.112453265904858
-      - {name: storage_junction}
+      - {name: waste_return_junction}
     - - 30.32863054876306
       - -14.722565316709364
       - {name: therapy_room_junction}
@@ -515,7 +515,7 @@ levels:
       - {name: x-ray_junction}
     - - 26.98159502391176
       - -8.367505544252712
-      - {is_charger: true, name: charging_station_1}
+      - {is_charger: false, name: charging_station_1}
     - - 34.01081927262735
       - -7.955884679543581
       - {name: ultrasound_1}
@@ -527,7 +527,7 @@ levels:
       - {name: therapy_room}
     - - 26.98159502391176
       - -15.183647299484019
-      - {name: storage_1}
+      - {name: waste_return_1}
     - - 30.29071590943786
       - -24.45549748392236
       - {name: pharmacy_juction}
@@ -536,19 +536,19 @@ levels:
       - {name: pharmacy}
     - - 20.120988223146803
       - -14.927515314350108
-      - {name: recycling_juction}
+      - {name: clothes_return_junction}
     - - 23.663758767413395
       - -14.929263939736261
-      - {name: recycling_juction_1}
+      - {name: clothes_return_1}
     - - 23.674444811439898
       - -12.783117715795637
-      - {name: recycling_juction_2}
+      - {name: clothes_return_2}
     - - 26.96474715709595
       - -10.550428413219606
-      - {name: charging_station_2}
+      - {is_charger: true, name: charging_station_2}
     - - 27.015096465833803
       - -13.538551638573011
-      - {name: storage_2}
+      - {name: waste_return_2}
     - - 33.96993474574154
       - -6.082246456257997
       - {name: ultrasound_2}
