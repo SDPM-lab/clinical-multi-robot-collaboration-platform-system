@@ -37,12 +37,13 @@ export const sortTasksByPriority = (tasks) => [...tasks].sort((first, second) =>
 
 const baseLocationDetails = Object.freeze({
   reception_back: { label: 'Nurse Reception' }, nurse_station: { label: 'Nurse Station' },
-  pharmacy: { label: 'Pharmacy' }, consult_2: { label: 'Consultation Room 2' },
-  ward_a: { label: 'Ward A' }, charging_station: { label: 'Charging Station A', statusKey: 'charging' },
+  pharmacy: { label: 'Pharmacy' }, consult_1_1: { label: 'Consultation Room 2' },
+  ward_a_1: { label: 'Ward A' }, charging_station_1: { label: 'Charging Station A', statusKey: 'charging' },
+  charging_station_2: { label: 'Charging Station B', statusKey: 'charging' },
   lab: { label: 'Laboratory' },
 })
 export const locationDetails = baseLocationDetails
-export const demoRobotWaypoints = Object.freeze({ R02: 'consult_2', R03: 'nurse_station' })
+export const demoRobotWaypoints = Object.freeze({ R02: 'consult_1_1', R03: 'nurse_station' })
 
 export const shortestVertexPath = (data, from, to) => {
   const adjacency = new Map(data.vertices.map((vertex) => [vertex.id, []]))

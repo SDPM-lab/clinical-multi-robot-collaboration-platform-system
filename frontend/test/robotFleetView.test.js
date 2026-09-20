@@ -54,7 +54,7 @@ describe('robot product stage', () => {
         return from.x === Number(a.x1) && from.y === Number(a.y1) && to.x === Number(a.x2) && to.y === Number(a.y2)
       })).toBe(true)
     }
-    const destination = navigation.namedWaypoints.find(v => v.name === 'charging_station')
+    const destination = navigation.namedWaypoints.find(v => v.name === 'charging_station_1')
     const final = byId.get(destination.id)
     expect(Number(lines.at(-1).attributes('x2'))).toBe(final.x)
     expect(Number(lines.at(-1).attributes('y2'))).toBe(final.y)

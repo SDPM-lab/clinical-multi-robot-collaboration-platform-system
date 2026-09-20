@@ -9,8 +9,8 @@ export const SCENE_ASSETS = Object.freeze({
 })
 
 export const NAVIGATION_ASSETS = Object.freeze({
-  graph0: publicAssetUrl('generated/rmf-navigation.json', '209581c07be5'),
-  graph1: publicAssetUrl('generated/rmf-navigation-graph-1.json', 'a76216b3a527'),
+  graph0: publicAssetUrl('generated/rmf-navigation.json', 'c7c855914668'),
+  graph1: publicAssetUrl('generated/rmf-navigation-graph-1.json', '940824567445'),
 })
 
 // These are exact root object names found in the original combined hospital GLB.

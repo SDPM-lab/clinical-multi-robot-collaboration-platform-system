@@ -515,7 +515,7 @@ levels:
       - {name: x-ray_junction}
     - - 26.98159502391176
       - -8.367505544252712
-      - {is_charger: true, name: charging_station}
+      - {is_charger: true, name: charging_station_1}
     - - 34.01081927262735
       - -7.955884679543581
       - {name: ultrasound_1}
@@ -533,7 +533,7 @@ levels:
       - {name: pharmacy_juction}
     - - 31.829506249254056
       - -24.44073131399483
-      - {name: ''}
+      - {name: pharmacy}
     - - 20.120988223146803
       - -14.927515314350108
       - {name: recycling_juction}
@@ -545,7 +545,7 @@ levels:
       - {name: recycling_juction_2}
     - - 26.96474715709595
       - -10.550428413219606
-      - {name: ''}
+      - {name: charging_station_2}
     - - 27.015096465833803
       - -13.538551638573011
       - {name: storage_2}

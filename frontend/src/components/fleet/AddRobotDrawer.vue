@@ -35,7 +35,7 @@ const form = reactive({
   maxSpeedMps: 0.7,
   footprintRadiusM: 0.35,
   navGraphIndex: 0,
-  chargingWaypoint: 'charging_station',
+  chargingWaypoint: 'charging_station_1',
 })
 const isLastStep = computed(() => currentStep.value === steps.length - 1)
 

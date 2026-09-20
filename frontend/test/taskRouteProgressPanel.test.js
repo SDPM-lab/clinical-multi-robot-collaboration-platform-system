@@ -18,7 +18,7 @@ describe('Overview task route progress panel', () => {
     const route = buildActiveRoutes(navigation, demoFleetStore.tasks.value).find((entry) => entry.taskId === 'T001')
     expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('rmf-navigation.json'), { cache: 'no-store' })
     expect(wrapper.findAll('.task-route-progress__stops li')).toHaveLength(route.vertexIds.length)
-    expect(wrapper.text()).toContain('目前 4 / 7')
+    expect(wrapper.text()).toContain('目前 3 / 5')
     expect(wrapper.text()).toContain('Pharmacy')
     expect(wrapper.text()).toContain('Nurse Reception')
     route.vertexIds.filter((id) => !navigation.vertices.find((vertex) => vertex.id === id)?.name).forEach((id) => {
@@ -44,8 +44,8 @@ describe('Overview task route progress panel', () => {
     expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(2)
     vi.advanceTimersByTime(1000)
     await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(4)
-    expect(wrapper.findAll('.task-route-progress__stops li')).toHaveLength(7)
+    expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(3)
+    expect(wrapper.findAll('.task-route-progress__stops li')).toHaveLength(5)
     wrapper.unmount()
   })
 
