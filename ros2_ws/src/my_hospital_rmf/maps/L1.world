@@ -2882,7 +2882,7 @@
       <uri>model://hospital_nav_overlay</uri>
     </include>
     <rmf_charger_waypoints name="charger_waypoints">
-      <rmf_vertex name="charging_station" x="26.98159502391176" y="-8.367505544252712" level="L1" />
+      <rmf_vertex name="charging_station_1" x="26.98159502391176" y="-8.367505544252712" level="L1" />
     </rmf_charger_waypoints>
     <!-- robots from fleet_config.yaml — do not edit manually -->
     <include>

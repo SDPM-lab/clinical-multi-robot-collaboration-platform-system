@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { NAVIGATION_ASSETS } from '@/config/sceneAssets.js'
 import { shortestVertexPath } from '@/data/demoActiveRoutes.js'
-const props = defineProps({ waypoint: String, target: { type: String, default: 'charging_station' } })
+const props = defineProps({ waypoint: String, target: { type: String, default: 'charging_station_1' } })
 const graph = ref(null), error = ref('')
 const controller = new AbortController()
 const route = computed(() => {
