@@ -484,11 +484,11 @@
     </link>
 
     <link name="lane_35_36">
-      <pose>21.892373 -14.928390 0.08 0 0 -0.000494</pose>
+      <pose>21.801140 -14.950206 0.08 0 0 -0.013504</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>3.542771 0.08 0.04</size>
+            <size>3.360609 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -529,11 +529,11 @@
     </link>
 
     <link name="lane_36_37">
-      <pose>23.669102 -13.856191 0.08 0 0 1.565817</pose>
+      <pose>23.505050 -13.915283 0.08 0 0 1.548335</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>2.146173 0.08 0.04</size>
+            <size>2.115760 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -1330,7 +1330,7 @@
     </link>
 
     <link name="marker_36_clothes_return_1">
-      <pose>23.663759 -14.929264 0.18 0 0 0</pose>
+      <pose>23.481291 -14.972896 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1346,7 +1346,7 @@
     </link>
 
     <link name="marker_37_clothes_return_2">
-      <pose>23.674445 -12.783118 0.18 0 0 0</pose>
+      <pose>23.528809 -12.857670 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
