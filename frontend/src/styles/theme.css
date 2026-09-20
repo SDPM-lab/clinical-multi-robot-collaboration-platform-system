@@ -1,0 +1,223 @@
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --app-bg: #eceeed;
+  --app-background: var(--app-bg);
+  --app-background-image:
+    radial-gradient(ellipse 42% 35% at 14% 8%, rgba(208,218,221,.30), transparent 70%),
+    radial-gradient(ellipse 36% 30% at 72% 9%, rgba(255,255,255,.82), transparent 68%),
+    radial-gradient(ellipse 32% 44% at 92% 56%, rgba(255,182,96,.12), transparent 72%),
+    radial-gradient(ellipse 30% 24% at 38% 82%, rgba(255,211,151,.075), transparent 74%),
+    linear-gradient(135deg, #e7ebeb 0%, #f7f8f7 45%, #eceeed 100%);
+  --app-surface: rgba(255, 255, 255, 0.62);
+  --app-border: rgba(24, 28, 25, 0.08);
+  --circuit-line: rgba(143, 124, 104, 0.20);
+  --circuit-line-underlay: rgba(199, 165, 137, 0.08);
+  --circuit-node: rgba(143, 124, 104, 0.32);
+  --circuit-signal: #c46936;
+  --circuit-secondary-signal: #c99755;
+  --segmented-track: rgba(224, 217, 208, 0.58);
+  --segmented-border: rgba(145, 128, 109, 0.13);
+  --app-canvas: var(--app-background);
+  --app-canvas-rgb: 236, 235, 230;
+  --app-page-gutter: 18px;
+  --page-bg: var(--app-background);
+  --navbar-bg: var(--app-background);
+  --navbar-background: var(--app-background);
+  --scene-bg: var(--app-background);
+  --scene-background: var(--scene-bg);
+  --surface-1: #fafbfa;
+  --surface-2: #eef0ed;
+  --surface-3: #e5e8e4;
+  --panel-background: var(--app-surface);
+  --panel-background-strong: rgba(255, 255, 255, 0.9);
+  --column-background: rgba(239, 241, 238, 0.78);
+  --card-background: rgba(255, 255, 255, 0.88);
+  --card-border: var(--app-border);
+  --panel-bg: var(--panel-background);
+  --panel-bg-strong: var(--panel-background-strong);
+  --panel-border: var(--app-border);
+  --panel-border-subtle: rgba(24, 28, 25, 0.055);
+  --panel-shadow: 0 10px 28px rgba(24, 28, 25, 0.06);
+  --panel-blur: 8px;
+  --radius-panel: 5px;
+  --panel-radius: var(--radius-panel);
+  --radius-control: 4px;
+  --radius-small: 3px;
+  --radius-round: 999px;
+  --tool-button-background: rgba(255, 255, 255, 0.68);
+  --tool-button-border: var(--app-border);
+  --tool-button-shadow: 0 6px 18px rgba(24, 28, 25, 0.055);
+  --popover-bg: rgba(255, 255, 255, 0.88);
+  --glass-background: var(--panel-background);
+  --glass-border: var(--panel-border);
+  --glass-shadow: var(--panel-shadow);
+  --glass-divider: rgba(57, 58, 55, 0.1);
+  --text-primary: #35312d;
+  --text-secondary: #6f6860;
+  --text-muted: #999087;
+  --text-disabled: #b8afa5;
+  --accent-beige: #f3caa3;
+  --accent-wood: #E88746;
+  --theme-primary: #c96b35;
+  --theme-primary-hover: #b95f31;
+  --theme-primary-active: #a9532a;
+  --theme-primary-soft: rgba(201, 111, 59, 0.12);
+  --theme-primary-border: rgba(201, 111, 59, 0.38);
+  --accent-orange: var(--theme-primary);
+  --robot-01: #cf7540;
+  --robot-02: #D5AD4E;
+  --robot-03: #4F9F91;
+  --semantic-error: #C96561;
+  --semantic-success: #6F9B7B;
+  --semantic-warning: #C59A52;
+  --charging-station: #8F9692;
+  --charging-station-bg: rgba(143, 150, 146, 0.12);
+  --charging-station-border: rgba(143, 150, 146, 0.48);
+  --focus-ring: rgba(201, 111, 59, 0.18);
+  --progress-track: rgba(98, 92, 82, 0.14);
+  --nav-hover: var(--accent-orange);
+  --nav-active: var(--accent-orange);
+  --wood-accent: var(--accent-wood);
+  --wood-accent-hover: var(--accent-orange);
+  --icon-color: #686d69;
+  --icon-button-background: rgba(255, 255, 255, 0.64);
+  --icon-button-border: rgba(70, 73, 70, 0.12);
+  --icon-button-hover: rgba(127, 119, 108, 0.10);
+  --navbar-border: rgba(70, 73, 70, 0.1);
+  --navbar-shadow: 0 4px 18px rgba(55, 58, 55, 0.07);
+  --control-shadow: 0 8px 24px rgba(54, 58, 55, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+  --search-background: rgba(255, 255, 255, 0.64);
+  --search-background-active: rgba(255, 255, 255, 0.78);
+  --search-border: rgba(255, 255, 255, 0.64);
+  --search-border-active: rgba(178, 122, 72, 0.45);
+  --search-focus-ring: rgba(178, 122, 72, 0.12);
+  --dropdown-background: rgba(255, 255, 255, 0.88);
+  --dropdown-shadow: 0 16px 36px rgba(54, 58, 55, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  --search-result-hover: rgba(178, 122, 72, 0.1);
+  --message-background: rgba(255, 255, 255, 0.82);
+  --message-border: rgba(70, 73, 70, 0.1);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --app-bg: #111311;
+  --app-background: var(--app-bg);
+  --app-background-image:
+    radial-gradient(circle at 17% 9%, rgba(207, 117, 64, 0.075), transparent 31%),
+    radial-gradient(circle at 82% 19%, rgba(197, 138, 78, 0.045), transparent 29%),
+    radial-gradient(circle at 48% 91%, rgba(166, 91, 57, 0.035), transparent 35%),
+    var(--app-bg);
+  --app-surface: rgba(34, 37, 35, 0.76);
+  --app-border: rgba(255, 255, 255, 0.08);
+  --circuit-line: rgba(158, 143, 126, 0.16);
+  --circuit-line-underlay: rgba(116, 107, 95, 0.16);
+  --circuit-node: rgba(176, 155, 132, 0.30);
+  --circuit-signal: #cf7540;
+  --circuit-secondary-signal: #c58a4e;
+  --segmented-track: rgba(255, 255, 255, 0.055);
+  --segmented-border: rgba(241, 233, 222, 0.09);
+  --app-canvas: var(--app-background);
+  --app-canvas-rgb: 17, 19, 17;
+  --app-background-elevated: #1a1d1b;
+  --page-bg: var(--app-background);
+  --navbar-bg: var(--app-background);
+  --navbar-background: var(--app-background);
+  --scene-bg: var(--app-background);
+  --scene-background: var(--scene-bg);
+  --surface-1: #1a1d1b;
+  --surface-2: #202321;
+  --surface-3: #292c2a;
+  --panel-background: var(--app-surface);
+  --panel-background-strong: rgba(35, 38, 36, 0.94);
+  --column-background: rgba(28, 31, 29, 0.86);
+  --card-background: rgba(35, 38, 36, 0.94);
+  --card-border: rgba(241, 233, 222, 0.075);
+  --panel-bg: var(--panel-background);
+  --panel-bg-strong: var(--panel-background-strong);
+  --panel-border: rgba(241, 233, 222, 0.09);
+  --panel-border-subtle: rgba(241, 233, 222, 0.065);
+  --panel-shadow: 0 14px 34px rgba(0, 0, 0, 0.24), 0 2px 7px rgba(0, 0, 0, 0.14);
+  --panel-blur: 8px;
+  --radius-panel: 5px;
+  --panel-radius: var(--radius-panel);
+  --radius-control: 4px;
+  --radius-small: 3px;
+  --radius-round: 999px;
+  --tool-button-background: rgba(35, 38, 36, 0.94);
+  --tool-button-border: rgba(241, 233, 222, 0.10);
+  --tool-button-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  --popover-bg: var(--panel-background-strong);
+  --glass-background: var(--panel-background);
+  --glass-border: var(--panel-border);
+  --glass-shadow: var(--panel-shadow);
+  --glass-divider: var(--panel-border-subtle);
+  --text-primary: #f0ebe4;
+  --text-secondary: #c3bbb1;
+  --text-muted: #8e877e;
+  --text-disabled: #625d56;
+  --accent-beige: #f3b678;
+  --accent-wood: #E88746;
+  --theme-primary: #c96b35;
+  --theme-primary-hover: #d8783d;
+  --theme-primary-active: #b85f32;
+  --theme-primary-soft: rgba(201, 107, 53, 0.15);
+  --theme-primary-border: rgba(201, 107, 53, 0.38);
+  --accent-orange: var(--theme-primary);
+  --robot-01: #cf7540;
+  --robot-02: #D5AD4E;
+  --robot-03: #4F9F91;
+  --semantic-error: #C96561;
+  --semantic-success: #6F9B7B;
+  --semantic-warning: #C59A52;
+  --charging-station: #B0B5B2;
+  --charging-station-bg: rgba(176, 181, 178, 0.14);
+  --charging-station-border: rgba(176, 181, 178, 0.52);
+  --focus-ring: rgba(207, 117, 64, 0.18);
+  --progress-track: rgba(255, 255, 255, 0.13);
+  --nav-hover: var(--accent-orange);
+  --nav-active: var(--accent-orange);
+  --wood-accent: var(--accent-wood);
+  --wood-accent-hover: var(--accent-orange);
+  --icon-color: var(--text-secondary);
+  --icon-button-background: rgba(31, 29, 26, 0.9);
+  --icon-button-border: var(--panel-border);
+  --icon-button-hover: var(--surface-3);
+  --navbar-border: rgba(255, 255, 255, 0.08);
+  --navbar-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+  --control-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  --search-background: rgba(35, 38, 36, 0.82);
+  --search-background-active: rgba(42, 46, 43, 0.94);
+  --search-border: var(--panel-border);
+  --search-border-active: var(--theme-primary-border);
+  --search-focus-ring: var(--focus-ring);
+  --dropdown-background: var(--panel-background-strong);
+  --dropdown-shadow: 0 18px 42px rgba(16, 18, 17, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  --search-result-hover: rgba(213, 170, 125, 0.13);
+  --message-background: var(--panel-background-strong);
+  --message-border: var(--panel-border);
+}
+
+[data-theme='dark'] .glass-panel,
+[data-theme='dark'] .quick-log-composer {
+  color: var(--text-primary);
+  background: var(--panel-background);
+  border-color: var(--panel-border);
+  opacity: 1;
+  filter: none;
+}
+
+[data-theme='dark'] input:not([type='checkbox']):not([type='radio']),
+[data-theme='dark'] textarea,
+[data-theme='dark'] .quick-log-input-row,
+[data-theme='dark'] .task-select-trigger {
+  color: var(--text-primary);
+  background: var(--surface-2);
+  border-color: var(--panel-border);
+}
+
+[data-theme='dark'] input::placeholder,
+[data-theme='dark'] textarea::placeholder,
+[data-theme='dark'] .quick-log-editor:empty::before {
+  color: var(--text-muted);
+}

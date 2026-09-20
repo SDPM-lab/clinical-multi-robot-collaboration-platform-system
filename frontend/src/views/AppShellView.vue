@@ -1,0 +1,620 @@
+<script setup>
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  Maximize,
+  Moon,
+  RadioTower,
+  Sun,
+  Unplug,
+  LogOut,
+  UserRoundPen,
+  Languages,
+  X,
+} from '@lucide/vue'
+import ClinicOverviewView from '@/views/ClinicOverviewView.vue'
+import OverviewSearch from '@/components/overview/OverviewSearch.vue'
+import HospitalScene from '@/components/scene/HospitalScene.vue'
+import TaskDispatchView from '@/views/TaskDispatchView.vue'
+import RobotFleetView from '@/views/RobotFleetView.vue'
+import ScheduleHistoryView from '@/views/ScheduleHistoryView.vue'
+import { SCENE_ASSETS } from '@/config/sceneAssets.js'
+import { demoFleetStore } from '@/stores/demoFleetStore.js'
+import { overviewDemoData } from '@/data/overviewDemoData.js'
+import { rosConnectionStore } from '@/stores/rosConnectionStore.js'
+import { authStore } from '@/stores/authStore.js'
+import { locale, setLocale, t } from '@/i18n/index.js'
+
+const THEME_STORAGE_KEY = 'hospital-rmf-color-theme'
+
+const readStoredTheme = () => {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'
+  } catch {
+    return 'light'
+  }
+}
+
+const darkMode = ref(readStoredTheme() === 'dark')
+const router = useRouter()
+const route = useRoute()
+const userMenuRoot = ref(null)
+const userMenuOpen = ref(false)
+const languageMenuOpen = ref(false)
+const profileDialogOpen = ref(false)
+const profileName = ref('')
+const profileAvatarPreview = ref(null)
+const profileError = ref('')
+const profileFileInput = ref(null)
+let userMenuCloseTimer
+const openUserMenu = () => { clearTimeout(userMenuCloseTimer); userMenuOpen.value = true }
+const closeUserMenuSoon = () => {
+  clearTimeout(userMenuCloseTimer)
+  userMenuCloseTimer = window.setTimeout(() => { userMenuOpen.value = false }, 150)
+}
+const onUserMenuFocusOut = (event) => {
+  if (!userMenuRoot.value?.contains(event.relatedTarget)) closeUserMenuSoon()
+}
+const onDocumentPointerDown = (event) => {
+  if (!userMenuRoot.value?.contains(event.target)) { userMenuOpen.value = false; languageMenuOpen.value = false }
+}
+const chooseLanguage = (next) => { setLocale(next); languageMenuOpen.value=false; userMenuOpen.value=false }
+const handleLogout = async () => {
+  await authStore.logout()
+  userMenuOpen.value = false
+  await router.replace('/login')
+}
+const openProfileDialog = () => {
+  profileName.value = authStore.currentUser.value.name
+  profileAvatarPreview.value = authStore.currentUser.value.avatarUrl || null
+  profileError.value = ''
+  profileDialogOpen.value = true
+  userMenuOpen.value = false
+}
+const selectProfileAvatar = () => profileFileInput.value?.click()
+const previewProfileAvatar = (event) => {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+  if (!file) return
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { profileError.value = 'invalidImage'; return }
+  if (file.size > 3 * 1024 * 1024) { profileError.value = 'imageTooLarge'; return }
+  const reader = new FileReader()
+  reader.onload = () => { profileAvatarPreview.value = reader.result; profileError.value = '' }
+  reader.onerror = () => { profileError.value = 'imageReadError' }
+  reader.readAsDataURL(file)
+}
+const saveProfile = async () => {
+  try {
+    await authStore.updateProfile({ name:profileName.value, avatarUrl:profileAvatarPreview.value })
+    profileDialogOpen.value = false
+  } catch { profileError.value = 'invalidName' }
+}
+const currentTheme = computed(() => darkMode.value ? 'dark' : 'light')
+const themeToggleLabel = computed(() => (
+  darkMode.value ? t('common.lightMode') : t('common.darkMode')
+))
+const rosStatus = computed(() => rosConnectionStore.status.value)
+const rosStatusIcon = computed(() => rosConnectionStore.state.value === 'disconnected' ? Unplug : RadioTower)
+const searchParams = new URLSearchParams(window.location.search)
+const activeSection = ref(
+  searchParams.get('mapCameraDebug') === '1'
+    ? 'map'
+    : 'overview',
+)
+const sharedOverviewData = computed(() => ({
+  ...overviewDemoData,
+  robots: demoFleetStore.robots.value,
+  taskList: demoFleetStore.tasks.value,
+  fleet: {
+    online: demoFleetStore.robots.value.filter((robot) => robot.state !== 'offline').length,
+    total: demoFleetStore.robots.value.length,
+    activeTasks: demoFleetStore.tasks.value.filter((task) => task.status === 'executing').length,
+    charging: demoFleetStore.robots.value.filter((robot) => robot.state === 'charging').length,
+  },
+}))
+const navItems = Object.freeze([
+  { id: 'overview' },
+  { id: 'dispatch' },
+  { id: 'history' },
+  { id: 'map' },
+  { id: 'robots' },
+])
+
+const selectSection = (sectionId) => {
+  if (!['overview', 'map', 'dispatch', 'robots', 'history'].includes(sectionId)) return
+  activeSection.value = sectionId
+  if (route.name !== 'overview') router.push('/')
+}
+
+const selectSearchResult = (result) => {
+  selectSection(result.section)
+}
+
+const toggleFullscreen = () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.()
+  } else {
+    document.exitFullscreen?.()
+  }
+}
+const handleFullscreenChange = () => requestAnimationFrame(() => window.dispatchEvent(new Event('resize')))
+
+const toggleColorMode = () => {
+  darkMode.value = !darkMode.value
+}
+
+watch(
+  currentTheme,
+  (theme) => {
+    document.documentElement.dataset.theme = theme
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme)
+    } catch {
+      // The visual theme still works when browser storage is unavailable.
+    }
+  },
+  { immediate: true },
+)
+onMounted(() => {
+  document.addEventListener('pointerdown', onDocumentPointerDown)
+  document.addEventListener('fullscreenchange', handleFullscreenChange)
+})
+onBeforeUnmount(() => {
+  clearTimeout(userMenuCloseTimer)
+  document.removeEventListener('pointerdown', onDocumentPointerDown)
+  document.removeEventListener('fullscreenchange', handleFullscreenChange)
+})
+</script>
+
+<template>
+  <main
+    class="overview-page app-shell"
+    :class="{ 'app-shell--overview': activeSection === 'overview' }"
+    :data-theme="currentTheme"
+    aria-label="醫院三維場景總覽"
+  >
+    <ScheduleHistoryView v-if="activeSection === 'history'" />
+    <TaskDispatchView v-else-if="activeSection === 'dispatch'" />
+    <RobotFleetView v-else-if="activeSection === 'robots'" />
+    <HospitalScene
+      v-else-if="activeSection === 'map'"
+      :model-url="SCENE_ASSETS.environment"
+      mode="original"
+      :theme="currentTheme"
+    />
+
+    <ClinicOverviewView
+      v-if="activeSection === 'overview'"
+      :data="sharedOverviewData"
+      :theme="currentTheme"
+    />
+    <div class="overview-overlay">
+      <header class="overview-navbar top-navbar" :class="{'history-navbar':activeSection==='history'}">
+        <div class="brand">Hospital RMF</div>
+        <nav class="overview-nav" :aria-label="t('common.navigation')">
+          <button
+            v-for="item in navItems"
+            :key="item.id"
+            type="button"
+            class="overview-nav__link"
+            :class="{ 'overview-nav__link--active': activeSection === item.id }"
+            :aria-current="activeSection === item.id ? 'page' : undefined"
+            @click="selectSection(item.id)"
+          >{{ t(`nav.${item.id}`) }}</button>
+        </nav>
+        <div class="overview-actions">
+          <OverviewSearch @select="selectSearchResult" />
+          <button
+            type="button"
+            class="overview-action ros-connection-action"
+            :class="`is-${rosConnectionStore.state.value}`"
+            :title="rosStatus.label"
+            :aria-label="rosStatus.label"
+            :data-tooltip="rosStatus.label"
+          >
+            <component :is="rosStatusIcon" :size="17" :stroke-width="1.8" />
+            <span class="ros-status-dot" :style="{ backgroundColor: rosStatus.color }"></span>
+          </button>
+          <button
+            type="button"
+            class="overview-action theme-toggle"
+            :title="themeToggleLabel"
+            :aria-label="themeToggleLabel"
+            :data-tooltip="themeToggleLabel"
+            @click="toggleColorMode"
+          >
+            <Transition name="theme-icon" mode="out-in">
+              <Sun v-if="darkMode" key="sun" class="theme-icon" :size="17" :stroke-width="1.8" />
+              <Moon v-else key="moon" class="theme-icon" :size="17" :stroke-width="1.8" />
+            </Transition>
+          </button>
+          <button type="button" class="overview-action" :title="t('common.fullscreen')" :aria-label="t('common.fullscreen')" @click="toggleFullscreen">
+            <Maximize :size="17" :stroke-width="1.8" />
+          </button>
+          <div ref="userMenuRoot" class="user-menu-root" @mouseenter="openUserMenu" @mouseleave="closeUserMenuSoon" @focusin="openUserMenu" @focusout="onUserMenuFocusOut" @keydown.esc="userMenuOpen = false">
+            <button type="button" class="overview-action user-menu-trigger" :aria-label="t('user.menu')" :aria-expanded="userMenuOpen" aria-haspopup="menu" @click="userMenuOpen = !userMenuOpen">
+              <img v-if="authStore.currentUser.value.avatarUrl" class="navbar-user-avatar" :src="authStore.currentUser.value.avatarUrl" alt="">
+              <span v-else class="navbar-user-initial">{{ authStore.currentUser.value.name.charAt(0).toUpperCase() }}</span>
+            </button>
+            <Transition name="user-menu-pop">
+              <div v-if="userMenuOpen" class="user-menu" role="menu">
+                <button type="button" role="menuitem" @click="openProfileDialog"><UserRoundPen :size="14" />{{t('user.profile')}}</button>
+                <button type="button" role="menuitem" :aria-expanded="languageMenuOpen" @click="languageMenuOpen=!languageMenuOpen"><Languages :size="14" />{{t('user.language')}}：{{locale==='en'?'English':'中文'}}</button>
+                <div v-if="languageMenuOpen" class="language-options" role="group" :aria-label="t('user.language')"><button type="button" :aria-pressed="locale==='zh-TW'" @click="chooseLanguage('zh-TW')">中文</button><button type="button" :aria-pressed="locale==='en'" @click="chooseLanguage('en')">English</button></div>
+                <button type="button" role="menuitem" @click="handleLogout"><LogOut :size="14" />{{t('user.logout')}}</button>
+              </div>
+            </Transition>
+          </div>
+        </div>
+      </header>
+    </div>
+    <Teleport to="body">
+      <div v-if="profileDialogOpen" class="profile-dialog-backdrop" @click.self="profileDialogOpen=false">
+        <section class="profile-dialog" role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title">
+          <header><h2 id="profile-dialog-title">{{t('user.profile')}}</h2><button type="button" :aria-label="t('user.close')" @click="profileDialogOpen=false"><X :size="17"/></button></header>
+          <div class="profile-avatar-preview"><span>{{ (profileName.trim() || authStore.currentUser.value.name).charAt(0).toUpperCase() }}</span><img v-if="profileAvatarPreview" :src="profileAvatarPreview" alt="頭像預覽"></div>
+          <label>{{t('user.displayName')}}<input v-model="profileName" maxlength="40" autocomplete="name"></label>
+          <label>{{t('user.avatar')}}<input ref="profileFileInput" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" @change="previewProfileAvatar"><button type="button" class="profile-file-button" @click="selectProfileAvatar">{{t('user.chooseImage')}}</button><small>JPG, PNG, WebP · 3 MB max</small></label>
+          <p v-if="profileError" role="alert">{{ t(`user.${profileError}`) }}</p>
+          <footer><button type="button" @click="profileDialogOpen=false">{{t('user.cancel')}}</button><button type="button" class="profile-save" :disabled="!profileName.trim()" @click="saveProfile">{{t('user.save')}}</button></footer>
+        </section>
+      </div>
+    </Teleport>
+  </main>
+</template>
+
+<style scoped>
+.overview-page {
+  position: relative;
+  --overview-content-left: 18px;
+  --overview-content-right: 18px;
+  --overview-calendar-width: 292px;
+  --overview-column-gap: 18px;
+  --overview-main-right: calc(var(--overview-calendar-width) + var(--overview-column-gap) + var(--overview-content-right));
+  --overview-top-row: 124px;
+  --overview-calendar-bottom: 416px;
+  --overview-task-progress-top: 250px;
+  --overview-task-progress-height: calc(var(--overview-calendar-bottom) - var(--overview-task-progress-top));
+  --overview-top-bottom-offset: calc(100% - var(--overview-calendar-bottom));
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--text-primary);
+  background: transparent;
+  transition:
+    color 300ms ease,
+    background-color 300ms ease;
+}
+
+.overview-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+
+.overview-navbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  min-height: 62px;
+  padding: 0 var(--app-page-gutter);
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: none;
+  transition:
+    color 300ms ease,
+    color 300ms ease;
+}
+
+.top-navbar {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+:global([data-theme='dark']) .overview-navbar,
+:global([data-theme='dark']) .top-navbar {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.overview-navbar :deep(.overview-search__field),
+.overview-action {
+  background-color: rgba(255, 255, 255, 0.68);
+  border-color: rgba(25, 30, 27, 0.08);
+}
+
+:global([data-theme='dark']) .overview-navbar :deep(.overview-search__field),
+:global([data-theme='dark']) .overview-action {
+  background-color: rgba(37, 40, 38, 0.78);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.brand {
+  flex: 0 0 auto;
+  display: flex;
+  height: 36px;
+  align-items: center;
+  justify-self: start;
+  padding: 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: auto;
+}
+
+:global([data-theme='dark']) .brand {
+  background: transparent;
+  border-color: transparent;
+}
+
+.overview-nav {
+  display: flex;
+  justify-self: center;
+  min-width: 0;
+  justify-content: center;
+  gap: 30px;
+  margin: 0;
+  pointer-events: auto;
+}
+
+.overview-nav__link {
+  position: relative;
+  padding: 9px 2px;
+  color: var(--text-secondary);
+  font-size: var(--navbar-font-size);
+  font-weight: 500;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color 220ms ease;
+}
+
+.overview-nav__link::after {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  left: 2px;
+  height: 2px;
+  background: var(--nav-hover);
+  border-radius: 999px;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 200ms ease;
+}
+
+.overview-nav__link:hover,
+.overview-nav__link:focus-visible {
+  color: var(--nav-hover);
+}
+
+.overview-nav__link:hover::after,
+.overview-nav__link:focus-visible::after,
+.overview-nav__link--active::after {
+  transform: scaleX(1);
+}
+
+.overview-nav__link--active {
+  color: var(--nav-active);
+}
+
+.overview-nav__link--active::after {
+  background: var(--nav-active);
+}
+
+.overview-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  justify-self: end;
+  pointer-events: auto;
+}
+
+.overview-action {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  color: var(--icon-color);
+  font-size: 1.2rem;
+  line-height: 1;
+  background: var(--icon-button-background);
+  border: 1px solid var(--icon-button-border);
+  border-radius: 9px;
+  box-shadow: var(--control-shadow);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  cursor: pointer;
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    transform 180ms ease;
+}
+
+.overview-action:hover {
+  color: var(--wood-accent);
+  background: var(--icon-button-hover);
+}
+
+.overview-action:active {
+  transform: scale(0.94);
+}
+
+.overview-action:focus-visible {
+  outline: 2px solid var(--wood-accent);
+  outline-offset: 3px;
+}
+.user-menu-root { position:relative; }
+.navbar-user-avatar{width:24px;height:24px;object-fit:cover;border-radius:50%}.navbar-user-initial{display:grid;width:24px;height:24px;place-items:center;color:var(--text-secondary);font-size:10px;font-weight:700;background:var(--surface-2);border-radius:50%}
+.user-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:70; width:180px; padding:5px; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:8px; box-shadow:var(--navbar-shadow); }
+.user-menu button { display:flex; width:100%; min-height:32px; align-items:center; gap:7px; padding:0 9px; color:var(--text-primary); font-size:12px; background:transparent; border:0; border-radius:5px; cursor:pointer; }
+.user-menu button:hover,.user-menu button:focus-visible { color:var(--accent-orange); background:var(--icon-button-hover); outline:none; }
+.language-options{display:flex;gap:4px;padding:3px 4px 6px 24px}.language-options button{justify-content:center;min-height:27px;padding:0 6px;font-size:11px}.language-options button[aria-pressed=true]{color:var(--accent-orange);background:var(--theme-primary-soft);font-weight:700}
+.user-menu-pop-enter-active,.user-menu-pop-leave-active { transition:opacity 140ms ease,transform 140ms ease; }
+.user-menu-pop-enter-from,.user-menu-pop-leave-to { opacity:0; transform:translateY(-3px); }
+
+.theme-icon {
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(180deg) scale(1.08);
+}
+
+.ros-status-dot { position:absolute; right:4px; bottom:4px; width:6px; height:6px; border:1px solid var(--icon-button-background); border-radius:50%; }
+.ros-connection-action.is-connected { color:#42a66b; }
+.ros-connection-action.is-connecting { color:var(--semantic-warning); }
+.ros-connection-action.is-disconnected { color:var(--semantic-error); }
+.ros-connection-action.is-connecting .ros-status-dot { animation:ros-connection-breathe 1.8s ease-in-out infinite; }
+.ros-connection-action::after { position:absolute; top:calc(100% + 9px); right:-5px; z-index:30; padding:6px 9px; color:var(--text-primary); font-size:.7rem; line-height:1; white-space:nowrap; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:7px; box-shadow:var(--navbar-shadow); opacity:0; pointer-events:none; content:attr(data-tooltip); transform:translateY(-3px); transition:opacity 160ms ease,transform 160ms ease; }
+.ros-connection-action:hover::after,.ros-connection-action:focus-visible::after { opacity:1; transform:translateY(0); }
+@keyframes ros-connection-breathe { 50% { opacity:.42; transform:scale(.78); } }
+
+.theme-toggle::after {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: -5px;
+  z-index: 30;
+  padding: 6px 9px;
+  color: var(--text-primary);
+  font-size: 0.7rem;
+  line-height: 1;
+  white-space: nowrap;
+  background: var(--dropdown-background);
+  border: 1px solid var(--glass-border);
+  border-radius: 7px;
+  box-shadow: var(--navbar-shadow);
+  opacity: 0;
+  pointer-events: none;
+  content: attr(data-tooltip);
+  transform: translateY(-3px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.theme-toggle:hover::after,
+.theme-toggle:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+:global(.profile-dialog-backdrop){position:fixed;z-index:2000;inset:0;display:grid;place-items:center;padding:20px;background:rgba(11,11,10,.52);backdrop-filter:blur(4px)}:global(.profile-dialog){display:grid;box-sizing:border-box;width:min(390px,calc(100vw - 32px));gap:15px;padding:18px;color:var(--text-primary);background:var(--panel-background-strong);border:1px solid var(--panel-border);border-radius:var(--radius-panel);box-shadow:var(--dropdown-shadow)}:global(.profile-dialog>header){display:flex;align-items:center;justify-content:space-between}:global(.profile-dialog h2){margin:0;font-size:17px}:global(.profile-dialog header button){display:grid;width:30px;height:30px;place-items:center;padding:0;color:var(--text-muted);background:transparent;border:0;border-radius:var(--radius-control);cursor:pointer}:global(.profile-avatar-preview){position:relative;display:grid;width:68px;height:68px;place-items:center;overflow:hidden;color:var(--text-secondary);font-size:24px;background:var(--surface-3);border:1px solid var(--panel-border);border-radius:50%}:global(.profile-avatar-preview img){position:absolute;width:100%;height:100%;object-fit:cover}:global(.profile-dialog>label){display:grid;gap:7px;color:var(--text-secondary);font-size:12px}:global(.profile-dialog label input:not(.sr-only)){height:38px;padding:0 10px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--panel-border);border-radius:var(--radius-control);outline:none}:global(.profile-dialog label input:focus){border-color:var(--theme-primary-border);box-shadow:0 0 0 3px var(--focus-ring)}:global(.profile-file-button){justify-self:start;padding:7px 10px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--panel-border);border-radius:var(--radius-control);cursor:pointer}:global(.profile-dialog label small){color:var(--text-muted)}:global(.profile-dialog>p){margin:0;color:var(--semantic-error);font-size:11px}:global(.profile-dialog>footer){display:flex;justify-content:flex-end;gap:8px}:global(.profile-dialog footer button){min-width:70px;height:34px;color:var(--text-secondary);background:transparent;border:1px solid var(--panel-border);border-radius:var(--radius-control);cursor:pointer}:global(.profile-dialog footer .profile-save){color:#fff;background:var(--theme-primary);border-color:transparent}:global(.profile-dialog footer .profile-save:disabled){color:var(--text-disabled);background:var(--surface-3);cursor:not-allowed}
+
+.theme-icon-enter-active,
+.theme-icon-leave-active {
+  transition:
+    opacity 240ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-icon-enter-from {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.8);
+}
+
+.theme-icon-leave-to {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
+}
+
+@media (max-width: 720px) {
+  .overview-navbar {
+    top: 0;
+    right: 0;
+    left: 0;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 6px;
+    min-height: 58px;
+    padding: 0 14px;
+  }
+
+  .overview-nav {
+    justify-content: flex-start;
+    justify-self: stretch;
+    width: 100%;
+    gap: 12px;
+    margin: 0 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .overview-nav::-webkit-scrollbar { display: none; }
+
+  .brand { padding: 8px 0; font-size: 13px; }
+
+  .overview-actions { justify-content: flex-end; }
+
+  .overview-nav__link {
+    padding: 8px 2px;
+    white-space: nowrap;
+  }
+
+}
+
+@media (max-width: 900px) {
+  .overview-navbar.history-navbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 42px 32px;
+    min-height: 80px;
+    padding: 0 12px;
+  }
+  .history-navbar .brand { grid-column: 1; grid-row: 1; white-space: nowrap; }
+  .history-navbar .overview-actions { grid-column: 2; grid-row: 1; }
+  .history-navbar .overview-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 18px;
+    margin: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .history-navbar .overview-nav::-webkit-scrollbar { display: none; }
+  .history-navbar .overview-nav__link { padding: 5px 2px; white-space: nowrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overview-page,
+  .overview-navbar,
+  .overview-action,
+  .theme-icon,
+  .theme-icon-enter-active,
+  .theme-icon-leave-active {
+    transition-duration: 0.01ms;
+  }
+  .ros-connection-action.is-connecting .ros-status-dot { animation:none; }
+  .glass-switch,.glass-switch span { transition:none; }
+}
+.overview-page.app-shell--overview{background:radial-gradient(ellipse at 48% 38%,rgba(195,205,202,.65) 0%,rgba(226,231,229,.42) 36%,rgba(247,248,247,0) 68%),linear-gradient(135deg,#f8f9f8 0%,#eef1f0 46%,#e2e7e5 100%)}
+:global(html[data-theme='dark']) .overview-page.app-shell--overview{background:radial-gradient(ellipse at 48% 38%,rgba(81,96,91,.38) 0%,rgba(48,57,54,.24) 38%,rgba(20,24,22,0) 70%),linear-gradient(135deg,#202522 0%,#171b19 48%,#101311 100%)}
+</style>

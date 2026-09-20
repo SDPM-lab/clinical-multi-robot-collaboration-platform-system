@@ -9,7 +9,7 @@
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │  瀏覽器 (醫護人員)                                                │
-│  frontend/  (Vue 3 + Vite)  :5174                                │
+│  frontend/  (Vue 3 + Vite + Three.js)  :5174                     │
 └────────────────┬─────────────────────────┬───────────────────────┘
                  │ HTTP REST               │ WebSocket :9090
                  ▼                         ▼
@@ -58,19 +58,81 @@
 
 ### `frontend/`
 
-**Vue 3 + Vite** 前端儀表板，給醫護人員使用。
+**Vue 3 + Vite + Three.js** 醫院多機器人營運平台前端。目前正在重新設計 UI；第一階段首頁顯示可操作的靜態醫院 3D 環境，尚未接入即時機器人、人物、任務、路線或統計資料。
 
 | 路徑 | 用途 |
 |------|------|
-| `src/components/views/` | 各個頁面：機器人狀態、任務派遣、地圖、警報、甘特圖 |
-| `src/components/` | 共用元件：RobotCard、TaskModal、NotificationBell 等 |
+| `src/views/AppShellView.vue` | 應用程式共用外殼，負責 Navbar 與頁面切換 |
+| `src/views/ClinicOverviewView.vue` | Overview 首頁 Dashboard 與三層診所模型 |
+| `src/components/scene/HospitalScene.vue` | Three.js 場景、GLB 載入、透視相機取景、OrbitControls、燈光、陰影與資源清理 |
+| `src/config/sceneAssets.js` | 3D 資產路徑、場景分層與嵌入式動態物件的精確過濾設定 |
+| `public/models/` | 瀏覽器直接讀取的 GLB 模型資產 |
 | `src/js/composables/` | Vue composables：`useRobots`、`useTasks`、`useRosBridge`（WebSocket 連線） |
-| `src/js/data/` | 靜態設定資料：地圖 topics、選單、任務類型 |
-| `src/router/` | Vue Router 路由設定 |
+| `src/components/`、`src/components/views/` | 舊版任務、機器人、警報等元件暫時保留，但目前沒有掛到新版首頁路由 |
+| `src/router/` | Vue Router 路由設定；目前 `/` 顯示新版 Overview |
 | `vite.config.js` | Vite 開發伺服器設定，proxy 到後端 |
 
-**輸入**：護理人員的操作  
-**輸出**：HTTP 請求到 backend :5000；WebSocket 訂閱 :9090 取得機器人即時位置
+### Overview 第一階段
+
+目前已完成：
+
+- 以 `GLTFLoader` 載入醫院 GLB。
+- 3D 場景填滿整個瀏覽器，不放在 Dashboard 卡片內。
+- 保留 GLB 原始材質、貼圖與家具顏色，不修改模型內的材質資料。
+- 使用 `PerspectiveCamera` 與 `OrbitControls`，支援滑鼠旋轉、滾輪縮放和拖曳平移。
+- 使用 `Box3` 自動計算模型邊界、將模型置中，並依模型尺寸與相機 FOV 自動調整初始距離。
+- Resize 時更新透視相機 aspect 與 renderer 尺寸。
+- 使用 sRGB 色彩空間、ACES Filmic tone mapping、柔和環境光、方向光及陰影地面。
+- 限制 device pixel ratio，並使用 `ResizeObserver` 更新畫面尺寸。
+- 顯示中文載入進度及明確的模型載入錯誤。
+- Vue 元件卸載時清除動畫、OrbitControls、geometry、material、texture、shadow map、renderer 和 WebGL context。
+
+目前未實作：新版 Top Navbar、淺／深色切換、OpenRMF 即時位置、ROS 2 WebSocket、機器人路線、任務派遣 UI、人物動畫、統計卡片和警報資料。
+
+### 3D 場景資產分層
+
+| 資產／群組 | 現況 | 用途 |
+|------------|------|------|
+| `public/models/hospital_environment.glb` | 已建立並由 Overview 載入 | 有效場景只掛載醫院建築、牆壁、地板、門、櫃台、設備及靜態家具；內嵌動態根節點不會進入可見場景 |
+| `public/models/hospital.glb` | 保留的完整匯出模型 | 包含原場景中的機器人與人物，僅作來源／檢查用途，不由 Overview 載入 |
+| `robot_*.glb` | 尚未建立／載入 | 未來由 OpenRMF／ROS 2 座標獨立控制 |
+| `character_*.glb` | 尚未建立／載入 | 未來獨立控制人物位置、材質與動畫 |
+| `environmentGroup` | 可見 | 靜態醫院環境；若未來需要素色材質，只能套用在此群組 |
+| `robotGroup` | 隱藏 | 預留機器人圖層，目前不載入模型 |
+| `characterGroup` | 隱藏 | 預留人物圖層，目前不載入模型 |
+| `overlayGroup` | 隱藏 | 預留路線、標記和即時狀態圖層 |
+
+原始 Blender 場景位於專案根目錄的 `blender/scenes/floor_L1.blend`。完整模型曾檢查到 3 個機器人、3 個坐姿女性訪客、1 個坐姿男性訪客、1 個站立人物、1 個女性訪客與 1 個護理師。`scripts/create-environment-glb.mjs` 會從完整 GLB 的有效場景根節點解除這些動態物件，不修改或刪除原始 Blender 場景，也不改動其他靜態 Node、Mesh、材質或貼圖。
+
+Blender 場景儲存後，可在 `frontend` 目錄執行以下命令，一次重建完整模型與 Overview 環境模型：
+
+```bash
+cd frontend
+npm run models:update
+```
+
+此命令會將 Blender 中目前可見的物件匯出為 `public/models/hospital.glb`，再產生不含動態人物與機器人場景根節點的 `public/models/hospital_environment.glb`。
+
+動態物件名稱設定集中在 `src/config/sceneAssets.js`。設定使用完整物件名稱，不使用模糊的 `robot` 或 `nurse` 關鍵字，避免將 `OpenRobotics` 靜態家具、`NurseTable` 或 `NurseMonitor` 誤判為動態物件。
+
+### 啟動前端
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+正式建置檢查：
+
+```bash
+cd frontend
+npm run build
+```
+
+若只看到載入畫面或錯誤訊息，請確認 `frontend/public/models/hospital_environment.glb` 存在，並檢查瀏覽器開發者工具的 Network 與 Console。GLB 約 53 MB，第一次載入需要一些時間。
+
+舊版 composables 仍保留原本的 HTTP／WebSocket 能力，但本階段的新版 Overview 不會建立 ROSBridge 連線，也不會顯示即時或假造的機器人資料。
 
 ---
 
@@ -115,34 +177,35 @@
 |------|------|------|
 | `hospital_floor.png` | **手動放入**（底圖） | 工程圖底圖，匯入 traffic-editor 時使用 |
 | `hospital_floor_real.png` | **手動放入**（底圖） | 較精確的實際底圖 |
-| `hospital.building.yaml` | **手動用 traffic-editor 編輯** | 定義所有 waypoints（護理站、病房、充電站…）、lane 連結、測量比例 → 這是整個地圖的「唯一真實來源」 |
-| `hospital.world` | **由 hospital.building.yaml 生成** (`rmf_building_map_tools`) | Gazebo 模擬世界檔 |
+| `L1.building.yaml` | **手動用 traffic-editor 編輯** | 定義所有 waypoints（護理站、病房、充電站…）、lane 連結、測量比例 → 這是整個地圖的「唯一真實來源」 |
+| `L1.world` | **由 L1.building.yaml 生成** (`rmf_building_map_tools`) | Gazebo 模擬世界檔 |
 
 #### `models/hospital_L1/`
 
 | 檔案 | 來源 | 說明 |
 |------|------|------|
-| `model.config` | **由 hospital.building.yaml 生成** | Gazebo 模型 metadata |
-| `model.sdf` | **由 hospital.building.yaml 生成** | Gazebo 模型幾何定義（牆壁、走道） |
+| `model.config` | **由 L1.building.yaml 生成** | Gazebo 模型 metadata |
+| `model.sdf` | **由 L1.building.yaml 生成** | Gazebo 模型幾何定義（牆壁、走道） |
 
 #### `nav_graphs/`
 
 | 檔案 | 來源 | 說明 |
 |------|------|------|
-| `0.yaml` | **由 hospital.building.yaml 生成** | Open-RMF 導航圖：waypoint 座標 + lane 連結。被 fleet adapter 和 Python 腳本讀取 |
+| `0.yaml` | **由 L1.building.yaml 生成** | Graph 0：Open-RMF 機器人導航圖，被 fleet adapter、模擬機器人與 Gazebo overlay 使用 |
+| `1.yaml` | **由 L1.building.yaml 生成** | Graph 1：前端 3D 場景中 Baymax、護士等人物的移動路線 |
 
-> **生成流程**：`hospital.building.yaml` → `rmf_building_map_tools`（`building_map_generator`）→ `hospital.world` + `models/hospital_L1/` + `nav_graphs/0.yaml`
+> **生成流程**：`L1.building.yaml` → `rmf_building_map_tools`（`building_map_generator`）→ `L1.world` + `models/hospital_L1/` + `nav_graphs/{0,1}.yaml`。前端再將兩套 YAML 轉成 `frontend/public/generated/` 下的 JSON。
 
 #### `config/fleet_config.yaml`
 
 **手動設定**。定義機器人艦隊參數：速度上限、車體尺寸、電池系統、充電策略、兩台機器人的充電站位置（`charging_station`）。
 
-**輸入**：`hospital.launch.xml` 啟動時讀取  
+**輸入**：`hospital.launch.py` 啟動時讀取
 **輸出**：告訴 fleet adapter 如何管理 `hospital_robot_1`、`hospital_robot_2`
 
-#### `launch/hospital.launch.xml`
+#### `launch/hospital.launch.py`
 
-**輸入**：`maps/hospital.building.yaml`、`nav_graphs/0.yaml`、`config/fleet_config.yaml`  
+**輸入**：`maps/L1.building.yaml`、`nav_graphs/0.yaml`、`config/fleet_config.yaml`
 **輸出**：啟動 Open-RMF 共用節點（排程、交通管理、視覺化）+ 醫院艦隊 adapter
 
 #### `scripts/` — 四個 Python 節點
@@ -236,7 +299,7 @@ score = 與目標的歐氏距離
 ros2 run my_hospital_rmf hospital_fake_robot_state_publisher
 
 # 4. Open-RMF 主體（排程 + 艦隊 adapter）
-ros2 launch my_hospital_rmf hospital.launch.xml
+ros2 launch my_hospital_rmf hospital.launch.py
 
 # 5. 規則派遣器
 ros2 run my_hospital_rmf hospital_rule_dispatcher
@@ -284,7 +347,7 @@ hospital_rosbridge_ws_adapter.py 廣播
 
 ---
 
-## 地圖 Waypoints（`nav_graphs/0.yaml` / `hospital.building.yaml`）
+## 地圖 Waypoints（`nav_graphs/0.yaml` / `L1.building.yaml`）
 
 | Waypoint 名稱 | 對應位置 |
 |--------------|---------|

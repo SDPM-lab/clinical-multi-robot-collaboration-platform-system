@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import TaskAssignmentDashboard from '@/components/TaskAssignmentDashboard.vue'
-</script>
-
 <template>
-  <TaskAssignmentDashboard />
+  <RouterView />
 </template>
+
+<script setup>
+import { RouterView } from 'vue-router'
+</script>

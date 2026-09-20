@@ -4,11 +4,11 @@
     <static>true</static>
 
     <link name="lane_0_1">
-      <pose>13.995817 -16.191175 0.08 0 0 0.001659</pose>
+      <pose>14.537003 -16.213643 0.08 0 0 -0.002525</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>10.085613 0.08 0.04</size>
+            <size>11.168006 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -19,26 +19,11 @@
     </link>
 
     <link name="lane_1_2">
-      <pose>19.059434 -17.140068 0.08 0 0 -1.549053</pose>
+      <pose>20.127899 -17.189085 0.08 0 0 -1.563607</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.914975 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_1_3">
-      <pose>24.123175 -16.213282 0.08 0 0 -0.005994</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>10.169300 0.08 0.04</size>
+            <size>1.922733 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -49,81 +34,6 @@
     </link>
 
     <link name="lane_3_4">
-      <pose>29.205916 -18.998648 0.08 0 0 -1.571456</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>5.509781 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_4_5">
-      <pose>29.713364 -21.744601 0.08 0 0 0.017548</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.018689 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_3_6">
-      <pose>29.768182 -16.193714 0.08 0 0 0.089057</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.125356 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_6_7">
-      <pose>30.814193 -16.140506 0.08 0 0 0.006516</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>0.971146 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_7_8">
-      <pose>31.286877 -16.360958 0.08 0 0 -1.628326</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>0.447973 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_6_9">
       <pose>30.318944 -15.628062 0.08 0 0 1.589581</pose>
       <visual name="visual">
         <geometry>
@@ -138,7 +48,7 @@
       </visual>
     </link>
 
-    <link name="lane_9_10">
+    <link name="lane_4_5">
       <pose>30.318944 -14.917509 0.08 0 0 1.521147</pose>
       <visual name="visual">
         <geometry>
@@ -153,7 +63,7 @@
       </visual>
     </link>
 
-    <link name="lane_10_11">
+    <link name="lane_5_6">
       <pose>30.318611 -12.690940 0.08 0 0 1.575728</pose>
       <visual name="visual">
         <geometry>
@@ -168,7 +78,7 @@
       </visual>
     </link>
 
-    <link name="lane_11_12">
+    <link name="lane_6_7">
       <pose>30.328617 -9.478382 0.08 0 0 1.553840</pose>
       <visual name="visual">
         <geometry>
@@ -183,7 +93,7 @@
       </visual>
     </link>
 
-    <link name="lane_12_13">
+    <link name="lane_7_8">
       <pose>30.348643 -8.137325 0.08 0 0 1.570796</pose>
       <visual name="visual">
         <geometry>
@@ -198,7 +108,7 @@
       </visual>
     </link>
 
-    <link name="lane_13_14">
+    <link name="lane_8_9">
       <pose>30.327728 -7.125746 0.08 0 0 1.595354</pose>
       <visual name="visual">
         <geometry>
@@ -213,12 +123,12 @@
       </visual>
     </link>
 
-    <link name="lane_14_15">
-      <pose>26.850073 -6.287585 0.08 0 0 -3.137747</pose>
+    <link name="lane_10_11">
+      <pose>18.783595 -6.322405 0.08 0 0 3.123477</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>6.913533 0.08 0.04</size>
+            <size>2.931122 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -228,37 +138,7 @@
       </visual>
     </link>
 
-    <link name="lane_15_16">
-      <pose>21.244771 -6.292706 0.08 0 0 3.137788</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>4.297153 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_16_17">
-      <pose>18.207243 -6.290194 0.08 0 0 -3.135223</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.777972 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_17_18">
+    <link name="lane_11_12">
       <pose>15.236620 -6.315868 0.08 0 0 -3.131979</pose>
       <visual name="visual">
         <geometry>
@@ -273,7 +153,7 @@
       </visual>
     </link>
 
-    <link name="lane_18_19">
+    <link name="lane_12_13">
       <pose>11.039988 -6.339239 0.08 0 0 -3.140005</pose>
       <visual name="visual">
         <geometry>
@@ -288,7 +168,7 @@
       </visual>
     </link>
 
-    <link name="lane_19_20">
+    <link name="lane_13_14">
       <pose>8.928315 -6.859649 0.08 0 0 -1.564408</pose>
       <visual name="visual">
         <geometry>
@@ -303,52 +183,7 @@
       </visual>
     </link>
 
-    <link name="lane_20_21">
-      <pose>8.921612 -8.937946 0.08 0 0 -1.577205</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>3.122554 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_21_22">
-      <pose>8.911606 -10.759403 0.08 0 0 -1.570796</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>0.520424 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_22_23">
-      <pose>8.931618 -12.931126 0.08 0 0 -1.560327</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>3.823232 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_23_0">
+    <link name="lane_15_0">
       <pose>8.952324 -15.521090 0.08 0 0 -1.569774</pose>
       <visual name="visual">
         <geometry>
@@ -363,7 +198,7 @@
       </visual>
     </link>
 
-    <link name="lane_0_24">
+    <link name="lane_0_16">
       <pose>8.942318 -17.472640 0.08 0 0 -1.579201</pose>
       <visual name="visual">
         <geometry>
@@ -378,12 +213,12 @@
       </visual>
     </link>
 
-    <link name="lane_24_25">
-      <pose>8.951630 -20.617237 0.08 0 0 -1.560104</pose>
+    <link name="lane_17_16">
+      <pose>7.481744 -18.734675 0.08 0 0 -0.007629</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>3.743216 0.08 0.04</size>
+            <size>2.899833 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -393,12 +228,12 @@
       </visual>
     </link>
 
-    <link name="lane_25_26">
-      <pose>8.971642 -23.679677 0.08 0 0 -1.570796</pose>
+    <link name="lane_18_15">
+      <pose>7.769573 -14.816297 0.08 0 0 -0.022280</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>2.381878 0.08 0.04</size>
+            <size>2.364701 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -408,12 +243,12 @@
       </visual>
     </link>
 
-    <link name="lane_26_27">
-      <pose>8.339333 -24.899690 0.08 0 0 -3.095644</pose>
+    <link name="lane_19_20">
+      <pose>7.707885 -11.058598 0.08 0 0 -0.010769</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.265953 0.08 0.04</size>
+            <size>2.538818 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -423,12 +258,12 @@
       </visual>
     </link>
 
-    <link name="lane_28_25">
-      <pose>8.348520 -22.478774 0.08 0 0 -0.015990</pose>
+    <link name="lane_21_14">
+      <pose>7.759567 -7.391495 0.08 0 0 0.012622</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.246402 0.08 0.04</size>
+            <size>2.344288 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -438,12 +273,12 @@
       </visual>
     </link>
 
-    <link name="lane_29_24">
-      <pose>8.319321 -18.753133 0.08 0 0 0.012080</pose>
+    <link name="lane_22_23">
+      <pose>7.708593 -3.522856 0.08 0 0 0.028945</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.224682 0.08 0.04</size>
+            <size>2.394760 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -453,82 +288,7 @@
       </visual>
     </link>
 
-    <link name="lane_30_23">
-      <pose>8.347688 -14.828107 0.08 0 0 -0.024054</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.208233 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_31_22">
-      <pose>8.309315 -11.007375 0.08 0 0 -0.020320</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.204830 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_32_21">
-      <pose>9.374075 -10.517690 0.08 0 0 3.101613</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>0.925679 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_33_20">
-      <pose>8.328508 -7.359312 0.08 0 0 -0.028824</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.206720 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_34_35">
-      <pose>8.272428 -3.495572 0.08 0 0 0.011640</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.266174 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_35_19">
+    <link name="lane_23_13">
       <pose>8.915242 -4.915400 0.08 0 0 -1.563951</pose>
       <visual name="visual">
         <geometry>
@@ -543,12 +303,12 @@
       </visual>
     </link>
 
-    <link name="lane_36_18">
-      <pose>13.138783 -5.810863 0.08 0 0 -1.539985</pose>
+    <link name="lane_24_12">
+      <pose>13.172020 -4.962016 0.08 0 0 -1.583210</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.050534 0.08 0.04</size>
+            <size>2.747941 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -558,12 +318,12 @@
       </visual>
     </link>
 
-    <link name="lane_37_17">
-      <pose>17.320148 -5.782496 0.08 0 0 -1.574446</pose>
+    <link name="lane_25_11">
+      <pose>17.300122 -4.918758 0.08 0 0 -1.557615</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.026727 0.08 0.04</size>
+            <size>2.754435 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -573,12 +333,12 @@
       </visual>
     </link>
 
-    <link name="lane_38_15">
-      <pose>23.398176 -5.765829 0.08 0 0 -1.579848</pose>
+    <link name="lane_26_27">
+      <pose>30.890689 -4.772915 0.08 0 0 -1.585395</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.070147 0.08 0.04</size>
+            <size>2.966151 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -588,22 +348,7 @@
       </visual>
     </link>
 
-    <link name="lane_39_40">
-      <pose>30.881030 -5.743305 0.08 0 0 -1.594187</pose>
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>1.025336 0.08 0.04</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.05 0.05 0.05 1</ambient>
-          <diffuse>0.05 0.05 0.05 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="lane_40_14">
+    <link name="lane_27_9">
       <pose>30.587927 -6.265061 0.08 0 0 -3.108775</pose>
       <visual name="visual">
         <geometry>
@@ -618,12 +363,12 @@
       </visual>
     </link>
 
-    <link name="lane_41_12">
-      <pose>29.289892 -8.260270 0.08 0 0 -0.035102</pose>
+    <link name="lane_28_7">
+      <pose>28.665119 -8.332478 0.08 0 0 0.020803</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>2.118807 0.08 0.04</size>
+            <size>3.367776 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -633,12 +378,12 @@
       </visual>
     </link>
 
-    <link name="lane_42_13">
-      <pose>31.336796 -7.953289 0.08 0 0 -3.117399</pose>
+    <link name="lane_29_8">
+      <pose>32.179731 -7.966543 0.08 0 0 -3.135772</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.976886 0.08 0.04</size>
+            <size>3.662239 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -648,12 +393,12 @@
       </visual>
     </link>
 
-    <link name="lane_43_11">
-      <pose>31.307583 -10.662007 0.08 0 0 3.138898</pose>
+    <link name="lane_30_6">
+      <pose>31.952618 -10.597960 0.08 0 0 -3.104290</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.997992 0.08 0.04</size>
+            <size>3.290343 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -663,12 +408,12 @@
       </visual>
     </link>
 
-    <link name="lane_44_10">
-      <pose>31.326790 -14.722177 0.08 0 0 -3.141203</pose>
+    <link name="lane_31_5">
+      <pose>31.867046 -14.732419 0.08 0 0 3.135188</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>1.996320 0.08 0.04</size>
+            <size>3.076894 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -678,12 +423,12 @@
       </visual>
     </link>
 
-    <link name="lane_45_9">
-      <pose>29.260151 -15.106278 0.08 0 0 -0.005887</pose>
+    <link name="lane_32_4">
+      <pose>28.645426 -15.148050 0.08 0 0 0.021391</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>2.098248 0.08 0.04</size>
+            <size>3.328423 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -693,12 +438,312 @@
       </visual>
     </link>
 
-    <link name="lane_16_1">
-      <pose>19.067414 -11.233669 0.08 0 0 -1.576615</pose>
+    <link name="lane_3_33">
+      <pose>30.309673 -20.299584 0.08 0 0 -1.575358</pose>
       <visual name="visual">
         <geometry>
           <box>
-            <size>9.898442 0.08 0.04</size>
+            <size>8.311914 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_33_34">
+      <pose>31.060111 -24.448114 0.08 0 0 0.009596</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.538861 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_3_1">
+      <pose>25.224809 -16.185707 0.08 0 0 -3.133357</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>10.207989 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_35_36">
+      <pose>21.892373 -14.928390 0.08 0 0 -0.000494</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>3.542771 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_10_35">
+      <pose>20.184952 -10.638234 0.08 0 0 -1.585708</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>8.579516 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_35_1">
+      <pose>20.120988 -15.577629 0.08 0 0 -1.570796</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.300228 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_36_37">
+      <pose>23.669102 -13.856191 0.08 0 0 1.565817</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>2.146173 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_28_38">
+      <pose>26.973171 -9.458967 0.08 0 0 -1.578514</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>2.182988 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_32_39">
+      <pose>26.998346 -14.361099 0.08 0 0 1.550435</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.645437 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_29_40">
+      <pose>33.990377 -7.019066 0.08 0 0 1.592614</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.874084 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_30_41">
+      <pose>33.588346 -11.394210 0.08 0 0 -1.580473</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.715288 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_22_42">
+      <pose>6.489399 -2.594710 0.08 0 0 1.593970</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.926115 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_21_43">
+      <pose>6.558386 -6.570946 0.08 0 0 1.605654</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.671702 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_19_44">
+      <pose>6.430015 -10.203868 0.08 0 0 1.580944</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.682209 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_18_45">
+      <pose>6.582090 -14.024836 0.08 0 0 1.577888</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.530280 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_17_46">
+      <pose>6.036491 -17.920884 0.08 0 0 1.565039</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1.605487 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_10_9">
+      <pose>25.277865 -6.311622 0.08 0 0 0.007423</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>10.058176 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_14_20">
+      <pose>8.954419 -9.224485 0.08 0 0 -1.558457</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>3.695848 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_20_47">
+      <pose>8.976693 -11.343999 0.08 0 0 -1.572737</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.543463 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_47_15">
+      <pose>8.963898 -13.229184 0.08 0 0 -1.578400</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>3.227001 0.08 0.04</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.05 0.05 0.05 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="lane_47_48">
+      <pose>11.204553 -11.612899 0.08 0 0 0.001270</pose>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>4.456778 0.08 0.04</size>
           </box>
         </geometry>
         <material>
@@ -725,7 +770,7 @@
     </link>
 
     <link name="marker_1_center_mid_junction">
-      <pose>19.038617 -16.182806 0.18 0 0 0</pose>
+      <pose>20.120988 -16.227743 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -741,7 +786,7 @@
     </link>
 
     <link name="marker_2_reception_back">
-      <pose>19.080251 -18.097329 0.18 0 0 0</pose>
+      <pose>20.134811 -18.150426 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -756,55 +801,7 @@
       </visual>
     </link>
 
-    <link name="marker_3_right_mid_junction">
-      <pose>29.207734 -16.243758 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_4_meeting_room_junction">
-      <pose>29.204098 -21.753538 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_5_meeting_room">
-      <pose>30.222631 -21.735663 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_6_right_bottom_junction">
+    <link name="marker_3_right_bottom_junction">
       <pose>30.328631 -16.143670 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -820,39 +817,7 @@
       </visual>
     </link>
 
-    <link name="marker_7_director_room_junction">
-      <pose>31.299756 -16.137342 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_8_director_room">
-      <pose>31.273998 -16.584574 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_9_storage_junction">
+    <link name="marker_4_storage_junction">
       <pose>30.309257 -15.112453 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -868,7 +833,7 @@
       </visual>
     </link>
 
-    <link name="marker_10_therapy_room_junction">
+    <link name="marker_5_therapy_room_junction">
       <pose>30.328631 -14.722565 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -884,7 +849,7 @@
       </visual>
     </link>
 
-    <link name="marker_11_ecg_junction">
+    <link name="marker_6_ecg_junction">
       <pose>30.308591 -10.659315 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -900,7 +865,7 @@
       </visual>
     </link>
 
-    <link name="marker_12_charging_station_junction">
+    <link name="marker_7_charging_station_junction">
       <pose>30.348643 -8.297450 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -916,7 +881,7 @@
       </visual>
     </link>
 
-    <link name="marker_13_ultrasound_junction">
+    <link name="marker_8_ultrasound_junction">
       <pose>30.348643 -7.977201 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -932,7 +897,7 @@
       </visual>
     </link>
 
-    <link name="marker_14_right_top_junction">
+    <link name="marker_9_right_top_junction">
       <pose>30.306814 -6.274290 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -948,8 +913,8 @@
       </visual>
     </link>
 
-    <link name="marker_15_procedure_room_junction">
-      <pose>23.393332 -6.300880 0.18 0 0 0</pose>
+    <link name="marker_10_center_top_junction">
+      <pose>20.248915 -6.348953 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -964,23 +929,7 @@
       </visual>
     </link>
 
-    <link name="marker_16_center_top_junction">
-      <pose>19.096210 -6.284532 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_17_blood_draw_junction">
+    <link name="marker_11_blood_draw_junction">
       <pose>17.318275 -6.295856 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -996,7 +945,7 @@
       </visual>
     </link>
 
-    <link name="marker_18_lab_junction">
+    <link name="marker_12_lab_junction">
       <pose>13.154964 -6.335880 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1012,7 +961,7 @@
       </visual>
     </link>
 
-    <link name="marker_19_left_top_junction">
+    <link name="marker_13_left_top_junction">
       <pose>8.925012 -6.342597 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1028,7 +977,7 @@
       </visual>
     </link>
 
-    <link name="marker_20_ward_b_junction">
+    <link name="marker_14_ward_b_junction">
       <pose>8.931618 -7.376701 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1044,39 +993,7 @@
       </visual>
     </link>
 
-    <link name="marker_21_nurse_station_junction">
-      <pose>8.911606 -10.499191 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_22_ward_c_junction">
-      <pose>8.911606 -11.019615 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_23_ward_d_junction">
+    <link name="marker_15_ward_d_junction">
       <pose>8.951630 -14.842638 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1092,7 +1009,7 @@
       </visual>
     </link>
 
-    <link name="marker_24_consult_1_junction">
+    <link name="marker_16_consult_1_junction">
       <pose>8.931618 -18.745736 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1108,8 +1025,56 @@
       </visual>
     </link>
 
-    <link name="marker_25_consult_2_junction">
-      <pose>8.971642 -22.488738 0.18 0 0 0</pose>
+    <link name="marker_17_consult_1_1">
+      <pose>6.031869 -18.723614 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_18_ward_d_1">
+      <pose>6.587516 -14.789957 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_19_ward_c_1">
+      <pose>6.438550 -11.044929 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_20_ward_c_junction">
+      <pose>8.977221 -11.072268 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1124,24 +1089,8 @@
       </visual>
     </link>
 
-    <link name="marker_26_consult_3_junction">
-      <pose>8.971642 -24.870616 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.18</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.45 1.0 1</ambient>
-          <diffuse>0.1 0.45 1.0 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_27_consult_3">
-      <pose>7.707025 -24.928764 0.18 0 0 0</pose>
+    <link name="marker_21_ward_b_1">
+      <pose>6.587516 -7.406289 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1156,8 +1105,8 @@
       </visual>
     </link>
 
-    <link name="marker_28_consult_2">
-      <pose>7.725399 -22.468809 0.18 0 0 0</pose>
+    <link name="marker_22_ward_a_1">
+      <pose>6.511714 -3.557509 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1172,103 +1121,7 @@
       </visual>
     </link>
 
-    <link name="marker_29_consult_1">
-      <pose>7.707025 -18.760530 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_30_ward_d">
-      <pose>7.743746 -14.813577 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_31_ward_c">
-      <pose>7.707025 -10.995134 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_32_nurse_station">
-      <pose>9.836545 -10.536190 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_33_ward_b">
-      <pose>7.725399 -7.341923 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_34_ward_a">
-      <pose>7.639383 -3.502941 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_35_ward_a_junction">
+    <link name="marker_23_ward_a_junction">
       <pose>8.905472 -3.488202 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1284,8 +1137,8 @@
       </visual>
     </link>
 
-    <link name="marker_36_lab">
-      <pose>13.122601 -5.285845 0.18 0 0 0</pose>
+    <link name="marker_24_lab">
+      <pose>13.189076 -3.588152 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1300,8 +1153,8 @@
       </visual>
     </link>
 
-    <link name="marker_37_blood_draw">
-      <pose>17.322022 -5.269136 0.18 0 0 0</pose>
+    <link name="marker_25_blood_draw">
+      <pose>17.281970 -3.541660 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1316,8 +1169,8 @@
       </visual>
     </link>
 
-    <link name="marker_38_procedure_room">
-      <pose>23.403019 -5.230777 0.18 0 0 0</pose>
+    <link name="marker_26_x_ray">
+      <pose>30.912338 -3.289997 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1332,23 +1185,7 @@
       </visual>
     </link>
 
-    <link name="marker_39_pharmacy">
-      <pose>30.893020 -5.230777 0.18 0 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.24</radius>
-            <length>0.16</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.85 0.25 1</ambient>
-          <diffuse>0.1 0.85 0.25 1</diffuse>
-        </material>
-      </visual>
-    </link>
-
-    <link name="marker_40_pharmacy_junction">
+    <link name="marker_27_x_ray_junction">
       <pose>30.869039 -6.255832 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
@@ -1364,8 +1201,8 @@
       </visual>
     </link>
 
-    <link name="marker_41_charging_station">
-      <pose>28.231141 -8.223091 0.18 0 0 0</pose>
+    <link name="marker_28_charging_station">
+      <pose>26.981595 -8.367506 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1380,8 +1217,8 @@
       </visual>
     </link>
 
-    <link name="marker_42_ultrasound">
-      <pose>32.324950 -7.929378 0.18 0 0 0</pose>
+    <link name="marker_29_ultrasound_1">
+      <pose>34.010819 -7.955885 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1396,8 +1233,8 @@
       </visual>
     </link>
 
-    <link name="marker_43_ecg">
-      <pose>32.306576 -10.664700 0.18 0 0 0</pose>
+    <link name="marker_30_ecg_1">
+      <pose>33.596645 -10.536606 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1412,8 +1249,8 @@
       </visual>
     </link>
 
-    <link name="marker_44_therapy_room">
-      <pose>32.324950 -14.721788 0.18 0 0 0</pose>
+    <link name="marker_31_therapy_room">
+      <pose>33.405462 -14.742272 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
@@ -1428,8 +1265,264 @@
       </visual>
     </link>
 
-    <link name="marker_45_storage">
-      <pose>28.211045 -15.100102 0.18 0 0 0</pose>
+    <link name="marker_32_storage_1">
+      <pose>26.981595 -15.183647 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_33_pharmacy_juction">
+      <pose>30.290716 -24.455497 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_34_wp_34">
+      <pose>31.829506 -24.440731 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.12</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.55 0.55 0.55 1</ambient>
+          <diffuse>0.55 0.55 0.55 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_35_recycling_juction">
+      <pose>20.120988 -14.927515 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_36_recycling_juction_1">
+      <pose>23.663759 -14.929264 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_37_recycling_juction_2">
+      <pose>23.674445 -12.783118 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_38_wp_38">
+      <pose>26.964747 -10.550428 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.12</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.55 0.55 0.55 1</ambient>
+          <diffuse>0.55 0.55 0.55 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_39_storage_2">
+      <pose>27.015096 -13.538552 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_40_ultrasound_2">
+      <pose>33.969935 -6.082246 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_41_ecg_2">
+      <pose>33.580047 -12.251813 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_42_ward_a_2">
+      <pose>6.467083 -1.631912 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_43_ward_b_2">
+      <pose>6.529256 -5.735602 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_44_ward_c_2">
+      <pose>6.421480 -9.362806 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_45_ward_d_2">
+      <pose>6.576663 -13.259715 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_46_consult_1_2">
+      <pose>6.041112 -17.118154 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.85 0.25 1</ambient>
+          <diffuse>0.1 0.85 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_47_nurse_station_junction">
+      <pose>8.976166 -11.615730 0.18 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.18</radius>
+            <length>0.16</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.45 1.0 1</ambient>
+          <diffuse>0.1 0.45 1.0 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="marker_48_nurse_station">
+      <pose>13.432940 -11.610068 0.18 0 0 0</pose>
       <visual name="visual">
         <geometry>
           <cylinder>
