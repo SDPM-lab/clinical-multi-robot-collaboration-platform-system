@@ -93,8 +93,8 @@
 
 | 資產／群組 | 現況 | 用途 |
 |------------|------|------|
-| `public/models/hospital_environment.glb` | 已建立並由 Overview 載入 | 有效場景只掛載醫院建築、牆壁、地板、門、櫃台、設備及靜態家具；內嵌動態根節點不會進入可見場景 |
-| `public/models/hospital.glb` | 保留的完整匯出模型 | 包含原場景中的機器人與人物，僅作來源／檢查用途，不由 Overview 載入 |
+| `public/models/hospital_L1_environment.glb` | 已建立並由即時地圖載入 | 有效場景只掛載醫院建築、牆壁、地板、門、櫃台、設備及靜態家具；內嵌動態根節點不會進入可見場景 |
+| `public/models/hospital_L1.glb` | 保留的一樓完整匯出模型 | 包含原場景中的機器人與人物，僅作來源／檢查用途，不由即時地圖載入 |
 | `robot_*.glb` | 尚未建立／載入 | 未來由 OpenRMF／ROS 2 座標獨立控制 |
 | `character_*.glb` | 尚未建立／載入 | 未來獨立控制人物位置、材質與動畫 |
 | `environmentGroup` | 可見 | 靜態醫院環境；若未來需要素色材質，只能套用在此群組 |
@@ -111,7 +111,7 @@ cd frontend
 npm run models:update
 ```
 
-此命令會將 Blender 中目前可見的物件匯出為 `public/models/hospital.glb`，再產生不含動態人物與機器人場景根節點的 `public/models/hospital_environment.glb`。
+此命令會將 Blender 中目前可見的一樓物件匯出為 `public/models/hospital_L1.glb`，再產生不含動態人物與機器人場景根節點的 `public/models/hospital_L1_environment.glb`。
 
 動態物件名稱設定集中在 `src/config/sceneAssets.js`。設定使用完整物件名稱，不使用模糊的 `robot` 或 `nurse` 關鍵字，避免將 `OpenRobotics` 靜態家具、`NurseTable` 或 `NurseMonitor` 誤判為動態物件。
 
@@ -130,7 +130,7 @@ cd frontend
 npm run build
 ```
 
-若只看到載入畫面或錯誤訊息，請確認 `frontend/public/models/hospital_environment.glb` 存在，並檢查瀏覽器開發者工具的 Network 與 Console。GLB 約 53 MB，第一次載入需要一些時間。
+若只看到載入畫面或錯誤訊息，請確認 `frontend/public/models/hospital_L1_environment.glb` 存在，並檢查瀏覽器開發者工具的 Network 與 Console。GLB 約 11 MB，第一次載入需要一些時間。
 
 舊版 composables 仍保留原本的 HTTP／WebSocket 能力，但本階段的新版 Overview 不會建立 ROSBridge 連線，也不會顯示即時或假造的機器人資料。
 

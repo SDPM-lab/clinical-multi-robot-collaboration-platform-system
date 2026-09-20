@@ -26,7 +26,7 @@ describe('Graph 1 actor coordination', () => {
   it('places five actors in the five spatially best-separated high-lane components', () => {
     const { topology, definitions } = buildGraphActorPlan(navigation)
     expect(definitions).toHaveLength(5)
-    expect(definitions.map((actor) => actor.startVertexId)).toEqual(['v13', 'v0', 'v10', 'v2', 'v6'])
+    expect(definitions.map((actor) => actor.startVertexId)).toEqual(['v13', 'v1', 'v10', 'v6', 'v8'])
     expect(new Set(definitions.map((actor) => actor.startVertexId)).size).toBe(5)
     expect(new Set(definitions.map((actor) => actor.componentIndex)).size).toBe(5)
     definitions.forEach((actor, index) => {

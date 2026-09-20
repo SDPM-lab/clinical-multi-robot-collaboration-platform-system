@@ -10,7 +10,7 @@ blender/
 ├── scenes/
 │   └── floor_L1.blend
 └── scripts/
-    ├── export_hospital_glb.py
+    ├── export_hospital_l1_glb.py
     ├── furniture/
     ├── equipment/
     ├── characters/
@@ -24,7 +24,7 @@ blender/
 - `scripts/characters/`：護理師與訪客製作腳本。
 - `scripts/robots/`：Blender 機器人製作腳本。
 - `scripts/materials/`：只調整既有材質的工具。
-- `scripts/export_hospital_glb.py`：匯出前端使用的醫院 GLB。
+- `scripts/export_hospital_l1_glb.py`：將一樓主場景匯出成前端環境流程使用的 GLB。
 
 ## 開啟主場景
 
@@ -60,4 +60,4 @@ cd frontend
 npm run models:update
 ```
 
-此命令會從 `floor_L1.blend` 匯出 `hospital.glb`，再產生前端載入的 `hospital_environment.glb`。
+此命令會從 `floor_L1.blend` 匯出 `hospital_L1.glb`，再產生前端載入的 `hospital_L1_environment.glb`。

@@ -25,19 +25,19 @@ describe('RMF navigation data', () => {
     expect(navigation.sourceBuilding).toBe('ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml')
     expect(navigation.sourceNavigationGraph).toBe('ros2_ws/src/my_hospital_rmf/nav_graphs_generated/0.yaml')
     expect(navigation.levels.map((level) => level.id)).toEqual(['L1'])
-    expect(navigation.vertices).toHaveLength(46)
-    expect(navigation.lanes).toHaveLength(94)
-    expect(navigation.namedWaypoints).toHaveLength(46)
-    expect(navigation.chargingWaypoints.map((vertex) => vertex.name)).toEqual(['charging_station'])
-    expect(navigation.doors).toHaveLength(32)
+    expect(navigation.vertices).toHaveLength(49)
+    expect(navigation.lanes).toHaveLength(100)
+    expect(navigation.namedWaypoints).toHaveLength(49)
+    expect(navigation.chargingWaypoints.map((vertex) => vertex.name)).toEqual(['charging_station_1'])
+    expect(navigation.doors).toHaveLength(25)
   })
 
   it('uses a fixed inverted-Y transform aligned with the centered GLB', () => {
     const reception = navigation.vertices.find((vertex) => vertex.name === 'reception_back')
     const world = rmfToThree(reception)
     expect(rmfMapTransform.invertY).toBe(true)
-    expect(world.x).toBeCloseTo(-0.780503, 5)
-    expect(world.z).toBeCloseTo(4.670986, 5)
+    expect(world.x).toBeCloseTo(0.274057, 5)
+    expect(world.z).toBeCloseTo(4.724083, 5)
   })
 
   it('builds active routes dynamically and keeps every hop on an actual RMF lane', () => {
@@ -54,7 +54,7 @@ describe('RMF navigation data', () => {
       id: 'T002', robotId: 'R02', title: '檢體運送', origin: 'Consultation Room 2',
       destination: 'Laboratory', priority: 'normal', startTime: '11:00:00', status: 'executing',
     }])[0]
-    expect(route.vertexIds).toEqual(['v28', 'v25', 'v24', 'v0', 'v1', 'v16', 'v17', 'v18', 'v36'])
+    expect(route.vertexIds).toEqual(['v17', 'v16', 'v0', 'v1', 'v35', 'v10', 'v11', 'v12', 'v24'])
     expect(route.colors.main).toBe(0xd5ad4e)
     expect(robotVisualThemes.R02.main).toBe('#D5AD4E')
     expect(robotVisualThemes.R03.main).toBe('#4F9F91')
@@ -85,6 +85,39 @@ describe('RMF navigation data', () => {
     const firstArrowPosition = entry.arrows[0].position.clone()
     layer.update(0.5)
     expect(entry.arrows[0].position.distanceTo(firstArrowPosition)).toBeGreaterThan(0.01)
+    layer.dispose()
+  })
+
+  it('controls navigation, active routes, arrows, and robots independently', () => {
+    const route = buildActiveRoutes(navigation, [{
+      id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy',
+      destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', status: 'executing',
+    }])[0]
+    const layer = new RmfNavigationLayer({
+      data: navigation,
+      parent: new THREE.Group(),
+      routes: [route],
+      camera: new THREE.PerspectiveCamera(),
+      showRobotModels: false,
+    })
+
+    layer.setBaseVisible(false)
+    expect(layer.baseGroup.visible).toBe(false)
+    expect(layer.activeGroup.visible).toBe(true)
+
+    layer.setActiveVisible(false)
+    expect(layer.activeGroup.visible).toBe(false)
+    expect(layer.completedGroup.visible).toBe(false)
+    expect(layer.baseGroup.visible).toBe(false)
+
+    layer.setArrowsVisible(false)
+    expect(layer.routeEntries[0].arrows.every((arrow) => !arrow.visible)).toBe(true)
+    expect(layer.activeGroup.visible).toBe(false)
+
+    layer.setRobotsVisible(false)
+    expect(layer.robotGroup.visible).toBe(false)
+    expect(layer.baseGroup.visible).toBe(false)
+
     layer.dispose()
   })
 
@@ -154,10 +187,10 @@ describe('RMF navigation data', () => {
     const container = document.createElement('div')
     const canvas = document.createElement('canvas')
     const parent = new THREE.Group()
-    const waypoint = navigation.namedWaypoints.find((entry) => entry.name === 'charging_station')
+    const waypoint = navigation.namedWaypoints.find((entry) => entry.name === 'charging_station_1')
     const layer = new LocationMarkerLayer({
       data: { namedWaypoints: [waypoint] },
-      details: { charging_station: { label: 'Charging Station A', statusKey: 'charging' } },
+      details: { charging_station_1: { label: 'Charging Station A', statusKey: 'charging' } },
       parent,
       container,
       canvas,

@@ -9,7 +9,7 @@ export const ROBOT_NAV_GRAPHS = Object.freeze([
   Object.freeze({ index: 0, label: 'Graph 0・機器人導航路網' }),
 ])
 
-export const GRAPH_0_CHARGING_WAYPOINTS = Object.freeze(['charging_station'])
+export const GRAPH_0_CHARGING_WAYPOINTS = Object.freeze(['charging_station_1'])
 
 const commonRobot = Object.freeze({
   model: 'Hospital AMR',
@@ -32,7 +32,7 @@ const commonRobot = Object.freeze({
   maxPayloadKg: null,
   maxSpeedMps: 0.7,
   footprintRadiusM: 0.35,
-  chargingWaypoint: 'charging_station',
+  chargingWaypoint: 'charging_station_1',
   capabilities: Object.freeze(['藥品配送', '檢體運送', '物資補充', '文件配送', '巡檢', '自動充電']),
   completedTaskIds: Object.freeze([]),
   firmwareVersion: null,
@@ -54,7 +54,7 @@ const makeRobot = (robot) => ({
 
 const initialRobots = [
   makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', rosNamespace: '/robot_01', battery: 82, state: 'executing', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_1_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
   makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
 ]
 
