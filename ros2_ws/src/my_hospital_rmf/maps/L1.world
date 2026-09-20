@@ -365,8 +365,8 @@
           <model name="ultrasound_door" />
           <model name="ecg_door" />
           <model name="therapy_room_door" />
-          <model name="consult_a_door" />
-          <model name="ward_d_door" />
+          <model name="consult_1_door" />
+          <model name="consult_2_door" />
           <model name="ward_c_door" />
           <model name="Pantry_room" />
           <model name="clothes_return_door" />
@@ -1767,7 +1767,7 @@
         </component>
       </plugin>
     </model>
-    <model name="consult_a_door">
+    <model name="consult_1_door">
       <pose>7.698170604774579 -18.67269618605374 0.0 0 0 -1.5769923986518213</pose>
       <link name="right">
         <pose>0 0 1.11 0 0 0</pose>
@@ -1828,11 +1828,11 @@
           <dx_min_door>0.01</dx_min_door>
           <f_max_door>500.0</f_max_door>
           <ros_interface>true</ros_interface>
-          <door name="consult_a_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
+          <door name="consult_1_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
         </component>
       </plugin>
     </model>
-    <model name="ward_d_door">
+    <model name="consult_2_door">
       <pose>7.690551594163477 -14.78082507362268 0.0 0 0 -1.5772142745225555</pose>
       <link name="right">
         <pose>0 0 1.11 0 0 0</pose>
@@ -1893,7 +1893,7 @@
           <dx_min_door>0.01</dx_min_door>
           <f_max_door>500.0</f_max_door>
           <ros_interface>true</ros_interface>
-          <door name="ward_d_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
+          <door name="consult_2_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
         </component>
       </plugin>
     </model>

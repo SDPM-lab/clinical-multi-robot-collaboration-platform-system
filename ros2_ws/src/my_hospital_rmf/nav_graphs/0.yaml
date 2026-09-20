@@ -15,10 +15,15 @@ doors:
     - [22.152641118232054, -15.454462186669923]
     - [22.14320409233852, -14.44994629222028]
     map: L1
-  consult_a_door:
+  consult_1_door:
     endpoints:
     - [7.694368038458655, -19.28639430669779]
     - [7.701973171090503, -18.058998065409693]
+    map: L1
+  consult_2_door:
+    endpoints:
+    - [7.686735149868298, -15.375468728749343]
+    - [7.694368038458655, -14.186181418496014]
     map: L1
   ecg_door:
     endpoints:
@@ -115,11 +120,6 @@ doors:
     - [7.6963109555543845, -11.590777250106166]
     - [7.700280057621369, -10.372207403624373]
     map: L1
-  ward_d_door:
-    endpoints:
-    - [7.686735149868298, -15.375468728749343]
-    - [7.694368038458655, -14.186181418496014]
-    map: L1
   waste_return_door:
     endpoints:
     - [28.189090242947906, -15.616529228412107]
@@ -214,16 +214,16 @@ levels:
       - {}
     - - 17
       - 16
-      - {door_name: consult_a_door}
+      - {door_name: consult_1_door}
     - - 16
       - 17
-      - {door_name: consult_a_door}
+      - {door_name: consult_1_door}
     - - 18
       - 15
-      - {door_name: ward_d_door}
+      - {door_name: consult_2_door}
     - - 15
       - 18
-      - {door_name: ward_d_door}
+      - {door_name: consult_2_door}
     - - 19
       - 20
       - {door_name: ward_c_door}
