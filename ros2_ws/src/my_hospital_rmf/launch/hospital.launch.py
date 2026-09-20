@@ -14,9 +14,9 @@ import os
 def generate_launch_description():
 
     pkg = get_package_share_directory("my_hospital_rmf")
-    world_file = os.path.join(pkg, "maps", "hospital.world")
+    world_file = os.path.join(pkg, "maps", "L1.world")
     nav_graph  = os.path.join(pkg, "nav_graphs", "0.yaml")
-    map_yaml   = os.path.join(pkg, "maps", "hospital_map.yaml")
+    map_yaml   = os.path.join(pkg, "maps", "L1.yaml")
     fleet_cfg  = os.path.join(pkg, "config", "fleet_config.yaml")
     rviz_cfg   = os.path.join(pkg, "rviz", "hospital.rviz")
     cleanup_executable = os.path.join(
@@ -117,7 +117,7 @@ def generate_launch_description():
     )
 
     # ── Hospital Fleet Adapter ───────────────────────────────────
-    # use_sim_time=true 時加入 -sim，與 hospital.launch.xml 保持一致。
+    # use_sim_time=true 時加入 -sim，啟用模擬模式。
     hospital_fleet_adapter_sim = Node(
         package="my_hospital_rmf",
         executable="hospital_fleet_adapter",
@@ -180,13 +180,6 @@ def generate_launch_description():
     ws_adapter = Node(
         package="my_hospital_rmf",
         executable="hospital_rosbridge_ws_adapter",
-        output="screen",
-    )
-
-    # ── HTTP API Bridge（port 5050）──────────────────────────────
-    api_bridge = Node(
-        package="my_hospital_rmf",
-        executable="hospital_ros_api_bridge",
         output="screen",
     )
 
@@ -260,7 +253,6 @@ def generate_launch_description():
         # 自定義節點
         fake_robot,
         ws_adapter,
-        api_bridge,
         # 地圖
         map_server,
         lifecycle_manager,

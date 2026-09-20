@@ -2,6 +2,14 @@
 <html lang="">
   <head>
     <meta charset="UTF-8">
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('hospital-rmf-color-theme') === 'dark' ? 'dark' : 'light'
+      } catch {
+        document.documentElement.dataset.theme = 'light'
+      }
+    </script>
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite App</title>

@@ -4,7 +4,7 @@
 
 | 類型 | 說明 |
 |------|------|
-| `hospital_L1/` | 由 `hospital.building.yaml` 生成的醫院建築 |
+| `hospital_L1/` | 由 `L1.building.yaml` 生成的醫院建築 |
 | `hospital_nav_overlay/` | 由導航圖生成的路網視覺化 |
 | `simple_robot/` | 模擬機器人模型 |
 | `*_real/` | Gazebo 儲存世界時產生或使用的本地模型 |
@@ -16,7 +16,7 @@
 
 ```bash
 cd ~/clinical-multi-robot-collaboration-platform-system
-bash ros2_ws/src/my_hospital_rmf/tools/rebuild_gazebo_scene.sh
+bash ros2_ws/src/my_hospital_rmf/tools/gazebo/rebuild_l1_gazebo_scene.sh
 ```
 
 ## 模型搜尋路徑
@@ -27,4 +27,4 @@ bash ros2_ws/src/my_hospital_rmf/tools/rebuild_gazebo_scene.sh
 export GZ_SIM_RESOURCE_PATH="$GZ_SIM_RESOURCE_PATH:$HOME/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/models"
 ```
 
-額外模型建議在 `config/props.yaml` 管理，不要直接修改生成後的 `hospital.world`。
+額外模型建議在 `config/props.yaml` 管理，不要直接修改生成後的 `L1.world`。
