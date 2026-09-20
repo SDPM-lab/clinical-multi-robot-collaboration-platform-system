@@ -88,6 +88,39 @@ describe('RMF navigation data', () => {
     layer.dispose()
   })
 
+  it('controls navigation, active routes, arrows, and robots independently', () => {
+    const route = buildActiveRoutes(navigation, [{
+      id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy',
+      destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', status: 'executing',
+    }])[0]
+    const layer = new RmfNavigationLayer({
+      data: navigation,
+      parent: new THREE.Group(),
+      routes: [route],
+      camera: new THREE.PerspectiveCamera(),
+      showRobotModels: false,
+    })
+
+    layer.setBaseVisible(false)
+    expect(layer.baseGroup.visible).toBe(false)
+    expect(layer.activeGroup.visible).toBe(true)
+
+    layer.setActiveVisible(false)
+    expect(layer.activeGroup.visible).toBe(false)
+    expect(layer.completedGroup.visible).toBe(false)
+    expect(layer.baseGroup.visible).toBe(false)
+
+    layer.setArrowsVisible(false)
+    expect(layer.routeEntries[0].arrows.every((arrow) => !arrow.visible)).toBe(true)
+    expect(layer.activeGroup.visible).toBe(false)
+
+    layer.setRobotsVisible(false)
+    expect(layer.robotGroup.visible).toBe(false)
+    expect(layer.baseGroup.visible).toBe(false)
+
+    layer.dispose()
+  })
+
   it('keeps base, active, selected, and hit-target dimensions explicit', () => {
     expect(routeVisualConfig).toMatchObject({
       baseRouteRadius: 0.04,

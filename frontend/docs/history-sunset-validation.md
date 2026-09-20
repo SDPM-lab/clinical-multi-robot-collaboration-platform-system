@@ -52,7 +52,7 @@ Priority 漸層：urgent #f06a50→#ff9a62；high #ed8b2c→#ffc061；normal #f2
 
 讀取倉庫現有 `blender/hospital_beautified.blend` 得到：AgX；Preview_Sun（SUN，energy 2）；沒有 Area Light；沒有啟用 compositor；world 沒有啟用節點；Material Preview 視窗使用 Blender 內建 forest.exr，use_scene_world／use_scene_lights 為 false。這說明該檔案預覽依賴 Studio 環境，不能期待自動包含在 GLB 中。此 blend 不保證就是目前 clinic_overview.glb 的直接來源；未臆測沒有提供的 clinic 原始 .blend。
 
-現有 `blender/scripts/export_hospital_glb.py` 還明確設 `export_lights=False`（該腳本輸出 hospital.glb，不宣稱它是 clinic GLB 的匯出流程）。
+現有 `blender/scripts/export_hospital_l1_glb.py` 還明確設 `export_lights=False`（該腳本輸出 `hospital_L1.glb`，不宣稱它是 clinic GLB 的匯出流程）。
 
 網頁原先無 environment map、使用 ACES 而非 AgX，並有前端牆面／深灰與玻璃色彩覆寫，這些是已確認的顯示差異來源。現在移除廣泛 color 覆寫，保留匯出的 base color、roughness、metallic、normal、alpha、side。若日後包含 base-color／emissive texture，將其標為 SRGB。
 

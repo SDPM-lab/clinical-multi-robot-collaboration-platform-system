@@ -1,7 +1,7 @@
-const publicAssetUrl = (path, version) => `${import.meta.env.BASE_URL}${path}${version ? `?v=${version}` : ''}`
+const publicAssetUrl = (path, version) => `${import.meta.env?.BASE_URL || '/'}${path}${version ? `?v=${version}` : ''}`
 
 export const SCENE_ASSETS = Object.freeze({
-  environment: publicAssetUrl('models/hospital_environment.glb', '345fd554b325'),
+  environment: publicAssetUrl('models/hospital_L1_environment.glb', 'a0b280479946'),
   robot: publicAssetUrl('models/robot.glb', '4138e4f67c9e'),
   robots: Object.freeze([publicAssetUrl('models/robot.glb', '4138e4f67c9e')]),
   characters: Object.freeze([]),
@@ -22,6 +22,7 @@ export const EMBEDDED_DYNAMIC_ROOTS = Object.freeze({
     'hospital_robot_1',
     'hospital_robot_2',
     'hospital_robot_3',
+    'hospital_robot_4',
   ]),
   characters: Object.freeze([
     'OpenRobotics/FemaleVisitorSit',
@@ -29,7 +30,6 @@ export const EMBEDDED_DYNAMIC_ROOTS = Object.freeze({
     'OpenRobotics/FemaleVisitorSit_3',
     'OpenRobotics/MaleVisitorSit',
     'OpenRobotics/Standing person',
-    'OpenRobotics/FemaleVisitor',
     'OpenRobotics/Nurse',
   ]),
 })

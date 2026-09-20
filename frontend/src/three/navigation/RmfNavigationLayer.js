@@ -337,7 +337,12 @@ export class RmfNavigationLayer {
   setBaseVisible(value) { this.baseGroup.visible = value }
   setActiveVisible(value) { this.activeGroup.visible = value; this.completedGroup.visible = value }
   setRobotsVisible(value) { this.robotGroup.visible = value }
-  setArrowsVisible(value) { this.arrowsVisible = value }
+  setArrowsVisible(value) {
+    this.arrowsVisible = value
+    this.routeEntries.forEach((entry) => {
+      entry.arrows.forEach((arrow) => { arrow.visible = value })
+    })
+  }
   disposeVisualGroup(group) {
     group.traverse((object) => {
       object.geometry?.dispose()
