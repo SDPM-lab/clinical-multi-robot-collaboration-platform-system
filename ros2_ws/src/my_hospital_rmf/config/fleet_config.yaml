@@ -39,7 +39,7 @@ rmf_fleet:
       start_pose: [9.0, -16.0, 0.05, 0.0, 0.0, 0.0]
     hospital_robot_2:
       charger: charging_station_2
-      start_waypoint: storage_junction
+      start_waypoint: waste_return_junction
       start_pose: [11.0, -16.0, 0.05, 0.0, 0.0, 0.0]
     hospital_robot_3:
       charger: charging_station_2
