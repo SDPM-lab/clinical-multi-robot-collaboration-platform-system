@@ -3,8 +3,8 @@ import { fileURLToPath } from 'node:url'
 
 import { EMBEDDED_DYNAMIC_ROOTS } from '../src/config/sceneAssets.js'
 
-const sourceUrl = new URL('../public/models/hospital.glb', import.meta.url)
-const outputUrl = new URL('../public/models/hospital_environment.glb', import.meta.url)
+const sourceUrl = new URL('../public/models/hospital_L1.glb', import.meta.url)
+const outputUrl = new URL('../public/models/hospital_L1_environment.glb', import.meta.url)
 const dynamicRootNames = new Set([
   ...EMBEDDED_DYNAMIC_ROOTS.robots,
   ...EMBEDDED_DYNAMIC_ROOTS.characters,

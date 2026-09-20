@@ -1,10 +1,12 @@
+"""Export the visible Hospital L1 Blender scene for the frontend pipeline."""
+
 from pathlib import Path
 
 import bpy
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-OUTPUT_PATH = PROJECT_ROOT / "frontend" / "public" / "models" / "hospital.glb"
+OUTPUT_PATH = PROJECT_ROOT / "frontend" / "public" / "models" / "hospital_L1.glb"
 
 
 def main():
@@ -22,7 +24,7 @@ def main():
     if "FINISHED" not in result:
         raise RuntimeError(f"Blender GLB export failed: {result}")
 
-    print(f"Exported visible Blender scene to {OUTPUT_PATH}")
+    print(f"Exported visible Hospital L1 scene to {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
