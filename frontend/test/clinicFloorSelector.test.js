@@ -34,7 +34,7 @@ it('renders only the clicked floor connector and never creates lines on hover', 
   expect(wrapper.findAll('line')).toHaveLength(0)
   expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   await wrapper.get('.floor-label').trigger('click')
-  expect(wrapper.emitted('update:modelValue')[0]).toEqual([3])
+  expect(wrapper.emitted('update:modelValue')[0]).toEqual([1])
   await wrapper.setProps({ modelValue: 3 })
   expect(wrapper.findAll('line')).toHaveLength(1)
   await wrapper.setProps({ modelValue: 2 })

@@ -1,4 +1,5 @@
 <script setup>
+import { overviewThemeVars } from '@/styles/overviewTheme.js'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -97,7 +98,9 @@ const rosStatus = computed(() => rosConnectionStore.status.value)
 const rosStatusIcon = computed(() => rosConnectionStore.state.value === 'disconnected' ? Unplug : RadioTower)
 const searchParams = new URLSearchParams(window.location.search)
 const activeSection = ref(
-  searchParams.get('mapCameraDebug') === '1'
+  searchParams.get('dispatchDebug') === '1'
+    ? 'dispatch'
+    : searchParams.get('mapCameraDebug') === '1'
     ? 'map'
     : 'overview',
 )
@@ -169,7 +172,8 @@ onBeforeUnmount(() => {
 <template>
   <main
     class="overview-page app-shell"
-    :class="{ 'app-shell--overview': activeSection === 'overview' }"
+    :class="{ 'app-shell--overview': activeSection === 'overview', 'app-shell--dispatch': activeSection === 'dispatch' }"
+    :style="['overview', 'dispatch'].includes(activeSection) ? overviewThemeVars : undefined"
     :data-theme="currentTheme"
     aria-label="醫院三維場景總覽"
   >
@@ -446,8 +450,8 @@ onBeforeUnmount(() => {
   border: 1px solid var(--icon-button-border);
   border-radius: 9px;
   box-shadow: var(--control-shadow);
-  backdrop-filter: blur(18px) saturate(125%);
-  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  backdrop-filter: var(--control-backdrop);
+  -webkit-backdrop-filter: var(--control-backdrop);
   cursor: pointer;
   transition:
     color 220ms ease,
@@ -615,6 +619,41 @@ onBeforeUnmount(() => {
   .ros-connection-action.is-connecting .ros-status-dot { animation:none; }
   .glass-switch,.glass-switch span { transition:none; }
 }
-.overview-page.app-shell--overview{background:radial-gradient(ellipse at 48% 38%,rgba(195,205,202,.65) 0%,rgba(226,231,229,.42) 36%,rgba(247,248,247,0) 68%),linear-gradient(135deg,#f8f9f8 0%,#eef1f0 46%,#e2e7e5 100%)}
-:global(html[data-theme='dark']) .overview-page.app-shell--overview{background:radial-gradient(ellipse at 48% 38%,rgba(81,96,91,.38) 0%,rgba(48,57,54,.24) 38%,rgba(20,24,22,0) 70%),linear-gradient(135deg,#202522 0%,#171b19 48%,#101311 100%)}
+.overview-page:is(.app-shell--overview,.app-shell--dispatch){
+  --bg-page:#F2F5F7;
+  --bg-map:#E8EDF2;
+  --surface-glass:rgba(255,255,255,.52);
+  --surface-glass-strong:rgba(255,255,255,.68);
+  --glass-border:rgba(255,255,255,.72);
+  --text-primary:var(--color-text);
+  --text-secondary:var(--color-text-secondary);
+  --text-muted:var(--color-text-muted);
+  --primary-blue:var(--overview-accent);
+  --primary-blue-soft:var(--overview-accent-soft);
+  --success-teal:var(--overview-yellow-text);
+  --warning-amber:var(--overview-yellow-text);
+  --danger-coral:#DD6B62;
+  --neutral-slate:#7A8794;
+  --nav-hover:var(--theme-primary);
+  --nav-active:var(--theme-primary);
+  --focus-ring:rgba(var(--overview-accent-rgb),.18);
+  --search-background:var(--info-background);
+  --search-background-active:var(--info-background);
+  --search-border:rgba(255,255,255,.72);
+  --search-border-active:rgba(var(--overview-accent-rgb),.4);
+  --search-focus-ring:rgba(var(--overview-accent-rgb),.14);
+  --dropdown-background:var(--info-background);
+  --search-result-hover:rgba(var(--overview-accent-rgb),.09);
+  --icon-color:var(--text-secondary);
+  --icon-button-background:rgba(255,255,255,.52);
+  --icon-button-border:rgba(255,255,255,.72);
+  --icon-button-hover:var(--theme-primary-soft);
+  --control-shadow:var(--info-shadow);
+  background:var(--overview-stage-background)
+}
+:global(html[data-theme='dark']) .overview-page:is(.app-shell--overview,.app-shell--dispatch){background:var(--overview-stage-background)}
+:is(.app-shell--overview,.app-shell--dispatch) .overview-navbar :deep(.overview-search__field),:is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border);box-shadow:var(--control-shadow);backdrop-filter:var(--control-backdrop);-webkit-backdrop-filter:var(--control-backdrop)}
+:global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-navbar :deep(.overview-search__field),:global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border)}
+:is(.app-shell--overview,.app-shell--dispatch) .overview-action:hover{color:var(--theme-primary);background:var(--overview-accent-soft)}
+:is(.app-shell--overview,.app-shell--dispatch) .overview-action:focus-visible{outline-color:var(--theme-primary)}
 </style>

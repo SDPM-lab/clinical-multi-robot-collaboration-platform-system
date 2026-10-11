@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
+import TaskAccuracyGauge from '@/components/robot-status/TaskAccuracyGauge.vue'
 import RobotFleetView from '@/views/RobotFleetView.vue'
 import { fleetStore } from '@/stores/demoFleetStore.js'
 import navigation from '../public/generated/rmf-navigation.json'
@@ -15,13 +16,16 @@ describe('robot product stage', () => {
     const w = view()
     expect(w.find('.robot-control-panel').exists()).toBe(true)
     expect(w.find('.robot-control-panel').text()).not.toMatch(/即時狀態|LIVE/)
-    expect(w.find('.liquid-battery').exists()).toBe(true)
-    expect(w.find('.thermal-arc').exists()).toBe(true)
+    expect(w.find('.battery-arc').exists()).toBe(true)
+    expect(w.find('.thermal-visual').exists()).toBe(true)
+    expect(w.find('.robot-side-metrics .energy').exists()).toBe(true)
+    expect(w.find('[data-section=battery]').exists()).toBe(false)
+    expect(w.find('.robot-sidebar-title').exists()).toBe(false)
     expect(w.find('.task-accuracy-card').text()).toContain('尚無已完成任務')
     expect(w.findAll('.robot-list-item__avatar')).toHaveLength(3)
     expect(w.find('.robot-inspector').exists()).toBe(true)
-    expect(w.findAll('.robot-inspector-tabs button')).toHaveLength(4)
-    expect(w.get('.robot-inspector-tabs button[aria-current="page"]').text()).toBe('概況')
+    expect(w.findAll('.robot-accordion')).toHaveLength(7)
+    expect(w.get('[data-section=overview]').attributes('open')).toBeDefined()
     expect(w.findAll('.robot-picker button')).toHaveLength(3)
     expect(w.findAll('.robot-arrow')).toHaveLength(0)
     await w.findAll('.robot-picker button')[1].trigger('click')
@@ -38,11 +42,11 @@ describe('robot product stage', () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true, json: async () => navigation })
     const before = JSON.stringify(fleetStore.state)
     const w = view()
-    await w.findAll('.robot-inspector-tabs button')[2].trigger('click')
+    await w.get('[data-section=movement] summary').trigger('click')
     expect(w.get('.charge-button').attributes('disabled')).toBeDefined()
     expect(w.text()).toContain('控制服務未連線')
     expect(w.text()).not.toMatch(/demo|模擬/i)
-    await w.get('.inspector-action').trigger('click')
+    await w.get('[data-section=movement] .inspector-action').trigger('click')
     await flushPromises()
     const lines = w.findAll('.lane-pending')
     expect(lines.length).toBeGreaterThan(1)
@@ -61,4 +65,39 @@ describe('robot product stage', () => {
     expect(JSON.stringify(fleetStore.state)).toBe(before)
     expect(w.text()).toContain('尚未派遣')
   })
+})
+
+it('keeps robot operations as events and model selection opens Structure without losing other sections', async () => {
+ const w = view()
+ const before = JSON.stringify(fleetStore.state)
+ await w.get('.robot-sidebar-actions button').trigger('click')
+ expect(w.emitted('edit-robot')[0]).toEqual(['R01'])
+ await w.get('.add-robot').trigger('click')
+ expect(w.emitted('add-robot')).toHaveLength(1)
+ expect(JSON.stringify(fleetStore.state)).toBe(before)
+ const viewport=w.findComponent({name:'RobotViewport'})
+ viewport.vm.$emit('component-selected','display')
+ await w.vm.$nextTick()
+ expect(w.get('[data-section=structure]').attributes('open')).toBeDefined()
+ expect(w.find('[data-section=diagnostics] .task-accuracy-card').exists()).toBe(true)
+ await w.get('.robot-search input').setValue('executing')
+ expect(w.findAll('.robot-picker button')).toHaveLength(3)
+ await w.get('.robot-search input').setValue('In progress')
+ expect(w.findAll('.robot-picker button')).toHaveLength(3)
+ await w.get('.robot-search input').setValue('R02')
+ expect(w.findAll('.robot-picker button')).toHaveLength(1)
+})
+
+
+it('preserves task accuracy calculations after moving the chart into Diagnostics', () => {
+ const w = mount(TaskAccuracyGauge, { props: { robotId: 'R01', active: false, tasks: [
+  {robotId:'R01',status:'completed'}, {robotId:'R01',status:'failed'},
+  {robotId:'R01',status:'cancelled'}, {robotId:'R01',status:'executing'},
+  {robotId:'R02',status:'completed'},
+ ] } })
+ expect(w.get('.accuracy-chart').attributes('aria-label')).toContain('33.3%')
+ expect(w.get('.accuracy-line').attributes('points').split(' ')).toHaveLength(3)
+ expect(w.get('.accuracy-summary').text()).toContain('成功 1')
+ expect(w.get('.accuracy-summary').text()).toContain('異常 2')
+ w.unmount()
 })

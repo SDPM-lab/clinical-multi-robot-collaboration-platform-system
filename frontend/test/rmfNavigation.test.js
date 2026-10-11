@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { demoFleetStore } from '../src/stores/demoFleetStore.js'
 import navigation from '../public/generated/rmf-navigation.json'
 import * as THREE from 'three'
 import { rmfMapTransform, rmfToThree } from '../src/config/rmfMapTransform.js'
@@ -25,10 +26,10 @@ describe('RMF navigation data', () => {
     expect(navigation.sourceBuilding).toBe('ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml')
     expect(navigation.sourceNavigationGraph).toBe('ros2_ws/src/my_hospital_rmf/nav_graphs_generated/0.yaml')
     expect(navigation.levels.map((level) => level.id)).toEqual(['L1'])
-    expect(navigation.vertices).toHaveLength(49)
-    expect(navigation.lanes).toHaveLength(100)
-    expect(navigation.namedWaypoints).toHaveLength(49)
-    expect(navigation.chargingWaypoints.map((vertex) => vertex.name)).toEqual(['charging_station_1'])
+    expect(navigation.vertices).toHaveLength(51)
+    expect(navigation.lanes).toHaveLength(104)
+    expect(navigation.namedWaypoints).toHaveLength(51)
+    expect(navigation.chargingWaypoints.map((vertex) => vertex.name)).toEqual(['charging_station_2'])
     expect(navigation.doors).toHaveLength(25)
   })
 
@@ -54,13 +55,13 @@ describe('RMF navigation data', () => {
       id: 'T002', robotId: 'R02', title: '檢體運送', origin: 'Consultation Room 2',
       destination: 'Laboratory', priority: 'normal', startTime: '11:00:00', status: 'executing',
     }])[0]
-    expect(route.vertexIds).toEqual(['v17', 'v16', 'v0', 'v1', 'v35', 'v10', 'v11', 'v12', 'v24'])
-    expect(route.colors.main).toBe(0xd5ad4e)
-    expect(robotVisualThemes.R02.main).toBe('#D5AD4E')
-    expect(robotVisualThemes.R03.main).toBe('#4F9F91')
-    expect(robotVisualThemes.R01.main).toBe('#CF7540')
-    expect(semanticColors.success).toBe('#6F9B7B')
-    expect(semanticColors.destination).toBe('#C96561')
+    expect(route.vertexIds.map((id) => navigation.vertices.find((vertex) => vertex.id === id).name)).toEqual(['consult_2_1', 'consult_2_junction', 'nurse_station_junction', 'consult_3_junction', 'ward_b_junction', 'left_top_junction', 'lab_junction', 'lab'])
+    expect(route.colors.main).toBe(0xfbe251)
+    expect(robotVisualThemes.R02.main).toBe('#FBE251')
+    expect(robotVisualThemes.R03.main).toBe('#77746D')
+    expect(robotVisualThemes.R01.main).toBe('#FB9966')
+    expect(semanticColors.success).toBe('#77746D')
+    expect(semanticColors.destination).toBe('#FB9966')
   })
 
   it('draws the entire active route in saturated color and overlays completed segments', () => {
@@ -78,10 +79,10 @@ describe('RMF navigation data', () => {
     })
     const entry = layer.routeEntries[0]
     expect(entry.activeRouteGroup.children).toHaveLength((route.vertexIds.length - 1) * 2 + 1)
-    expect(entry.activeRouteGroup.children.every((mesh) => mesh.material.color.getHex() === 0xcf7540)).toBe(true)
+    expect(entry.activeRouteGroup.children.every((mesh) => mesh.material.color.getHex() === 0xfb9966)).toBe(true)
     expect(entry.activeRouteGroup.children.every((mesh) => mesh.material.opacity === 0.82 && mesh.material.blending === THREE.NormalBlending && mesh.renderOrder === 2)).toBe(true)
     expect(entry.completedRouteGroup.children.length).toBeGreaterThan(0)
-    expect(entry.completedRouteGroup.children.every((mesh) => mesh.material.color.getHex() === 0xb85f32 && mesh.renderOrder === 3)).toBe(true)
+    expect(entry.completedRouteGroup.children.every((mesh) => mesh.material.color.getHex() === 0xfb9966 && mesh.renderOrder === 3)).toBe(true)
     const firstArrowPosition = entry.arrows[0].position.clone()
     layer.update(0.5)
     expect(entry.arrows[0].position.distanceTo(firstArrowPosition)).toBeGreaterThan(0.01)
@@ -137,7 +138,7 @@ describe('RMF navigation data', () => {
       completedHeight: 0.065,
       arrowHeight: 0.085,
     })
-    expect(robotRouteColors.R01).toMatchObject({ main: 0xcf7540, completed: 0xb85f32 })
+    expect(robotRouteColors.R01).toMatchObject({ main: 0xfb9966, completed: 0xfb9966 })
     expect(routeLayerY).toEqual({ R01: 0.031, R02: 0.034, R03: 0.037 })
     expect(REALTIME_ROBOT_SCALE_MULTIPLIER).toBe(1.4)
     expect(ROBOT_HIT_TARGET).toMatchObject({ radius: 0.45, height: 0.8 })
@@ -153,12 +154,12 @@ describe('RMF navigation data', () => {
     const waypoint = navigation.namedWaypoints.find((entry) => entry.name === 'lab')
     const layer = new LocationMarkerLayer({
       data: { namedWaypoints: [waypoint] },
-      details: { lab: { label: 'Laboratory', taskId: 'T002', robotId: 'R02', robot: 'Robot 02', isDestination: true, color: 0xffc400, theme: robotVisualThemes.R02 } },
+      details: { lab: { label: 'Laboratory', taskId: 'T002', robotId: 'R02', robot: 'Robot 02', isDestination: true, color: 0xfbe251, theme: robotVisualThemes.R02 } },
       parent, container, camera, canvas, environmentGroup,
     })
     const entry = layer.entries[0]
     expect(entry.root.querySelector('.rmf-location__status')).toBeNull()
-    expect(entry.root.style.getPropertyValue('--robot-color')).toBe('#D5AD4E')
+    expect(entry.root.style.getPropertyValue('--robot-color')).toBe('#FBE251')
     const farPosition = entry.nodeWorld.clone().add(new THREE.Vector3(2, 0, 0))
     layer.setDestinationState([{ id: 'T002', status: 'executing' }], new Map([['R02', farPosition]]), new Map([['R02', { progress: 0.2, isFinalSegment: false }]]))
     expect(entry.destinationState).toBe('idle')
@@ -172,18 +173,18 @@ describe('RMF navigation data', () => {
     const arrivedPosition = entry.nodeWorld.clone().add(new THREE.Vector3(0.1, 0, 0))
     layer.setDestinationState([{ id: 'T002', status: 'arrived' }], new Map([['R02', arrivedPosition]]))
     expect(entry.destinationState).toBe('arrived')
-    expect(entry.cube.material.color.getHex()).toBe(0xffc400)
+    expect(entry.cube.material.color.getHex()).toBe(0xfbe251)
     expect(entry.cube.material.opacity).toBe(0.96)
     expect(entry.cube.material.emissiveIntensity).toBe(0.9)
     expect(entry.marker.scale.x).toBeCloseTo(0.74 / 0.66)
-    expect(entry.pin.userData.materials[0].color.getHex()).toBe(0xc96561)
+    expect(entry.pin.userData.materials[0].color.getHex()).toBe(0xfbe251)
     expect(entry.pin.userData.materials[0].depthTest).toBe(false)
     expect(entry.pin.userData.baseScale).toBe(1.32)
     expect(entry.pin.position.y).toBeCloseTo(rmfToThree(waypoint).y + 0.55)
     layer.dispose()
   })
 
-  it('uses neutral gray for the fixed charging station without changing Robot 03 routes', () => {
+  it('uses charging red for the fixed charging station without changing Robot 03 routes', () => {
     const container = document.createElement('div')
     const canvas = document.createElement('canvas')
     const parent = new THREE.Group()
@@ -198,16 +199,16 @@ describe('RMF navigation data', () => {
       environmentGroup: new THREE.Group(),
     })
     const entry = layer.entries[0]
-    expect(entry.cube.material.color.getHex()).toBe(0x8f9692)
-    expect(entry.outline.material.color.getHex()).toBe(0x8f9692)
+    expect(entry.cube.material.color.getHex()).toBe(0xab3b3a)
+    expect(entry.outline.material.color.getHex()).toBe(0xab3b3a)
     expect(entry.root.classList.contains('is-charging-station')).toBe(true)
-    expect(entry.root.style.getPropertyValue('--location-color')).toBe('#8f9692')
+    expect(entry.root.style.getPropertyValue('--location-color')).toBe('#ab3b3a')
 
     const chargingRoute = buildActiveRoutes(navigation, [{
       id: 'T006', robotId: 'R03', title: '前往充電', origin: 'Ward A', destination: 'Charging Station A',
       priority: 'normal', startTime: '16:00:00', status: 'executing', direction: 'outbound',
     }])[0]
-    expect(chargingRoute.colors.main).toBe(0x4f9f91)
+    expect(chargingRoute.colors.main).toBe(0x77746d)
     layer.dispose()
   })
 
@@ -223,4 +224,35 @@ describe('RMF navigation data', () => {
     expect(details.pharmacy.isDestination).toBe(true)
     expect(details.reception_back.isDestination).toBe(false)
   })
+})
+
+
+it('keeps a charging destination red when Robot 02 is assigned to it', () => {
+ const waypoint = navigation.namedWaypoints.find(entry => entry.name === 'charging_station_1')
+ const layer = new LocationMarkerLayer({
+  data: { namedWaypoints: [waypoint] },
+  details: { charging_station_1: { label: 'Charging Station A', statusKey: 'active', taskId: 'T006', robotId: 'R02', color: 0xfbe251, theme: robotVisualThemes.R02, isDestination: true } },
+  parent: new THREE.Group(), container: document.createElement('div'), canvas: document.createElement('canvas'),
+  camera: new THREE.PerspectiveCamera(), environmentGroup: new THREE.Group(),
+ })
+ const entry = layer.entries[0]
+ expect(entry.root.classList.contains('is-charging-station')).toBe(true)
+ expect(entry.cube.material.color.getHex()).toBe(0xab3b3a)
+ expect(entry.pin.userData.materials[0].color.getHex()).toBe(0xab3b3a)
+ expect(entry.root.style.getPropertyValue('--robot-color')).toBe('#FBE251')
+ layer.dispose()
+})
+
+
+it('routes Robot 02 from Consultation Room 2 through the Pantry door', () => {
+  const route = buildActiveRoutes(navigation, demoFleetStore.tasks.value).find((entry) => entry.robotId === 'R02')
+  expect(route.origin).toBe('Consultation Room 2')
+  expect(route.destination).toBe('Pantry')
+  const byId = new Map(navigation.vertices.map((vertex) => [vertex.id, vertex]))
+  expect(byId.get(route.vertexIds[0]).name).toBe('consult_2_1')
+  expect(byId.get(route.vertexIds.at(-1)).name).toBe('pantry')
+  const lanes = route.vertexIds.slice(1).map((to, index) => navigation.lanes.find((lane) => lane.from === route.vertexIds[index] && lane.to === to))
+  expect(lanes.every(Boolean)).toBe(true)
+  expect(lanes.at(-1).doorName).toBe('Pantry_room')
+  expect(buildLocationDetails(demoFleetStore.tasks.value).pantry).toMatchObject({ taskId: 'T002', robotId: 'R02', isDestination: true })
 })

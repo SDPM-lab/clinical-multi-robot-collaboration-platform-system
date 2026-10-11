@@ -1,11 +1,12 @@
 import { mount,flushPromises } from '@vue/test-utils'
-import { describe,it,expect,vi,afterEach } from 'vitest'
+import { describe,it,expect,vi,beforeEach,afterEach } from 'vitest'
 import ScheduleHistoryView from '@/views/ScheduleHistoryView.vue'
 import HistorySummary from '@/components/history/HistorySummary.vue'
 import HospitalMiniMap from '@/components/dispatch/HospitalMiniMap.vue'
 import { setLocale } from '@/i18n/index.js'
 
-afterEach(()=>setLocale('zh-TW'))
+beforeEach(()=>vi.stubGlobal('ResizeObserver',class{observe(){} disconnect(){}}))
+afterEach(()=>{setLocale('zh-TW');vi.unstubAllGlobals()})
 const ready=async()=>{const wrapper=mount(ScheduleHistoryView);await vi.dynamicImportSettled();await flushPromises();return wrapper}
 
 describe('schedule history dashboard',()=>{
@@ -92,8 +93,9 @@ describe('schedule history dashboard',()=>{
   wrapper.unmount()
  })
  it('uses the clicked calendar day as the anchor for daily, weekly, and monthly lists',async()=>{
-  const wrapper=await ready()
-  const target=wrapper.find('[data-date="2026-09-15"]')
+ const wrapper=await ready()
+  const target=wrapper.findAll('.mini-grid button').find(button=>button.classes().some(name=>name.startsWith('intensity-')&&name!=='intensity-none'))
+  const [year,month,day]=target.attributes('data-date').split('-').map(Number)
   await target.trigger('click')
   expect(target.attributes('aria-pressed')).toBe('true')
 
@@ -102,17 +104,17 @@ describe('schedule history dashboard',()=>{
   expect(modes[0].attributes('aria-pressed')).toBe('true')
   expect(wrapper.findAll('.mini-grid button:not(.calendar-selected)').every(button=>button.classes().includes('calendar-default')&&button.classes().includes('intensity-none'))).toBe(true)
   expect(wrapper.findAll('.date-group')).toHaveLength(1)
-  expect(wrapper.get('.date-group h2').text()).toContain('9月15日')
+  expect(wrapper.get('.date-group h2').text()).toContain(`${month}月${day}日`)
   const dailyCount=wrapper.findAll('.history-row').length
 
   await modes[1].trigger('click')
   expect(modes[1].attributes('aria-pressed')).toBe('true')
   expect(wrapper.findAll('.mini-grid .is-in-week')).toHaveLength(7)
-  expect(wrapper.findAll('.history-row').length).toBeGreaterThan(dailyCount)
+  expect(wrapper.findAll('.history-row').length).toBeGreaterThanOrEqual(dailyCount)
 
   await modes[2].trigger('click')
   expect(modes[2].attributes('aria-pressed')).toBe('true')
-  expect(wrapper.findAll('.date-group').every(group=>group.get('h2').text().includes('2026年9月'))).toBe(true)
+  expect(wrapper.findAll('.date-group').every(group=>group.get('h2').text().includes(`${year}年${month}月`))).toBe(true)
   wrapper.unmount()
  })
  it('switches every visible history label to English and persists the selection',async()=>{

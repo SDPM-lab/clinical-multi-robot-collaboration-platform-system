@@ -8,7 +8,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "models:update": "blender --background ../blender/scenes/floor_L1.blend --python ../blender/scripts/export_hospital_l1_glb.py && node scripts/create-environment-glb.mjs",
+    "models:overview:update": "node scripts/update-overview-model.mjs && npm run build",
     "navigation:generate": "bash scripts/generate-rmf-navigation.sh",
+    "navigation:dispatch-map": "python3 scripts/generate-dispatch-route-mapping.py",
+    "navigation:dispatch-check": "python3 scripts/generate-dispatch-route-mapping.py --check",
     "test": "vitest run",
     "test:watch": "vitest"
   },

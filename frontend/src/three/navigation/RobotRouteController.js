@@ -161,8 +161,8 @@ export class RobotRouteController {
     this.setEmphasis(this.emphasis)
   }
 
-  update(delta, camera, elapsed) {
-    this.mixer?.update(delta)
+  update(delta, camera, elapsed, doorController) {
+    this.waitingForDoor = false
     if (this.entranceAge != null && this.entranceAge < 1.5) {
       this.entranceAge = Math.min(1.5, this.entranceAge + delta)
       const progress = this.entranceAge / 1.5
@@ -170,13 +170,26 @@ export class RobotRouteController {
       this.wrapper.scale.setScalar(0.94 + eased * 0.06)
     }
     if (this.points.length > 1 && this.totalDistance > 0) {
-      this.distance = Math.min(this.distance + this.speed * delta, this.totalDistance)
+      // Check each small step so a slow frame cannot jump through a closed door.
+      let remaining = Math.min(this.speed * Math.max(0, delta), this.totalDistance - this.distance)
+      while (remaining > 1e-8) {
+        const step = Math.min(remaining, 0.05)
+        const next = samplePolyline(this.points, this.distance + step).point
+        const current = samplePolyline(this.points, this.distance).point
+        if (doorController && !doorController.canMove(current, next)) {
+          this.waitingForDoor = true
+          break
+        }
+        this.distance += step
+        remaining -= step
+      }
       const pose = samplePolyline(this.points, this.distance)
       this.wrapper.position.copy(pose.point).setY(this.floorY)
       const yaw = Math.atan2(pose.tangent.x, pose.tangent.z)
       this.targetQuaternion.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, yaw)
       this.wrapper.quaternion.slerp(this.targetQuaternion, 1 - Math.exp(-8 * delta))
     }
+    if (!this.waitingForDoor) this.mixer?.update(delta)
   }
 
   getWorldPosition() { return this.wrapper.getWorldPosition(new THREE.Vector3()) }

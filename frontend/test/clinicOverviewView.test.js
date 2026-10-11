@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import ClinicOverviewView from '@/views/ClinicOverviewView.vue'
 import { overviewDemoData } from '@/data/overviewDemoData.js'
 
@@ -71,4 +71,20 @@ describe('clinic overview view', () => {
     wrapper.unmount()
     window.history.pushState({}, '', '/')
   })
+})
+
+
+it('expands the existing completion panel without replacing its gauge or changing floors', async () => {
+ const wrapper = mount(ClinicOverviewView, {
+  props: { data: overviewDemoData, theme: 'light' },
+  global: { stubs: { ClinicOverviewScene: SceneStub } },
+ })
+ const panel = wrapper.get('.completion-panel').element
+ const gauge = wrapper.get('.f1-speed-gauge').element
+ panel.requestFullscreen = vi.fn()
+ await wrapper.get('.completion-expand').trigger('click')
+ expect(panel.requestFullscreen).toHaveBeenCalledOnce()
+ expect(wrapper.get('.f1-speed-gauge').element).toBe(gauge)
+ expect(wrapper.get('.scene-stub').attributes('data-floor')).toBe('all')
+ wrapper.unmount()
 })

@@ -83,4 +83,4 @@ export const createClinicDailySchedules = (reference = new Date()) => Object.fre
   }),
 )
 
-export const clinicOverviewModelUrl = '/models/clinic_overview.glb?v=20260912-lighting'
+export const clinicOverviewModelUrl = '/models/hospital_overview.glb?v=86b09da6'
