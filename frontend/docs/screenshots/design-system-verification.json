@@ -1,0 +1,96 @@
+{
+  "surfaces": [
+    {
+      "selector": ".overview-calendar",
+      "background": "rgba(255, 255, 255, 0.92)",
+      "blur": "blur(3px)",
+      "border": "1px solid rgba(119, 116, 109, 0.18)",
+      "radius": "6px",
+      "shadow": "rgba(0, 0, 0, 0.043) 0px 4px 14px 0px"
+    },
+    {
+      "selector": ".task-progress-panel",
+      "background": "rgba(255, 255, 255, 0.92)",
+      "blur": "blur(3px)",
+      "border": "1px solid rgba(119, 116, 109, 0.18)",
+      "radius": "6px",
+      "shadow": "rgba(0, 0, 0, 0.043) 0px 4px 14px 0px"
+    },
+    {
+      "selector": ".bottom-status-panel",
+      "background": "rgba(255, 255, 255, 0.92)",
+      "blur": "blur(3px)",
+      "border": "1px solid rgba(119, 116, 109, 0.18)",
+      "radius": "6px",
+      "shadow": "rgba(0, 0, 0, 0.043) 0px 4px 14px 0px"
+    },
+    {
+      "selector": ".completion-panel",
+      "background": "rgba(255, 255, 255, 0.92)",
+      "blur": "blur(3px)",
+      "border": "1px solid rgba(119, 116, 109, 0.18)",
+      "radius": "6px",
+      "shadow": "rgba(0, 0, 0, 0.043) 0px 4px 14px 0px"
+    }
+  ],
+  "floorModes": [
+    "floor-realtime",
+    "floor-realtime",
+    "floor-realtime"
+  ],
+  "dialogSurface": "rgba(255, 255, 255, 0.92)",
+  "cameraRestored": true,
+  "map": {
+    "labels": [
+      {
+        "text": "Nurse Reception\nT001 · Robot 01",
+        "charging": false,
+        "color": "rgb(251, 153, 102)"
+      },
+      {
+        "text": "Consultation Room 2\nT002 · Robot 02",
+        "charging": false,
+        "color": "rgb(251, 226, 81)"
+      },
+      {
+        "text": "Ward A\nT003 · Robot 03",
+        "charging": false,
+        "color": "rgb(119, 116, 109)"
+      },
+      {
+        "text": "Laboratory\nT002 · Robot 02",
+        "charging": false,
+        "color": "rgb(251, 226, 81)"
+      },
+      {
+        "text": "Charging Station A",
+        "charging": true,
+        "color": "rgb(171, 59, 58)"
+      },
+      {
+        "text": "Pharmacy\nT001 · Robot 01",
+        "charging": false,
+        "color": "rgb(251, 153, 102)"
+      },
+      {
+        "text": "Charging Station B",
+        "charging": true,
+        "color": "rgb(171, 59, 58)"
+      },
+      {
+        "text": "Nurse Station\nT003 · Robot 03",
+        "charging": false,
+        "color": "rgb(119, 116, 109)"
+      }
+    ],
+    "primary": "#FB9966"
+  },
+  "loader": {
+    "background": "rgba(0, 0, 0, 0)",
+    "shadow": "none",
+    "blur": "none",
+    "text": "Loading...0%"
+  },
+  "overflow": false,
+  "errors": []
+}

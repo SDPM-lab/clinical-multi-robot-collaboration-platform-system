@@ -1,11 +1,12 @@
 import { mount,flushPromises } from '@vue/test-utils'
 import { computed } from 'vue'
-import { expect,it,vi,beforeEach } from 'vitest'
+import { expect,it,vi,beforeEach,afterEach } from 'vitest'
 import SharedLoading from '@/components/SharedLoading.vue'
 import ScheduleHistoryView from '@/views/ScheduleHistoryView.vue'
 const control=vi.hoisted(()=>({error:false,events:[]}))
 vi.mock('@/data/scheduleHistorySource.js',()=>({createHistorySource:()=>{if(control.error)throw new Error('Failed');return computed(()=>({events:control.events,demo:false,error:''}))}}))
-beforeEach(()=>{control.error=false;control.events=[]})
+beforeEach(()=>{control.error=false;control.events=[];vi.stubGlobal('ResizeObserver',class{observe(){} disconnect(){}})})
+afterEach(()=>vi.unstubAllGlobals())
 const ready=async()=>{await vi.dynamicImportSettled();await flushPromises()}
 it('uses the shared loader, then shows an honest empty state without a timer',async()=>{
  const wrapper=mount(ScheduleHistoryView)

@@ -1,0 +1,194 @@
+{
+  "overview": {
+    "gap": 16,
+    "states": [
+      "Network\n\nUnavailable",
+      "Robot connection\n0\n/ 3\n\nrobots connected"
+    ],
+    "padding": "20px",
+    "robots": [
+      {
+        "text": "Robot 01",
+        "right": 1463,
+        "safe": 30
+      },
+      {
+        "text": "Robot 02",
+        "right": 1463,
+        "safe": 30
+      },
+      {
+        "text": "Robot 03",
+        "right": 1463,
+        "safe": 30
+      }
+    ],
+    "charts": 3
+  },
+  "robotDesktop": {
+    "left": {
+      "x": 24,
+      "y": 84,
+      "width": 267.828125,
+      "height": 760,
+      "right": 291.828125,
+      "bottom": 844
+    },
+    "model": {
+      "x": 311.828125,
+      "y": 152,
+      "width": 793.296875,
+      "height": 519,
+      "right": 1105.125,
+      "bottom": 671
+    },
+    "right": {
+      "x": 1125.125,
+      "y": 84,
+      "width": 386.875,
+      "height": 760,
+      "right": 1512,
+      "bottom": 844
+    },
+    "metrics": {
+      "x": 311.828125,
+      "y": 683,
+      "width": 793.296875,
+      "height": 161,
+      "right": 1105.125,
+      "bottom": 844
+    },
+    "overflow": false,
+    "canvas": 1
+  },
+  "robots": [
+    {
+      "name": "Robot 01",
+      "battery": "82%",
+      "temperature": "48°C",
+      "ready": true
+    },
+    {
+      "name": "Robot 02",
+      "battery": "34%",
+      "temperature": "61°C",
+      "ready": true
+    },
+    {
+      "name": "Robot 03",
+      "battery": "18%",
+      "temperature": "73°C",
+      "ready": true
+    }
+  ],
+  "switchSettled": "Robot 03",
+  "robot1280": {
+    "left": {
+      "x": 24,
+      "y": 84,
+      "width": 221.75,
+      "height": 616,
+      "right": 245.75,
+      "bottom": 700
+    },
+    "model": {
+      "x": 265.75,
+      "y": 152,
+      "width": 649.9375,
+      "height": 375,
+      "right": 915.6875,
+      "bottom": 527
+    },
+    "right": {
+      "x": 935.6875,
+      "y": 84,
+      "width": 320.3125,
+      "height": 616,
+      "right": 1256,
+      "bottom": 700
+    },
+    "metrics": {
+      "x": 265.75,
+      "y": 539,
+      "width": 649.9375,
+      "height": 161,
+      "right": 915.6875,
+      "bottom": 700
+    },
+    "overflow": false,
+    "canvas": 1
+  },
+  "robot1024": {
+    "left": {
+      "x": 24,
+      "y": 84,
+      "width": 220,
+      "height": 520,
+      "right": 244,
+      "bottom": 604
+    },
+    "model": {
+      "x": 260,
+      "y": 152,
+      "width": 740,
+      "height": 279,
+      "right": 1000,
+      "bottom": 431
+    },
+    "right": {
+      "x": 24,
+      "y": 620,
+      "width": 976,
+      "height": 300,
+      "right": 1000,
+      "bottom": 920
+    },
+    "metrics": {
+      "x": 260,
+      "y": 443,
+      "width": 740,
+      "height": 161,
+      "right": 1000,
+      "bottom": 604
+    },
+    "overflow": false,
+    "canvas": 1
+  },
+  "robot390": {
+    "left": {
+      "x": 16,
+      "y": 80,
+      "width": 358,
+      "height": 260,
+      "right": 374,
+      "bottom": 340
+    },
+    "model": {
+      "x": 16,
+      "y": 420,
+      "width": 358,
+      "height": 292,
+      "right": 374,
+      "bottom": 712
+    },
+    "right": {
+      "x": 16,
+      "y": 1022,
+      "width": 358,
+      "height": 300,
+      "right": 374,
+      "bottom": 1322
+    },
+    "metrics": {
+      "x": 16,
+      "y": 724,
+      "width": 358,
+      "height": 282,
+      "right": 374,
+      "bottom": 1006
+    },
+    "overflow": false,
+    "canvas": 1
+  },
+  "errors": []
+}

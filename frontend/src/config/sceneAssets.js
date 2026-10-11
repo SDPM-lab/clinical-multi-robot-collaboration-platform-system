@@ -1,6 +1,7 @@
 const publicAssetUrl = (path, version) => `${import.meta.env?.BASE_URL || '/'}${path}${version ? `?v=${version}` : ''}`
 
 export const SCENE_ASSETS = Object.freeze({
+  dispatchFloor: publicAssetUrl('models/L1__flat.glb'),
   environment: publicAssetUrl('models/hospital_L1_environment.glb', 'a0b280479946'),
   robot: publicAssetUrl('models/robot.glb', '4138e4f67c9e'),
   robots: Object.freeze([publicAssetUrl('models/robot.glb', '4138e4f67c9e')]),
@@ -11,6 +12,7 @@ export const SCENE_ASSETS = Object.freeze({
 export const NAVIGATION_ASSETS = Object.freeze({
   graph0: publicAssetUrl('generated/rmf-navigation.json', 'c7c855914668'),
   graph1: publicAssetUrl('generated/rmf-navigation-graph-1.json', '940824567445'),
+  dispatchRouteMapping: publicAssetUrl('generated/dispatch-route-mapping.json'),
 })
 
 // These are exact root object names found in the original combined hospital GLB.

@@ -8,7 +8,8 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js'
 import { robotThermalZones, robotThermalSurface, robotBatteryZoneRules, thermalState, robotPresentation, stageLighting } from '@/config/robotHmi.js'
-import { componentSelectionPalette, primaryHotspots, robotComponents } from '@/config/robotComponentRules.js'
+import { visualTokens } from '@/config/visualTokens.js'
+import { primaryHotspots, robotComponents } from '@/config/robotComponentRules.js'
 import { RobotStructureController } from '@/three/robot/RobotStructureController.js'
 const props = defineProps({ robotId: String, temperature: { type: Number, default: null }, charging: Boolean, warning: Boolean })
 const emit = defineEmits(['ready', 'entrance-complete', 'component-selected', 'interaction-change', 'component-hover'])
@@ -16,9 +17,9 @@ const hotspots = ref([]), labelsVisible = ref(false)
 const host = ref(null), loading = ref(true), error = ref('')
 let renderer, composer, scene, camera, controls, observer, model, frame, disposed = false
 let renderPass, introOutline, hoverOutline, selectedOuterOutline, selectedInnerOutline
-let presentationGroup, themeObserver, spotlight, rim, shadow, entryStart = 0, switchStart = null
+let presentationGroup, themeObserver, spotlight, rim, shadow, animateFrame
 let isDark = false, outlinedSelection = null, selectionSweepStart = 0
-let structure, interactionReady = false, entranceNotified = false
+let structure, interactionReady = false
 const runtime = [], resources = new Set()
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 function resetView() {
@@ -33,11 +34,7 @@ function resetView() {
 }
 function fitStage(immediate = false) {
   if(!structure || !host.value) return
-  const stage=host.value.closest('.robot-hmi'), rect=host.value.getBoundingClientRect()
-  const controlPanel=stage.querySelector('.robot-control-panel').getBoundingClientRect()
-  const inspector=stage.querySelector('.robot-inspector').getBoundingClientRect()
-  const candidate={left:(controlPanel.right-rect.left+26)/rect.width,right:(inspector.left-rect.left-26)/rect.width,top:.12,bottom:.97}
-  structure.setSafeRect(candidate.right-candidate.left >= .28 ? candidate : {left:.08,right:.92,top:.14,bottom:.94},immediate)
+  structure.setSafeRect({ left: .08, right: .92, top: .06, bottom: .94 }, immediate)
 }
 function projectHotspots() {
   if(!structure || !labelsVisible.value) {hotspots.value=[];return}
@@ -49,35 +46,33 @@ function projectHotspots() {
     const p=new THREE.Box3().setFromObject(record.mesh).getCenter(new THREE.Vector3()).project(camera)
     return {id,label:robotComponents.find(c=>c.id===id).label,index:String(robotComponents.findIndex(c=>c.id===id)+1).padStart(2,'0'),x:(p.x+1)*width/2,y:(1-p.y)*height/2,z:p.z}
   }).filter(p=>p.z>-1&&p.z<1).sort((a,b)=>a.y-b.y)
-  const left=safe.left*width+4,right=safe.right*width-130
+  const labelWidth = width < 400 ? 100 : 140
+  const left=4,right=width-labelWidth-4
   const used=[0,0]
   points.forEach((p,i)=>{
-    const side=i%2;p.lx=side?Math.min(right,p.x+110):Math.max(left,p.x-230)
+    const side=i%2;p.lx=side?right:left
     p.ly=Math.min(safe.bottom*height-28,Math.max(safe.top*height,p.y-14,used[side]+36))
     used[side]=p.ly
   })
   hotspots.value=points
 }
 function hoverPart(id) {if(!interactionReady)return;structure.hovered=id;emit('component-hover',id)}
-function updateOutlines(time, elapsed, entering) {
+function updateOutlines(time) {
   if (!structure || !introOutline) return
   const records = structure.records
-  if (entering && elapsed >= 1500 && elapsed <= 2300) {
-    const count = Math.min(records.length, Math.max(1, Math.ceil((elapsed - 1500) / 800 * records.length)))
-    introOutline.selectedObjects = records.slice(0, count).map(record => record.mesh)
-  } else introOutline.selectedObjects = []
+  introOutline.selectedObjects = []
   const selected = records.filter(record => record.id === structure.selected).map(record => record.mesh)
   const hovered = structure.hovered && structure.hovered !== structure.selected ? records.filter(record => record.id === structure.hovered).map(record => record.mesh) : []
   if (outlinedSelection !== structure.selected) { outlinedSelection = structure.selected; selectionSweepStart = time }
   const selectionAge = time - selectionSweepStart
   const sweep = selected.length && selectionAge < 520 ? Math.sin(Math.PI * selectionAge / 520) : 0
   const selectedIsWarning = props.warning && selected.some(mesh => robotThermalZones.chassis.includes(mesh.name))
-  const selectedColor = selectedIsWarning ? componentSelectionPalette.warning : componentSelectionPalette[isDark ? 'selectedDark' : 'selectedLight']
-  const glowColor = componentSelectionPalette[isDark ? 'selectedGlowDark' : 'selectedGlowLight']
-  introOutline.visibleEdgeColor.set(componentSelectionPalette.hover)
-  introOutline.hiddenEdgeColor.set(componentSelectionPalette.hover)
-  hoverOutline.visibleEdgeColor.set(componentSelectionPalette.hover)
-  hoverOutline.hiddenEdgeColor.set(componentSelectionPalette.hover)
+  const selectedColor = selectedIsWarning ? visualTokens.error : visualTokens.primary
+  const glowColor = visualTokens.primary
+  introOutline.visibleEdgeColor.set(visualTokens.primary)
+  introOutline.hiddenEdgeColor.set(visualTokens.primary)
+  hoverOutline.visibleEdgeColor.set(visualTokens.primary)
+  hoverOutline.hiddenEdgeColor.set(visualTokens.primary)
   selectedOuterOutline.visibleEdgeColor.set(glowColor)
   selectedOuterOutline.hiddenEdgeColor.set(glowColor)
   selectedInnerOutline.visibleEdgeColor.set(selectedColor)
@@ -141,6 +136,22 @@ function trackModel(root) {
     })
     mesh.material = Array.isArray(mesh.material) ? cloned : cloned[0]
   })
+}
+function showWholeRobot() {
+  if (!structure || !presentationGroup || !animateFrame || disposed) return
+  cancelAnimationFrame(frame)
+  structure.reset()
+  presentationGroup.rotation.y = 0
+  structure.applyExplosion(0)
+  fitStage(true)
+  renderer.domElement.style.opacity = '1'
+  shadow.material.opacity = shadow.userData.opacity
+  spotlight.intensity = spotlight.userData.targetIntensity
+  labelsVisible.value = true
+  interactionReady = true
+  emit('interaction-change', true)
+  emit('entrance-complete')
+  frame = requestAnimationFrame(animateFrame)
 }
 onMounted(async () => {
   try {
@@ -243,64 +254,25 @@ onMounted(async () => {
       onSelect:id => emit('component-selected', id), canInteract:() => interactionReady, reducedMotion })
     fitStage(true)
     loading.value = false
-    entryStart = performance.now()
     emit('ready')
-    const ease = t => 1 - (1 - Math.max(0, Math.min(1, t))) ** 4
-    const animate = (time) => {
+    animateFrame = (time) => {
       if (disposed) return
-      frame = requestAnimationFrame(animate)
+      frame = requestAnimationFrame(animateFrame)
       if (document.hidden) return
-      const elapsed = time - entryStart
-      const duration = reducedMotion() ? 300 : robotPresentation.entranceMs
-      const entering = elapsed < duration
-      const reveal = ease(elapsed / 300)
-      presentationGroup.rotation.y = reducedMotion() ? 0 : -Math.PI*2*(1-ease(elapsed/1100))
-      if(entering && !reducedMotion()) {
-        const expansion = elapsed < 1900
-          ? ease((elapsed - 900) / 1000)
-          : elapsed < 2550
-            ? 1
-            : 1 - ease((elapsed - 2550) / 1250)
-        structure.applyExplosion(expansion)
-        // Fit the current rotated envelope throughout entry, before rendering.
-        const fit=structure.framing(new THREE.Box3().setFromObject(presentationGroup))
-        camera.position.copy(fit.position);controls.target.copy(fit.target);camera.lookAt(fit.target)
-      } else if(!entranceNotified) structure.applyExplosion(0)
-      labelsVisible.value = !entering || (!reducedMotion() && elapsed >= 1850)
-      renderer.domElement.style.opacity = String(reveal)
-      shadow.material.opacity = shadow.userData.opacity * ease((elapsed - (reducedMotion() ? 0 : 3200)) / 900)
-      spotlight.intensity = spotlight.userData.targetIntensity * reveal
-      if (!entering && switchStart !== null) {
-        const t = reducedMotion() ? 1 : Math.min(1, (time - switchStart) / robotPresentation.switchMs)
-        presentationGroup.rotation.y = .16 * Math.sin(Math.PI * t)
-        renderer.domElement.style.opacity = String(1 - .8 * Math.sin(Math.PI * t))
-        if (t === 1) switchStart = null
-      }
-      const nextInteraction = !entering && switchStart === null
-      if (nextInteraction !== interactionReady) emit('interaction-change', nextInteraction)
-      interactionReady = nextInteraction
-      if (interactionReady && !entranceNotified) { entranceNotified = true; emit('entrance-complete') }
       structure.update(time)
       controls.enabled = interactionReady && !structure.focusTween && !structure.explodeTween
       if (controls.enabled) controls.update()
       updateMaterials(time)
-      updateOutlines(time, elapsed, entering)
+      updateOutlines(time)
       projectHotspots()
       composer.render()
     }
-    frame = requestAnimationFrame(animate)
+    showWholeRobot()
   } catch (reason) {
     if (!disposed) { error.value = '3D 模型無法載入，請確認瀏覽器支援 WebGL 後重新整理。'; loading.value = false; emit('ready'); console.error(reason) }
   }
 })
-watch(() => props.robotId, () => {
-  interactionReady = false
-  emit('interaction-change', false)
-  structure?.reset()
-  if (controls) { camera.position.set(...robotPresentation.camera); controls.target.set(0,.08,0); controls.update() }
-  fitStage(true)
-  if (presentationGroup) switchStart = performance.now()
-})
+watch(() => props.robotId, showWholeRobot)
 defineExpose({ resetView, selectComponent: id => structure?.select(id), setStructureMode: mode => structure?.setMode(mode) })
 onBeforeUnmount(() => {
   disposed = true
@@ -320,7 +292,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="host" class="robot-viewport" @dblclick="resetView">
     <div class="robot-part-callouts" :class="{ 'is-ready': interactionReady }" aria-label="結構標註">
-      <svg aria-hidden="true"><g v-for="part in hotspots" :key="part.id" :class="{ 'is-selected': structure?.selected === part.id }"><line class="robot-part-connector" :x1="part.x" :y1="part.y" :x2="part.lx+8" :y2="part.ly+14"/><circle :cx="part.x" :cy="part.y" r="2.5"/></g></svg>
+      <svg aria-hidden="true"><g v-for="part in hotspots" :key="part.id" :class="{ 'is-selected': structure?.selected === part.id }"><line class="robot-part-connector" :x1="part.x" :y1="part.y" :x2="part.lx < part.x ? part.lx + (host?.clientWidth < 400 ? 100 : 140) : part.lx" :y2="part.ly+14"/><circle :cx="part.x" :cy="part.y" r="2.5"/></g></svg>
       <button v-for="part in hotspots" :key="part.id" class="robot-part-hotspot" :class="{ 'is-selected': structure?.selected === part.id }" :disabled="!interactionReady" :style="{left:part.lx+'px',top:part.ly+'px'}" @pointerenter="hoverPart(part.id)" @pointerleave="hoverPart(null)" @focus="hoverPart(part.id)" @blur="hoverPart(null)" @click="structure?.select(part.id)"><small>{{ part.index }}</small>{{ part.label }}</button>
     </div>
     <div v-if="loading" class="viewport-message" role="status"><span class="loading-orbit"></span>正在載入機器人</div>
@@ -328,5 +300,5 @@ onBeforeUnmount(() => {
   </div>
 </template>
 <style scoped>
-.robot-viewport{position:relative;width:100%;height:100%;min-height:0;touch-action:none}.robot-viewport :deep(canvas){display:block;width:100%;height:100%;cursor:grab}.robot-viewport :deep(canvas:active){cursor:grabbing}.viewport-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:var(--text-muted);font-size:12px;text-align:center}.loading-orbit{width:46px;height:46px;border:2px solid var(--panel-border);border-top-color:#71817b;border-radius:50%;animation:load 1.2s linear infinite}@keyframes load{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.loading-orbit{animation:none}}
+.robot-viewport{position:relative;width:100%;height:100%;min-height:0;touch-action:none}.robot-viewport :deep(canvas){display:block;width:100%;height:100%;cursor:grab}.robot-viewport :deep(canvas:active){cursor:grabbing}.viewport-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:var(--text-muted);font-size:12px;text-align:center}.loading-orbit{width:46px;height:46px;border:2px solid var(--panel-border);border-top-color:var(--theme-primary);border-radius:50%;animation:load 1.2s linear infinite}@keyframes load{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.loading-orbit{animation:none}}
 </style>

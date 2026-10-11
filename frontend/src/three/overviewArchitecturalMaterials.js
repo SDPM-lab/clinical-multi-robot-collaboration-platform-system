@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { overviewBuildingColors, overviewBuildingFill } from '@/styles/overviewTheme.js'
 
 export const overviewGlassNames = new Set(['M_Glass', 'M_DoorGlass'])
 export const overviewGlassParameters = Object.freeze({ color:'#AEB9B5', transparent:true, opacity:.26, transmission:.68, roughness:.16, metalness:0, ior:1.45, thickness:.06, depthWrite:false, side:THREE.DoubleSide })
@@ -22,12 +23,21 @@ export function enhanceOverviewModelSaturation(root, scale = overviewSaturationS
   })
 }
 
-// Exact GLB material names only. Textures and exported emissive remain intact.
+// Exact GLB material names only; hospital materials retain their exported emissive.
 export function applyOverviewArchitecturalMaterials(root, registerMaterial) {
   root.traverse(object => {
     if (!object.isMesh) return
     const array = Array.isArray(object.material)
     const materials = (array ? object.material : [object.material]).map(material => {
+      if (overviewBuildingColors[material.name]) {
+        material.color.set(overviewBuildingColors[material.name])
+        if (material.emissive) {
+          material.emissive.set(overviewBuildingFill.color)
+          material.emissiveIntensity = overviewBuildingFill.intensity
+        }
+        material.needsUpdate = true
+        return material
+      }
       if (overviewGlassNames.has(material.name)) {
         let glass = material
         if (!material.isMeshPhysicalMaterial) {

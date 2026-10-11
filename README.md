@@ -58,7 +58,7 @@
 
 ### `frontend/`
 
-**Vue 3 + Vite + Three.js** 醫院多機器人營運平台前端。目前正在重新設計 UI；第一階段首頁顯示可操作的靜態醫院 3D 環境，尚未接入即時機器人、人物、任務、路線或統計資料。
+**Vue 3 + Vite + Three.js** 醫院多機器人營運平台前端。首頁、任務派遣、排程歷史、即時地圖與機器人狀態頁面已提供操作介面；部分資料仍為示範資料，不能視為已接入正式 ROS 即時派遣。
 
 | 路徑 | 用途 |
 |------|------|
@@ -87,7 +87,7 @@
 - 顯示中文載入進度及明確的模型載入錯誤。
 - Vue 元件卸載時清除動畫、OrbitControls、geometry、material、texture、shadow map、renderer 和 WebGL context。
 
-目前未實作：新版 Top Navbar、淺／深色切換、OpenRMF 即時位置、ROS 2 WebSocket、機器人路線、任務派遣 UI、人物動畫、統計卡片和警報資料。
+上述「Overview 第一階段」描述的是初期 3D 場景建置；目前的任務派遣頁已另外提供建立任務、排程列表、Traffic Editor 路線及 F1 模型預覽。
 
 ### 3D 場景資產分層
 
@@ -122,6 +122,18 @@ cd frontend
 npm install
 npm run dev
 ```
+
+若要固定使用下列範例的 `5174` 埠，改用 `npm run dev -- --port 5174`；如埠已被占用，請以終端機顯示的實際網址為準。
+
+### 調整 Task Dispatch 預設視角
+
+```text
+http://localhost:5174/?dispatchDebug=1&cameraDebug=1&modelDebug=1
+```
+
+`dispatchDebug=1` 直接開啟任務派遣頁；`cameraDebug=1` 顯示相機位置、目標與縮放欄位；`modelDebug=1` 顯示模型位移、旋轉與比例欄位。調整後按「儲存預設」，設定會存到**目前瀏覽器**的 localStorage，重新載入仍會套用；地圖右上角的重設圖示會回到儲存的視角。「原始預設」只套用程式初始值，按下「儲存預設」後才會保存。這些欄位只調整畫面顯示，並非 ROS 與 GLB 的精準座標校正。
+
+目前派遣頁左側共用面板，可在「建立任務」與「任務排程」分頁間切換；預設顯示建立任務。右側地圖採用 `frontend/public/models/L1__flat.glb`。Graph 0 的可行走邊以 `frontend/public/generated/dispatch-route-mapping.json` 對應到 GLB 路段；房間展示分支不加入導航。來源雜湊、顯示修正、限制及重產生命令見 [L1 路線對應說明](frontend/docs/dispatch-route-mapping.md)。
 
 正式建置檢查：
 

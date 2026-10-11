@@ -1,0 +1,3291 @@
+{
+  "schemaVersion": 1,
+  "level": "L1",
+  "graphIndex": 0,
+  "source": {
+    "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml": "88f2e03e4fa6ff58dbce3eab456c10f409743e60e3edae8cbbb0a6bbfa1aa252",
+    "ros2_ws/src/my_hospital_rmf/nav_graphs_generated/0.yaml": "91c491b860ce97036ecceba4cf2460085baf9169d22484c1328cd722dc94bf79",
+    "frontend/public/generated/rmf-navigation.json": "8e2a60ba505185277b66ccb0efd7036e62c03bd8ecee809bab0502f6e0041938",
+    "frontend/public/models/L1__flat.glb": "6c726e833c6f8e65e40ab625fb427e84837c0ccb5ca744aed4f9ffcdb3af534a"
+  },
+  "glbScene": "L1_Solid_Block_Map_v5",
+  "suppressedGlbRoutes": [
+    "Route_center_reception__reception_door",
+    "Route_left_top__consult_3_door",
+    "Route_right_ecg__right_waste",
+    "Route_right_therapy__right_mid",
+    "Route_right_therapy__therapy_door",
+    "Route_right_waste__right_therapy",
+    "Route_right_waste__waste_door"
+  ],
+  "correctionNote": "Approved schematic display changes preserve TE topology; corrected bends are not ROS nodes.",
+  "displayNodes": {
+    "blood_door": {
+      "object": "RouteNode_blood_door",
+      "position": [
+        -0.42899999022483826,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "blood_draw_dock": {
+      "object": "RouteNode_blood_draw_dock",
+      "position": [
+        -0.42899999022483826,
+        1.1299999952316284,
+        -8.687999725341797
+      ]
+    },
+    "blood_draw_edge": {
+      "object": "RouteNode_blood_draw_edge",
+      "position": [
+        -0.42899999022483826,
+        0.0949999988079071,
+        -8.267999649047852
+      ]
+    },
+    "blood_draw_upper": {
+      "object": "RouteNode_blood_draw_upper",
+      "position": [
+        -0.42899999022483826,
+        1.1299999952316284,
+        -8.267999649047852
+      ]
+    },
+    "center_mid": {
+      "object": "RouteNode_center_mid",
+      "position": [
+        0.9359999895095825,
+        0.0949999988079071,
+        3.0810000896453857
+      ]
+    },
+    "center_reception": {
+      "object": "RouteNode_center_reception",
+      "position": [
+        -1.2869999408721924,
+        0.0949999988079071,
+        3.0810000896453857
+      ]
+    },
+    "center_top": {
+      "object": "RouteNode_center_top",
+      "position": [
+        0.9359999895095825,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "charge_door": {
+      "object": "RouteNode_charge_door",
+      "position": [
+        9.164999961853027,
+        0.0949999988079071,
+        -3.3540000915527344
+      ]
+    },
+    "charging_dock": {
+      "object": "RouteNode_charging_dock",
+      "position": [
+        7.809000015258789,
+        1.1299999952316284,
+        -3.3540000915527344
+      ]
+    },
+    "charging_edge": {
+      "object": "RouteNode_charging_edge",
+      "position": [
+        8.229000091552734,
+        0.0949999988079071,
+        -3.3540000915527344
+      ]
+    },
+    "charging_upper": {
+      "object": "RouteNode_charging_upper",
+      "position": [
+        8.229000091552734,
+        1.1299999952316284,
+        -3.3540000915527344
+      ]
+    },
+    "clothes_door": {
+      "object": "RouteNode_clothes_door",
+      "position": [
+        2.1059999465942383,
+        0.0949999988079071,
+        0.7409999966621399
+      ]
+    },
+    "clothes_return_dock": {
+      "object": "RouteNode_clothes_return_dock",
+      "position": [
+        3.2669999599456787,
+        1.1299999952316284,
+        0.7409999966621399
+      ]
+    },
+    "clothes_return_edge": {
+      "object": "RouteNode_clothes_return_edge",
+      "position": [
+        2.8469998836517334,
+        0.0949999988079071,
+        0.7409999966621399
+      ]
+    },
+    "clothes_return_upper": {
+      "object": "RouteNode_clothes_return_upper",
+      "position": [
+        2.8469998836517334,
+        1.1299999952316284,
+        0.7409999966621399
+      ]
+    },
+    "consult_1_dock": {
+      "object": "RouteNode_consult_1_dock",
+      "position": [
+        -12.744000434875488,
+        1.1299999952316284,
+        4.485000133514404
+      ]
+    },
+    "consult_1_door": {
+      "object": "RouteNode_consult_1_door",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        4.485000133514404
+      ]
+    },
+    "consult_1_edge": {
+      "object": "RouteNode_consult_1_edge",
+      "position": [
+        -12.324000358581543,
+        0.0949999988079071,
+        4.485000133514404
+      ]
+    },
+    "consult_1_upper": {
+      "object": "RouteNode_consult_1_upper",
+      "position": [
+        -12.324000358581543,
+        1.1299999952316284,
+        4.485000133514404
+      ]
+    },
+    "consult_2_dock": {
+      "object": "RouteNode_consult_2_dock",
+      "position": [
+        -12.744000434875488,
+        1.1299999952316284,
+        0.7020000219345093
+      ]
+    },
+    "consult_2_door": {
+      "object": "RouteNode_consult_2_door",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        0.7020000219345093
+      ]
+    },
+    "consult_2_edge": {
+      "object": "RouteNode_consult_2_edge",
+      "position": [
+        -12.324000358581543,
+        0.0949999988079071,
+        0.7020000219345093
+      ]
+    },
+    "consult_2_upper": {
+      "object": "RouteNode_consult_2_upper",
+      "position": [
+        -12.324000358581543,
+        1.1299999952316284,
+        0.7020000219345093
+      ]
+    },
+    "consult_3_dock": {
+      "object": "RouteNode_consult_3_dock",
+      "position": [
+        -12.744000434875488,
+        1.1299999952316284,
+        -3.119999885559082
+      ]
+    },
+    "consult_3_door": {
+      "object": "RouteNode_consult_3_door",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        -3.119999885559082
+      ]
+    },
+    "consult_3_edge": {
+      "object": "RouteNode_consult_3_edge",
+      "position": [
+        -12.324000358581543,
+        0.0949999988079071,
+        -3.119999885559082
+      ]
+    },
+    "consult_3_upper": {
+      "object": "RouteNode_consult_3_upper",
+      "position": [
+        -12.324000358581543,
+        1.1299999952316284,
+        -3.119999885559082
+      ]
+    },
+    "director_dock": {
+      "object": "RouteNode_director_dock",
+      "position": [
+        13.017000198364258,
+        1.1299999952316284,
+        5.1479997634887695
+      ]
+    },
+    "director_door": {
+      "object": "RouteNode_director_door",
+      "position": [
+        11.817000389099121,
+        0.0949999988079071,
+        5.1479997634887695
+      ]
+    },
+    "director_edge": {
+      "object": "RouteNode_director_edge",
+      "position": [
+        12.597000122070312,
+        0.0949999988079071,
+        5.1479997634887695
+      ]
+    },
+    "director_upper": {
+      "object": "RouteNode_director_upper",
+      "position": [
+        12.597000122070312,
+        1.1299999952316284,
+        5.1479997634887695
+      ]
+    },
+    "ecg_dock": {
+      "object": "RouteNode_ecg_dock",
+      "position": [
+        13.017000198364258,
+        1.1299999952316284,
+        -2.2230000495910645
+      ]
+    },
+    "ecg_door": {
+      "object": "RouteNode_ecg_door",
+      "position": [
+        11.817000389099121,
+        0.0949999988079071,
+        -2.2230000495910645
+      ]
+    },
+    "ecg_edge": {
+      "object": "RouteNode_ecg_edge",
+      "position": [
+        12.597000122070312,
+        0.0949999988079071,
+        -2.2230000495910645
+      ]
+    },
+    "ecg_upper": {
+      "object": "RouteNode_ecg_upper",
+      "position": [
+        12.597000122070312,
+        1.1299999952316284,
+        -2.2230000495910645
+      ]
+    },
+    "entry_right": {
+      "object": "RouteNode_entry_right",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        8.814000129699707
+      ]
+    },
+    "lab_door": {
+      "object": "RouteNode_lab_door",
+      "position": [
+        -6.317999839782715,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "laboratory_dock": {
+      "object": "RouteNode_laboratory_dock",
+      "position": [
+        -6.317999839782715,
+        1.1299999952316284,
+        -8.687999725341797
+      ]
+    },
+    "laboratory_edge": {
+      "object": "RouteNode_laboratory_edge",
+      "position": [
+        -6.317999839782715,
+        0.0949999988079071,
+        -8.267999649047852
+      ]
+    },
+    "laboratory_upper": {
+      "object": "RouteNode_laboratory_upper",
+      "position": [
+        -6.317999839782715,
+        1.1299999952316284,
+        -8.267999649047852
+      ]
+    },
+    "left_mid": {
+      "object": "RouteNode_left_mid",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        3.0810000896453857
+      ]
+    },
+    "left_nurse": {
+      "object": "RouteNode_left_nurse",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        -2.61299991607666
+      ]
+    },
+    "left_top": {
+      "object": "RouteNode_left_top",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "lift_1_edge": {
+      "object": "RouteNode_lift_1_edge",
+      "position": [
+        -15.32699966430664,
+        0.0949999988079071,
+        8.1899995803833
+      ]
+    },
+    "lift_2_edge": {
+      "object": "RouteNode_lift_2_edge",
+      "position": [
+        -15.32699966430664,
+        0.0949999988079071,
+        11.076000213623047
+      ]
+    },
+    "men_door": {
+      "object": "RouteNode_men_door",
+      "position": [
+        4.446000099182129,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "men_restroom_dock": {
+      "object": "RouteNode_men_restroom_dock",
+      "position": [
+        4.446000099182129,
+        1.1299999952316284,
+        -8.687999725341797
+      ]
+    },
+    "men_restroom_edge": {
+      "object": "RouteNode_men_restroom_edge",
+      "position": [
+        4.446000099182129,
+        0.0949999988079071,
+        -8.267999649047852
+      ]
+    },
+    "men_restroom_upper": {
+      "object": "RouteNode_men_restroom_upper",
+      "position": [
+        4.446000099182129,
+        1.1299999952316284,
+        -8.267999649047852
+      ]
+    },
+    "nurse_door": {
+      "object": "RouteNode_nurse_door",
+      "position": [
+        -9.515999794006348,
+        0.0949999988079071,
+        -2.61299991607666
+      ]
+    },
+    "nurse_station_dock": {
+      "object": "RouteNode_nurse_station_dock",
+      "position": [
+        -7.926000118255615,
+        1.1299999952316284,
+        -2.61299991607666
+      ]
+    },
+    "nurse_station_edge": {
+      "object": "RouteNode_nurse_station_edge",
+      "position": [
+        -8.345999717712402,
+        0.0949999988079071,
+        -2.61299991607666
+      ]
+    },
+    "nurse_station_upper": {
+      "object": "RouteNode_nurse_station_upper",
+      "position": [
+        -8.345999717712402,
+        1.1299999952316284,
+        -2.61299991607666
+      ]
+    },
+    "pantry_dock": {
+      "object": "RouteNode_pantry_dock",
+      "position": [
+        3.2669999599456787,
+        1.1299999952316284,
+        -3.236999988555908
+      ]
+    },
+    "pantry_door": {
+      "object": "RouteNode_pantry_door",
+      "position": [
+        2.1059999465942383,
+        0.0949999988079071,
+        -3.236999988555908
+      ]
+    },
+    "pantry_edge": {
+      "object": "RouteNode_pantry_edge",
+      "position": [
+        2.8469998836517334,
+        0.0949999988079071,
+        -3.236999988555908
+      ]
+    },
+    "pantry_upper": {
+      "object": "RouteNode_pantry_upper",
+      "position": [
+        2.8469998836517334,
+        1.1299999952316284,
+        -3.236999988555908
+      ]
+    },
+    "pharmacy_dock": {
+      "object": "RouteNode_pharmacy_dock",
+      "position": [
+        13.289999961853027,
+        1.1299999952316284,
+        9.944999694824219
+      ]
+    },
+    "pharmacy_door": {
+      "object": "RouteNode_pharmacy_door",
+      "position": [
+        12.36299991607666,
+        0.0949999988079071,
+        9.944999694824219
+      ]
+    },
+    "pharmacy_edge": {
+      "object": "RouteNode_pharmacy_edge",
+      "position": [
+        12.869999885559082,
+        0.0949999988079071,
+        9.944999694824219
+      ]
+    },
+    "pharmacy_upper": {
+      "object": "RouteNode_pharmacy_upper",
+      "position": [
+        12.869999885559082,
+        1.1299999952316284,
+        9.944999694824219
+      ]
+    },
+    "reception_desk_dock": {
+      "object": "RouteNode_reception_desk_dock",
+      "position": [
+        -1.2869999408721924,
+        1.1299999952316284,
+        6.113999843597412
+      ]
+    },
+    "reception_desk_edge": {
+      "object": "RouteNode_reception_desk_edge",
+      "position": [
+        -1.2869999408721924,
+        0.0949999988079071,
+        5.693999767303467
+      ]
+    },
+    "reception_desk_upper": {
+      "object": "RouteNode_reception_desk_upper",
+      "position": [
+        -1.2869999408721924,
+        1.1299999952316284,
+        5.693999767303467
+      ]
+    },
+    "reception_door": {
+      "object": "RouteNode_reception_door",
+      "position": [
+        -1.2869999408721924,
+        0.0949999988079071,
+        4.640999794006348
+      ]
+    },
+    "right_bottom": {
+      "object": "RouteNode_right_bottom",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        9.944999694824219
+      ]
+    },
+    "right_charge": {
+      "object": "RouteNode_right_charge",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        -3.3540000915527344
+      ]
+    },
+    "right_director": {
+      "object": "RouteNode_right_director",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        5.1479997634887695
+      ]
+    },
+    "right_ecg": {
+      "object": "RouteNode_right_ecg",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        -2.2230000495910645
+      ]
+    },
+    "right_lower": {
+      "object": "RouteNode_right_lower",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        7.019999980926514
+      ]
+    },
+    "right_mid": {
+      "object": "RouteNode_right_mid",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        3.0810000896453857
+      ]
+    },
+    "right_therapy": {
+      "object": "RouteNode_right_therapy",
+      "position": [
+        11.076,
+        0.095,
+        0.78
+      ],
+      "correction": "TE topology display correction"
+    },
+    "right_top": {
+      "object": "RouteNode_right_top",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "right_ultrasound": {
+      "object": "RouteNode_right_ultrasound",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        -6.123000144958496
+      ]
+    },
+    "right_waste": {
+      "object": "RouteNode_right_waste",
+      "position": [
+        11.076,
+        0.095,
+        1.521
+      ],
+      "correction": "TE topology display correction"
+    },
+    "support_bottom": {
+      "object": "RouteNode_support_bottom",
+      "position": [
+        0.9359999895095825,
+        0.0949999988079071,
+        0.7409999966621399
+      ]
+    },
+    "support_top": {
+      "object": "RouteNode_support_top",
+      "position": [
+        0.9359999895095825,
+        0.0949999988079071,
+        -3.236999988555908
+      ]
+    },
+    "therapy_dock": {
+      "object": "RouteNode_therapy_dock",
+      "position": [
+        13.017000198364258,
+        1.1299999952316284,
+        1.5210000276565552
+      ]
+    },
+    "therapy_door": {
+      "object": "RouteNode_therapy_door",
+      "position": [
+        11.817000389099121,
+        0.0949999988079071,
+        1.5210000276565552
+      ]
+    },
+    "therapy_edge": {
+      "object": "RouteNode_therapy_edge",
+      "position": [
+        12.597000122070312,
+        0.0949999988079071,
+        1.5210000276565552
+      ]
+    },
+    "therapy_upper": {
+      "object": "RouteNode_therapy_upper",
+      "position": [
+        12.597000122070312,
+        1.1299999952316284,
+        1.5210000276565552
+      ]
+    },
+    "ultrasound_dock": {
+      "object": "RouteNode_ultrasound_dock",
+      "position": [
+        13.017000198364258,
+        1.1299999952316284,
+        -6.123000144958496
+      ]
+    },
+    "ultrasound_door": {
+      "object": "RouteNode_ultrasound_door",
+      "position": [
+        11.817000389099121,
+        0.0949999988079071,
+        -6.123000144958496
+      ]
+    },
+    "ultrasound_edge": {
+      "object": "RouteNode_ultrasound_edge",
+      "position": [
+        12.597000122070312,
+        0.0949999988079071,
+        -6.123000144958496
+      ]
+    },
+    "ultrasound_upper": {
+      "object": "RouteNode_ultrasound_upper",
+      "position": [
+        12.597000122070312,
+        1.1299999952316284,
+        -6.123000144958496
+      ]
+    },
+    "ward_a_dock": {
+      "object": "RouteNode_ward_a_dock",
+      "position": [
+        -12.744000434875488,
+        1.1299999952316284,
+        -10.685999870300293
+      ]
+    },
+    "ward_a_door": {
+      "object": "RouteNode_ward_a_door",
+      "position": [
+        -10.725000381469727,
+        0.0949999988079071,
+        -10.685999870300293
+      ]
+    },
+    "ward_a_edge": {
+      "object": "RouteNode_ward_a_edge",
+      "position": [
+        -12.324000358581543,
+        0.0949999988079071,
+        -10.685999870300293
+      ]
+    },
+    "ward_a_upper": {
+      "object": "RouteNode_ward_a_upper",
+      "position": [
+        -12.324000358581543,
+        1.1299999952316284,
+        -10.685999870300293
+      ]
+    },
+    "ward_b_dock": {
+      "object": "RouteNode_ward_b_dock",
+      "position": [
+        -12.744000434875488,
+        1.1299999952316284,
+        -6.941999912261963
+      ]
+    },
+    "ward_b_door": {
+      "object": "RouteNode_ward_b_door",
+      "position": [
+        -11.2,
+        0.095,
+        -6.942
+      ],
+      "correction": "TE topology display correction"
+    },
+    "ward_b_edge": {
+      "object": "RouteNode_ward_b_edge",
+      "position": [
+        -12.324000358581543,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "ward_b_upper": {
+      "object": "RouteNode_ward_b_upper",
+      "position": [
+        -12.324000358581543,
+        1.1299999952316284,
+        -6.941999912261963
+      ]
+    },
+    "waste_door": {
+      "object": "RouteNode_waste_door",
+      "position": [
+        9.164999961853027,
+        0.0949999988079071,
+        0.7799999713897705
+      ]
+    },
+    "waste_return_dock": {
+      "object": "RouteNode_waste_return_dock",
+      "position": [
+        7.809000015258789,
+        1.1299999952316284,
+        0.7799999713897705
+      ]
+    },
+    "waste_return_edge": {
+      "object": "RouteNode_waste_return_edge",
+      "position": [
+        8.229000091552734,
+        0.0949999988079071,
+        0.7799999713897705
+      ]
+    },
+    "waste_return_upper": {
+      "object": "RouteNode_waste_return_upper",
+      "position": [
+        8.229000091552734,
+        1.1299999952316284,
+        0.7799999713897705
+      ]
+    },
+    "women_door": {
+      "object": "RouteNode_women_door",
+      "position": [
+        8.112000465393066,
+        0.0949999988079071,
+        -6.941999912261963
+      ]
+    },
+    "women_restroom_dock": {
+      "object": "RouteNode_women_restroom_dock",
+      "position": [
+        8.112000465393066,
+        1.1299999952316284,
+        -8.687999725341797
+      ]
+    },
+    "women_restroom_edge": {
+      "object": "RouteNode_women_restroom_edge",
+      "position": [
+        8.112000465393066,
+        0.0949999988079071,
+        -8.267999649047852
+      ]
+    },
+    "women_restroom_upper": {
+      "object": "RouteNode_women_restroom_upper",
+      "position": [
+        8.112000465393066,
+        1.1299999952316284,
+        -8.267999649047852
+      ]
+    },
+    "xray_dock": {
+      "object": "RouteNode_xray_dock",
+      "position": [
+        11.076000213623047,
+        1.1299999952316284,
+        -8.687999725341797
+      ]
+    },
+    "xray_door": {
+      "object": "RouteNode_xray_door",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        -7.839000225067139
+      ]
+    },
+    "xray_edge": {
+      "object": "RouteNode_xray_edge",
+      "position": [
+        11.076000213623047,
+        0.0949999988079071,
+        -8.267999649047852
+      ]
+    },
+    "xray_upper": {
+      "object": "RouteNode_xray_upper",
+      "position": [
+        11.076000213623047,
+        1.1299999952316284,
+        -8.267999649047852
+      ]
+    },
+    "ward_b_junction": {
+      "object": null,
+      "position": [
+        -10.725,
+        0.095,
+        -5.85
+      ],
+      "correction": "TE topology display correction"
+    },
+    "ward_b_elbow": {
+      "object": null,
+      "position": [
+        -11.2,
+        0.095,
+        -5.85
+      ],
+      "correction": "TE topology display correction"
+    },
+    "waste_elbow": {
+      "object": null,
+      "position": [
+        10.35,
+        0.095,
+        1.521
+      ],
+      "correction": "TE topology display correction"
+    },
+    "waste_drop": {
+      "object": null,
+      "position": [
+        10.35,
+        0.095,
+        0.78
+      ],
+      "correction": "TE topology display correction"
+    },
+    "therapy_elbow": {
+      "object": null,
+      "position": [
+        11.45,
+        0.095,
+        0.78
+      ],
+      "correction": "TE topology display correction"
+    },
+    "therapy_rise": {
+      "object": null,
+      "position": [
+        11.45,
+        0.095,
+        1.521
+      ],
+      "correction": "TE topology display correction"
+    },
+    "reception_elbow": {
+      "object": null,
+      "position": [
+        0.936,
+        0.095,
+        4.641
+      ],
+      "correction": "TE topology display correction"
+    }
+  },
+  "displayEdges": {
+    "Route_blood_door__blood_draw_edge": {
+      "object": "Route_blood_door__blood_draw_edge",
+      "nodes": [
+        "blood_door",
+        "blood_draw_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_blood_door__center_top": {
+      "object": "Route_blood_door__center_top",
+      "nodes": [
+        "blood_door",
+        "center_top"
+      ],
+      "kind": "glb"
+    },
+    "Route_blood_draw_edge__blood_draw_upper": {
+      "object": "Route_blood_draw_edge__blood_draw_upper",
+      "nodes": [
+        "blood_draw_edge",
+        "blood_draw_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_blood_draw_upper__blood_draw_dock": {
+      "object": "Route_blood_draw_upper__blood_draw_dock",
+      "nodes": [
+        "blood_draw_upper",
+        "blood_draw_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_center_mid__right_mid": {
+      "object": "Route_center_mid__right_mid",
+      "nodes": [
+        "center_mid",
+        "right_mid"
+      ],
+      "kind": "glb"
+    },
+    "Route_center_reception__center_mid": {
+      "object": "Route_center_reception__center_mid",
+      "nodes": [
+        "center_reception",
+        "center_mid"
+      ],
+      "kind": "glb"
+    },
+    "Route_center_top__men_door": {
+      "object": "Route_center_top__men_door",
+      "nodes": [
+        "center_top",
+        "men_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_center_top__support_top": {
+      "object": "Route_center_top__support_top",
+      "nodes": [
+        "center_top",
+        "support_top"
+      ],
+      "kind": "glb"
+    },
+    "Route_charge_door__charging_edge": {
+      "object": "Route_charge_door__charging_edge",
+      "nodes": [
+        "charge_door",
+        "charging_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_charging_edge__charging_upper": {
+      "object": "Route_charging_edge__charging_upper",
+      "nodes": [
+        "charging_edge",
+        "charging_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_charging_upper__charging_dock": {
+      "object": "Route_charging_upper__charging_dock",
+      "nodes": [
+        "charging_upper",
+        "charging_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_clothes_door__clothes_return_edge": {
+      "object": "Route_clothes_door__clothes_return_edge",
+      "nodes": [
+        "clothes_door",
+        "clothes_return_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_clothes_return_edge__clothes_return_upper": {
+      "object": "Route_clothes_return_edge__clothes_return_upper",
+      "nodes": [
+        "clothes_return_edge",
+        "clothes_return_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_clothes_return_upper__clothes_return_dock": {
+      "object": "Route_clothes_return_upper__clothes_return_dock",
+      "nodes": [
+        "clothes_return_upper",
+        "clothes_return_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_1_door__consult_1_edge": {
+      "object": "Route_consult_1_door__consult_1_edge",
+      "nodes": [
+        "consult_1_door",
+        "consult_1_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_1_edge__consult_1_upper": {
+      "object": "Route_consult_1_edge__consult_1_upper",
+      "nodes": [
+        "consult_1_edge",
+        "consult_1_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_1_upper__consult_1_dock": {
+      "object": "Route_consult_1_upper__consult_1_dock",
+      "nodes": [
+        "consult_1_upper",
+        "consult_1_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_2_door__consult_2_edge": {
+      "object": "Route_consult_2_door__consult_2_edge",
+      "nodes": [
+        "consult_2_door",
+        "consult_2_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_2_door__left_mid": {
+      "object": "Route_consult_2_door__left_mid",
+      "nodes": [
+        "consult_2_door",
+        "left_mid"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_2_edge__consult_2_upper": {
+      "object": "Route_consult_2_edge__consult_2_upper",
+      "nodes": [
+        "consult_2_edge",
+        "consult_2_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_2_upper__consult_2_dock": {
+      "object": "Route_consult_2_upper__consult_2_dock",
+      "nodes": [
+        "consult_2_upper",
+        "consult_2_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_3_door__consult_3_edge": {
+      "object": "Route_consult_3_door__consult_3_edge",
+      "nodes": [
+        "consult_3_door",
+        "consult_3_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_3_door__left_nurse": {
+      "object": "Route_consult_3_door__left_nurse",
+      "nodes": [
+        "consult_3_door",
+        "left_nurse"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_3_edge__consult_3_upper": {
+      "object": "Route_consult_3_edge__consult_3_upper",
+      "nodes": [
+        "consult_3_edge",
+        "consult_3_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_consult_3_upper__consult_3_dock": {
+      "object": "Route_consult_3_upper__consult_3_dock",
+      "nodes": [
+        "consult_3_upper",
+        "consult_3_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_director_door__director_edge": {
+      "object": "Route_director_door__director_edge",
+      "nodes": [
+        "director_door",
+        "director_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_director_edge__director_upper": {
+      "object": "Route_director_edge__director_upper",
+      "nodes": [
+        "director_edge",
+        "director_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_director_upper__director_dock": {
+      "object": "Route_director_upper__director_dock",
+      "nodes": [
+        "director_upper",
+        "director_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_ecg_door__ecg_edge": {
+      "object": "Route_ecg_door__ecg_edge",
+      "nodes": [
+        "ecg_door",
+        "ecg_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_ecg_edge__ecg_upper": {
+      "object": "Route_ecg_edge__ecg_upper",
+      "nodes": [
+        "ecg_edge",
+        "ecg_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_ecg_upper__ecg_dock": {
+      "object": "Route_ecg_upper__ecg_dock",
+      "nodes": [
+        "ecg_upper",
+        "ecg_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_entry_right__right_bottom": {
+      "object": "Route_entry_right__right_bottom",
+      "nodes": [
+        "entry_right",
+        "right_bottom"
+      ],
+      "kind": "glb"
+    },
+    "Route_lab_door__blood_door": {
+      "object": "Route_lab_door__blood_door",
+      "nodes": [
+        "lab_door",
+        "blood_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_lab_door__laboratory_edge": {
+      "object": "Route_lab_door__laboratory_edge",
+      "nodes": [
+        "lab_door",
+        "laboratory_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_laboratory_edge__laboratory_upper": {
+      "object": "Route_laboratory_edge__laboratory_upper",
+      "nodes": [
+        "laboratory_edge",
+        "laboratory_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_laboratory_upper__laboratory_dock": {
+      "object": "Route_laboratory_upper__laboratory_dock",
+      "nodes": [
+        "laboratory_upper",
+        "laboratory_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_left_mid__center_reception": {
+      "object": "Route_left_mid__center_reception",
+      "nodes": [
+        "left_mid",
+        "center_reception"
+      ],
+      "kind": "glb"
+    },
+    "Route_left_mid__consult_1_door": {
+      "object": "Route_left_mid__consult_1_door",
+      "nodes": [
+        "left_mid",
+        "consult_1_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_left_nurse__consult_2_door": {
+      "object": "Route_left_nurse__consult_2_door",
+      "nodes": [
+        "left_nurse",
+        "consult_2_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_left_nurse__nurse_door": {
+      "object": "Route_left_nurse__nurse_door",
+      "nodes": [
+        "left_nurse",
+        "nurse_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_left_top__lab_door": {
+      "object": "Route_left_top__lab_door",
+      "nodes": [
+        "left_top",
+        "lab_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_men_door__men_restroom_edge": {
+      "object": "Route_men_door__men_restroom_edge",
+      "nodes": [
+        "men_door",
+        "men_restroom_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_men_door__women_door": {
+      "object": "Route_men_door__women_door",
+      "nodes": [
+        "men_door",
+        "women_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_men_restroom_edge__men_restroom_upper": {
+      "object": "Route_men_restroom_edge__men_restroom_upper",
+      "nodes": [
+        "men_restroom_edge",
+        "men_restroom_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_men_restroom_upper__men_restroom_dock": {
+      "object": "Route_men_restroom_upper__men_restroom_dock",
+      "nodes": [
+        "men_restroom_upper",
+        "men_restroom_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_nurse_door__nurse_station_edge": {
+      "object": "Route_nurse_door__nurse_station_edge",
+      "nodes": [
+        "nurse_door",
+        "nurse_station_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_nurse_station_edge__nurse_station_upper": {
+      "object": "Route_nurse_station_edge__nurse_station_upper",
+      "nodes": [
+        "nurse_station_edge",
+        "nurse_station_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_nurse_station_upper__nurse_station_dock": {
+      "object": "Route_nurse_station_upper__nurse_station_dock",
+      "nodes": [
+        "nurse_station_upper",
+        "nurse_station_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_pantry_door__pantry_edge": {
+      "object": "Route_pantry_door__pantry_edge",
+      "nodes": [
+        "pantry_door",
+        "pantry_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_pantry_edge__pantry_upper": {
+      "object": "Route_pantry_edge__pantry_upper",
+      "nodes": [
+        "pantry_edge",
+        "pantry_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_pantry_upper__pantry_dock": {
+      "object": "Route_pantry_upper__pantry_dock",
+      "nodes": [
+        "pantry_upper",
+        "pantry_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_pharmacy_door__pharmacy_edge": {
+      "object": "Route_pharmacy_door__pharmacy_edge",
+      "nodes": [
+        "pharmacy_door",
+        "pharmacy_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_pharmacy_edge__pharmacy_upper": {
+      "object": "Route_pharmacy_edge__pharmacy_upper",
+      "nodes": [
+        "pharmacy_edge",
+        "pharmacy_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_pharmacy_upper__pharmacy_dock": {
+      "object": "Route_pharmacy_upper__pharmacy_dock",
+      "nodes": [
+        "pharmacy_upper",
+        "pharmacy_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_reception_desk_edge__reception_desk_upper": {
+      "object": "Route_reception_desk_edge__reception_desk_upper",
+      "nodes": [
+        "reception_desk_edge",
+        "reception_desk_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_reception_desk_upper__reception_desk_dock": {
+      "object": "Route_reception_desk_upper__reception_desk_dock",
+      "nodes": [
+        "reception_desk_upper",
+        "reception_desk_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_reception_door__reception_desk_edge": {
+      "object": "Route_reception_door__reception_desk_edge",
+      "nodes": [
+        "reception_door",
+        "reception_desk_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_bottom__pharmacy_door": {
+      "object": "Route_right_bottom__pharmacy_door",
+      "nodes": [
+        "right_bottom",
+        "pharmacy_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_charge__charge_door": {
+      "object": "Route_right_charge__charge_door",
+      "nodes": [
+        "right_charge",
+        "charge_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_charge__right_ecg": {
+      "object": "Route_right_charge__right_ecg",
+      "nodes": [
+        "right_charge",
+        "right_ecg"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_director__director_door": {
+      "object": "Route_right_director__director_door",
+      "nodes": [
+        "right_director",
+        "director_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_director__right_lower": {
+      "object": "Route_right_director__right_lower",
+      "nodes": [
+        "right_director",
+        "right_lower"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_ecg__ecg_door": {
+      "object": "Route_right_ecg__ecg_door",
+      "nodes": [
+        "right_ecg",
+        "ecg_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_lower__entry_right": {
+      "object": "Route_right_lower__entry_right",
+      "nodes": [
+        "right_lower",
+        "entry_right"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_mid__right_director": {
+      "object": "Route_right_mid__right_director",
+      "nodes": [
+        "right_mid",
+        "right_director"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_top__right_ultrasound": {
+      "object": "Route_right_top__right_ultrasound",
+      "nodes": [
+        "right_top",
+        "right_ultrasound"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_top__xray_door": {
+      "object": "Route_right_top__xray_door",
+      "nodes": [
+        "right_top",
+        "xray_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_ultrasound__right_charge": {
+      "object": "Route_right_ultrasound__right_charge",
+      "nodes": [
+        "right_ultrasound",
+        "right_charge"
+      ],
+      "kind": "glb"
+    },
+    "Route_right_ultrasound__ultrasound_door": {
+      "object": "Route_right_ultrasound__ultrasound_door",
+      "nodes": [
+        "right_ultrasound",
+        "ultrasound_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_support_bottom__center_mid": {
+      "object": "Route_support_bottom__center_mid",
+      "nodes": [
+        "support_bottom",
+        "center_mid"
+      ],
+      "kind": "glb"
+    },
+    "Route_support_bottom__clothes_door": {
+      "object": "Route_support_bottom__clothes_door",
+      "nodes": [
+        "support_bottom",
+        "clothes_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_support_top__pantry_door": {
+      "object": "Route_support_top__pantry_door",
+      "nodes": [
+        "support_top",
+        "pantry_door"
+      ],
+      "kind": "glb"
+    },
+    "Route_support_top__support_bottom": {
+      "object": "Route_support_top__support_bottom",
+      "nodes": [
+        "support_top",
+        "support_bottom"
+      ],
+      "kind": "glb"
+    },
+    "Route_therapy_door__therapy_edge": {
+      "object": "Route_therapy_door__therapy_edge",
+      "nodes": [
+        "therapy_door",
+        "therapy_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_therapy_edge__therapy_upper": {
+      "object": "Route_therapy_edge__therapy_upper",
+      "nodes": [
+        "therapy_edge",
+        "therapy_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_therapy_upper__therapy_dock": {
+      "object": "Route_therapy_upper__therapy_dock",
+      "nodes": [
+        "therapy_upper",
+        "therapy_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_ultrasound_door__ultrasound_edge": {
+      "object": "Route_ultrasound_door__ultrasound_edge",
+      "nodes": [
+        "ultrasound_door",
+        "ultrasound_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_ultrasound_edge__ultrasound_upper": {
+      "object": "Route_ultrasound_edge__ultrasound_upper",
+      "nodes": [
+        "ultrasound_edge",
+        "ultrasound_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_ultrasound_upper__ultrasound_dock": {
+      "object": "Route_ultrasound_upper__ultrasound_dock",
+      "nodes": [
+        "ultrasound_upper",
+        "ultrasound_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_a_door__left_top": {
+      "object": "Route_ward_a_door__left_top",
+      "nodes": [
+        "ward_a_door",
+        "left_top"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_a_door__ward_a_edge": {
+      "object": "Route_ward_a_door__ward_a_edge",
+      "nodes": [
+        "ward_a_door",
+        "ward_a_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_a_edge__ward_a_upper": {
+      "object": "Route_ward_a_edge__ward_a_upper",
+      "nodes": [
+        "ward_a_edge",
+        "ward_a_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_a_upper__ward_a_dock": {
+      "object": "Route_ward_a_upper__ward_a_dock",
+      "nodes": [
+        "ward_a_upper",
+        "ward_a_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_b_door__ward_b_edge": {
+      "object": "Route_ward_b_door__ward_b_edge",
+      "nodes": [
+        "ward_b_door",
+        "ward_b_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_b_edge__ward_b_upper": {
+      "object": "Route_ward_b_edge__ward_b_upper",
+      "nodes": [
+        "ward_b_edge",
+        "ward_b_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_ward_b_upper__ward_b_dock": {
+      "object": "Route_ward_b_upper__ward_b_dock",
+      "nodes": [
+        "ward_b_upper",
+        "ward_b_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_waste_door__waste_return_edge": {
+      "object": "Route_waste_door__waste_return_edge",
+      "nodes": [
+        "waste_door",
+        "waste_return_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_waste_return_edge__waste_return_upper": {
+      "object": "Route_waste_return_edge__waste_return_upper",
+      "nodes": [
+        "waste_return_edge",
+        "waste_return_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_waste_return_upper__waste_return_dock": {
+      "object": "Route_waste_return_upper__waste_return_dock",
+      "nodes": [
+        "waste_return_upper",
+        "waste_return_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_women_door__right_top": {
+      "object": "Route_women_door__right_top",
+      "nodes": [
+        "women_door",
+        "right_top"
+      ],
+      "kind": "glb"
+    },
+    "Route_women_door__women_restroom_edge": {
+      "object": "Route_women_door__women_restroom_edge",
+      "nodes": [
+        "women_door",
+        "women_restroom_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_women_restroom_edge__women_restroom_upper": {
+      "object": "Route_women_restroom_edge__women_restroom_upper",
+      "nodes": [
+        "women_restroom_edge",
+        "women_restroom_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_women_restroom_upper__women_restroom_dock": {
+      "object": "Route_women_restroom_upper__women_restroom_dock",
+      "nodes": [
+        "women_restroom_upper",
+        "women_restroom_dock"
+      ],
+      "kind": "glb"
+    },
+    "Route_xray_door__xray_edge": {
+      "object": "Route_xray_door__xray_edge",
+      "nodes": [
+        "xray_door",
+        "xray_edge"
+      ],
+      "kind": "glb"
+    },
+    "Route_xray_edge__xray_upper": {
+      "object": "Route_xray_edge__xray_upper",
+      "nodes": [
+        "xray_edge",
+        "xray_upper"
+      ],
+      "kind": "glb"
+    },
+    "Route_xray_upper__xray_dock": {
+      "object": "Route_xray_upper__xray_dock",
+      "nodes": [
+        "xray_upper",
+        "xray_dock"
+      ],
+      "kind": "glb"
+    },
+    "Correction_left_top__ward_b_junction": {
+      "object": null,
+      "nodes": [
+        "left_top",
+        "ward_b_junction"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_ward_b_junction__consult_3_door": {
+      "object": null,
+      "nodes": [
+        "ward_b_junction",
+        "consult_3_door"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_ward_b_junction__ward_b_elbow": {
+      "object": null,
+      "nodes": [
+        "ward_b_junction",
+        "ward_b_elbow"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_ward_b_elbow__ward_b_door": {
+      "object": null,
+      "nodes": [
+        "ward_b_elbow",
+        "ward_b_door"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_right_mid__right_waste": {
+      "object": null,
+      "nodes": [
+        "right_mid",
+        "right_waste"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_right_waste__right_therapy": {
+      "object": null,
+      "nodes": [
+        "right_waste",
+        "right_therapy"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_right_therapy__right_ecg": {
+      "object": null,
+      "nodes": [
+        "right_therapy",
+        "right_ecg"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_right_waste__waste_elbow": {
+      "object": null,
+      "nodes": [
+        "right_waste",
+        "waste_elbow"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_waste_elbow__waste_drop": {
+      "object": null,
+      "nodes": [
+        "waste_elbow",
+        "waste_drop"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_waste_drop__waste_door": {
+      "object": null,
+      "nodes": [
+        "waste_drop",
+        "waste_door"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_right_therapy__therapy_elbow": {
+      "object": null,
+      "nodes": [
+        "right_therapy",
+        "therapy_elbow"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_therapy_elbow__therapy_rise": {
+      "object": null,
+      "nodes": [
+        "therapy_elbow",
+        "therapy_rise"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_therapy_rise__therapy_door": {
+      "object": null,
+      "nodes": [
+        "therapy_rise",
+        "therapy_door"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_center_mid__reception_elbow": {
+      "object": null,
+      "nodes": [
+        "center_mid",
+        "reception_elbow"
+      ],
+      "kind": "corrected"
+    },
+    "Correction_reception_elbow__reception_door": {
+      "object": null,
+      "nodes": [
+        "reception_elbow",
+        "reception_door"
+      ],
+      "kind": "corrected"
+    }
+  },
+  "vertices": {
+    "v0": {
+      "name": "left_mid_junction",
+      "sourceVertexIndex": 0,
+      "sourcePosition": [
+        8.953017489029458,
+        -16.19954313692292
+      ],
+      "displayNode": "left_mid",
+      "status": "candidate"
+    },
+    "v1": {
+      "name": "center_mid_junction",
+      "sourceVertexIndex": 1,
+      "sourcePosition": [
+        20.120988223146803,
+        -16.227743190769477
+      ],
+      "displayNode": "center_mid",
+      "status": "candidate"
+    },
+    "v2": {
+      "name": "reception_back",
+      "sourceVertexIndex": 2,
+      "sourcePosition": [
+        20.13481069048498,
+        -18.150426192742927
+      ],
+      "displayNode": "reception_door",
+      "status": "candidate"
+    },
+    "v3": {
+      "name": "right_bottom_junction",
+      "sourceVertexIndex": 3,
+      "sourcePosition": [
+        30.32863054876306,
+        -16.143670392441496
+      ],
+      "displayNode": "right_mid",
+      "status": "candidate"
+    },
+    "v4": {
+      "name": "waste_return_junction",
+      "sourceVertexIndex": 4,
+      "sourcePosition": [
+        30.3092568897228,
+        -15.112453265904858
+      ],
+      "displayNode": "right_waste",
+      "status": "candidate"
+    },
+    "v5": {
+      "name": "therapy_room_junction",
+      "sourceVertexIndex": 5,
+      "sourcePosition": [
+        30.32863054876306,
+        -14.722565316709364
+      ],
+      "displayNode": "right_therapy",
+      "status": "candidate"
+    },
+    "v6": {
+      "name": "ecg_junction",
+      "sourceVertexIndex": 6,
+      "sourcePosition": [
+        30.308590746718554,
+        -10.65931503845588
+      ],
+      "displayNode": "right_ecg",
+      "status": "candidate"
+    },
+    "v7": {
+      "name": "charging_station_junction",
+      "sourceVertexIndex": 7,
+      "sourcePosition": [
+        30.34864259484905,
+        -8.29744950497248
+      ],
+      "displayNode": "right_charge",
+      "status": "candidate"
+    },
+    "v8": {
+      "name": "ultrasound_junction",
+      "sourceVertexIndex": 8,
+      "sourcePosition": [
+        30.34864259484905,
+        -7.977201255679562
+      ],
+      "displayNode": "right_ultrasound",
+      "status": "candidate"
+    },
+    "v9": {
+      "name": "right_top_junction",
+      "sourceVertexIndex": 9,
+      "sourcePosition": [
+        30.306814365373885,
+        -6.274289933191407
+      ],
+      "displayNode": "right_top",
+      "status": "candidate"
+    },
+    "v10": {
+      "name": "center_top_junction",
+      "sourceVertexIndex": 10,
+      "sourcePosition": [
+        20.248915435921205,
+        -6.348953461584365
+      ],
+      "displayNode": "center_top",
+      "status": "candidate"
+    },
+    "v11": {
+      "name": "blood_draw_junction",
+      "sourceVertexIndex": 11,
+      "sourcePosition": [
+        17.318274800642826,
+        -6.295856312953983
+      ],
+      "displayNode": "blood_door",
+      "status": "candidate"
+    },
+    "v12": {
+      "name": "lab_junction",
+      "sourceVertexIndex": 12,
+      "sourcePosition": [
+        13.154964291959377,
+        -6.33588040512597
+      ],
+      "displayNode": "lab_door",
+      "status": "candidate"
+    },
+    "v13": {
+      "name": "left_top_junction",
+      "sourceVertexIndex": 13,
+      "sourcePosition": [
+        8.925011726892471,
+        -6.342597347085485
+      ],
+      "displayNode": "left_top",
+      "status": "candidate"
+    },
+    "v14": {
+      "name": "ward_b_junction",
+      "sourceVertexIndex": 14,
+      "sourcePosition": [
+        8.931617645017944,
+        -7.376701093307205
+      ],
+      "displayNode": "ward_b_junction",
+      "status": "candidate"
+    },
+    "v15": {
+      "name": "consult_2_junction",
+      "sourceVertexIndex": 15,
+      "sourcePosition": [
+        8.951629691103937,
+        -14.842637593225325
+      ],
+      "displayNode": "consult_2_door",
+      "status": "candidate"
+    },
+    "v16": {
+      "name": "consult_1_junction",
+      "sourceVertexIndex": 16,
+      "sourcePosition": [
+        8.931617645017944,
+        -18.74573599087384
+      ],
+      "displayNode": "consult_1_door",
+      "status": "candidate"
+    },
+    "v17": {
+      "name": "consult_1_1",
+      "sourceVertexIndex": 17,
+      "sourcePosition": [
+        6.031869391561633,
+        -18.72361449194106
+      ],
+      "displayNode": "consult_1_edge",
+      "status": "candidate"
+    },
+    "v18": {
+      "name": "consult_2_1",
+      "sourceVertexIndex": 18,
+      "sourcePosition": [
+        6.5875159249811945,
+        -14.789956783972599
+      ],
+      "displayNode": "consult_2_edge",
+      "status": "candidate"
+    },
+    "v19": {
+      "name": "consult_3_1",
+      "sourceVertexIndex": 19,
+      "sourcePosition": [
+        6.438549695655915,
+        -11.044928570040774
+      ],
+      "displayNode": "consult_3_edge",
+      "status": "candidate"
+    },
+    "v20": {
+      "name": "consult_3_junction",
+      "sourceVertexIndex": 20,
+      "sourcePosition": [
+        8.97722068485052,
+        -11.072268189173512
+      ],
+      "displayNode": "consult_3_door",
+      "status": "candidate"
+    },
+    "v21": {
+      "name": "ward_b_1",
+      "sourceVertexIndex": 21,
+      "sourcePosition": [
+        6.5875159249811945,
+        -7.406288945079285
+      ],
+      "displayNode": "ward_b_edge",
+      "status": "candidate"
+    },
+    "v22": {
+      "name": "ward_a_1",
+      "sourceVertexIndex": 22,
+      "sourcePosition": [
+        6.511714402289311,
+        -3.557508958235609
+      ],
+      "displayNode": "ward_a_edge",
+      "status": "candidate"
+    },
+    "v23": {
+      "name": "ward_a_junction",
+      "sourceVertexIndex": 23,
+      "sourcePosition": [
+        8.905471532101153,
+        -3.4882023298351577
+      ],
+      "displayNode": "ward_a_door",
+      "status": "candidate"
+    },
+    "v24": {
+      "name": "lab",
+      "sourceVertexIndex": 24,
+      "sourcePosition": [
+        13.189076364968649,
+        -3.5881515364310834
+      ],
+      "displayNode": "laboratory_dock",
+      "status": "candidate"
+    },
+    "v25": {
+      "name": "blood_draw",
+      "sourceVertexIndex": 25,
+      "sourcePosition": [
+        17.281970006911234,
+        -3.5416603059261744
+      ],
+      "displayNode": "blood_draw_dock",
+      "status": "candidate"
+    },
+    "v26": {
+      "name": "x-ray",
+      "sourceVertexIndex": 26,
+      "sourcePosition": [
+        30.912338356236624,
+        -3.2899970301124393
+      ],
+      "displayNode": "xray_dock",
+      "status": "candidate"
+    },
+    "v27": {
+      "name": "x-ray_junction",
+      "sourceVertexIndex": 27,
+      "sourcePosition": [
+        30.869039060960414,
+        -6.255832220781996
+      ],
+      "displayNode": "xray_door",
+      "status": "candidate"
+    },
+    "v28": {
+      "name": "charging_station_1",
+      "sourceVertexIndex": 28,
+      "sourcePosition": [
+        26.98159502391176,
+        -8.367505544252712
+      ],
+      "displayNode": "charging_edge",
+      "status": "candidate"
+    },
+    "v29": {
+      "name": "ultrasound_1",
+      "sourceVertexIndex": 29,
+      "sourcePosition": [
+        34.01081927262735,
+        -7.955884679543581
+      ],
+      "displayNode": "ultrasound_edge",
+      "status": "candidate"
+    },
+    "v30": {
+      "name": "ecg_1",
+      "sourceVertexIndex": 30,
+      "sourcePosition": [
+        33.596644859735264,
+        -10.536605945881432
+      ],
+      "displayNode": "ecg_edge",
+      "status": "candidate"
+    },
+    "v31": {
+      "name": "therapy_room",
+      "sourceVertexIndex": 31,
+      "sourcePosition": [
+        33.40546181751567,
+        -14.742272047251744
+      ],
+      "displayNode": "therapy_dock",
+      "status": "candidate"
+    },
+    "v32": {
+      "name": "waste_return_1",
+      "sourceVertexIndex": 32,
+      "sourcePosition": [
+        26.98159502391176,
+        -15.183647299484019
+      ],
+      "displayNode": "waste_return_edge",
+      "status": "candidate"
+    },
+    "v33": {
+      "name": "pharmacy_juction",
+      "sourceVertexIndex": 33,
+      "sourcePosition": [
+        30.29071590943786,
+        -24.45549748392236
+      ],
+      "displayNode": "right_bottom",
+      "status": "candidate"
+    },
+    "v34": {
+      "name": "pharmacy",
+      "sourceVertexIndex": 34,
+      "sourcePosition": [
+        31.829506249254056,
+        -24.44073131399483
+      ],
+      "displayNode": "pharmacy_dock",
+      "status": "candidate"
+    },
+    "v35": {
+      "name": "clothes_return_junction",
+      "sourceVertexIndex": 35,
+      "sourcePosition": [
+        20.120988223146803,
+        -14.927515314350108
+      ],
+      "displayNode": "support_bottom",
+      "status": "candidate"
+    },
+    "v36": {
+      "name": "clothes_return_1",
+      "sourceVertexIndex": 36,
+      "sourcePosition": [
+        23.481291096166068,
+        -14.9728963065146
+      ],
+      "displayNode": "clothes_return_edge",
+      "status": "candidate"
+    },
+    "v37": {
+      "name": "pantry_junction",
+      "sourceVertexIndex": 37,
+      "sourcePosition": [
+        20.182336546657528,
+        -10.813610411815157
+      ],
+      "displayNode": "support_top",
+      "status": "candidate"
+    },
+    "v38": {
+      "name": "pantry",
+      "sourceVertexIndex": 38,
+      "sourcePosition": [
+        23.176225356178335,
+        -10.813610411815157
+      ],
+      "displayNode": "pantry_dock",
+      "status": "candidate"
+    },
+    "v39": {
+      "name": "clothes_return_2",
+      "sourceVertexIndex": 39,
+      "sourcePosition": [
+        23.52880929713586,
+        -12.857670220354555
+      ],
+      "displayNode": "clothes_return_dock",
+      "status": "candidate"
+    },
+    "v40": {
+      "name": "charging_station_2",
+      "sourceVertexIndex": 40,
+      "sourcePosition": [
+        26.96474715709595,
+        -10.550428413219606
+      ],
+      "displayNode": "charging_dock",
+      "status": "candidate"
+    },
+    "v41": {
+      "name": "waste_return_2",
+      "sourceVertexIndex": 41,
+      "sourcePosition": [
+        27.015096465833803,
+        -13.538551638573011
+      ],
+      "displayNode": "waste_return_dock",
+      "status": "candidate"
+    },
+    "v42": {
+      "name": "ultrasound_2",
+      "sourceVertexIndex": 42,
+      "sourcePosition": [
+        33.96993474574154,
+        -6.082246456257997
+      ],
+      "displayNode": "ultrasound_dock",
+      "status": "candidate"
+    },
+    "v43": {
+      "name": "ecg_2",
+      "sourceVertexIndex": 43,
+      "sourcePosition": [
+        33.58004679654605,
+        -12.251813157989691
+      ],
+      "displayNode": "ecg_dock",
+      "status": "candidate"
+    },
+    "v44": {
+      "name": "ward_a_2",
+      "sourceVertexIndex": 44,
+      "sourcePosition": [
+        6.467082821004599,
+        -1.6319115806185693
+      ],
+      "displayNode": "ward_a_dock",
+      "status": "candidate"
+    },
+    "v45": {
+      "name": "ward_b_2",
+      "sourceVertexIndex": 45,
+      "sourcePosition": [
+        6.52925616806788,
+        -5.735602290421697
+      ],
+      "displayNode": "ward_b_dock",
+      "status": "candidate"
+    },
+    "v46": {
+      "name": "consult_3_2",
+      "sourceVertexIndex": 46,
+      "sourcePosition": [
+        6.421479781172023,
+        -9.362806460476904
+      ],
+      "displayNode": "consult_3_dock",
+      "status": "candidate"
+    },
+    "v47": {
+      "name": "consult_2_2",
+      "sourceVertexIndex": 47,
+      "sourcePosition": [
+        6.576663345203631,
+        -13.2597152793776
+      ],
+      "displayNode": "consult_2_dock",
+      "status": "candidate"
+    },
+    "v48": {
+      "name": "consult_1_2",
+      "sourceVertexIndex": 48,
+      "sourcePosition": [
+        6.041112125745594,
+        -17.118154339782894
+      ],
+      "displayNode": "consult_1_dock",
+      "status": "candidate"
+    },
+    "v49": {
+      "name": "nurse_station_junction",
+      "sourceVertexIndex": 49,
+      "sourcePosition": [
+        8.976165958427126,
+        -11.61572985680701
+      ],
+      "displayNode": "left_nurse",
+      "status": "candidate"
+    },
+    "v50": {
+      "name": "nurse_station",
+      "sourceVertexIndex": 50,
+      "sourcePosition": [
+        13.432940216440965,
+        -11.61006764127089
+      ],
+      "displayNode": "nurse_station_dock",
+      "status": "candidate"
+    }
+  },
+  "lanes": {
+    "l0": {
+      "from": "v0",
+      "to": "v1",
+      "displayNodes": [
+        "left_mid",
+        "center_reception",
+        "center_mid"
+      ]
+    },
+    "l1": {
+      "from": "v1",
+      "to": "v0",
+      "displayNodes": [
+        "center_mid",
+        "center_reception",
+        "left_mid"
+      ]
+    },
+    "l2": {
+      "from": "v1",
+      "to": "v2",
+      "displayNodes": [
+        "center_mid",
+        "reception_elbow",
+        "reception_door"
+      ]
+    },
+    "l3": {
+      "from": "v2",
+      "to": "v1",
+      "displayNodes": [
+        "reception_door",
+        "reception_elbow",
+        "center_mid"
+      ]
+    },
+    "l4": {
+      "from": "v3",
+      "to": "v4",
+      "displayNodes": [
+        "right_mid",
+        "right_waste"
+      ]
+    },
+    "l5": {
+      "from": "v4",
+      "to": "v3",
+      "displayNodes": [
+        "right_waste",
+        "right_mid"
+      ]
+    },
+    "l6": {
+      "from": "v4",
+      "to": "v5",
+      "displayNodes": [
+        "right_waste",
+        "right_therapy"
+      ]
+    },
+    "l7": {
+      "from": "v5",
+      "to": "v4",
+      "displayNodes": [
+        "right_therapy",
+        "right_waste"
+      ]
+    },
+    "l8": {
+      "from": "v5",
+      "to": "v6",
+      "displayNodes": [
+        "right_therapy",
+        "right_ecg"
+      ]
+    },
+    "l9": {
+      "from": "v6",
+      "to": "v5",
+      "displayNodes": [
+        "right_ecg",
+        "right_therapy"
+      ]
+    },
+    "l10": {
+      "from": "v6",
+      "to": "v7",
+      "displayNodes": [
+        "right_ecg",
+        "right_charge"
+      ]
+    },
+    "l11": {
+      "from": "v7",
+      "to": "v6",
+      "displayNodes": [
+        "right_charge",
+        "right_ecg"
+      ]
+    },
+    "l12": {
+      "from": "v7",
+      "to": "v8",
+      "displayNodes": [
+        "right_charge",
+        "right_ultrasound"
+      ]
+    },
+    "l13": {
+      "from": "v8",
+      "to": "v7",
+      "displayNodes": [
+        "right_ultrasound",
+        "right_charge"
+      ]
+    },
+    "l14": {
+      "from": "v8",
+      "to": "v9",
+      "displayNodes": [
+        "right_ultrasound",
+        "right_top"
+      ]
+    },
+    "l15": {
+      "from": "v9",
+      "to": "v8",
+      "displayNodes": [
+        "right_top",
+        "right_ultrasound"
+      ]
+    },
+    "l16": {
+      "from": "v10",
+      "to": "v11",
+      "displayNodes": [
+        "center_top",
+        "blood_door"
+      ]
+    },
+    "l17": {
+      "from": "v11",
+      "to": "v10",
+      "displayNodes": [
+        "blood_door",
+        "center_top"
+      ]
+    },
+    "l18": {
+      "from": "v11",
+      "to": "v12",
+      "displayNodes": [
+        "blood_door",
+        "lab_door"
+      ]
+    },
+    "l19": {
+      "from": "v12",
+      "to": "v11",
+      "displayNodes": [
+        "lab_door",
+        "blood_door"
+      ]
+    },
+    "l20": {
+      "from": "v12",
+      "to": "v13",
+      "displayNodes": [
+        "lab_door",
+        "left_top"
+      ]
+    },
+    "l21": {
+      "from": "v13",
+      "to": "v12",
+      "displayNodes": [
+        "left_top",
+        "lab_door"
+      ]
+    },
+    "l22": {
+      "from": "v13",
+      "to": "v14",
+      "displayNodes": [
+        "left_top",
+        "ward_b_junction"
+      ]
+    },
+    "l23": {
+      "from": "v14",
+      "to": "v13",
+      "displayNodes": [
+        "ward_b_junction",
+        "left_top"
+      ]
+    },
+    "l24": {
+      "from": "v15",
+      "to": "v0",
+      "displayNodes": [
+        "consult_2_door",
+        "left_mid"
+      ]
+    },
+    "l25": {
+      "from": "v0",
+      "to": "v15",
+      "displayNodes": [
+        "left_mid",
+        "consult_2_door"
+      ]
+    },
+    "l26": {
+      "from": "v0",
+      "to": "v16",
+      "displayNodes": [
+        "left_mid",
+        "consult_1_door"
+      ]
+    },
+    "l27": {
+      "from": "v16",
+      "to": "v0",
+      "displayNodes": [
+        "consult_1_door",
+        "left_mid"
+      ]
+    },
+    "l28": {
+      "from": "v17",
+      "to": "v16",
+      "displayNodes": [
+        "consult_1_edge",
+        "consult_1_door"
+      ]
+    },
+    "l29": {
+      "from": "v16",
+      "to": "v17",
+      "displayNodes": [
+        "consult_1_door",
+        "consult_1_edge"
+      ]
+    },
+    "l30": {
+      "from": "v18",
+      "to": "v15",
+      "displayNodes": [
+        "consult_2_edge",
+        "consult_2_door"
+      ]
+    },
+    "l31": {
+      "from": "v15",
+      "to": "v18",
+      "displayNodes": [
+        "consult_2_door",
+        "consult_2_edge"
+      ]
+    },
+    "l32": {
+      "from": "v19",
+      "to": "v20",
+      "displayNodes": [
+        "consult_3_edge",
+        "consult_3_door"
+      ]
+    },
+    "l33": {
+      "from": "v20",
+      "to": "v19",
+      "displayNodes": [
+        "consult_3_door",
+        "consult_3_edge"
+      ]
+    },
+    "l34": {
+      "from": "v21",
+      "to": "v14",
+      "displayNodes": [
+        "ward_b_edge",
+        "ward_b_door",
+        "ward_b_elbow",
+        "ward_b_junction"
+      ]
+    },
+    "l35": {
+      "from": "v14",
+      "to": "v21",
+      "displayNodes": [
+        "ward_b_junction",
+        "ward_b_elbow",
+        "ward_b_door",
+        "ward_b_edge"
+      ]
+    },
+    "l36": {
+      "from": "v22",
+      "to": "v23",
+      "displayNodes": [
+        "ward_a_edge",
+        "ward_a_door"
+      ]
+    },
+    "l37": {
+      "from": "v23",
+      "to": "v22",
+      "displayNodes": [
+        "ward_a_door",
+        "ward_a_edge"
+      ]
+    },
+    "l38": {
+      "from": "v23",
+      "to": "v13",
+      "displayNodes": [
+        "ward_a_door",
+        "left_top"
+      ]
+    },
+    "l39": {
+      "from": "v13",
+      "to": "v23",
+      "displayNodes": [
+        "left_top",
+        "ward_a_door"
+      ]
+    },
+    "l40": {
+      "from": "v24",
+      "to": "v12",
+      "displayNodes": [
+        "laboratory_dock",
+        "laboratory_upper",
+        "laboratory_edge",
+        "lab_door"
+      ]
+    },
+    "l41": {
+      "from": "v12",
+      "to": "v24",
+      "displayNodes": [
+        "lab_door",
+        "laboratory_edge",
+        "laboratory_upper",
+        "laboratory_dock"
+      ]
+    },
+    "l42": {
+      "from": "v25",
+      "to": "v11",
+      "displayNodes": [
+        "blood_draw_dock",
+        "blood_draw_upper",
+        "blood_draw_edge",
+        "blood_door"
+      ]
+    },
+    "l43": {
+      "from": "v11",
+      "to": "v25",
+      "displayNodes": [
+        "blood_door",
+        "blood_draw_edge",
+        "blood_draw_upper",
+        "blood_draw_dock"
+      ]
+    },
+    "l44": {
+      "from": "v26",
+      "to": "v27",
+      "displayNodes": [
+        "xray_dock",
+        "xray_upper",
+        "xray_edge",
+        "xray_door"
+      ]
+    },
+    "l45": {
+      "from": "v27",
+      "to": "v26",
+      "displayNodes": [
+        "xray_door",
+        "xray_edge",
+        "xray_upper",
+        "xray_dock"
+      ]
+    },
+    "l46": {
+      "from": "v27",
+      "to": "v9",
+      "displayNodes": [
+        "xray_door",
+        "right_top"
+      ]
+    },
+    "l47": {
+      "from": "v9",
+      "to": "v27",
+      "displayNodes": [
+        "right_top",
+        "xray_door"
+      ]
+    },
+    "l48": {
+      "from": "v28",
+      "to": "v7",
+      "displayNodes": [
+        "charging_edge",
+        "charge_door",
+        "right_charge"
+      ]
+    },
+    "l49": {
+      "from": "v7",
+      "to": "v28",
+      "displayNodes": [
+        "right_charge",
+        "charge_door",
+        "charging_edge"
+      ]
+    },
+    "l50": {
+      "from": "v29",
+      "to": "v8",
+      "displayNodes": [
+        "ultrasound_edge",
+        "ultrasound_door",
+        "right_ultrasound"
+      ]
+    },
+    "l51": {
+      "from": "v8",
+      "to": "v29",
+      "displayNodes": [
+        "right_ultrasound",
+        "ultrasound_door",
+        "ultrasound_edge"
+      ]
+    },
+    "l52": {
+      "from": "v30",
+      "to": "v6",
+      "displayNodes": [
+        "ecg_edge",
+        "ecg_door",
+        "right_ecg"
+      ]
+    },
+    "l53": {
+      "from": "v6",
+      "to": "v30",
+      "displayNodes": [
+        "right_ecg",
+        "ecg_door",
+        "ecg_edge"
+      ]
+    },
+    "l54": {
+      "from": "v31",
+      "to": "v5",
+      "displayNodes": [
+        "therapy_dock",
+        "therapy_upper",
+        "therapy_edge",
+        "therapy_door",
+        "therapy_rise",
+        "therapy_elbow",
+        "right_therapy"
+      ]
+    },
+    "l55": {
+      "from": "v5",
+      "to": "v31",
+      "displayNodes": [
+        "right_therapy",
+        "therapy_elbow",
+        "therapy_rise",
+        "therapy_door",
+        "therapy_edge",
+        "therapy_upper",
+        "therapy_dock"
+      ]
+    },
+    "l56": {
+      "from": "v32",
+      "to": "v4",
+      "displayNodes": [
+        "waste_return_edge",
+        "waste_door",
+        "waste_drop",
+        "waste_elbow",
+        "right_waste"
+      ]
+    },
+    "l57": {
+      "from": "v4",
+      "to": "v32",
+      "displayNodes": [
+        "right_waste",
+        "waste_elbow",
+        "waste_drop",
+        "waste_door",
+        "waste_return_edge"
+      ]
+    },
+    "l58": {
+      "from": "v3",
+      "to": "v33",
+      "displayNodes": [
+        "right_mid",
+        "right_director",
+        "right_lower",
+        "entry_right",
+        "right_bottom"
+      ]
+    },
+    "l59": {
+      "from": "v33",
+      "to": "v3",
+      "displayNodes": [
+        "right_bottom",
+        "entry_right",
+        "right_lower",
+        "right_director",
+        "right_mid"
+      ]
+    },
+    "l60": {
+      "from": "v33",
+      "to": "v34",
+      "displayNodes": [
+        "right_bottom",
+        "pharmacy_door",
+        "pharmacy_edge",
+        "pharmacy_upper",
+        "pharmacy_dock"
+      ]
+    },
+    "l61": {
+      "from": "v34",
+      "to": "v33",
+      "displayNodes": [
+        "pharmacy_dock",
+        "pharmacy_upper",
+        "pharmacy_edge",
+        "pharmacy_door",
+        "right_bottom"
+      ]
+    },
+    "l62": {
+      "from": "v3",
+      "to": "v1",
+      "displayNodes": [
+        "right_mid",
+        "center_mid"
+      ]
+    },
+    "l63": {
+      "from": "v1",
+      "to": "v3",
+      "displayNodes": [
+        "center_mid",
+        "right_mid"
+      ]
+    },
+    "l64": {
+      "from": "v35",
+      "to": "v36",
+      "displayNodes": [
+        "support_bottom",
+        "clothes_door",
+        "clothes_return_edge"
+      ]
+    },
+    "l65": {
+      "from": "v36",
+      "to": "v35",
+      "displayNodes": [
+        "clothes_return_edge",
+        "clothes_door",
+        "support_bottom"
+      ]
+    },
+    "l66": {
+      "from": "v10",
+      "to": "v37",
+      "displayNodes": [
+        "center_top",
+        "support_top"
+      ]
+    },
+    "l67": {
+      "from": "v37",
+      "to": "v10",
+      "displayNodes": [
+        "support_top",
+        "center_top"
+      ]
+    },
+    "l68": {
+      "from": "v37",
+      "to": "v35",
+      "displayNodes": [
+        "support_top",
+        "support_bottom"
+      ]
+    },
+    "l69": {
+      "from": "v35",
+      "to": "v37",
+      "displayNodes": [
+        "support_bottom",
+        "support_top"
+      ]
+    },
+    "l70": {
+      "from": "v37",
+      "to": "v38",
+      "displayNodes": [
+        "support_top",
+        "pantry_door",
+        "pantry_edge",
+        "pantry_upper",
+        "pantry_dock"
+      ]
+    },
+    "l71": {
+      "from": "v38",
+      "to": "v37",
+      "displayNodes": [
+        "pantry_dock",
+        "pantry_upper",
+        "pantry_edge",
+        "pantry_door",
+        "support_top"
+      ]
+    },
+    "l72": {
+      "from": "v35",
+      "to": "v1",
+      "displayNodes": [
+        "support_bottom",
+        "center_mid"
+      ]
+    },
+    "l73": {
+      "from": "v1",
+      "to": "v35",
+      "displayNodes": [
+        "center_mid",
+        "support_bottom"
+      ]
+    },
+    "l74": {
+      "from": "v36",
+      "to": "v39",
+      "displayNodes": [
+        "clothes_return_edge",
+        "clothes_return_upper",
+        "clothes_return_dock"
+      ]
+    },
+    "l75": {
+      "from": "v39",
+      "to": "v36",
+      "displayNodes": [
+        "clothes_return_dock",
+        "clothes_return_upper",
+        "clothes_return_edge"
+      ]
+    },
+    "l76": {
+      "from": "v28",
+      "to": "v40",
+      "displayNodes": [
+        "charging_edge",
+        "charging_upper",
+        "charging_dock"
+      ]
+    },
+    "l77": {
+      "from": "v40",
+      "to": "v28",
+      "displayNodes": [
+        "charging_dock",
+        "charging_upper",
+        "charging_edge"
+      ]
+    },
+    "l78": {
+      "from": "v32",
+      "to": "v41",
+      "displayNodes": [
+        "waste_return_edge",
+        "waste_return_upper",
+        "waste_return_dock"
+      ]
+    },
+    "l79": {
+      "from": "v41",
+      "to": "v32",
+      "displayNodes": [
+        "waste_return_dock",
+        "waste_return_upper",
+        "waste_return_edge"
+      ]
+    },
+    "l80": {
+      "from": "v29",
+      "to": "v42",
+      "displayNodes": [
+        "ultrasound_edge",
+        "ultrasound_upper",
+        "ultrasound_dock"
+      ]
+    },
+    "l81": {
+      "from": "v42",
+      "to": "v29",
+      "displayNodes": [
+        "ultrasound_dock",
+        "ultrasound_upper",
+        "ultrasound_edge"
+      ]
+    },
+    "l82": {
+      "from": "v30",
+      "to": "v43",
+      "displayNodes": [
+        "ecg_edge",
+        "ecg_upper",
+        "ecg_dock"
+      ]
+    },
+    "l83": {
+      "from": "v43",
+      "to": "v30",
+      "displayNodes": [
+        "ecg_dock",
+        "ecg_upper",
+        "ecg_edge"
+      ]
+    },
+    "l84": {
+      "from": "v22",
+      "to": "v44",
+      "displayNodes": [
+        "ward_a_edge",
+        "ward_a_upper",
+        "ward_a_dock"
+      ]
+    },
+    "l85": {
+      "from": "v44",
+      "to": "v22",
+      "displayNodes": [
+        "ward_a_dock",
+        "ward_a_upper",
+        "ward_a_edge"
+      ]
+    },
+    "l86": {
+      "from": "v21",
+      "to": "v45",
+      "displayNodes": [
+        "ward_b_edge",
+        "ward_b_upper",
+        "ward_b_dock"
+      ]
+    },
+    "l87": {
+      "from": "v45",
+      "to": "v21",
+      "displayNodes": [
+        "ward_b_dock",
+        "ward_b_upper",
+        "ward_b_edge"
+      ]
+    },
+    "l88": {
+      "from": "v19",
+      "to": "v46",
+      "displayNodes": [
+        "consult_3_edge",
+        "consult_3_upper",
+        "consult_3_dock"
+      ]
+    },
+    "l89": {
+      "from": "v46",
+      "to": "v19",
+      "displayNodes": [
+        "consult_3_dock",
+        "consult_3_upper",
+        "consult_3_edge"
+      ]
+    },
+    "l90": {
+      "from": "v18",
+      "to": "v47",
+      "displayNodes": [
+        "consult_2_edge",
+        "consult_2_upper",
+        "consult_2_dock"
+      ]
+    },
+    "l91": {
+      "from": "v47",
+      "to": "v18",
+      "displayNodes": [
+        "consult_2_dock",
+        "consult_2_upper",
+        "consult_2_edge"
+      ]
+    },
+    "l92": {
+      "from": "v17",
+      "to": "v48",
+      "displayNodes": [
+        "consult_1_edge",
+        "consult_1_upper",
+        "consult_1_dock"
+      ]
+    },
+    "l93": {
+      "from": "v48",
+      "to": "v17",
+      "displayNodes": [
+        "consult_1_dock",
+        "consult_1_upper",
+        "consult_1_edge"
+      ]
+    },
+    "l94": {
+      "from": "v10",
+      "to": "v9",
+      "displayNodes": [
+        "center_top",
+        "men_door",
+        "women_door",
+        "right_top"
+      ]
+    },
+    "l95": {
+      "from": "v9",
+      "to": "v10",
+      "displayNodes": [
+        "right_top",
+        "women_door",
+        "men_door",
+        "center_top"
+      ]
+    },
+    "l96": {
+      "from": "v14",
+      "to": "v20",
+      "displayNodes": [
+        "ward_b_junction",
+        "consult_3_door"
+      ]
+    },
+    "l97": {
+      "from": "v20",
+      "to": "v14",
+      "displayNodes": [
+        "consult_3_door",
+        "ward_b_junction"
+      ]
+    },
+    "l98": {
+      "from": "v20",
+      "to": "v49",
+      "displayNodes": [
+        "consult_3_door",
+        "left_nurse"
+      ]
+    },
+    "l99": {
+      "from": "v49",
+      "to": "v20",
+      "displayNodes": [
+        "left_nurse",
+        "consult_3_door"
+      ]
+    },
+    "l100": {
+      "from": "v49",
+      "to": "v15",
+      "displayNodes": [
+        "left_nurse",
+        "consult_2_door"
+      ]
+    },
+    "l101": {
+      "from": "v15",
+      "to": "v49",
+      "displayNodes": [
+        "consult_2_door",
+        "left_nurse"
+      ]
+    },
+    "l102": {
+      "from": "v49",
+      "to": "v50",
+      "displayNodes": [
+        "left_nurse",
+        "nurse_door",
+        "nurse_station_edge",
+        "nurse_station_upper",
+        "nurse_station_dock"
+      ]
+    },
+    "l103": {
+      "from": "v50",
+      "to": "v49",
+      "displayNodes": [
+        "nurse_station_dock",
+        "nurse_station_upper",
+        "nurse_station_edge",
+        "nurse_door",
+        "left_nurse"
+      ]
+    }
+  },
+  "unmappedLanes": [],
+  "audit": {
+    "glbRouteMeshesVerified": 103,
+    "unmappedVertexIds": [],
+    "duplicateVertexAnchors": {},
+    "sharedDisplaySegments": [],
+    "visualOnlyEdges": [
+      "Route_director_door__director_edge",
+      "Route_director_edge__director_upper",
+      "Route_director_upper__director_dock",
+      "Route_men_door__men_restroom_edge",
+      "Route_men_restroom_edge__men_restroom_upper",
+      "Route_men_restroom_upper__men_restroom_dock",
+      "Route_reception_desk_edge__reception_desk_upper",
+      "Route_reception_desk_upper__reception_desk_dock",
+      "Route_reception_door__reception_desk_edge",
+      "Route_right_director__director_door",
+      "Route_women_door__women_restroom_edge",
+      "Route_women_restroom_edge__women_restroom_upper",
+      "Route_women_restroom_upper__women_restroom_dock"
+    ],
+    "isolatedDisplayNodes": [
+      "lift_1_edge",
+      "lift_2_edge"
+    ],
+    "nonDestinationRooms": [
+      "Room_director",
+      "Room_men_restroom",
+      "Room_women_restroom",
+      "Room_lift_1",
+      "Room_lift_2"
+    ]
+  }
+}

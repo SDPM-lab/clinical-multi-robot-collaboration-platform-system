@@ -50,7 +50,24 @@ cd ~/clinical-multi-robot-collaboration-platform-system/frontend
 npm run dev
 ```
 
-## 3. 調整 Overview camera／model preset
+## 3. 調整地圖預設視角
+
+### Task Dispatch 派遣地圖
+
+若要使用 `5174` 埠，啟動前端時執行 `npm run dev -- --port 5174`，然後開啟：
+
+```text
+http://localhost:5174/?dispatchDebug=1&cameraDebug=1&modelDebug=1
+```
+
+- `dispatchDebug=1`：直接進入任務派遣頁。
+- `cameraDebug=1`：調整相機位置、目標及縮放；仍可在地圖上拖曳平移、用滾輪縮放。
+- `modelDebug=1`：調整 F1 地圖的顯示位移、旋轉與比例。
+- 調整後按「儲存預設」，設定保存在目前瀏覽器；重新載入會套用，地圖右上角的重設圖示也會回到儲存的視角。「原始預設」可先恢復程式初始視角，再決定是否儲存。
+
+此面板僅調整畫面呈現，並非 ROS／GLB 精準座標校正。若 Vite 使用其他埠，請把網址中的 `5174` 改成終端機顯示的埠。
+
+### Overview camera／model preset
 
 若要手動調整場景鏡頭並保存 preset，可在瀏覽器網址上加入 query string：
 

@@ -1,6 +1,8 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { MapPin } from '@lucide/vue'
 import * as THREE from 'three'
+import { overviewPalette } from '@/styles/overviewTheme.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -29,6 +31,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelPreset', 'cameraChange', 'cameraPresetChange', 'floorAnchors', 'modelInteractionEnd'])
 
 const host = ref(null)
+const hospitalMarker = ref(null)
 const loading = ref(true)
 const loadError = ref(false)
 const modelProgress = ref(0)
@@ -64,6 +67,10 @@ let loadGeneration = 0
 let cameraTween
 let dragState
 let lastAnchorSignature = ''
+let hospitalMarkerRoot
+let hospitalMarkerAnchor
+const hospitalMarkerWorld = new THREE.Vector3()
+const hospitalMarkerProjected = new THREE.Vector3()
 
 const easeOutQuint = (value) => 1 - ((1 - value) ** 5)
 const roundedVector = (vector) => ({ x: Number(vector.x.toFixed(4)), y: Number(vector.y.toFixed(4)), z: Number(vector.z.toFixed(4)) })
@@ -122,6 +129,57 @@ const disposeModel = () => {
   floorLeaderPoints.clear()
   layoutRoot = null
   modelRoot = null
+  hospitalMarkerRoot = null
+  hospitalMarkerAnchor = null
+}
+
+const prepareHospitalRoute = (root) => {
+  const routeRoot = root.getObjectByName('HOSPITAL_ROUTE_ROOT')
+  routeRoot?.traverse((object) => {
+    if (!object.isMesh || !object.material) return
+    const array = Array.isArray(object.material)
+    const materials = (array ? object.material : [object.material]).map((source) => {
+      const material = source.clone()
+      material.color?.set(overviewPalette.accent)
+      if (material.emissive) {
+        material.emissive.set(overviewPalette.accent)
+        material.emissiveIntensity = 0.6
+      }
+      material.name = `${source.name || 'HospitalRoute'}_OverviewAccent`
+      material.needsUpdate = true
+      registerMaterial(material)
+      return material
+    })
+    object.material = array ? materials : materials[0]
+  })
+}
+
+const prepareHospitalMarker = (root) => {
+  hospitalMarkerRoot = root.getObjectByName('HOSPITAL_MODEL_ROOT') || null
+  hospitalMarkerAnchor = null
+  if (!hospitalMarkerRoot) return
+  root.updateMatrixWorld(true)
+  const bounds = new THREE.Box3().setFromObject(hospitalMarkerRoot)
+  if (bounds.isEmpty()) return
+  const anchorWorld = bounds.getCenter(new THREE.Vector3())
+  anchorWorld.y = bounds.max.y + 1.6
+  hospitalMarkerAnchor = hospitalMarkerRoot.worldToLocal(anchorWorld)
+}
+
+const updateHospitalMarker = () => {
+  const marker = hospitalMarker.value
+  if (!marker || !hospitalMarkerRoot || !hospitalMarkerAnchor || !camera || !host.value) return
+  hospitalMarkerRoot.localToWorld(hospitalMarkerWorld.copy(hospitalMarkerAnchor))
+  hospitalMarkerProjected.copy(hospitalMarkerWorld).project(camera)
+  const visible = hospitalMarkerProjected.z > -1 && hospitalMarkerProjected.z < 1
+  marker.style.visibility = visible ? 'visible' : 'hidden'
+  if (!visible) return
+  const projectedX = (hospitalMarkerProjected.x * .5 + .5) * host.value.clientWidth
+  const projectedY = (-hospitalMarkerProjected.y * .5 + .5) * host.value.clientHeight
+  const screenX = THREE.MathUtils.clamp(projectedX, 72, host.value.clientWidth - 72)
+  const screenY = THREE.MathUtils.clamp(projectedY, 132, host.value.clientHeight - 24)
+  marker.dataset.edgeClamped = String(screenX !== projectedX || screenY !== projectedY)
+  marker.style.transform = `translate(-50%, -100%) translate(${screenX}px, ${screenY}px)`
 }
 
 const reportDuplicateNodes = (root) => {
@@ -152,6 +210,8 @@ const prepareModel = (root) => {
   originalStates = captureOverviewOriginalState(root, registerMaterial)
   applyOverviewArchitecturalMaterials(root, registerMaterial)
   enhanceOverviewModelSaturation(root)
+  prepareHospitalRoute(root)
+  prepareHospitalMarker(root)
   appearanceStates = captureOverviewOriginalState(root, registerMaterial)
   reportDuplicateNodes(root)
   reportModelHierarchy(root)
@@ -202,7 +262,7 @@ const createFloorTintOverlays = () => {
   sources.forEach((source) => {
     if (!source.isMesh || !source.geometry) return
     const material = new THREE.MeshBasicMaterial({
-      color: 0xf08a92,
+      color: overviewPalette.accent,
       transparent: true,
       opacity: /glass/i.test(source.name) ? 0.08 : 0.13,
       depthWrite: false,
@@ -425,6 +485,7 @@ const animate = (time) => {
   }
   if (controls?.enabled) controls.update()
   emitFloorAnchors()
+  updateHospitalMarker()
   renderer?.render(scene, camera)
 }
 
@@ -559,11 +620,13 @@ watch(() => props.interactionTarget, () => {
 
 onMounted(() => {
   scene = new THREE.Scene()
+  const sceneBackground = new THREE.Color(getComputedStyle(host.value).getPropertyValue('--bg-map').trim() || '#E8EDF2')
+  scene.background = sceneBackground
   camera = new THREE.PerspectiveCamera(31, 1, 0.05, 200)
   camera.position.set(22, 18, 26)
   camera.userData.target = new THREE.Vector3()
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
-  renderer.setClearColor(0x000000, 0)
+  renderer.setClearColor(sceneBackground, 0)
   renderer.setClearAlpha(0)
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.ACESFilmicToneMapping
@@ -590,7 +653,7 @@ onMounted(() => {
   const room = new RoomEnvironment()
   environmentTarget = pmrem.fromScene(room, 0.04)
   scene.environment = environmentTarget.texture
-  scene.environmentIntensity = overviewLighting.environment
+  scene.environmentIntensity = 0.28
   room.dispose()
   pmrem.dispose()
   addOverviewLighting(scene)
@@ -655,6 +718,10 @@ defineExpose({
 
 <template>
   <section ref="host" class="clinic-overview-scene" :class="{ 'is-debug': modelDebug || cameraDebug, 'is-model-debug': modelDebug && interactionTarget === 'model' }">
+    <div ref="hospitalMarker" class="hospital-location-marker" aria-label="Hospital RMF 位置">
+      <span class="hospital-location-marker__pin"><MapPin :size="24" :stroke-width="2" /></span>
+      <strong>Hospital RMF</strong>
+    </div>
     <SharedLoading :loading="loading" :detail="`${modelProgress}%`" :error="loadError ? '請確認模型檔案後重新載入。' : ''" error-title="模型載入失敗">
       <template #error-action><button class="clinic-model-retry" type="button" @click="loadModel">重新載入</button></template>
     </SharedLoading>
@@ -662,6 +729,7 @@ defineExpose({
 </template>
 
 <style scoped>
-.clinic-overview-scene{position:relative;width:100%;height:100%;min-height:360px;overflow:hidden;background:transparent;isolation:isolate}:deep(canvas){position:absolute;z-index:1;inset:0;display:block;width:100%;height:100%;border:0;outline:0;background:transparent;pointer-events:none}.clinic-overview-scene.is-debug :deep(canvas){cursor:grab;pointer-events:auto}.clinic-overview-scene.is-model-debug :deep(canvas:active){cursor:grabbing}.clinic-model-retry{padding:7px 11px;color:#1e1f1e;background:#f1a534;border:0;border-radius:6px;cursor:pointer}
+.clinic-overview-scene{position:relative;width:100%;height:100%;min-height:360px;overflow:hidden;background:var(--bg-map,#E8EDF2);isolation:isolate}:deep(canvas){position:absolute;z-index:1;inset:0;display:block;width:100%;height:100%;border:0;outline:0;background:transparent;pointer-events:none}.clinic-overview-scene.is-debug :deep(canvas){cursor:grab;pointer-events:auto}.clinic-overview-scene.is-model-debug :deep(canvas:active){cursor:grabbing}.clinic-model-retry{padding:7px 11px;color:#1e1f1e;background:var(--overview-accent);border:0;border-radius:6px;cursor:pointer}
 :deep(canvas){mask-image:radial-gradient(ellipse 95% 100% at 52% 48%,#000 65%,rgba(0,0,0,.94) 82%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 95% 100% at 52% 48%,#000 65%,rgba(0,0,0,.94) 82%,transparent 100%)}
+.hospital-location-marker{position:absolute;z-index:3;top:0;left:0;display:grid;justify-items:center;gap:3px;visibility:hidden;pointer-events:none;will-change:transform}.hospital-location-marker__pin{display:grid;width:34px;height:34px;place-items:center;color:#fff;background:var(--color-primary);border:1px solid var(--marker-border);border-radius:50% 50% 50% 12px;box-shadow:var(--marker-shadow);transform:rotate(-45deg)}.hospital-location-marker__pin :deep(svg){transform:rotate(45deg)}.hospital-location-marker strong{padding:5px 9px;color:var(--color-text);font-size:11px;font-weight:600;line-height:1;background:var(--marker-background);border:1px solid var(--marker-border);border-radius:var(--radius-control);box-shadow:var(--marker-shadow);backdrop-filter:var(--control-backdrop);white-space:nowrap}
 </style>

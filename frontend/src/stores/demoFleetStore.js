@@ -1,4 +1,5 @@
 import { computed, reactive, readonly } from 'vue'
+import { dispatchTaskLocations } from '@/config/dispatchDestinations.js'
 
 export const ROBOT_CAPABILITY_OPTIONS = Object.freeze([
   '藥品配送', '檢體運送', '物資補充', '醫療廢棄物運送', '文件配送',
@@ -54,13 +55,13 @@ const makeRobot = (robot) => ({
 
 const initialRobots = [
   makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', rosNamespace: '/robot_01', battery: 82, state: 'executing', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_1_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
   makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
 ]
 
 const initialTasks = [
   { id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy', destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720, status: 'executing', direction: 'outbound', progress: 42 },
-  { id: 'T002', robotId: 'R02', title: '檢體運送', origin: 'Consultation Room 2', destination: 'Laboratory', priority: 'normal', startTime: '11:00:00', endTime: '11:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
+  { id: 'T002', robotId: 'R02', title: '檢體運送', origin: 'Consultation Room 2', destination: 'Pantry', priority: 'normal', startTime: '11:00:00', endTime: '11:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
   { id: 'T003', robotId: 'R03', title: '病房物資補充', origin: 'Nurse Station', destination: 'Ward A', priority: 'high', startTime: '14:20:00', endTime: '14:38:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 30 },
   { id: 'T006', robotId: 'R03', title: '前往充電', origin: 'Ward A', destination: 'Charging Station A', priority: 'normal', startTime: '16:00:00', endTime: '16:15:00', durationSeconds: 900, status: 'scheduled' },
   { id: 'T009', robotId: 'R03', title: '文件配送', origin: 'Nurse Station', destination: 'Nurse Reception', priority: 'low', startTime: '17:00:00', endTime: '17:12:00', durationSeconds: 720, status: 'scheduled' },
@@ -82,10 +83,7 @@ const state = reactive({
   notification: '',
 })
 
-const reachableLocations = new Set([
-  'Nurse Reception', 'Nurse Station', 'Pharmacy', 'Consultation Room 2',
-  'Ward A', 'Charging Station A', 'Laboratory',
-])
+const reachableLocations = new Set(dispatchTaskLocations)
 
 const normalizeRosNamespace = (value) => {
   const normalized = String(value || '').trim().replace(/^\/+|\/+$/g, '')
@@ -100,9 +98,10 @@ const validateTask = (candidate, ignoreId = null) => {
   if (!reachableLocations.has(candidate.origin) || !reachableLocations.has(candidate.destination)) return { ok: false, reason: '請選擇 RMF 路網中可達的起點與目的地。' }
   const start = timeToSeconds(candidate.startTime)
   const end = timeToSeconds(candidate.endTime)
-  const chargingConflict = state.tasks.find((task) => task.robotId === candidate.robotId && task.id !== ignoreId && task.title === '前往充電' && start < timeToSeconds(task.endTime) && end > timeToSeconds(task.startTime))
+  const sameDate = (task) => (task.date || '2026-08-31') === (candidate.date || '2026-08-31')
+  const chargingConflict = state.tasks.find((task) => task.robotId === candidate.robotId && task.id !== ignoreId && sameDate(task) && task.title === '前往充電' && start < timeToSeconds(task.endTime) && end > timeToSeconds(task.startTime))
   if (chargingConflict) return { ok: false, reason: '與充電時段衝突。' }
-  const overlap = state.tasks.find((task) => task.robotId === candidate.robotId && task.id !== ignoreId && start < timeToSeconds(task.endTime) && end > timeToSeconds(task.startTime))
+  const overlap = state.tasks.find((task) => task.robotId === candidate.robotId && task.id !== ignoreId && sameDate(task) && start < timeToSeconds(task.endTime) && end > timeToSeconds(task.startTime))
   if (overlap) return { ok: false, reason: `與 ${overlap.id}「${overlap.title}」時間重疊。` }
   return { ok: true }
 }
@@ -134,7 +133,7 @@ const moveTasks = (changes) => {
     if (robot.battery < 20 && task.title !== '前往充電') return { ok: false, taskId: task.id, reason: '機器人電量不足 20%。' }
     const start = timeToSeconds(task.startTime)
     const end = timeToSeconds(task.endTime)
-    const overlap = planned.find((other) => other.id !== task.id && other.robotId === task.robotId && start < timeToSeconds(other.endTime) && end > timeToSeconds(other.startTime))
+    const overlap = planned.find((other) => other.id !== task.id && other.robotId === task.robotId && (other.date || '2026-08-31') === (task.date || '2026-08-31') && start < timeToSeconds(other.endTime) && end > timeToSeconds(other.startTime))
     if (overlap) return { ok: false, taskId: task.id, reason: `與 ${overlap.id}「${overlap.title}」時間重疊。` }
   }
   changes.forEach((change) => {
@@ -149,7 +148,7 @@ const createTask = (input) => {
   const durationSeconds = Number(input.durationSeconds)
   const candidate = {
     ...input,
-    id: `T${String(state.tasks.length + 1).padStart(3, '0')}`,
+    id: `T${String(Math.max(0, ...state.tasks.map((task) => Number(/^T(\d+)$/.exec(task.id)?.[1]) || 0)) + 1).padStart(3, '0')}`,
     durationSeconds,
     endTime: secondsToTime(timeToSeconds(input.startTime) + durationSeconds),
     status: 'scheduled',
@@ -163,6 +162,22 @@ const createTask = (input) => {
   state.notification = `已建立 ${candidate.id}「${candidate.title}」`
   window.setTimeout(() => { state.notification = '' }, 3200)
   return { ok: true, task: candidate }
+}
+
+const deleteTask = (taskId) => {
+  const index = state.tasks.findIndex((task) => task.id === taskId)
+  if (index < 0) return { ok: false, reason: '找不到任務。' }
+  const [task] = state.tasks.splice(index, 1)
+  const robot = state.robots.find((entry) => entry.id === task.robotId)
+  if (robot) {
+    robot.queuedTaskIds = robot.queuedTaskIds.filter((id) => id !== taskId)
+    robot.queuedTasks = robot.queuedTaskIds.length
+    if (robot.activeTaskId === taskId) {
+      robot.activeTaskId = null
+      if (robot.state === 'executing') robot.state = 'idle'
+    }
+  }
+  return { ok: true, task }
 }
 
 const validateRobot = (candidate) => {
@@ -226,6 +241,7 @@ export const demoFleetStore = {
   moveTask,
   moveTasks,
   createTask,
+  deleteTask,
   validateRobot,
   addRobot,
 }

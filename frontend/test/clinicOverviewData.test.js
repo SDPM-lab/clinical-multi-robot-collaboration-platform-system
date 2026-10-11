@@ -1,9 +1,13 @@
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { clinicOverviewModelUrl, completionByFloor, createClinicDailySchedules, taskProgressByRobot } from '@/data/clinicOverviewData.js'
 
 describe('clinic overview dashboard data', () => {
-  it('uses an explicit lighting revision for the current GLB', () => {
-    expect(clinicOverviewModelUrl).toBe('/models/clinic_overview.glb?v=20260912-lighting')
+  it('uses the current GLB asset revision', () => {
+    const bytes = readFileSync('public/models/hospital_overview.glb')
+    const revision = createHash('sha256').update(bytes).digest('hex').slice(0, 8)
+    expect(clinicOverviewModelUrl).toBe('/models/hospital_overview.glb?v=' + revision)
   })
   it('keeps distinct completion values for the building and each floor', () => {
     expect(completionByFloor.all.map(({ percentage }) => percentage)).toEqual([86, 72, 64])

@@ -1,8 +1,9 @@
 import * as THREE from 'three'
+import { visualTokens, colorHex, colorAlpha } from '@/config/visualTokens.js'
 import { rmfToThree } from '@/config/rmfMapTransform.js'
 import { semanticColors, semanticTheme } from '@/config/robotVisualThemes.js'
 
-const STATUS_COLORS = Object.freeze({ normal: 0x969892, active: 0x969892, emergency: semanticTheme.destinationHex, charging: semanticTheme.chargingStationHex })
+const STATUS_COLORS = Object.freeze({ normal: 0xDAC9A6, active: colorHex(visualTokens.neutral), emergency: semanticTheme.destinationHex, charging: semanticTheme.chargingStationHex })
 export const ARRIVAL_THRESHOLD = 0.25
 export const locationMarkerSize = Object.freeze({ normal: 0.52, destination: 0.66, activeDestination: 0.66, arrived: 0.74 })
 export const destinationStyles = Object.freeze({
@@ -16,10 +17,9 @@ const makeStem = (color) => new THREE.Line(
   new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.58 }),
 )
 
-const makeDestinationPin = () => {
+const makeDestinationPin = (color) => {
   const pin = new THREE.Group()
   pin.name = 'Active Destination 3D Pin'
-  const color = semanticTheme.destinationHex
   const material = new THREE.MeshStandardMaterial({
     color, emissive: color, emissiveIntensity: 0.22,
     transparent: true, opacity: 0.96, roughness: 0.42, metalness: 0.04, depthTest: false, depthWrite: false,
@@ -28,7 +28,7 @@ const makeDestinationPin = () => {
   ring.position.y = 0.1
   const center = new THREE.Mesh(
     new THREE.CircleGeometry(0.068, 24),
-    new THREE.MeshBasicMaterial({ color: 0xfff7f2, transparent: true, opacity: 0.94, depthTest: false, depthWrite: false }),
+    new THREE.MeshBasicMaterial({ color: colorHex(visualTokens.white), transparent: true, opacity: 0.94, depthTest: false, depthWrite: false }),
   )
   center.position.set(0, 0.1, 0.006)
   const point = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.23, 20), material.clone())
@@ -56,6 +56,7 @@ export class LocationMarkerLayer {
     this.environmentGroup = environmentGroup
     this.visible = true
     this.labelsVisible = true
+    this.roomLabelsVisible = false
     this.raycaster = new THREE.Raycaster()
     this.entries = []
     this.retiringPins = []
@@ -88,8 +89,10 @@ export class LocationMarkerLayer {
 
   addLocation(waypoint, detail, sequenceIndex = 0, sequenceTotal = 1) {
     const transformed = rmfToThree(waypoint)
-    const status = detail.statusKey || (waypoint.isCharger ? 'charging' : 'normal')
-    const color = detail.color || STATUS_COLORS[status] || STATUS_COLORS.normal
+    // Charging facilities keep their visual identity even when assigned a task.
+    const charging = waypoint.isCharger || waypoint.name.startsWith('charging_station_') || detail.statusKey === 'charging'
+    const status = charging ? 'charging' : (detail.statusKey || 'normal')
+    const color = charging ? STATUS_COLORS.charging : (detail.color ?? STATUS_COLORS[status] ?? STATUS_COLORS.normal)
     const baseOpacity = detail.isDestination ? destinationStyles.idle.opacity : detail.taskId ? 0.16 : 0.035
     const nodeWorld = new THREE.Vector3(transformed.x, transformed.y + 0.08, transformed.z)
     const anchorWorld = new THREE.Vector3(transformed.x, transformed.y + (detail.isDestination ? 1.12 : 0.9), transformed.z)
@@ -119,7 +122,7 @@ export class LocationMarkerLayer {
     marker.scale.setScalar(baseScale)
     marker.renderOrder = 7
     this.group.add(marker)
-    const pin = detail.isDestination ? makeDestinationPin() : null
+    const pin = detail.isDestination ? makeDestinationPin(color) : null
     if (pin) {
       pin.position.set(transformed.x, transformed.y + 0.55, transformed.z)
       pin.renderOrder = 9
@@ -129,9 +132,10 @@ export class LocationMarkerLayer {
     const root = document.createElement('div')
     root.className = `rmf-location${detail.taskId ? ' is-active' : ''}${status === 'charging' ? ' is-charging-station' : ''}`
     root.style.setProperty('--location-color', `#${color.toString(16).padStart(6, '0')}`)
+    if (!detail.taskId && !charging) root.style.setProperty('--location-color', '#DAC9A6', 'important')
     root.style.setProperty('--robot-color', detail.theme?.main || `#${color.toString(16).padStart(6, '0')}`)
-    root.style.setProperty('--robot-soft', detail.theme?.soft || 'rgba(110, 108, 103, 0.12)')
-    root.style.setProperty('--robot-glow', detail.theme?.glow || '#b5b2ab')
+    root.style.setProperty('--robot-soft', detail.theme?.soft || colorAlpha(visualTokens.neutral, .12))
+    root.style.setProperty('--robot-glow', detail.theme?.glow || visualTokens.neutral)
     root.style.setProperty('--success-color', semanticColors.success)
     root.innerHTML = `<strong>${detail.label}</strong>${detail.taskId ? `<small class="rmf-location__task">${detail.taskId} · ${detail.robot}</small>` : ''}<span class="rmf-location__success" aria-label="任務完成">✓</span>`
     this.overlay.appendChild(root)
@@ -217,6 +221,7 @@ export class LocationMarkerLayer {
 
   setVisible(visible) { this.visible = visible; this.group.visible = visible; this.pinTransitionGroup.visible = visible; this.overlay.hidden = !visible }
   setLabelsVisible(visible) { this.labelsVisible = visible; this.overlay.style.display = visible ? '' : 'none' }
+  setRoomLabelsVisible(visible) { this.roomLabelsVisible = visible }
   setSelectedRobot(robotId = null) {
     this.entries.forEach((entry) => {
       const selected = !robotId || entry.detail.robotId === robotId
@@ -238,6 +243,12 @@ export class LocationMarkerLayer {
       if (entry.pin) entry.pin.visible = !(isolate && !match)
       this.applyEntryVisual(entry)
     })
+  }
+
+  getVisibleTaskLabels() {
+    return this.visible && this.labelsVisible
+      ? this.entries.filter((entry) => entry.detail.taskId && !entry.root.hidden).map((entry) => entry.detail.label)
+      : []
   }
 
   getRobotLabelScreenPosition(robotId) {
@@ -284,7 +295,7 @@ export class LocationMarkerLayer {
         entry.marker.scale.setScalar(destinationStyles.approaching.scale * (1 + Math.sin(elapsed * 3) * 0.025))
       }
       entry.screenPosition = null
-      if (!this.labelsVisible) { entry.root.hidden = true; return }
+      if (!this.labelsVisible || (this.roomLabelsVisible && !entry.detail.taskId)) { entry.root.hidden = true; return }
       const projected = entry.anchorWorld.clone().project(this.camera)
       const outside = projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > 1.04 || Math.abs(projected.y) > 1.04
       const direction = entry.anchorWorld.clone().sub(cameraPosition)
