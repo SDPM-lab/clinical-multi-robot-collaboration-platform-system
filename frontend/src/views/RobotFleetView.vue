@@ -1,45 +1,49 @@
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { BatteryCharging, ChevronDown, Plus, Search } from '@lucide/vue'
 import { fleetStore } from '@/stores/demoFleetStore.js'
 import { i18n } from '@/i18n/index.js'
 import { robotStateLabels } from '@/data/robotStatus.js'
+import { clinicFloorOptions } from '@/data/clinicOverviewData.js'
+import { normalizeFloor } from '@/data/overviewStatusData.js'
 import { chargingCommandAdapter } from '@/services/chargingCommandAdapter.js'
-import RobotViewport from '@/components/robot-status/RobotViewport.vue'
 import BatteryGauge from '@/components/robot-status/BatteryGauge.vue'
 import TemperatureGauge from '@/components/robot-status/TemperatureGauge.vue'
 import TaskAccuracyGauge from '@/components/robot-status/TaskAccuracyGauge.vue'
 import ChargingRoutePlane from '@/components/robot-status/ChargingRoutePlane.vue'
-import { robotComponents, robotSubsystems } from '@/config/robotComponentRules.js'
+import RobotViewport from '@/components/robot-status/RobotViewport.vue'
 import '@/styles/robotHmi.css'
+
+const agibotImage = `${import.meta.env.BASE_URL}images/agibot-a2d-transparent.png`
 
 const emit = defineEmits(['edit-robot', 'add-robot'])
 const actionNotice = ref('')
-const openSections = reactive({ overview: true, task: true, location: false, communication: false, structure: false, movement: false, diagnostics: false })
+const openSections = reactive({ overview: true, task: true, location: false, communication: false, movement: false, diagnostics: false })
 const robots = fleetStore.robots
 const tasks = fleetStore.tasks
 const selectedId = ref(robots.value[0]?.id)
-const selectedComponent = ref(null), hoveredComponent = ref(null), structureMode = ref('whole')
-const interactionReady = ref(false), search = ref(''), routeVisible = ref(false), stageReady = ref(false), viewport = ref(null)
+const search = ref(''), selectedFloor = ref('all'), routeVisible = ref(false), stageReady = ref(false)
+const floorForRobot = entry => normalizeFloor(entry.floorId ?? entry.floor ?? entry.location?.level_name)
+const floorTabs = computed(() => [
+  ...[...clinicFloorOptions].sort((a, b) => a.id === 'all' ? -1 : b.id === 'all' ? 1 : a.id - b.id).map(option => ({ id: option.id === 'all' ? 'all' : `floor${option.id}`, label: option.id === 'all' ? 'All' : `${option.id}F`, count: option.id === 'all' ? robots.value.length : robots.value.filter(entry => floorForRobot(entry) === `floor${option.id}`).length })),
+  ...(robots.value.some(entry => !floorForRobot(entry)) ? [{ id: 'unassigned', label: '未指定', count: robots.value.filter(entry => !floorForRobot(entry)).length }] : []),
+])
 const robot = computed(() => robots.value.find(entry => entry.id === selectedId.value) || robots.value[0])
-const filteredRobots = computed(() => { const query = search.value.trim().toLocaleLowerCase(); return query ? robots.value.filter(entry => `${entry.name} ${entry.id} ${entry.state} ${robotStateLabels[entry.state]} ${i18n.global.getLocaleMessage('en').legacy?.[robotStateLabels[entry.state]] || ''}`.toLocaleLowerCase().includes(query)) : robots.value })
+const filteredRobots = computed(() => { const query = search.value.trim().toLocaleLowerCase(); return robots.value.filter(entry => {
+  const floor = floorForRobot(entry)
+  if (selectedFloor.value !== 'all' && (selectedFloor.value === 'unassigned' ? floor !== null : floor !== selectedFloor.value)) return false
+  return !query || `${entry.name} ${entry.id} ${entry.state} ${robotStateLabels[entry.state]} ${i18n.global.getLocaleMessage('en').legacy?.[robotStateLabels[entry.state]] || ''}`.toLocaleLowerCase().includes(query)
+}) })
+watch(filteredRobots, entries => { if (entries.length && !entries.some(entry => entry.id === selectedId.value)) selectedId.value = entries[0].id })
 const charging = computed(() => robot.value?.state === 'charging')
 const temperature = computed(() => robot.value?.temperatureSource === 'demo' && !import.meta.env.DEV ? null : robot.value?.motorTemperature ?? null)
 const task = computed(() => fleetStore.tasks.value.find(entry => entry.robotId === robot.value?.id && entry.status === 'executing'))
 const queued = computed(() => fleetStore.tasks.value.filter(entry => entry.robotId === robot.value?.id && entry.status === 'scheduled').length)
 const connection = computed(() => ({ connected: 'Online', connecting: '連線中', disconnected: '尚未連線' }[robot.value?.connectionState] || '尚未連線'))
-const selectedPart = computed(() => robotComponents.find(part => part.id === selectedComponent.value))
-const previewPart = computed(() => robotComponents.find(part => part.id === (hoveredComponent.value || selectedComponent.value)))
-// Former tabs keep their existing contents and events inside independent accordions.
-
-
 function selectRobot(id) {
   if (id === selectedId.value) return
-  selectedId.value = id; selectedComponent.value = null; hoveredComponent.value = null; structureMode.value = 'whole'
-  viewport.value?.setStructureMode?.('whole')
+  selectedId.value = id
 }
-function setStructureMode(mode) { if (interactionReady.value) { structureMode.value = mode; viewport.value?.setStructureMode?.(mode) } }
-function onComponentSelected(id) { selectedComponent.value = id; if (id) openSections.structure = true }
 </script>
 
 <template>
@@ -47,9 +51,12 @@ function onComponentSelected(id) { selectedComponent.value = id; if (id) openSec
     <div class="robot-status-background" aria-hidden="true"></div>
     <aside class="robot-control-panel robot-left-hmi" aria-label="機器人清單">
       <label class="robot-search"><Search :size="15" aria-hidden="true"/><input v-model="search" type="search" aria-label="搜尋機器人" placeholder="搜尋機器人"></label>
+      <div class="robot-floor-filter" role="group" aria-label="樓層篩選">
+        <button v-for="floor in floorTabs" :key="floor.id" type="button" :aria-pressed="selectedFloor === floor.id" :class="{ 'is-active': selectedFloor === floor.id }" @click="selectedFloor = floor.id">{{ floor.label }}<span>{{ floor.count }}</span></button>
+      </div>
       <div class="robot-picker" role="listbox" aria-label="機器人清單">
         <button v-for="(entry, index) in filteredRobots" :key="entry.id" class="robot-list-item" role="option" :aria-selected="entry.id === robot.id" :class="{ 'is-active': entry.id === robot.id }" :style="{ '--robot-index': index }" @click="selectRobot(entry.id)">
-          <img class="robot-list-item__avatar" :src="entry.thumbnailUrl" :alt="`${entry.name} 機器人縮圖`">
+          <img class="robot-list-item__avatar" :src="agibotImage" :alt="`${entry.name} AGIBOT A2D 縮圖`">
           <span class="robot-picker__identity"><strong>{{ entry.name }}</strong><small>{{ entry.id }} · {{ robotStateLabels[entry.state] }}</small><small>{{ entry.currentLocation || '位置尚未提供' }}</small></span>
           <span class="robot-list-item__battery"><strong>{{ entry.battery }}%</strong><i><span :style="{ width: `${entry.battery}%` }"></span></i></span>
         </button>
@@ -59,10 +66,10 @@ function onComponentSelected(id) { selectedComponent.value = id; if (id) openSec
       <p v-if="actionNotice" class="robot-action-notice" role="status">{{ actionNotice }}</p>
     </aside>
     <main class="robot-digital-twin-stage">
-      <header class="robot-stage-status"><div><strong class="robot-stage-status__name">{{ robot.name }}</strong><span><i :data-state="robot.state"></i>{{ robotStateLabels[robot.state] }}</span></div><p>{{ robot.model }} · {{ robot.currentLocation || '位置尚未提供' }}</p></header>
+      <header class="robot-stage-status"><div><strong class="robot-stage-status__name">{{ robot.name }}</strong><span><i :data-state="robot.state"></i>{{ robotStateLabels[robot.state] }}</span></div><p>AGIBOT A2D · {{ robot.currentLocation || '位置尚未提供' }}</p></header>
       <div class="robot-model-cell">
-      <RobotViewport ref="viewport" :robot-id="robot.id" :temperature="temperature" :charging="charging" :warning="robot.temperatureSource !== 'demo' && temperature >= 70" @ready="stageReady = true" @entrance-complete="interactionReady = true" @component-selected="onComponentSelected" @component-hover="hoveredComponent = $event" @interaction-change="interactionReady = $event"/>
-      <ChargingRoutePlane v-if="routeVisible" :waypoint="robot.currentWaypoint" :target="robot.chargingWaypoint"/>
+        <RobotViewport :robot-id="robot.id" @ready="stageReady = true"/>
+        <ChargingRoutePlane v-if="routeVisible" :waypoint="robot.currentWaypoint" :target="robot.chargingWaypoint"/>
       </div>
     </main>
     <aside class="robot-inspector" aria-label="機器人 Inspector">
@@ -89,16 +96,6 @@ function onComponentSelected(id) { selectedComponent.value = id; if (id) openSec
         <details class="robot-accordion" data-section="communication" :open="openSections.communication" @toggle="openSections.communication = $event.target.open">
           <summary><span>通訊狀態<small>{{ connection }}</small></span><ChevronDown :size="16" aria-hidden="true"/></summary>
           <div class="accordion-body"><div class="status-facts"><article><small>通訊狀態</small><strong>{{ connection }}</strong></article><article><small>ROS Namespace</small><strong>{{ robot.rosNamespace }}</strong></article><article><small>資料更新</small><strong>{{ robot.lastHeartbeatAt || '尚未提供' }}</strong></article></div></div>
-        </details>
-        <details class="robot-accordion" data-section="structure" :open="openSections.structure" @toggle="openSections.structure = $event.target.open">
-          <summary><span>結構<small>{{ previewPart?.label || '整機' }}</small></span><ChevronDown :size="16" aria-hidden="true"/></summary>
-          <div class="accordion-body">
-          <header class="inspector-heading"><small>DIGITAL TWIN</small><h2 id="structure-heading">結構</h2><p>{{ previewPart ? `預覽 · ${previewPart.label}` : '8 個可互動結構' }}</p></header>
-          <div class="structure-modes" role="group" aria-label="結構模式" :style="{ '--mode-index': ['whole','xray','exploded'].indexOf(structureMode) }"><span aria-hidden="true"></span><button v-for="mode in [{id:'whole',label:'整機'},{id:'xray',label:'X-Ray'},{id:'exploded',label:'Exploded'}]" :key="mode.id" :disabled="!interactionReady" :aria-pressed="structureMode === mode.id" @click="setStructureMode(mode.id)">{{ mode.label }}</button></div>
-          <article v-if="selectedPart" class="selected-part-detail"><small>SELECTED COMPONENT</small><h3>{{ selectedPart.label }}</h3><p>{{ selectedPart.note }}</p><dl><div><dt>類型</dt><dd>實際可分離 Mesh</dd></div><div><dt>狀態</dt><dd>結構已辨識</dd></div><div v-if="robot.lastHeartbeatAt"><dt>最後更新</dt><dd>{{ robot.lastHeartbeatAt }}</dd></div></dl><p class="empty-sensor">尚未提供此構件的獨立感測資料</p><button class="inspector-action" @click="viewport?.resetView?.()">返回整機視角</button></article>
-          <div class="structure-parts"><button v-for="(part, partIndex) in robotComponents" :key="part.id" :aria-pressed="selectedComponent === part.id" :disabled="!interactionReady" @click="viewport?.selectComponent?.(part.id)"><span>{{ String(partIndex + 1).padStart(2, '0') }}</span><strong>{{ part.label }}</strong><small>{{ part.name }}</small></button></div>
-          <p class="inspector-note">{{ Object.values(robotSubsystems).map(entry => entry.label).join('、') }}。功能未確認的幾何維持中性名稱。</p>
-        </div>
         </details>
         <details class="robot-accordion" data-section="movement" :open="openSections.movement" @toggle="openSections.movement = $event.target.open">
           <summary><span>移動<small>{{ task ? '任務路線進行中' : '沒有執行中的路線' }}</small></span><ChevronDown :size="16" aria-hidden="true"/></summary>

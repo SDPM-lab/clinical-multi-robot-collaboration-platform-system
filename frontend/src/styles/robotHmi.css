@@ -47,7 +47,7 @@
 .robot-stage-status i[data-state=offline],.inspector-heading i[data-state=offline]{background:var(--color-neutral)}.robot-stage-status i[data-state=charging]{background:var(--color-secondary)}.robot-stage-status i[data-state=error],.inspector-heading i[data-state=error]{background:var(--color-error)}
 
 /* Robot Status: spacious vehicle stage and compact instrument cluster. */
-.robot-hmi{grid-template-columns:minmax(270px,22%) minmax(280px,1fr) minmax(320px,28%);gap:16px}
+.robot-hmi{grid-template-columns:minmax(270px,22%) minmax(280px,1fr) minmax(300px,25%);gap:16px}
 .robot-control-panel{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;backdrop-filter:none}
 .robot-search{flex-basis:42px;background:color-mix(in srgb,var(--info-background) 44%,transparent);border-color:color-mix(in srgb,var(--info-divider) 70%,transparent);border-radius:10px}
 .robot-picker{gap:12px;padding:2px 6px 8px 0}
@@ -76,3 +76,10 @@
 @media(max-width:1100px){.robot-hmi{grid-template-columns:260px minmax(0,1fr)}.robot-side-metrics .battery-arc{width:110px}.thermal-track{height:98px}.robot-inspector{grid-column:1/-1}}
 @media(max-width:700px){.robot-hmi{grid-template-columns:minmax(0,1fr);grid-template-rows:260px 560px auto}.robot-inspector{grid-column:1;grid-row:3}.robot-side-metrics .hmi-gauge{aspect-ratio:auto;min-height:170px}.robot-side-metrics .battery-arc{width:100px}.robot-picker button{min-height:64px}}
 @media(prefers-reduced-motion:reduce){.battery-liquid::before{animation:none}}
+
+.robot-list-item__avatar{object-fit:contain;background:transparent}
+.robot-floor-filter{display:flex;flex-wrap:wrap;gap:6px}
+.robot-floor-filter button{display:flex;flex:1 0 56px;align-items:center;justify-content:center;gap:5px;min-height:32px;padding:6px 8px;border:1px solid color-mix(in srgb,var(--info-divider) 78%,transparent);border-radius:8px;background:color-mix(in srgb,var(--info-background) 55%,transparent);color:var(--text-secondary);font-size:11px;white-space:nowrap;transition:background 160ms ease,border-color 160ms ease,color 160ms ease}
+.robot-floor-filter button:hover{background:var(--theme-primary-soft)}
+.robot-floor-filter button.is-active{border-color:color-mix(in srgb,var(--theme-primary) 55%,transparent);background:var(--theme-primary-soft);color:var(--theme-primary)}
+.robot-floor-filter button span{font-size:10px;opacity:.72;font-variant-numeric:tabular-nums}

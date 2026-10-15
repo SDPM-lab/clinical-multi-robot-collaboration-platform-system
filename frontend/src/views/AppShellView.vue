@@ -98,7 +98,9 @@ const rosStatus = computed(() => rosConnectionStore.status.value)
 const rosStatusIcon = computed(() => rosConnectionStore.state.value === 'disconnected' ? Unplug : RadioTower)
 const searchParams = new URLSearchParams(window.location.search)
 const activeSection = ref(
-  searchParams.get('dispatchDebug') === '1'
+  searchParams.get('robotDebug') === '1'
+    ? 'robots'
+    : searchParams.get('dispatchDebug') === '1'
     ? 'dispatch'
     : searchParams.get('mapCameraDebug') === '1'
     ? 'map'

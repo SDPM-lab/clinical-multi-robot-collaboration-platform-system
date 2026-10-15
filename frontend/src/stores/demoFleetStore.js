@@ -14,6 +14,7 @@ export const GRAPH_0_CHARGING_WAYPOINTS = Object.freeze(['charging_station_1'])
 
 const commonRobot = Object.freeze({
   model: 'Hospital AMR',
+  floorId: null,
   motorTemperature: null,
   temperatureSource: 'unavailable',
   chargingCommand: null,
@@ -54,9 +55,9 @@ const makeRobot = (robot) => ({
 })
 
 const initialRobots = [
-  makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', rosNamespace: '/robot_01', battery: 82, state: 'executing', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
+  makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', floorId: 'floor1', rosNamespace: '/robot_01', battery: 82, state: 'executing', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', floorId: 'floor2', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', floorId: 'floor3', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
 ]
 
 const initialTasks = [

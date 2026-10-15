@@ -22,6 +22,24 @@ describe('theme switching', () => {
   afterEach(() => {
     localStorage.removeItem('hospital-rmf-color-theme')
     document.documentElement.dataset.theme = 'light'
+    window.history.replaceState({}, '', '/')
+  })
+
+  it('opens Robot Status from the dedicated debug URL', async () => {
+    window.history.replaceState({}, '', '/?robotDebug=1&cameraDebug=1&modelDebug=1')
+    const router = await createTestRouter()
+    const wrapper = mount(AppShellView, {
+      global: {
+        plugins: [router],
+        stubs: {
+          RobotFleetView: { template: '<div class="robot-view-stub" />' },
+          HospitalScene: true,
+        },
+      },
+    })
+
+    expect(wrapper.find('.robot-view-stub').exists()).toBe(true)
+    wrapper.unmount()
   })
 
   it('switches light and dark twice without leaving a transition overlay behind', async () => {
