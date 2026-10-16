@@ -4,6 +4,7 @@ import { ChevronDown, Clock3 } from '@lucide/vue'
 import { t, translateLocation, translateTask } from '@/i18n/index.js'
 import { robotStateLabels } from '@/data/robotStatus.js'
 import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
+import { taskPriorityColor } from '@/config/taskPriorityColors.js'
 
 const props = defineProps({
   robots: { type: Array, required: true },
@@ -98,7 +99,7 @@ const submit = () => {
 </script>
 
 <template>
-  <section class="task-panel" :aria-label="t('dispatchForm.title')">
+  <section class="task-panel" :class="{ 'is-robot-picker-open': robotPickerOpen }" :aria-label="t('dispatchForm.title')">
     <header><div><span class="panel-eyebrow">{{ t('dispatchForm.eyebrow') }}</span><strong>{{ t('dispatchForm.title') }}</strong></div></header>
     <form @submit.prevent="submit">
       <div class="form-scroll task-form-grid">
@@ -128,7 +129,7 @@ const submit = () => {
         <label class="field"><span>{{ t('dispatchForm.date') }}</span><input v-model="form.date" type="date" required></label>
         <div ref="timePicker" class="field dispatch-time-picker" @keydown.esc.stop="timePickerOpen=false"><label for="dispatch-start-time">{{ t('dispatchForm.start') }}</label><div class="dispatch-time-entry"><input id="dispatch-start-time" v-model.trim="timeText" type="text" inputmode="text" pattern="(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)" placeholder="09:30 AM" required @blur="normalizeTimeText"><button type="button" :aria-label="t('dispatchForm.chooseTime')" :aria-expanded="timePickerOpen" @click="timePickerOpen=!timePickerOpen"><Clock3 :size="14" /></button></div><div v-if="timePickerOpen" class="dispatch-time-options" role="listbox" :aria-label="t('dispatchForm.chooseTime')"><button v-for="time in timeOptions" :key="time" type="button" role="option" :aria-selected="timeText===time" @click="chooseTime(time)">{{ time }}</button></div></div>
 
-        <fieldset class="priority-control full-width"><legend>{{ t('dispatchForm.priority') }}</legend><div><button v-for="priority in priorities" :key="priority.value" type="button" :class="{ active: form.priority === priority.value }" @click="form.priority=priority.value">{{ t(`priority.${priority.value === 'emergency' ? 'urgent' : priority.value}`) }}</button></div></fieldset>
+        <fieldset class="priority-control full-width"><legend>{{ t('dispatchForm.priority') }}</legend><div><button v-for="priority in priorities" :key="priority.value" type="button" :data-priority="priority.value" :style="{ '--priority-color': taskPriorityColor(priority.value) }" :class="{ active: form.priority === priority.value }" :aria-pressed="form.priority === priority.value" @click="form.priority=priority.value">{{ t(`priority.${priority.value === 'emergency' ? 'urgent' : priority.value}`) }}</button></div></fieldset>
 
 
         <label class="field notes-field"><span>{{ t('dispatchForm.note') }}</span><textarea v-model.trim="form.notes" rows="3" :placeholder="t('dispatchForm.notePlaceholder')"></textarea></label>
@@ -154,5 +155,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding-bot
 .field{font-size:13px}.field input,.field textarea,.task-type-trigger,.robot-trigger,.dispatch-time-entry input{font-size:12.5px}.task-type-options button,.robot-options button,.dispatch-time-options button{font-size:12px}.robot-summary{font-size:11.5px}.robot-summary small{font-size:10.5px}.priority-control legend{font-size:12.5px}.priority-control button{font-size:12px}.task-panel footer button{font-size:12px}
 .dispatch-location-picker{position:relative}.location-trigger{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%;height:34px;min-width:0;padding:0 9px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:8px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.location-trigger svg{flex:none}.location-options{position:absolute;z-index:35;top:100%;left:0;right:0;display:grid;gap:3px;max-height:210px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:#f8faf9;border:1px solid var(--panel-border);border-radius:10px;box-shadow:0 10px 22px #34433825}.location-options button{min-height:30px;padding:5px 8px;color:inherit;background:transparent;border:0;border-radius:7px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger:focus-visible,.location-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}:global([data-theme='dark']) .location-options{background:#303735}
 .location-options button:hover,.location-options button[aria-selected=true]{background:color-mix(in srgb,#fb9966 15%,transparent)}
-@media(min-width:1100px){.form-scroll{overflow-y:visible;scrollbar-width:none}.form-scroll::-webkit-scrollbar{display:none}}
+.priority-control button.active{background:color-mix(in srgb,var(--priority-color) 20%,var(--panel-bg-strong));box-shadow:inset 0 -2px 0 var(--priority-color),0 2px 7px rgba(65,58,48,.09)}
+.priority-control button:hover{background:color-mix(in srgb,var(--priority-color) 12%,var(--panel-bg-strong))}
+.task-panel{height:auto;grid-template-rows:auto auto}
+.task-panel form{grid-template-rows:auto auto}
+.form-scroll{overflow:visible;scrollbar-width:none}
+.form-scroll::-webkit-scrollbar{display:none}
+.task-panel.is-robot-picker-open .notes-field textarea{min-height:38px;height:38px}
 </style>

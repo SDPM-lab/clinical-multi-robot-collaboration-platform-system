@@ -2,7 +2,7 @@
 import { computed, reactive, watch } from 'vue'
 import { Check, ChevronLeft, ChevronRight, Pencil, RotateCcw, X } from '@lucide/vue'
 import { localeTag, t, translateLocation, translateTask } from '@/i18n/index.js'
-import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
+import { taskPriorityColor } from '@/config/taskPriorityColors.js'
 import { shiftIsoDate } from './taskTimeline.js'
 
 const props = defineProps({ date: { type: String, required: true }, tasks: { type: Array, required: true }, robots: { type: Array, required: true }, editing: { type: Boolean, default: false } })
@@ -29,7 +29,6 @@ const timeSlots = computed(() => {
   return slots
 })
 const robotName = (id) => props.robots.find((robot) => robot.id === id)?.name || id || '未指派'
-const taskColor = (id) => id ? getRobotVisualTheme(id).main : '#9da8a4'
 const taskTitle = (task) => `${robotName(task.robotId)} · ${translateTask(task.title)} · ${translateLocation(task.origin)} → ${translateLocation(task.destination)} · ${task.startTime.slice(0, 5)}–${task.endTime.slice(0, 5)}`
 const saveTime = (task) => { if (draftTimes[task.id] && draftTimes[task.id] !== task.startTime.slice(0, 5)) emit('reschedule', task.id, draftTimes[task.id]) }
 </script>
@@ -39,18 +38,21 @@ const saveTime = (task) => { if (draftTimes[task.id] && draftTimes[task.id] !== 
     <div class="schedule-date-navigation">
       <button type="button" aria-label="前一天" @click="emit('update:date', shiftIsoDate(date, -1))"><ChevronLeft :size="16" /></button>
       <strong>{{ heading }}</strong>
-      <button type="button" aria-label="後一天" @click="emit('update:date', shiftIsoDate(date, 1))"><ChevronRight :size="16" /></button>
+      <div class="schedule-date-actions">
+        <button class="schedule-today" type="button" :aria-label="t('dispatch.todaySchedule')" :title="t('dispatch.todaySchedule')" @click="emit('update:date', todayIsoDate())"><RotateCcw :size="15" /></button>
+        <button type="button" aria-label="後一天" @click="emit('update:date', shiftIsoDate(date, 1))"><ChevronRight :size="16" /></button>
+      </div>
     </div>
     <div class="schedule-days" aria-label="選擇日期">
       <button v-for="day in days" :key="day.date" type="button" :class="{ 'is-selected': day.date === date }" :aria-pressed="day.date === date" @click="emit('update:date', day.date)"><span>{{ day.weekday }}</span><strong>{{ day.day }}</strong></button>
     </div>
-    <div class="schedule-list-heading"><strong>當日任務</strong><div class="schedule-list-tools"><span>{{ sortedTasks.length }} 項任務</span><button class="schedule-today" type="button" :aria-label="t('dispatch.todaySchedule')" :title="t('dispatch.todaySchedule')" @click="emit('update:date', todayIsoDate())"><RotateCcw :size="15" /></button><button class="schedule-edit" type="button" :aria-label="editing ? t('dispatch.doneEditing') : t('dispatch.edit')" :title="editing ? t('dispatch.doneEditing') : t('dispatch.edit')" :aria-pressed="editing" @click="emit('edit')"><Check v-if="editing" :size="15" /><Pencil v-else :size="15" /></button></div></div>
+    <div class="schedule-list-heading"><strong>當日任務</strong><div class="schedule-list-tools"><span>{{ sortedTasks.length }} 項任務</span><button class="schedule-edit" type="button" :aria-label="editing ? t('dispatch.doneEditing') : t('dispatch.edit')" :title="editing ? t('dispatch.doneEditing') : t('dispatch.edit')" :aria-pressed="editing" @click="emit('edit')"><Check v-if="editing" :size="15" /><Pencil v-else :size="15" /></button></div></div>
     <div class="schedule-list">
       <p v-if="!sortedTasks.length" class="schedule-empty">目前沒有排定任務</p>
       <div v-for="slot in timeSlots" :key="slot.time" class="schedule-slot" :class="{ 'is-concurrent': slot.tasks.length > 1 }">
         <div class="schedule-time"><strong>{{ slot.time }}</strong><span>{{ slot.tasks.length === 1 ? slot.tasks[0].endTime.slice(0, 5) : t('dispatch.robotCount', { count: slot.tasks.length }) }}</span></div>
         <div class="schedule-slot-cards" :class="{ 'is-editing': editing }" :style="{ '--slot-columns': Math.min(slot.tasks.length, 3) }">
-          <article v-for="task in slot.tasks" :key="task.id" class="schedule-item" :style="{ '--item-color': taskColor(task.robotId) }" :title="taskTitle(task)" :aria-label="taskTitle(task)">
+          <article v-for="task in slot.tasks" :key="task.id" class="schedule-item" :data-priority="task.priority" :style="{ '--item-color': taskPriorityColor(task.priority) }" :title="taskTitle(task)" :aria-label="taskTitle(task)">
             <button v-if="editing" class="schedule-delete" type="button" :aria-label="`${t('dispatch.deleteTask')} ${task.id}`" :title="t('dispatch.deleteTask')" @click="emit('request-delete', task)"><X :size="13" /></button>
             <div class="schedule-card-top"><span>{{ task.id }} · {{ task.robotId || robotName(task.robotId) }}</span></div>
             <h3>{{ translateTask(task.title) }}</h3>
@@ -66,7 +68,7 @@ const saveTime = (task) => { if (draftTimes[task.id] && draftTimes[task.id] !== 
 <style scoped>
 .schedule-sidebar{display:flex;flex-direction:column;width:100%;height:100%;min-width:0;min-height:0;color:var(--text-primary)}
 .schedule-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px 8px}.schedule-header h2{margin:0;font-size:15px;font-weight:650}.schedule-header-actions{display:flex;align-items:center;gap:5px}.schedule-header-actions button{display:grid;place-items:center;width:29px;height:29px;border-radius:8px;cursor:pointer}.schedule-today{color:var(--text-secondary);background:var(--surface-glass);border:1px solid var(--panel-border)}.schedule-today:hover{background:var(--icon-button-hover)}.schedule-edit{color:#dc784b;background:#fff5ef;border:1px solid #f7d9ca}.schedule-edit:hover,.schedule-edit[aria-pressed=true]{background:#ffe9dc}
-.schedule-date-navigation{display:flex;align-items:center;justify-content:space-between;margin:0 14px;padding:4px 0;border-top:1px solid var(--panel-border)}.schedule-date-navigation strong{font-size:12px;font-weight:600}.schedule-date-navigation button{display:grid;width:27px;height:27px;place-items:center;color:var(--text-secondary);background:transparent;border:0;border-radius:7px;cursor:pointer}.schedule-date-navigation button:hover{background:var(--icon-button-hover)}
+.schedule-date-navigation{display:grid;grid-template-columns:58px minmax(0,1fr) 58px;align-items:center;margin:0 14px;padding:4px 0;border-top:1px solid var(--panel-border)}.schedule-date-navigation strong{text-align:center;font-size:12px;font-weight:600}.schedule-date-actions{display:flex;justify-content:flex-end;gap:2px}.schedule-date-navigation button{display:grid;width:27px;height:27px;place-items:center;color:var(--text-secondary);background:transparent;border:0;border-radius:7px;cursor:pointer}.schedule-date-navigation button:hover{background:var(--icon-button-hover)}.schedule-date-navigation .schedule-today{color:#dc784b;background:var(--surface-glass);border:1px solid var(--panel-border)}.schedule-date-navigation .schedule-today:hover{background:var(--icon-button-hover)}
 .schedule-days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;padding:0 12px 6px}.schedule-days button{display:grid;gap:0;justify-items:center;min-height:39px;padding:4px 0;color:var(--text-muted);background:transparent;border:0;border-radius:7px;cursor:pointer}.schedule-days button span{font-size:9px}.schedule-days button strong{font-size:12px;font-weight:600;color:var(--text-primary)}.schedule-days button.is-selected{color:#fff;background:#f49466;box-shadow:0 4px 10px #f4946630}.schedule-days button.is-selected strong{color:#fff}
 .schedule-list-heading{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;border-top:1px solid var(--panel-border)}.schedule-list-heading strong{font-size:12px;font-weight:650}.schedule-list-heading span{font-size:10px;color:var(--text-muted)}
 .schedule-list{flex:1;min-height:0;overflow:auto;padding:0 12px 9px;scrollbar-width:thin;overscroll-behavior:contain}.schedule-empty{padding:30px 10px;text-align:center;color:var(--text-muted);font-size:12px}

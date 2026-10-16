@@ -83,3 +83,74 @@
 .robot-floor-filter button:hover{background:var(--theme-primary-soft)}
 .robot-floor-filter button.is-active{border-color:color-mix(in srgb,var(--theme-primary) 55%,transparent);background:var(--theme-primary-soft);color:var(--theme-primary)}
 .robot-floor-filter button span{font-size:10px;opacity:.72;font-variant-numeric:tabular-nums}
+
+.robot-inspector{grid-template-rows:auto auto;align-content:start}
+.robot-info-card{height:auto;min-height:0;padding:18px 20px 20px;overflow:visible;scrollbar-gutter:auto;border:1px solid rgba(var(--color-secondary-rgb),.3);border-radius:4px;background:linear-gradient(180deg,rgba(var(--color-secondary-rgb),.08) 0%,rgba(var(--color-secondary-rgb),.2) 52%,rgba(var(--color-secondary-rgb),.36) 100%);box-shadow:0 10px 26px rgba(76,68,43,.08);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.robot-info-card__header{display:flex;align-items:center;justify-content:space-between;gap:12px}.robot-info-card__header h2{margin:0;font-size:14px;font-weight:600}.robot-info-card__header svg{color:var(--text-secondary)}
+.robot-info-card__hero{display:grid;justify-items:start;gap:5px;margin-top:20px}.robot-info-card__hero>span{color:var(--text-muted);font-size:9px;letter-spacing:.14em}.robot-info-card__hero strong{font-size:25px;font-weight:500;letter-spacing:-.025em}.robot-info-card__hero p{display:flex;align-items:center;gap:7px;margin:0;color:var(--text-secondary);font-size:11px}.robot-info-card__hero i{width:6px;height:6px;border-radius:50%;background:var(--theme-primary)}.robot-info-card__hero i[data-state=offline]{background:var(--color-neutral)}.robot-info-card__hero i[data-state=charging]{background:var(--color-secondary)}
+.robot-info-card__facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px;margin:20px 0 0;padding-top:16px;border-top:1px solid color-mix(in srgb,var(--text-secondary) 16%,transparent)}.robot-info-card__facts>div{display:grid;align-content:start;gap:5px;min-width:0}.robot-info-card__facts dt{color:var(--text-secondary);font-size:10px}.robot-info-card__facts dd{margin:0;overflow-wrap:anywhere;color:var(--text-primary);font-size:12px;font-weight:550;line-height:1.35}
+.robot-info-card__structure{margin-top:20px;padding-top:16px;border-top:1px solid color-mix(in srgb,var(--text-secondary) 16%,transparent)}.robot-info-card__structure h3{margin:0 0 10px;font-size:12px;font-weight:600}.robot-info-card__structure>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.robot-info-card__structure button{min-width:0;min-height:32px;padding:6px 4px;color:var(--text-secondary);background:color-mix(in srgb,var(--info-background) 55%,transparent);border:1px solid color-mix(in srgb,var(--text-secondary) 18%,transparent);border-radius:5px;font-size:11px;white-space:nowrap}.robot-info-card__structure button[aria-pressed=true]{color:var(--text-primary);background:color-mix(in srgb,var(--theme-primary) 17%,var(--info-background));border-color:color-mix(in srgb,var(--theme-primary) 55%,transparent)}.robot-info-card__structure button:disabled{opacity:.45}
+.overview-page[data-theme=dark] .robot-info-card{border-color:rgba(var(--color-secondary-rgb),.24);background:linear-gradient(180deg,rgba(var(--color-secondary-rgb),.05),rgba(var(--color-secondary-rgb),.16));box-shadow:0 10px 26px rgba(0,0,0,.16)}
+.robot-info-card{display:flex;flex-direction:column;min-height:clamp(410px,calc(100dvh - 310px),485px)}
+.robot-info-card__structure{margin-top:auto}
+.robot-info-card__structure>div{grid-template-columns:repeat(2,minmax(0,1fr))}
+.robot-info-card__structure button{min-height:36px}
+.robot-info-card__structure button:last-child{grid-column:1/-1}
+.robot-list-item__battery strong{color:var(--battery-color)}
+.robot-list-item__battery i span{background:var(--battery-color)}
+.robot-info-card{min-height:clamp(350px,calc(100dvh - 370px),420px)}
+.robot-info-card__facts{margin-top:18px}
+.robot-info-card__connection{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.robot-info-card__connection-icon{position:relative;display:grid;flex:none;place-items:center;width:25px;height:25px;border-radius:50%;color:#c96561;background:rgba(201,101,97,.12)}
+.robot-info-card__connection-icon::after{position:absolute;inset:-3px;border:1px solid currentColor;border-radius:50%;content:'';animation:robot-connection-pulse 2.4s ease-out infinite}
+.robot-info-card__connection[data-state=connected] .robot-info-card__connection-icon{color:#6f9b7b;background:rgba(111,155,123,.14)}
+.robot-info-card__connection[data-state=connecting] .robot-info-card__connection-icon{color:#c59a52;background:rgba(197,154,82,.14)}
+.robot-info-card__connection[data-state=connecting] svg{animation:robot-connection-spin 1.8s linear infinite}
+.robot-info-card__structure{padding-top:12px}
+.robot-info-card__structure h3{margin-bottom:7px}
+.robot-info-card__structure>div{gap:5px}
+.robot-info-card__structure button{min-height:28px;padding:4px 5px;font-size:10px;line-height:1.2}
+.robot-info-card__structure button:last-child{min-height:30px}
+@keyframes robot-connection-pulse{0%{transform:scale(.8);opacity:.7}70%,100%{transform:scale(1.45);opacity:0}}
+@keyframes robot-connection-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.robot-info-card__connection-icon::after,.robot-info-card__connection[data-state=connecting] svg{animation:none}}
+.robot-info-card{min-height:clamp(400px,calc(100dvh - 330px),460px);padding-top:22px;border-radius:12px}
+.robot-side-metrics .hmi-gauge{padding:16px 15px 12px;justify-content:flex-start}
+.robot-side-metrics .gauge-heading{min-height:20px;align-items:flex-start}
+.robot-side-metrics .battery-arc{margin:auto}
+.robot-side-metrics .thermal{--meter-color:#d67866;background:linear-gradient(155deg,color-mix(in srgb,#e7ac8e 9%,var(--info-background)),var(--info-background) 65%)}
+.thermal-visual{display:flex;align-items:center;justify-content:center;width:100%;margin:auto;min-height:0;flex:1}
+.thermal-dial{position:relative;display:grid;flex:none;place-items:center;width:clamp(106px,8.5vw,132px);max-width:100%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 48% 37%,color-mix(in srgb,var(--info-background) 97%,white),color-mix(in srgb,var(--info-background) 91%,#d5d2d1));box-shadow:inset 0 1px 2px #ffffff9c,0 4px 12px #534d4515;animation:thermal-dial-enter 650ms ease-out both}
+.thermal-dial__scale{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.thermal-dial__track,.thermal-dial__arc{fill:none;stroke-width:9;stroke-linecap:round}
+.thermal-dial__track{stroke:color-mix(in srgb,var(--text-secondary) 12%,transparent)}
+.thermal-dial__arc{stroke:url(#thermal-scale-gradient)}
+.thermal-dial__indicator{fill:var(--text-primary);stroke:var(--info-background);stroke-width:2;filter:drop-shadow(0 1px 3px #0005)}
+.thermal-reading{position:relative;font-size:clamp(30px,2.7vw,37px);font-weight:400;letter-spacing:-.04em}.thermal-reading em{font-size:13px;letter-spacing:0}
+@keyframes thermal-dial-enter{from{opacity:.5;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.thermal-dial{animation:none}.thermal-dial__indicator{transition:none}}
+.robot-hmi{padding-bottom:4px}
+.robot-side-metrics .battery-arc,.robot-side-metrics .thermal-visual{transform:translateY(-5px)}
+.robot-sidebar-actions{padding-bottom:17px}
+.robot-sidebar-actions .add-robot{width:36px;min-width:36px;height:36px;min-height:36px;padding:0;color:var(--theme-primary);background:var(--info-background);border:1px solid var(--theme-primary);border-radius:50%;animation:add-robot-breathe 2.5s ease-in-out infinite}
+.robot-sidebar-actions .add-robot svg{transition:transform 250ms ease}
+.robot-sidebar-actions .add-robot:hover svg{transform:rotate(90deg)}
+@keyframes add-robot-breathe{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--theme-primary) 16%,transparent)}}
+@media(prefers-reduced-motion:reduce){.robot-sidebar-actions .add-robot{animation:none}.robot-sidebar-actions .add-robot svg{transition:none}}
+.robot-list-item__avatar--custom{display:grid;place-items:center;color:var(--theme-primary);background:var(--theme-primary-soft)}
+.robot-info-card{min-height:0}
+.robot-info-card__structure{margin-top:18px}
+.robot-side-metrics .hmi-gauge{padding:13px 15px 15px}
+.robot-side-metrics .gauge-heading{position:relative;z-index:2;align-items:center;min-height:20px}
+.robot-side-metrics .battery-arc{width:clamp(88px,7vw,112px);transform:none}
+.robot-side-metrics .thermal-visual{transform:none}
+.thermal-dial{width:clamp(96px,7.5vw,118px)}
+.robot-sidebar-actions .add-robot{animation:none;transition:background 180ms ease,box-shadow 180ms ease,transform 180ms ease}
+.robot-sidebar-actions .add-robot:hover{background:var(--theme-primary-soft);box-shadow:0 4px 12px color-mix(in srgb,var(--theme-primary) 18%,transparent);transform:translateY(-2px) scale(1.05)}
+.robot-hmi:has(.add-status-backdrop){z-index:1000}
+.robot-info-card__structure button{cursor:pointer;transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,box-shadow 180ms ease,transform 180ms ease}
+.robot-info-card__structure button:not(:disabled):hover{color:var(--text-primary);background:color-mix(in srgb,var(--theme-primary) 13%,var(--info-background));border-color:color-mix(in srgb,var(--theme-primary) 65%,transparent);box-shadow:0 4px 10px color-mix(in srgb,var(--theme-primary) 18%,transparent);transform:translateY(-2px)}
+.robot-info-card__structure button[aria-pressed=true]:not(:disabled):hover{background:color-mix(in srgb,var(--theme-primary) 24%,var(--info-background));border-color:var(--theme-primary)}
+.robot-info-card__structure button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:2px}
+.robot-info-card__structure button:disabled{cursor:default}
+@media(prefers-reduced-motion:reduce){.robot-info-card__structure button{transition:none}.robot-info-card__structure button:not(:disabled):hover{transform:none}}

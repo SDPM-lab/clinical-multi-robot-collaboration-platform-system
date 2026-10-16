@@ -124,4 +124,8 @@ const notification = computed(() => {
 @media(max-width:599px){.dispatch-side-panel{width:100%;height:530px}.dispatch-side-panel.is-schedule{height:560px}.dispatch-workspace{grid-template-rows:auto 480px}}
 @media(prefers-reduced-motion:reduce){.dispatch-toast-enter-active,.dispatch-toast-leave-active{transition:none}}
 .dispatch-confirm-backdrop{position:fixed;z-index:100;inset:0;display:grid;place-items:center;padding:20px;background:#24313c5c;backdrop-filter:blur(5px)}.dispatch-confirm{box-sizing:border-box;width:min(360px,100%);padding:20px;color:var(--text-primary);background:var(--panel-bg-strong);border:1px solid var(--panel-border);border-radius:15px;box-shadow:0 20px 60px #17222e35}.dispatch-confirm h2{margin:0 0 8px;font-size:17px}.dispatch-confirm p{margin:0;color:var(--text-secondary);font-size:12px;line-height:1.6}.dispatch-confirm-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.dispatch-confirm-actions button{min-width:70px;height:32px;padding:0 12px;color:var(--text-primary);background:var(--search-background);border:1px solid var(--panel-border);border-radius:7px;cursor:pointer}.dispatch-confirm-actions button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:2px}.dispatch-confirm-actions .is-danger{color:#fff;background:#c85c50;border-color:#c85c50}
+.task-dispatch-page{overflow-y:auto}
+.dispatch-side-panel:not(.is-schedule){height:auto;grid-template-rows:45px auto;overflow:visible}
+.dispatch-side-panel:not(.is-schedule) .dispatch-panel-body :deep(.task-panel){height:auto}
+@media(max-width:1099px){.dispatch-side-panel:not(.is-schedule){height:auto}}
 </style>

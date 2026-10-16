@@ -27,7 +27,7 @@ describe('demo fleet store scheduling rules', () => {
 
   it('rejects duplicate IDs, duplicate namespaces, Graph 1, and invalid battery values', () => {
     const base = {
-      id: 'R04', name: 'Robot 04', rosNamespace: '/robot_04', navGraphIndex: 0,
+      id: 'R08', name: 'Robot 08', rosNamespace: '/robot_08', navGraphIndex: 0,
       chargingWaypoint: 'charging_station_1', battery: 80, maxSpeedMps: 0.7, maxPayloadKg: 20,
     }
     expect(demoFleetStore.validateRobot({ ...base, id: 'R01' }).reason).toContain('已存在')

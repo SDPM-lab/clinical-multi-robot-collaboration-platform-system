@@ -1,45 +1,50 @@
 <script setup>
 import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { clone as cloneScene } from 'three/addons/utils/SkeletonUtils.js'
 import { RotateCcw } from '@lucide/vue'
 import { AgibotArmAssembly } from '@/three/robot/AgibotArmAssembly.js'
+import { DEFAULT_ROBOT_ASSET, loadRobotAsset } from '@/three/robot/robotModelAssets.js'
 import { defaultRobotModelPreset, readRobotCameraPreset, readRobotModelPreset, storeRobotCameraPreset, storeRobotModelPreset, validRobotCameraPreset, validRobotModelPreset } from '@/config/robotViewportPreset.js'
 import { t } from '@/i18n/index.js'
 
-const modelUrl = `${import.meta.env.BASE_URL}models/AGIBOT_A2D.glb`
 const params = new URLSearchParams(window.location.search)
 const robotDebugEnabled = params.get('robotDebug') === '1'
 const cameraDebugEnabled = robotDebugEnabled && params.get('cameraDebug') === '1'
 const modelDebugEnabled = robotDebugEnabled && params.get('modelDebug') === '1'
 const debugEnabled = cameraDebugEnabled || modelDebugEnabled
-let assetPromise
-function loadAsset() {
-  if (!assetPromise) assetPromise = new GLTFLoader().loadAsync(modelUrl).catch(error => {
-    assetPromise = null
-    throw error
-  })
-  return assetPromise
-}
-
-const props = defineProps({ robotId: String })
+const props = defineProps({ robotId: String, modelAssetKey: { type: String, default: DEFAULT_ROBOT_ASSET } })
 const emit = defineEmits(['ready'])
 const host = ref(null)
 const loading = ref(true)
 const error = ref('')
-const disassembly = ref(0)
 const debugStatus = ref('')
 const cameraPreset = reactive({ position: { x: 0, y: 0, z: 0 }, target: { x: 0, y: 0, z: 0 }, fov: 35, aspect: 1 })
 const modelPreset = reactive(readRobotModelPreset() || defaultRobotModelPreset())
 let renderer, scene, camera, controls, observer, assembly, model, frame
 let disposed = false
-let currentAmount = 0
+let loadToken = 0
+let zoneAmounts = { l: 0, r: 0, head: 0, base: 0 }
+let activeZone = null
+let cameraTween = null
 let lastFrame = 0
 let viewportWidth = 0
 let viewportHeight = 0
 const frontDirection = new THREE.Vector3(1, .13, .28).normalize()
 const rounded = value => Math.round(value * 1000) / 1000
+
+function staticAssembly(root) {
+  const bounds = new THREE.Box3().setFromObject(root)
+  return {
+    assembledBounds: bounds,
+    explodedBounds: bounds.clone(),
+    set() {},
+    setZones() {},
+    zoneBounds: () => new THREE.Box3(),
+    boundsAt: () => bounds.clone(),
+  }
+}
 
 function captureCamera() {
   if (!camera || !controls || !debugEnabled) return
@@ -51,7 +56,7 @@ function captureCamera() {
   cameraPreset.aspect = camera.aspect
 }
 
-function applyCameraPreset(preset = cameraPreset) {
+function applyCameraPreset(preset = cameraPreset, boundsOverride) {
   if (!camera || !controls || !validRobotCameraPreset(preset)) { debugStatus.value = t('robotDebug.invalid'); return }
   camera.position.set(Number(preset.position.x), Number(preset.position.y), Number(preset.position.z))
   controls.target.set(Number(preset.target.x), Number(preset.target.y), Number(preset.target.z))
@@ -59,7 +64,7 @@ function applyCameraPreset(preset = cameraPreset) {
   camera.updateProjectionMatrix()
   if (assembly && preset.aspect) {
     const direction = camera.position.clone().sub(controls.target).normalize()
-    const bounds = assembly.boundsAt(currentAmount)
+    const bounds = boundsOverride || viewBounds()
     const sourceFit = fitDistance(bounds, direction, Number(preset.aspect))
     const currentFit = fitDistance(bounds, direction)
     camera.position.sub(controls.target).multiplyScalar(currentFit / sourceFit).add(controls.target)
@@ -75,12 +80,11 @@ function applyModelPreset() {
   model.scale.setScalar(Number(modelPreset.scale))
   model.updateMatrixWorld(true)
   if (assembly) {
-    const amount = currentAmount
     assembly.set(0)
     assembly.assembledBounds.setFromObject(model)
     assembly.set(1)
     assembly.explodedBounds.setFromObject(model)
-    assembly.set(amount)
+    assembly.setZones(zoneAmounts)
     resize()
   }
   debugStatus.value = ''
@@ -129,11 +133,15 @@ function fitDistance(bounds, direction, aspect = camera.aspect) {
   return Math.max(distance, camera.near * 4)
 }
 
+function viewBounds() {
+  return activeZone ? assembly.zoneBounds(activeZone) : assembly.boundsAt(Math.max(...Object.values(zoneAmounts)))
+}
+
 function fitFactoryView() {
   if (!assembly || !camera || !controls) return
   camera.fov = 35
   camera.updateProjectionMatrix()
-  const bounds = assembly.boundsAt(disassembly.value / 100)
+  const bounds = assembly.assembledBounds
   const target = bounds.getCenter(new THREE.Vector3())
   const distance = fitDistance(bounds, frontDirection)
   controls.target.copy(target)
@@ -149,8 +157,58 @@ function fitFactoryView() {
 function resetView() {
   fitFactoryView()
   const saved = readRobotCameraPreset()
-  if (saved) applyCameraPreset(saved)
+  if (saved && props.modelAssetKey === DEFAULT_ROBOT_ASSET) applyCameraPreset(saved, assembly.assembledBounds)
   captureCamera()
+}
+
+function moveCameraTo(position, target) {
+  cameraTween = {
+    fromPosition: camera.position.clone(),
+    fromTarget: controls.target.clone(),
+    toPosition: position.clone(),
+    toTarget: target.clone(),
+    startTime: performance.now(),
+  }
+  controls.enabled = false
+}
+
+function focusZone(zone) {
+  if (!assembly || !controls || !['l', 'r', 'head', 'base'].includes(zone)) return
+  activeZone = zone
+  assembly.setZones({ [zone]: 1 })
+  const bounds = assembly.zoneBounds(zone)
+  assembly.setZones(zoneAmounts)
+  if (bounds.isEmpty()) return
+  const target = bounds.getCenter(new THREE.Vector3())
+  if (zone === 'head') {
+    const right = new THREE.Vector3().crossVectors(camera.up, frontDirection).normalize()
+    const screenUp = new THREE.Vector3().crossVectors(frontDirection, right).normalize()
+    const offset = Math.max(.1, Math.min(.22, bounds.getSize(new THREE.Vector3()).length() * .18))
+    target.addScaledVector(screenUp, -offset)
+  }
+  const distance = fitDistance(bounds, frontDirection) * .85
+  controls.minDistance = Math.max(.12, bounds.getSize(new THREE.Vector3()).length() * .18)
+  controls.maxDistance = Math.max(distance * 3, 12)
+  camera.near = Math.max(.005, controls.minDistance * .02)
+  camera.far = Math.max(100, controls.maxDistance * 3)
+  camera.updateProjectionMatrix()
+  moveCameraTo(target.clone().addScaledVector(frontDirection, distance), target)
+}
+
+function focusArm(side) { focusZone(side) }
+
+function showWholeRobot() {
+  if (!assembly || !controls) return
+  activeZone = null
+  const fromPosition = camera.position.clone()
+  const fromTarget = controls.target.clone()
+  resetView()
+  const toPosition = camera.position.clone()
+  const toTarget = controls.target.clone()
+  camera.position.copy(fromPosition)
+  controls.target.copy(fromTarget)
+  controls.update()
+  moveCameraTo(toPosition, toTarget)
 }
 
 function resize() {
@@ -158,7 +216,7 @@ function resize() {
   const { width, height } = host.value.getBoundingClientRect()
   if (width < 1 || height < 1) return
   const sizeChanged = width !== viewportWidth || height !== viewportHeight
-  const bounds = assembly?.boundsAt(currentAmount)
+  const bounds = assembly && viewBounds()
   const direction = controls && camera.position.clone().sub(controls.target).normalize()
   const previousFit = bounds && direction && viewportWidth && viewportHeight && sizeChanged
     ? fitDistance(bounds, direction)
@@ -186,19 +244,26 @@ function animate(time) {
   const delta = lastFrame ? Math.min((time - lastFrame) / 1000, .05) : 0
   lastFrame = time
   if (document.hidden || !assembly) return
-  const target = disassembly.value / 100
-  const transitioning = currentAmount !== target
-  if (transitioning) {
-    currentAmount = Math.abs(currentAmount - target) < .0005
+  let assemblyChanged = false
+  for (const zone of ['l', 'r', 'head', 'base']) {
+    const target = activeZone === zone ? 1 : 0
+    if (zoneAmounts[zone] === target) continue
+    zoneAmounts[zone] = Math.abs(zoneAmounts[zone] - target) < .0005
       ? target
-      : THREE.MathUtils.lerp(currentAmount, target, 1 - Math.exp(-9 * delta))
-    assembly.set(currentAmount)
+      : THREE.MathUtils.lerp(zoneAmounts[zone], target, 1 - Math.exp(-9 * delta))
+    assemblyChanged = true
   }
-  if (transitioning) {
-    const direction = camera.position.clone().sub(controls.target).normalize()
-    const needed = fitDistance(assembly.boundsAt(Math.max(currentAmount, target)), direction)
-    const distance = camera.position.distanceTo(controls.target)
-    if (distance < needed) camera.position.copy(controls.target).addScaledVector(direction, needed)
+  if (assemblyChanged) assembly.setZones(zoneAmounts)
+  if (cameraTween) {
+    const progress = Math.min(1, (time - cameraTween.startTime) / 650)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    camera.position.copy(cameraTween.fromPosition).lerp(cameraTween.toPosition, eased)
+    controls.target.copy(cameraTween.fromTarget).lerp(cameraTween.toTarget, eased)
+    if (progress >= 1) {
+      cameraTween = null
+      controls.enabled = true
+      captureCamera()
+    }
   }
   controls.update()
   renderer.render(scene, camera)
@@ -234,42 +299,58 @@ function initializeRenderer() {
 }
 
 async function start() {
+  const token = ++loadToken
   loading.value = true
   error.value = ''
   try {
     initializeRenderer()
-    const asset = await loadAsset()
-    if (disposed) return
-    if (!asset.scene.getObjectByName('AGIBOT_A2D')) throw new Error('AGIBOT_A2D root node missing')
-    model = asset.scene.clone(true)
+    if (model) scene.remove(model)
+    model = null
+    assembly = null
+    const asset = await loadRobotAsset(props.modelAssetKey)
+    if (disposed || token !== loadToken) return
+    if (props.modelAssetKey === DEFAULT_ROBOT_ASSET && !asset.scene.getObjectByName('AGIBOT_A2D')) throw new Error('AGIBOT_A2D root node missing')
+    model = cloneScene(asset.scene)
     scene.add(model)
-    applyModelPreset()
-    assembly = new AgibotArmAssembly(model)
-    currentAmount = 0
-    disassembly.value = 0
+    if (props.modelAssetKey === DEFAULT_ROBOT_ASSET) applyModelPreset()
+    let structureAvailable = false
+    if (model.getObjectByName('AGIBOT_A2D')) {
+      try {
+        assembly = new AgibotArmAssembly(model)
+        structureAvailable = assembly.records.length > 0
+      } catch (reason) {
+        if (props.modelAssetKey === DEFAULT_ROBOT_ASSET) throw reason
+      }
+    }
+    if (!assembly) assembly = staticAssembly(model)
+    zoneAmounts = { l: 0, r: 0, head: 0, base: 0 }
+    activeZone = null
     resize()
     resetView()
     loading.value = false
-    emit('ready')
+    emit('ready', { structureAvailable })
     if (!frame) frame = requestAnimationFrame(animate)
   } catch (reason) {
-    if (disposed) return
+    if (disposed || token !== loadToken) return
     loading.value = false
-    error.value = 'AGIBOT A2D 3D 模型載入失敗。'
+    error.value = 'loadError'
     console.error(reason)
   }
 }
 
-function toggleDisassembly() { disassembly.value = disassembly.value > 0 ? 0 : 100 }
-watch(() => props.robotId, () => {
-  disassembly.value = 0
-  currentAmount = 0
+watch(() => [props.robotId, props.modelAssetKey], ([, assetKey], [, previousAssetKey]) => {
+  zoneAmounts = { l: 0, r: 0, head: 0, base: 0 }
+  activeZone = null
+  cameraTween = null
+  if (controls) controls.enabled = true
   assembly?.set(0)
-  resetView()
+  if (assetKey !== previousAssetKey) start()
+  else resetView()
 })
 onMounted(start)
 onBeforeUnmount(() => {
   disposed = true
+  loadToken++
   cancelAnimationFrame(frame)
   observer?.disconnect()
   if (debugEnabled) controls?.removeEventListener('end', captureCamera)
@@ -279,19 +360,15 @@ onBeforeUnmount(() => {
   renderer?.dispose()
   renderer?.domElement.remove()
 })
-defineExpose({ resetView })
+defineExpose({ focusArm, focusZone, showWholeRobot, resetView })
 </script>
 
 <template>
   <div ref="host" class="robot-viewport" aria-label="AGIBOT A2D 互動式 3D 模型">
-    <div v-if="loading" class="viewport-message" role="status">Loading...</div>
-    <div v-else-if="error" class="viewport-message" role="alert">{{ error }}<button type="button" @click="start">重試</button></div>
+    <div v-if="loading" class="viewport-message" role="status">{{ t('robotStatus.loading') }}</div>
+    <div v-else-if="error" class="viewport-message" role="alert">{{ t(props.modelAssetKey === DEFAULT_ROBOT_ASSET ? 'robotStatus.loadError' : 'robotStatus.customLoadError') }}<button type="button" @click="start">{{ t('robotStatus.retry') }}</button></div>
     <div v-else class="viewport-controls">
-      <button type="button" class="viewport-reset" @click="resetView"><RotateCcw :size="14" aria-hidden="true"/>重設視角</button>
-      <div class="viewport-disassembly">
-        <button type="button" @click="toggleDisassembly">{{ disassembly ? '恢復組裝' : '手臂拆解' }}</button>
-        <label>拆解程度 <input v-model.number="disassembly" type="range" min="0" max="100" step="1" aria-label="手臂拆解程度"><output>{{ disassembly }}%</output></label>
-      </div>
+      <button type="button" class="viewport-reset" :aria-label="t('robotStatus.resetView')" :title="t('robotStatus.resetView')" @click="showWholeRobot"><RotateCcw :size="17" aria-hidden="true"/></button>
     </div>
     <details v-if="debugEnabled && !loading && !error" class="robot-debug-panel" open>
       <summary>{{ t('robotDebug.title') }}<span>{{ debugStatus }}</span></summary>
@@ -318,17 +395,12 @@ defineExpose({ resetView })
 .robot-viewport :deep(canvas){display:block;width:100%;height:100%;cursor:grab}
 .robot-viewport :deep(canvas:active){cursor:grabbing}
 .viewport-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-secondary);font-size:12px;text-align:center}
-.viewport-message button,.viewport-controls button{border:1px solid color-mix(in srgb,var(--theme-primary) 35%,var(--info-divider));border-radius:8px;background:var(--info-background);color:var(--text-primary);font:inherit;cursor:pointer}
+.viewport-message button{border:1px solid color-mix(in srgb,var(--theme-primary) 35%,var(--info-divider));border-radius:8px;background:var(--info-background);color:var(--text-primary);font:inherit;cursor:pointer}
 .viewport-message button{padding:7px 14px}
-.viewport-controls{position:absolute;z-index:2;right:12px;bottom:12px;left:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;pointer-events:none}
+.viewport-controls{position:absolute;z-index:2;top:12px;right:12px;pointer-events:none}
 .viewport-controls>*{pointer-events:auto}
-.viewport-reset{display:flex;align-items:center;gap:6px;padding:8px 10px;font-size:11px!important}
-.viewport-disassembly{display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding:8px 10px;border:1px solid var(--info-divider);border-radius:10px;background:var(--info-background);box-shadow:var(--info-shadow)}
-.viewport-disassembly button{padding:5px 9px;color:var(--theme-primary);font-size:11px}
-.viewport-disassembly label{display:flex;align-items:center;gap:8px;white-space:nowrap;color:var(--text-secondary);font-size:10px}
-.viewport-disassembly input{width:110px;accent-color:var(--theme-primary)}
-.viewport-disassembly output{min-width:32px;text-align:right;font-variant-numeric:tabular-nums}
-@media(max-width:480px){.viewport-controls{flex-wrap:wrap}.viewport-disassembly input{width:85px}}
+.viewport-reset{display:grid;place-items:center;width:34px;height:34px;padding:0;color:var(--text-secondary);background:transparent;border:0;border-radius:50%;cursor:pointer;transition:color 180ms ease,transform 180ms ease}
+.viewport-reset:hover{color:var(--theme-primary);transform:rotate(-30deg)}
 .robot-debug-panel{position:absolute;z-index:3;top:12px;left:12px;width:248px;max-width:calc(100% - 24px);max-height:calc(100% - 80px);box-sizing:border-box;overflow:auto;padding:10px;color:var(--text-primary);background:var(--info-background);border:var(--info-border);border-radius:10px;box-shadow:var(--info-shadow);backdrop-filter:blur(14px)}
 .robot-debug-panel summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;font-size:12px;font-weight:600}
 .robot-debug-panel summary span{font-size:9px;font-weight:400;color:var(--theme-primary)}

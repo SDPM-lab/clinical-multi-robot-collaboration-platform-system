@@ -56,8 +56,12 @@ const makeRobot = (robot) => ({
 
 const initialRobots = [
   makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', floorId: 'floor1', rosNamespace: '/robot_01', battery: 82, state: 'executing', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', floorId: 'floor2', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', floorId: 'floor3', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
+  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', floorId: 'floor1', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', floorId: 'floor1', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
+  makeRobot({ id: 'R04', name: 'Robot 04', floorId: 'floor2', rosNamespace: '/robot_04', battery: 76, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
+  makeRobot({ id: 'R05', name: 'Robot 05', floorId: 'floor2', rosNamespace: '/robot_05', battery: 62, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
+  makeRobot({ id: 'R06', name: 'Robot 06', floorId: 'floor3', rosNamespace: '/robot_06', battery: 88, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
+  makeRobot({ id: 'R07', name: 'Robot 07', floorId: 'floor3', rosNamespace: '/robot_07', battery: 45, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
 ]
 
 const initialTasks = [
@@ -216,7 +220,7 @@ const addRobot = (input) => {
     footprintRadiusM: input.footprintRadiusM === '' ? null : Number(input.footprintRadiusM),
     state: 'offline',
     connectionState: 'disconnected',
-    currentLocation: input.currentLocation || 'Charging Station A',
+    currentLocation: input.currentLocation === undefined ? 'Charging Station A' : input.currentLocation,
     currentWaypoint: input.chargingWaypoint,
     activeTaskId: null,
     queuedTaskIds: [],
