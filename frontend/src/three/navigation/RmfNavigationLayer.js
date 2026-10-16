@@ -262,9 +262,10 @@ export class RmfNavigationLayer {
       progress,
       color,
       offline: robot?.state === 'offline',
+      modelAssetKey: robot?.modelAssetKey,
     })
     this.robotControllers.set(id, controller)
-    controller.load().catch((error) => console.error(`${id} robot.glb load failed:`, error))
+    controller.load().catch((error) => console.error(`${id} robot model load failed:`, error))
   }
 
   applyEmphasis() {

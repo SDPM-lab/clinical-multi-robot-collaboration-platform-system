@@ -1,9 +1,38 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import * as THREE from 'three'
 import { getRobotCameraPose } from '@/three/navigation/realtimeRobotCamera.js'
 import { RobotRouteController } from '@/three/navigation/RobotRouteController.js'
+import { loadRobotAsset } from '@/three/robot/robotModelAssets.js'
+
+vi.mock('@/three/robot/robotModelAssets.js', () => ({
+  DEFAULT_ROBOT_ASSET: 'AGIBOT_A2D',
+  loadRobotAsset: vi.fn(),
+}))
 
 describe('realtime robot selection and camera helpers', () => {
+  it('reuses the Robot Status model for map robots and keeps shared geometry alive', async () => {
+    const geometry = new THREE.BoxGeometry(1, 2, 1)
+    const scene = new THREE.Group()
+    scene.name = 'AGIBOT_A2D'
+    scene.add(new THREE.Mesh(geometry, new THREE.MeshStandardMaterial()))
+    vi.mocked(loadRobotAsset).mockResolvedValue({ scene, animations: [] })
+    const parent = new THREE.Group()
+    const first = new RobotRouteController({ id: 'R01', parent, color: 0xff6700 })
+    const second = new RobotRouteController({ id: 'R02', parent, color: 0xff6700 })
+    await Promise.all([first.load(), second.load()])
+    expect(loadRobotAsset).toHaveBeenCalledWith('AGIBOT_A2D')
+    expect(first.model.rotation.y).toBeCloseTo(-Math.atan2(1, 0.28))
+    expect(first.model.children[0].geometry).toBe(geometry)
+    expect(second.model.children[0].geometry).toBe(geometry)
+    const disposeGeometry = vi.spyOn(geometry, 'dispose')
+    first.dispose()
+    expect(disposeGeometry).not.toHaveBeenCalled()
+    expect(second.model.children[0].geometry).toBe(geometry)
+    second.dispose()
+    scene.children[0].material.dispose()
+    geometry.dispose()
+  })
+
   it('derives third-, first-person, and fixed local-follow poses from the corrected wrapper forward vector', () => {
     const position = new THREE.Vector3(2, 0, 3)
     const forward = new THREE.Vector3(1, 0, 0)

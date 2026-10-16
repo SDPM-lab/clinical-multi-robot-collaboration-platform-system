@@ -49,6 +49,20 @@ describe('task dispatch workspace',()=>{
     expect(schedule.find('.schedule-progress').exists()).toBe(false)
     schedule.unmount()
   })
+  it('uses priority colors for task borders and creation choices',async()=>{
+    const tasks=['low','normal','high','emergency'].map((priority,index)=>({id:`P${index}`,robotId:'R01',startTime:`${String(index+8).padStart(2,'0')}:30:00`,endTime:`${String(index+8).padStart(2,'0')}:42:00`,title:'藥品配送',origin:'藥局',destination:'護理站',priority}))
+    const schedule=mount(TaskScheduleSidebar,{props:{date:'2026-08-31',robots:[{id:'R01',name:'Robot 01'}],tasks}})
+    expect(schedule.findAll('.schedule-item').map(item=>item.element.style.getPropertyValue('--item-color'))).toEqual(['#E0BD45','#FB9966','#D65B57','#954D43'])
+    schedule.unmount()
+    wrapper=mount(TaskDispatchView,{global:{stubs:{DispatchMapScene:true}}});await flushPromises()
+    const choices=wrapper.findAll('.priority-control button')
+    expect(choices.map(item=>item.element.style.getPropertyValue('--priority-color'))).toEqual(['#E0BD45','#FB9966','#D65B57','#954D43'])
+    await wrapper.get('.robot-trigger').trigger('click')
+    expect(wrapper.get('.task-panel').classes()).toContain('is-robot-picker-open')
+    expect(wrapper.get('.create-button').exists()).toBe(true)
+    await wrapper.get('.robot-trigger').trigger('click')
+    expect(wrapper.get('.task-panel').classes()).not.toContain('is-robot-picker-open')
+  })
   it('links form endpoints, map selection and robot status while retaining all payload fields',async()=>{
     wrapper=mount(TaskDispatchView, { global: { stubs: { DispatchMapScene: true } } });await flushPromises()
     const form=wrapper.getComponent(TaskForm),map=wrapper.getComponent(DispatchMapScene)
@@ -109,7 +123,7 @@ describe('task dispatch workspace',()=>{
     setLocale('en')
     wrapper=mount(TaskDispatchView, { global: { stubs: { DispatchMapScene: true } } });await flushPromises()
     await wrapper.get('.robot-trigger').trigger('click')
-    expect(wrapper.findAll('.robot-options [role="option"]')).toHaveLength(3)
+    expect(wrapper.findAll('.robot-options [role="option"]')).toHaveLength(7)
     expect(wrapper.get('.robot-options').text()).toContain('In progress')
     await wrapper.findAll('.robot-options [role="option"]')[1].trigger('click')
     expect(wrapper.getComponent(TaskForm).props('robotId')).toBe('R02')
@@ -133,7 +147,9 @@ describe('task dispatch workspace',()=>{
   it('returns the schedule to the current local date',async()=>{
     wrapper=mount(TaskDispatchView, { global: { stubs: { DispatchMapScene: true } } });await flushPromises()
     const now=new Date(), today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
-    await wrapper.get('.schedule-today').trigger('click')
+    await wrapper.get('.schedule-date-navigation button[aria-label="後一天"]').trigger('click')
+    expect(wrapper.getComponent(TaskScheduleSidebar).props('date')).not.toBe(today)
+    await wrapper.get('.schedule-date-navigation .schedule-today').trigger('click')
     expect(wrapper.getComponent(TaskScheduleSidebar).props('date')).toBe(today)
   })
   it('updates the form and deletion dialog when the language changes without reloading',async()=>{
