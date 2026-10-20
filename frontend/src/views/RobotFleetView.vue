@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { Bot, Plus, Search, Wifi, WifiOff, LoaderCircle } from '@lucide/vue'
+import { Bot, Plus, Search, Wifi, WifiOff, LoaderCircle, X } from '@lucide/vue'
 import { fleetStore } from '@/stores/demoFleetStore.js'
 import { i18n, t, translateLocation } from '@/i18n/index.js'
-import { robotStateLabels } from '@/data/robotStatus.js'
+import { robotStateColors, robotStateLabels } from '@/data/robotStatus.js'
 import { clinicFloorOptions } from '@/data/clinicOverviewData.js'
 import { normalizeFloor } from '@/data/overviewStatusData.js'
 import { robotSeriesColors } from '@/config/visualTokens.js'
@@ -15,8 +15,10 @@ import '@/styles/robotHmi.css'
 
 const agibotImage = `${import.meta.env.BASE_URL}images/agibot-a2d-transparent.png`
 
-const emit = defineEmits(['edit-robot', 'add-robot'])
+const emit = defineEmits(['add-robot'])
 const actionNotice = ref('')
+const editing = ref(false)
+const pendingRemove = ref(null)
 const robots = fleetStore.robots
 const selectedId = ref(robots.value[0]?.id)
 const search = ref(''), selectedFloor = ref('all'), stageReady = ref(false), structureAvailable = ref(true), selectedZone = ref(null), viewport = ref(null), addDialogOpen = ref(false)
@@ -72,6 +74,13 @@ function showWholeRobot() {
   selectedZone.value = null
   viewport.value?.showWholeRobot?.()
 }
+function confirmRemoveRobot() {
+  if (!pendingRemove.value) return
+  const result = fleetStore.removeRobot(pendingRemove.value.id)
+  pendingRemove.value = null
+  if (!result.ok) return
+  if (selectedId.value === result.robot.id) selectedId.value = robots.value[0]?.id
+}
 </script>
 
 <template>
@@ -82,16 +91,19 @@ function showWholeRobot() {
       <div class="robot-floor-filter" role="group" :aria-label="t('robotStatus.floorFilter')">
         <button v-for="floor in floorTabs" :key="floor.id" type="button" :aria-pressed="selectedFloor === floor.id" :class="{ 'is-active': selectedFloor === floor.id }" @click="selectedFloor = floor.id">{{ floor.label }}<span>{{ floor.count }}</span></button>
       </div>
-      <div class="robot-picker" role="listbox" :aria-label="t('robotStatus.list')">
-        <button v-for="entry in filteredRobots" :key="entry.id" class="robot-list-item" role="option" :aria-selected="entry.id === robot.id" :class="{ 'is-active': entry.id === robot.id }" :style="{ '--battery-color': robotSeriesColors[robots.findIndex(item => item.id === entry.id) % robotSeriesColors.length] }" @click="selectRobot(entry.id)">
-          <span v-if="entry.modelAssetKey" class="robot-list-item__avatar robot-list-item__avatar--custom"><Bot :size="29" aria-hidden="true"/></span>
-          <img v-else class="robot-list-item__avatar" :src="agibotImage" :alt="`${entry.name} AGIBOT A2D 縮圖`">
-          <span class="robot-picker__identity"><strong>{{ entry.name }}</strong><small>{{ t(`robotStatus.states.${entry.state}`) }} · {{ floorCode(entry) }}</small><small>{{ entry.currentLocation ? translateLocation(entry.currentLocation) : t('robotStatus.noLocation') }}</small></span>
-          <span class="robot-list-item__battery"><strong>{{ entry.battery }}%</strong><i><span :style="{ width: `${entry.battery}%` }"></span></i></span>
-        </button>
+      <div class="robot-picker" :class="{ 'is-editing': editing }" role="listbox" :aria-label="t('robotStatus.list')">
+        <div v-for="entry in filteredRobots" :key="entry.id" class="robot-list-entry" role="presentation">
+          <button type="button" class="robot-list-item" role="option" :aria-selected="entry.id === robot.id" :class="{ 'is-active': entry.id === robot.id }" :style="{ '--battery-color': robotSeriesColors[robots.findIndex(item => item.id === entry.id) % robotSeriesColors.length] }" @click="selectRobot(entry.id)">
+            <span v-if="entry.modelAssetKey" class="robot-list-item__avatar robot-list-item__avatar--custom"><Bot :size="29" aria-hidden="true"/></span>
+            <img v-else class="robot-list-item__avatar" :src="agibotImage" :alt="`${entry.name} AGIBOT A2D 縮圖`">
+            <span class="robot-picker__identity"><strong>{{ entry.name }}</strong><small>{{ t(`robotStatus.states.${entry.state}`) }} · {{ floorCode(entry) }}</small><small>{{ entry.currentLocation ? translateLocation(entry.currentLocation) : t('robotStatus.noLocation') }}</small></span>
+            <span class="robot-list-item__battery"><strong>{{ entry.battery }}%</strong><i><span :style="{ width: `${entry.battery}%` }"></span></i></span>
+          </button>
+          <button v-if="editing" type="button" class="robot-list-item__remove" :aria-label="t('robotStatus.removeRobot', { name: entry.name })" @click="pendingRemove=entry"><X :size="12" :stroke-width="3" aria-hidden="true"/></button>
+        </div>
         <p v-if="!filteredRobots.length" class="robot-picker__empty">{{ t('robotStatus.noRobots') }}</p>
       </div>
-      <footer class="robot-sidebar-actions"><button type="button" @click="emit('edit-robot', robot.id); actionNotice = '編輯服務尚未接入'">{{ t('robotStatus.edit') }}</button><button type="button" class="add-robot" :aria-label="t('robotStatus.addRobot')" :title="t('robotStatus.addRobot')" @click="emit('add-robot'); addDialogOpen = true"><Plus :size="18" aria-hidden="true"/></button></footer>
+      <footer class="robot-sidebar-actions"><button type="button" class="edit-robots" :aria-pressed="editing" @click="editing=!editing; pendingRemove=null">{{ t(editing ? 'robotStatus.doneEditing' : 'robotStatus.edit') }}</button><button type="button" class="add-robot" :aria-label="t('robotStatus.addRobot')" :title="t('robotStatus.addRobot')" @click="emit('add-robot'); addDialogOpen = true"><Plus :size="18" aria-hidden="true"/></button></footer>
       <p v-if="actionNotice" class="robot-action-notice" role="status">{{ actionNotice }}</p>
     </aside>
     <main class="robot-digital-twin-stage">
@@ -106,7 +118,7 @@ function showWholeRobot() {
         <TemperatureGauge :value="temperature" :active="stageReady"/>
       </div>
       <section class="robot-inspector-content robot-info-card" aria-labelledby="robot-info-title">
-        <header class="robot-info-card__header"><h2 id="robot-info-title">{{ t('robotStatus.title') }}</h2></header>
+        <header class="robot-info-card__header"><h2 id="robot-info-title">{{ t('robotStatus.title') }}</h2><span class="robot-info-card__state" :aria-label="`${t('robotStatus.operationalStatus')}: ${t(`robotStatus.states.${robot.state}`)}`"><i :style="{ backgroundColor: robotStateColors[robot.state] }" aria-hidden="true"></i>{{ t(`robotStatus.states.${robot.state}`) }}</span></header>
         <dl class="robot-info-card__facts">
           <div><dt>{{ t('robotStatus.id') }}</dt><dd>{{ robot.id }}</dd></div>
           <div><dt>{{ t('robotStatus.floor') }}</dt><dd>{{ floorLabel(robot) }}</dd></div>
@@ -126,6 +138,13 @@ function showWholeRobot() {
       </section>
     </aside>
     <AddRobotStatusDialog v-if="addDialogOpen" @close="addDialogOpen = false" @created="onRobotCreated"/>
+    <div v-if="pendingRemove" class="robot-remove-backdrop">
+      <section class="robot-remove-dialog" role="alertdialog" aria-modal="true" aria-labelledby="robot-remove-title" aria-describedby="robot-remove-message">
+        <h2 id="robot-remove-title">{{ t('robotStatus.removeTitle') }}</h2>
+        <p id="robot-remove-message">{{ t('robotStatus.removeMessage', { name: pendingRemove.name }) }}</p>
+        <div><button type="button" @click="pendingRemove=null">{{ t('robotStatus.cancel') }}</button><button type="button" class="is-danger" @click="confirmRemoveRobot">{{ t('robotStatus.remove') }}</button></div>
+      </section>
+    </div>
   </section>
   <section v-else class="robot-hmi">{{ t('robotStatus.noRobots') }}</section>
 </template>

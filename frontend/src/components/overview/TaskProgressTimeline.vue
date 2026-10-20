@@ -27,9 +27,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', closeOnOutside
     <header>
       <div><h2>任務進度</h2><span>{{ progress.taskId }} · {{ progress.floor }}</span></div>
       <div ref="selectRoot" class="robot-select">
-        <button type="button" :aria-expanded="open" aria-haspopup="listbox" @click="open = !open"><i :style="{background: robotColors[modelValue]}" :class="progress.robotState === 'executing' ? 'is-executing' : ''"></i>{{ progress.robotId }}<ChevronDown :size="13" /></button>
+        <button type="button" :aria-expanded="open" aria-haspopup="listbox" @click="open = !open"><i :style="{background: robotColors[modelValue]}" :class="progress.robotState === 'busy' ? 'is-executing' : ''"></i>{{ progress.robotId }}<ChevronDown :size="13" /></button>
         <div v-if="open" class="robot-options" role="listbox">
-          <button v-for="key in robotKeys" :key="key" type="button" role="option" :aria-selected="key === modelValue" @click="choose(key)"><i :style="{background: robotColors[key]}" :class="progressByRobot[key].robotState === 'executing' ? 'is-executing' : ''"></i>{{ progressByRobot[key].robotId }}</button>
+          <button v-for="key in robotKeys" :key="key" type="button" role="option" :aria-selected="key === modelValue" @click="choose(key)"><i :style="{background: robotColors[key]}" :class="progressByRobot[key].robotState === 'busy' ? 'is-executing' : ''"></i>{{ progressByRobot[key].robotId }}</button>
         </div>
       </div>
     </header>

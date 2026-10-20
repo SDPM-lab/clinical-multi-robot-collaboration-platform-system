@@ -1,4 +1,5 @@
 import { locationDetails } from './demoActiveRoutes.js'
+import { REQUIRED_CAPABILITIES_BY_TASK_TYPE, TASK_TYPE_BY_LABEL } from '@/config/taskTypes.js'
 export const priorityOptions = [{id:'urgent',label:'緊急',from:'#f06a50',to:'#ff9a62'},{id:'high',label:'高',from:'#ed8b2c',to:'#ffc061'},{id:'normal',label:'一般',from:'#f2bd43',to:'#f6dc79'},{id:'low',label:'低',from:'#70b99c',to:'#a4d6b9'}]
 export const statusOptions = [{id:'completed',label:'已完成'},{id:'cancelled',label:'已取消'},{id:'failed',label:'失敗'},{id:'running',label:'執行中'},{id:'waiting',label:'等待中'}]
 export const historyLocations = Object.values(locationDetails).map(location=>location.label)
@@ -34,12 +35,17 @@ export function layoutDayEvents(events,key) {
  return rows.map(row=>({...row,top:(row.start-dayStart)/3600000*76,height:Math.max(22,(row.end-row.start)/3600000*76)}))
 }
 export function adaptHistoryTasks(tasks,robots) {
- const statuses={completed:'completed',done:'completed',cancelled:'cancelled',failed:'failed',error:'failed',executing:'running',running:'running',waiting:'waiting'}
+ const statuses={completed:'completed',done:'completed',cancelled:'cancelled',failed:'failed',error:'failed',executing:'running',running:'running',waiting:'waiting',scheduled:'waiting',pending:'waiting',assigned:'waiting'}
+ const labelsByType=Object.fromEntries(Object.entries(TASK_TYPE_BY_LABEL).flatMap(([label,type])=>[[type,label],[type[0].toLowerCase()+type.slice(1),label]]))
  return tasks.flatMap(task=>{
   const start=task.start || (task.date ? `${task.date}T${task.startTime}` : null)
   const end=task.end || (task.date ? `${task.date}T${task.endTime}` : null)
-  if(!statuses[task.status] || !Number.isFinite(Date.parse(start)) || !(Date.parse(end)>Date.parse(start)))return []
-  return [{id:task.id,taskId:task.taskId||task.id,title:task.title,robotId:task.robotId,robotName:robots.find(robot=>robot.id===task.robotId)?.name||task.robotId,start,end,startLocation:task.origin||task.startLocation,endLocation:task.destination||task.endLocation,priority:task.priority||'normal',status:statuses[task.status],taskType:task.taskType||task.title}]
+  const status=statuses[String(task.status||'').toLowerCase()]
+  if(!status || !Number.isFinite(Date.parse(start)) || !(Date.parse(end)>Date.parse(start)))return []
+  const robotId=task.robotId||task.assignedRobot||''
+  const taskType=TASK_TYPE_BY_LABEL[task.type]||TASK_TYPE_BY_LABEL[task.title]||TASK_TYPE_BY_LABEL[labelsByType[task.taskType]]||task.taskType
+  const title=task.title||labelsByType[taskType]||task.type||''
+  return [{id:task.id,taskId:task.taskId||task.id,title,robotId,robotName:robots.find(robot=>robot.id===robotId)?.name||robotId,start,end,startLocation:task.origin||task.source||task.startLocation,endLocation:task.destination||task.endLocation,priority:String(task.priority||'normal').toLowerCase()==='emergency'?'urgent':String(task.priority||'normal').toLowerCase(),status,taskType,requiredCapabilities:task.requiredCapabilities??REQUIRED_CAPABILITIES_BY_TASK_TYPE[taskType]??[],note:task.note??null,createdAt:task.createdAt??null}]
  })
 }
 // Explicit demo history, generated once from existing task templates; never persisted as real history.
@@ -53,7 +59,7 @@ export function createDemoHistory(tasks,robots,today=dayKey(new Date())) {
    const begin=new Date(`${date}T${String(hour).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:00`)
    const end=new Date(begin.getTime()+(50+((day+14)%3)*15)*60000)
    const priority=priorityOptions[(day+14+index)%4].id
-   events.push({id:`history-${date}-${task.id}`,taskId:`H${String((day+14)*3+index+1).padStart(4,'0')}`,title:task.title,robotId:task.robotId,robotName:robots.find(robot=>robot.id===task.robotId)?.name||task.robotId,start:begin.toISOString(),end:end.toISOString(),startLocation:task.origin,endLocation:task.destination,priority,status:date===today&&index===1?'running':(day+14+index)%13===0?'failed':(day+14+index)%11===0?'cancelled':'completed',taskType:task.title})
+   events.push({id:`history-${date}-${task.id}`,taskId:`H${String((day+14)*3+index+1).padStart(4,'0')}`,title:task.title,robotId:task.robotId,robotName:robots.find(robot=>robot.id===task.robotId)?.name||task.robotId,start:begin.toISOString(),end:end.toISOString(),startLocation:task.origin,endLocation:task.destination,priority,status:date===today&&index===1?'running':(day+14+index)%13===0?'failed':(day+14+index)%11===0?'cancelled':'completed',taskType:task.taskType||TASK_TYPE_BY_LABEL[task.title]})
   })
  }
  return events

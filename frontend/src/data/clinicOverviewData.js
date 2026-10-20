@@ -18,7 +18,7 @@ export const completionByFloor = Object.freeze({
 
 export const taskProgressByRobot = Object.freeze({
   robot01: Object.freeze({
-    taskId: 'T001', robotId: 'Robot 01', robotState: 'executing', floor: 'Floor 1',
+    taskId: 'T001', robotId: 'Robot 01', robotState: 'busy', floor: 'Floor 1',
     steps: Object.freeze([
       Object.freeze({ label: '藥局取件', location: '藥局', status: 'completed', statusLabel: '已完成', time: '09:30' }),
       Object.freeze({ label: '前往護理站', location: '一樓護理站', status: 'completed', statusLabel: '已完成', time: '09:38' }),

@@ -67,6 +67,28 @@ describe('theme switching', () => {
     wrapper.unmount()
   })
 
+  it('highlights the fullscreen control only while fullscreen is active', async () => {
+    const router = await createTestRouter()
+    const wrapper = mount(AppShellView, {
+      global: { plugins: [router], stubs: { ClinicOverviewView: true, OverviewSearch: true } },
+    })
+    const button = wrapper.get('.fullscreen-action')
+    expect(button.attributes('aria-pressed')).toBe('false')
+    expect(button.attributes('aria-label')).toBe('進入全螢幕')
+
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: document.documentElement })
+    document.dispatchEvent(new Event('fullscreenchange'))
+    await wrapper.vm.$nextTick()
+    expect(button.attributes('aria-pressed')).toBe('true')
+    expect(button.attributes('aria-label')).toBe('退出全螢幕')
+
+    delete document.fullscreenElement
+    document.dispatchEvent(new Event('fullscreenchange'))
+    await wrapper.vm.$nextTick()
+    expect(button.attributes('aria-pressed')).toBe('false')
+    wrapper.unmount()
+  })
+
   it('keeps dispatch, robot status, and schedule history renderable with the global background', async () => {
     const router = await createTestRouter()
     const wrapper = mount(AppShellView, {
