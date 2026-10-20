@@ -13,6 +13,14 @@ public class RobotController : ControllerBase
     private readonly ITaskService _taskService;
 
     private static readonly HashSet<string> HardwareOverrideStatuses = ["充電中", "緊急停止", "暫停"];
+    private static string TaskTitle(TaskType taskType) => taskType switch
+    {
+        TaskType.MedicineDelivery => "藥品配送",
+        TaskType.SpecimenDelivery => "檢體配送",
+        TaskType.GeneralDelivery => "一般物資配送",
+        TaskType.WasteCollection => "垃圾回收",
+        _ => taskType.ToString(),
+    };
 
     public RobotController(RobotStateStore store, RosBridgeTestService rosBridge, ITaskService taskService)
     {
@@ -43,7 +51,7 @@ public class RobotController : ControllerBase
                 Model = r.Model,
                 Status = "執行任務中",
                 Battery = r.Battery,
-                CurrentTask = $"執行任務: {task.Title}",
+                CurrentTask = $"執行任務: {TaskTitle(task.TaskType)}",
                 Location = r.Location,
                 X = r.X,
                 Y = r.Y,
@@ -60,12 +68,12 @@ public class RobotController : ControllerBase
                 CurrentTaskDetail = new RobotTaskDetailDto
                 {
                     TaskNo = task.Id,
-                    Title = task.Title,
+                    Title = TaskTitle(task.TaskType),
                     Progress = r.CurrentTaskDetail.Progress > 0 ? r.CurrentTaskDetail.Progress : 0,
                     Step = r.CurrentTaskDetail.Step is not ("待命中" or "") ? r.CurrentTaskDetail.Step : "執行任務中",
-                    StartedAt = task.Start?.ToString("HH:mm") ?? "—",
-                    Eta = task.End?.ToString("HH:mm") ?? "—",
-                    Payload = string.Join("、", task.Items),
+                    StartedAt = r.CurrentTaskDetail.StartedAt,
+                    Eta = r.CurrentTaskDetail.Eta,
+                    Payload = r.CurrentTaskDetail.Payload,
                 },
             };
         }).ToList();

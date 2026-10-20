@@ -106,24 +106,4 @@ public class TaskController : ControllerBase
         var found = await _taskService.UpdateTaskStatusAsync(task_id, RobotTaskStatus.Cancelled);
         return found ? Ok() : NotFound("查無此任務");
     }
-
-    [HttpGet("{task_id}/confirm")]
-    public async Task<IActionResult> GetConfirm(string task_id)
-    {
-        var confirmed = await _taskService.GetConfirmAsync(task_id);
-        if (confirmed is null) return NotFound("查無此任務");
-        return Ok(new { confirmed });
-    }
-
-    [HttpPatch("{task_id}/confirm")]
-    public async Task<IActionResult> ConfirmTask(string task_id)
-    {
-        var result = await _taskService.ConfirmTaskAsync(task_id);
-        return result switch
-        {
-            ConfirmTaskResult.Success    => Ok(),
-            ConfirmTaskResult.WrongState => BadRequest("任務尚未結束，無法確認"),
-            _                            => NotFound("查無此任務"),
-        };
-    }
 }

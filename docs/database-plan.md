@@ -8,10 +8,9 @@
 | --- | --- | --- | --- |
 | `robots` | `id`、`ros_name`（唯一）、`name`、`model`、`floor_id` | 一台機器人可被指派多個任務 | `RobotStateStore.cs`、`RobotDto` |
 | `places` | `id`、`name`、`type`、`floor_id` | 一個地點可作為多個任務的起點或終點 | `PlaceController.cs` |
-| `tasks` | `id`、`title`、`task_type`、`source_place_id`、`destination_place_id`、`priority`、`status`、`assigned_robot_id`（可空）、`created_at`、`start_at`（可空）、`end_at`（可空）、`note`、`confirmed` | 分別連到起點、終點與機器人 | `RobotTask.cs`、`TaskService.cs` |
-| `task_items` | `task_id`、`item_order`、`item_name` | 一個任務有零到多個物品 | `RobotTask.Items` |
+| `tasks` | `id`、`task_type`、`source_place_id`、`destination_place_id`、`priority`、`status`、`assigned_robot_id`（可空）、`created_at` | 分別連到起點、終點與機器人 | `RobotTask.cs`、`TaskService.cs` |
 | `task_capabilities` | `task_id`、`capability` | 一個任務需要零到多種能力 | `RobotTask.RequiredCapabilities` |
-| `task_events` | `id`、`task_id`、`status`、`occurred_at`、`note`（可空） | 一個任務有零到多筆狀態紀錄 | 排程歷史需要可查詢的時間線；目前後端尚無此類別 |
+| `task_events` | `id`、`task_id`、`status`、`occurred_at` | 一個任務有零到多筆狀態紀錄 | 排程歷史需要可查詢的時間線；目前後端尚無此類別 |
 
 ## 尚待對齊的欄位
 

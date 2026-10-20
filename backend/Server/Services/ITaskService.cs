@@ -4,7 +4,6 @@ using Server.Requests;
 namespace Server.Services;
 
 public enum DeleteTaskResult { Success, NotFound, Forbidden }
-public enum ConfirmTaskResult { Success, NotFound, WrongState }
 
 public interface ITaskService
 {
@@ -13,7 +12,5 @@ public interface ITaskService
     Task CreateTaskAsync(CreateTaskRequest request);
     Task<DeleteTaskResult> DeleteTaskAsync(string taskId);
     Task<bool> UpdateTaskStatusAsync(string taskId, RobotTaskStatus status);
-    Task<ConfirmTaskResult> ConfirmTaskAsync(string taskId);
-    Task<bool?> GetConfirmAsync(string taskId);
     Task<Dictionary<string, RobotTask>> GetActiveTasksByRobotAsync();
 }

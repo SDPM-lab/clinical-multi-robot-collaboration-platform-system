@@ -37,7 +37,6 @@ public class TaskService : ITaskService
         {
             Seed(
                 "task-1",
-                "藥品配送",
                 TaskType.MedicineDelivery,
                 "pharmacy",
                 "ward_a",
@@ -48,7 +47,6 @@ public class TaskService : ITaskService
 
             Seed(
                 "task-2",
-                "檢體配送",
                 TaskType.SpecimenDelivery,
                 "ward_b",
                 "lab",
@@ -58,7 +56,6 @@ public class TaskService : ITaskService
 
             Seed(
                 "task-3",
-                "一般物資配送",
                 TaskType.GeneralDelivery,
                 "storage",
                 "nurse_station",
@@ -68,7 +65,6 @@ public class TaskService : ITaskService
 
             Seed(
                 "task-4",
-                "垃圾回收",
                 TaskType.WasteCollection,
                 "ward_c",
                 "storage",
@@ -81,7 +77,6 @@ public class TaskService : ITaskService
 
     private static RobotTask Seed(
         string id,
-        string title,
         TaskType taskType,
         string source,
         string destination,
@@ -92,8 +87,6 @@ public class TaskService : ITaskService
         return new RobotTask
         {
             Id = id,
-            Title = title,
-
             TaskType = taskType,
             Source = source,
             Destination = destination,
@@ -103,18 +96,7 @@ public class TaskService : ITaskService
 
             Status = status,
             AssignedRobot = assignedRobot,
-
             CreatedAt = DateTime.UtcNow,
-
-            Start = status == RobotTaskStatus.Running
-                ? DateTime.Now
-                : null,
-
-            End = status == RobotTaskStatus.Completed
-                ? DateTime.Now
-                : null,
-
-            Confirmed = status == RobotTaskStatus.Completed
         };
     }
 
@@ -132,19 +114,6 @@ public class TaskService : ITaskService
 
     public async Task CreateTaskAsync(CreateTaskRequest request)
     {
-        DateTime? start = null;
-
-        if (!string.IsNullOrWhiteSpace(request.StartTime))
-        {
-            if (!TimeOnly.TryParse(request.StartTime, out var time))
-                throw new ArgumentException("時間格式不符");
-
-            start = DateTime.Today.Add(time.ToTimeSpan());
-
-            if (start < DateTime.Now)
-                throw new ArgumentException("開始時間不可早於現在");
-        }
-
         var task = new RobotTask
         {
             Id = Guid.NewGuid().ToString(),
@@ -160,18 +129,7 @@ public class TaskService : ITaskService
             Status = RobotTaskStatus.Pending,
 
             AssignedRobot = null,
-
             CreatedAt = DateTime.UtcNow,
-
-            Title = string.IsNullOrWhiteSpace(request.Title)
-                ? request.TaskType.ToString()
-                : request.Title,
-
-            Items = request.Items,
-
-            Start = start,
-
-            Note = request.Note
         };
 
         await SendTaskToRosBridgeAsync(task);
@@ -245,9 +203,7 @@ public class TaskService : ITaskService
                 new DateTimeOffset(
                     task.CreatedAt
                 ).ToUnixTimeMilliseconds()
-                / 1000.0,
-
-            note = task.Note
+                / 1000.0
         };
 
         var json = JsonSerializer.Serialize(payload);
@@ -373,54 +329,7 @@ public class TaskService : ITaskService
             return Task.FromResult(false);
 
         task.Status = status;
-
-        if (status == RobotTaskStatus.Running
-            && task.Start == null)
-        {
-            task.Start = DateTime.Now;
-        }
-
-        if (status is
-            RobotTaskStatus.Completed
-            or RobotTaskStatus.Failed
-            or RobotTaskStatus.Cancelled)
-        {
-            task.End = DateTime.Now;
-        }
-
         return Task.FromResult(true);
-    }
-
-    public Task<ConfirmTaskResult> ConfirmTaskAsync(string taskId)
-    {
-        if (!_store.TryGetValue(taskId, out var task))
-            return Task.FromResult(ConfirmTaskResult.NotFound);
-
-        if (task.Status is not (
-            RobotTaskStatus.Completed
-            or RobotTaskStatus.Failed
-            or RobotTaskStatus.Cancelled))
-        {
-            return Task.FromResult(
-                ConfirmTaskResult.WrongState
-            );
-        }
-
-        task.Confirmed = true;
-
-        return Task.FromResult(
-            ConfirmTaskResult.Success
-        );
-    }
-
-    public Task<bool?> GetConfirmAsync(string taskId)
-    {
-        if (!_store.TryGetValue(taskId, out var task))
-            return Task.FromResult<bool?>(null);
-
-        return Task.FromResult<bool?>(
-            task.Confirmed
-        );
     }
 
     public Task<Dictionary<string, RobotTask>>
