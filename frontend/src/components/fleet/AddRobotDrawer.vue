@@ -18,6 +18,7 @@ const form = reactive({
   name: `Robot ${suffix}`,
   id: `R${suffix}`,
   model: 'Hospital AMR',
+  floorId: null,
   manufacturer: '',
   serialNumber: '',
   thumbnailUrl: '/images/robot-thumbnail.png',
@@ -81,6 +82,7 @@ const submit = () => {
           <div class="thumbnail-preview"><img :src="form.thumbnailUrl" alt="robot.glb 產生的機器人縮圖"><span>來源：robot.glb</span></div>
           <label><span>機器人名稱 *</span><input v-model.trim="form.name" placeholder="Robot 04"></label>
           <label><span>Robot ID *</span><input v-model.trim="form.id" placeholder="R04"></label>
+          <label><span>所在樓層</span><select v-model="form.floorId"><option :value="null">未指定</option><option value="floor1">1F</option><option value="floor2">2F</option><option value="floor3">3F</option></select></label>
           <label><span>型號</span><input v-model.trim="form.model" placeholder="Hospital AMR"></label>
           <label><span>製造商</span><input v-model.trim="form.manufacturer" placeholder="未提供時顯示 —"></label>
           <label><span>序號</span><input v-model.trim="form.serialNumber" placeholder="未提供時顯示 —"></label>

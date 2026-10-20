@@ -46,7 +46,7 @@ watch(() => props.active, (active) => {
   if (!active) return
   clearTimeout(entranceTimer)
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  entranceTimer = window.setTimeout(animateAccuracy, reduced ? 0 : 3400)
+  entranceTimer = window.setTimeout(animateAccuracy, reduced ? 0 : 120)
 }, { immediate: true })
 watch(accuracy, () => { if (props.active) animateAccuracy() })
 onBeforeUnmount(() => {
@@ -56,12 +56,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="task-accuracy-card" aria-label="任務準確率">
+  <section class="task-accuracy-card" :class="{ 'is-active': active }" aria-label="任務準確率">
     <header><span>TASK ACCURACY</span><small>任務準確率</small></header>
     <template v-if="accuracy !== null">
       <div class="accuracy-summary"><strong>{{ shown.toFixed(1) }}%</strong><span>成功 {{ successfulCount }}<br>異常 {{ anomalyCount }}</span></div>
       <svg class="accuracy-chart" viewBox="0 0 220 84" role="img" :aria-label="`任務準確率 ${accuracy.toFixed(1)}%`">
-        <defs><linearGradient id="accuracy-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(180,201,130,.28)"/><stop offset="1" stop-color="rgba(180,201,130,.01)"/></linearGradient></defs>
+        <defs><linearGradient id="accuracy-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--theme-primary)" stop-opacity=".28"/><stop offset="1" stop-color="var(--theme-primary)" stop-opacity=".01"/></linearGradient></defs>
         <polygon class="accuracy-area" :points="areaPoints"/>
         <polyline class="accuracy-line" pathLength="1" :points="linePoints"/>
         <circle v-if="peak" class="accuracy-peak" :cx="peak.x" :cy="peak.y" r="3"/>

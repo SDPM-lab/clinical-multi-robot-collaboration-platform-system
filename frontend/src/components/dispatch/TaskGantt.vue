@@ -12,6 +12,7 @@ import {
 } from './taskTimeline.js'
 
 const props = defineProps({
+  dense: { type: Boolean, default: false },
   robots: { type: Array, required: true }, tasks: { type: Array, required: true }, date: { type: String, required: true },
 })
 const emit = defineEmits(['update:date', 'save-changes'])
@@ -31,8 +32,8 @@ let resizeObserver
 let initialScrollApplied = false
 
 const WORKDAY_DURATION = WORKDAY_END - WORKDAY_START
-const STAGE_HEIGHT = 210
-const BASELINE_Y = 105
+const STAGE_HEIGHT = props.dense ? 142 : 210
+const BASELINE_Y = props.dense ? 71 : 105
 const MIN_SCALE = 1
 const MAX_SCALE = 18
 const priorityLabels = Object.freeze({ low: '低', normal: '一般', high: '高' })
@@ -162,7 +163,8 @@ watch(() => props.tasks, () => { if (!isScheduleEditing.value) drafts.value = {}
 watch(() => props.date, () => centerOn(props.date === todayIso ? nowSeconds : 11 * 3600))
 onMounted(() => {
   resizeObserver = new ResizeObserver(async ([entry]) => {
-    viewportWidth.value = Math.max(entry.contentRect.width, 1)
+    if (entry.contentRect.width <= 0) return
+    viewportWidth.value = entry.contentRect.width
     if (!initialScrollApplied && viewport.value) { initialScrollApplied = true; await centerOn(nowVisible.value ? nowSeconds : 11 * 3600) }
   })
   if (viewport.value) { resizeObserver.observe(viewport.value); viewport.value.addEventListener('wheel', onTimelineWheel, { passive: false }) }
@@ -171,7 +173,7 @@ onBeforeUnmount(() => { resizeObserver?.disconnect(); viewport.value?.removeEven
 </script>
 
 <template>
-  <section class="timeline-panel" aria-label="機器人任務泡泡時間軸">
+  <section class="timeline-panel" :class="{dense}" :style="{'--stage-height':`${STAGE_HEIGHT}px`,'--baseline-y':`${BASELINE_Y}px`}" aria-label="機器人任務泡泡時間軸">
     <div class="timeline-toolbar">
       <div class="date-navigation"><button type="button" @click="requestDate(shiftIsoDate(date, -1))">〈 前一天</button><strong>{{ dateLabel }}</strong><button type="button" @click="requestDate(shiftIsoDate(date, 1))">後一天 〉</button></div>
       <div class="timeline-actions">
@@ -220,4 +222,7 @@ onBeforeUnmount(() => { resizeObserver?.disconnect(); viewport.value?.removeEven
 :deep(.task-bubble.has-warning){outline:2px solid #d94b55}:deep(.task-bubble.is-offline){filter:grayscale(1);opacity:.58}
 .timeline-warning{position:absolute;right:16px;bottom:8px;z-index:25;padding:6px 9px;color:#b23d47;font-size:11px;background:var(--popover-bg);border:1px solid rgba(217,75,85,.3);border-radius:8px;box-shadow:var(--control-shadow)}.task-detail-popover{position:absolute;z-index:30;right:16px;bottom:12px;display:grid;width:220px;gap:4px;padding:12px;color:var(--text-secondary);font-size:11.5px;background:var(--popover-bg);border:1px solid var(--panel-border);border-radius:11px;box-shadow:var(--dropdown-shadow)}.task-detail-popover strong{color:var(--text-primary)}.task-detail-popover button{position:absolute;top:5px;right:7px;color:var(--text-muted);background:transparent;border:0;cursor:pointer}.unsaved-dialog-backdrop{position:absolute;z-index:40;inset:0;display:grid;place-items:center;background:rgba(40,42,40,.16);backdrop-filter:blur(3px)}.unsaved-dialog{display:grid;gap:14px;padding:17px 18px;background:var(--panel-bg-strong);border:1px solid var(--panel-border);border-radius:13px;box-shadow:var(--dropdown-shadow)}.unsaved-dialog>div{display:flex;justify-content:flex-end;gap:8px}.unsaved-dialog button{padding:7px 10px;color:var(--text-primary);background:var(--icon-button-background);border:1px solid var(--panel-border);border-radius:8px;cursor:pointer}.discard-button{color:#b23d47!important}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 @media(max-width:1100px){.timeline-toolbar{grid-template-columns:1fr}.timeline-actions{justify-content:flex-start}.zoom-label{display:none}.timeline-legend{gap:8px}.timeline-legend .priority-key{display:none}}
+
+.dense .time-canvas{height:calc(var(--stage-height) + 32px)}.dense .bubble-stage{height:var(--stage-height)}.dense .timeline-baseline{top:var(--baseline-y)}.dense .timeline-toolbar{grid-template-columns:minmax(0,1fr) auto}.dense .date-navigation{gap:8px}.dense .date-navigation strong{min-width:180px;font-size:12px}.dense .zoom-label{font-size:9px}.dense .timeline-legend{min-width:0}
+@media(max-width:1100px){.dense{grid-template-rows:auto 27px minmax(0,1fr)}.dense .timeline-toolbar{display:flex;flex-wrap:wrap;gap:2px;padding-bottom:4px;min-height:54px}.dense .date-navigation{flex:1}.dense .date-navigation strong{min-width:0}.dense .timeline-actions{flex-wrap:wrap}.dense .time-viewport{overflow-y:auto}.dense .timeline-legend em{font-size:9px}}
 </style>

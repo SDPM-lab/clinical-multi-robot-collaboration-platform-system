@@ -20,18 +20,19 @@ it('translates visible overview interface copy',async()=>{
 it('translates visible robot interface copy in every inspector tab',async()=>{
  const wrapper=mount(RobotFleetView,{global:{stubs:{RobotViewport:true,ChargingRoutePlane:true}}})
  const dispose=await switchPage(wrapper)
- for(const tab of wrapper.findAll('.robot-inspector-tabs button')){await tab.trigger('click');await nextTick();await new Promise(resolve=>setTimeout(resolve,10));expect(untranslatedText(wrapper.element)).toEqual([])}
+ for(const tab of wrapper.findAll('.robot-accordion summary')){await tab.trigger('click');await nextTick();await new Promise(resolve=>setTimeout(resolve,10));expect(untranslatedText(wrapper.element)).toEqual([])}
  dispose();wrapper.unmount()
 })
 it('translates visible dispatch interface copy while preserving Robot and task IDs',async()=>{
  vi.stubGlobal('ResizeObserver',class{observe(){} disconnect(){}})
- const wrapper=mount(TaskDispatchView,{global:{stubs:{HospitalMiniMap:true}}})
+ const wrapper=mount(TaskDispatchView,{global:{stubs:{DispatchMapScene:true}}})
  const dispose=await switchPage(wrapper)
  expect(untranslatedText(wrapper.element)).toEqual([])
  expect(wrapper.text()).toContain('T001')
  expect(wrapper.text()).toContain('Robot 01')
- const taskOption=wrapper.get('.task-panel select option').element
- expect(taskOption.textContent).toBe('Medication delivery')
- expect(taskOption.value).toBe('藥品配送')
+ await wrapper.get('.task-type-trigger').trigger('click')
+ const taskOption=wrapper.get('.task-type-options [role="option"]')
+ expect(taskOption.text()).toBe('Medication delivery')
+ expect(taskOption.attributes('aria-selected')).toBe('true')
  dispose();wrapper.unmount()
 })

@@ -1,0 +1,67 @@
+{
+  "panel": {
+    "x": 22,
+    "y": 142,
+    "width": 298,
+    "height": 286,
+    "right": 320,
+    "bottom": 428
+  },
+  "floor": {
+    "x": 22,
+    "y": 96,
+    "width": 80,
+    "height": 34,
+    "right": 102,
+    "bottom": 130
+  },
+  "expand": {
+    "x": 283,
+    "y": 155,
+    "width": 24,
+    "height": 24,
+    "right": 307,
+    "bottom": 179
+  },
+  "background": "linear-gradient(rgba(251, 226, 81, 0.08) 0%, rgba(251, 226, 81, 0.22) 48%, rgba(251, 226, 81, 0.38) 100%)",
+  "blur": "blur(2px)",
+  "states": [
+    "機器人連線狀態未取得",
+    "網路狀態未取得"
+  ],
+  "legends": 3,
+  "overflow": false,
+  "floors": [
+    "floor-realtime",
+    "floor-realtime",
+    "floor-realtime"
+  ],
+  "fullscreen": true,
+  "labels": [
+    {
+      "text": "T001 · Robot 01",
+      "decoration": "none"
+    },
+    {
+      "text": "T002 · Robot 02",
+      "decoration": "none"
+    },
+    {
+      "text": "T003 · Robot 03",
+      "decoration": "none"
+    },
+    {
+      "text": "T002 · Robot 02",
+      "decoration": "none"
+    },
+    {
+      "text": "T001 · Robot 01",
+      "decoration": "none"
+    },
+    {
+      "text": "T003 · Robot 03",
+      "decoration": "none"
+    }
+  ],
+  "errors": []
+}

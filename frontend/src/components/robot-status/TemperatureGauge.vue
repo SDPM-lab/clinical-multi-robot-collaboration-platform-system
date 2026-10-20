@@ -1,41 +1,34 @@
 <script setup>
-import { computed, onBeforeUnmount, watch } from 'vue'
-import { TriangleAlert } from '@lucide/vue'
+import { computed, watch } from 'vue'
+import { Thermometer } from '@lucide/vue'
 import { useCountUp } from '@/composables/useCountUp.js'
 import { thermalState } from '@/config/robotHmi.js'
+import { t } from '@/i18n/index.js'
 
 const props = defineProps({ value: { type: Number, default: null }, active: Boolean })
-const { displayed, restart } = useCountUp(() => props.value, { duration: 2200 })
+const { displayed, restart } = useCountUp(() => props.value, { duration: 900 })
 const state = computed(() => thermalState(props.value))
-const progress = computed(() => Math.max(0, Math.min(1, displayed.value / 100)))
-const endpoint = computed(() => {
-  const angle = (150 + progress.value * 240) * Math.PI / 180
-  return { x: 100 + Math.cos(angle) * 72, y: 100 + Math.sin(angle) * 72 }
+const progress = computed(() => Number.isFinite(props.value) ? Math.max(0, Math.min(100, displayed.value)) : 0)
+const indicator = computed(() => {
+  const angle = (135 + progress.value * 2.7) * Math.PI / 180
+  return { x: 80 + 68 * Math.cos(angle), y: 80 + 68 * Math.sin(angle) }
 })
-let entranceTimer
-
-watch(() => props.active, (active) => {
-  if (!active) return
-  clearTimeout(entranceTimer)
-  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  entranceTimer = window.setTimeout(restart, reduced ? 0 : 3300)
-}, { immediate: true })
-onBeforeUnmount(() => clearTimeout(entranceTimer))
+const statusText = computed(() => t(state.value === 'critical' ? 'robotStatus.temperatureCritical' : state.value === 'warning' ? 'robotStatus.temperatureWarning' : state.value === 'unknown' ? 'robotStatus.temperatureUnknown' : 'robotStatus.temperatureNormal'))
+watch(() => props.active, active => { if (active) restart() }, { immediate: true })
 </script>
-
 <template>
-  <section class="hmi-gauge thermal" :class="`is-${state}`" aria-label="溫度儀表">
-    <div class="gauge-heading"><span>THERMAL</span><small>MOTOR TEMPERATURE</small></div>
-    <div class="thermal-arc">
-      <svg viewBox="0 0 200 178" aria-hidden="true">
-        <defs><linearGradient id="thermal-gradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#72A89C"/><stop offset=".5" stop-color="#A8B87A"/><stop offset=".72" stop-color="#D1A45F"/><stop offset="1" stop-color="#B9635D"/></linearGradient></defs>
-        <circle class="thermal-arc-track" cx="100" cy="100" r="72" pathLength="100"/>
-        <circle class="thermal-arc-value" cx="100" cy="100" r="72" pathLength="100" :stroke-dasharray="`${progress * 66.67} 100`"/>
-        <circle v-if="value !== null" class="thermal-endpoint" :cx="endpoint.x" :cy="endpoint.y" r="3.5"/>
-      </svg>
-      <div class="thermal-reading"><strong>{{ value == null ? '待接入' : displayed }}<em v-if="value !== null">°C</em></strong><span>{{ state.toUpperCase() }}</span></div>
+  <section class="hmi-gauge thermal" :class="`is-${state}`" :aria-label="t('robotStatus.temperature')">
+    <div class="gauge-heading"><span>{{ t('robotStatus.temperature') }}</span><Thermometer :size="18" aria-hidden="true" /></div>
+    <div class="thermal-visual" role="img" :aria-label="state === 'unknown' ? statusText : `${t('robotStatus.temperatureValue', { value })} · ${statusText}`">
+      <div class="thermal-dial">
+        <svg class="thermal-dial__scale" viewBox="0 0 160 160" aria-hidden="true">
+          <defs><linearGradient id="thermal-scale-gradient"><stop offset="0%" stop-color="#A8DDEB"/><stop offset="38%" stop-color="#EAB7CF"/><stop offset="68%" stop-color="#ED7C84"/><stop offset="100%" stop-color="#F03B38"/></linearGradient></defs>
+          <path class="thermal-dial__track" d="M 32 128 A 68 68 0 1 1 128 128"/>
+          <path class="thermal-dial__arc" d="M 32 128 A 68 68 0 1 1 128 128"/>
+          <circle v-if="state !== 'unknown'" class="thermal-dial__indicator" :cx="indicator.x" :cy="indicator.y" r="5"/>
+        </svg>
+        <strong class="thermal-reading">{{ state === 'unknown' ? '—' : displayed }}<em v-if="state !== 'unknown'">°C</em></strong>
+      </div>
     </div>
-    <p v-if="state === 'critical'" role="alert"><TriangleAlert :size="15"/>馬達溫度過高</p>
-    <p v-else>{{ state === 'warning' ? '溫度偏高，請留意' : state === 'unknown' ? '尚無溫度資料' : '溫度在正常範圍' }}</p>
   </section>
 </template>

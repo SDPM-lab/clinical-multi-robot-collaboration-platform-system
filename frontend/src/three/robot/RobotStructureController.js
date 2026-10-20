@@ -13,18 +13,36 @@ export class RobotStructureController {
     const center = this.wholeBox.getCenter(new THREE.Vector3())
     const dimensions = this.wholeBox.getSize(new THREE.Vector3())
     const span = Math.max(dimensions.x, dimensions.y, dimensions.z)
+    const parts = []
     root.traverse(mesh => {
       if (!mesh.isMesh) return
+      parts.push({ mesh, center: new THREE.Box3().setFromObject(mesh).getCenter(new THREE.Vector3()) })
+    })
+    // Origins can be shared by unrelated GLB meshes. Use geometry bounds in world space.
+    const lower = parts.filter(part => part.center.y < center.y - span * .25)
+      .sort((a, b) => a.center.x - b.center.x || a.center.z - b.center.z)
+    parts.sort((a, b) => b.center.y - a.center.y).forEach(({ mesh, center: partCenter }, index) => {
       const id = componentIdForMesh(mesh.name)
-      mesh.userData.originalTransform = {position:mesh.position.clone(), quaternion:mesh.quaternion.clone(), scale:mesh.scale.clone()}
+      mesh.userData.originalTransform = { position: mesh.position.clone(), quaternion: mesh.quaternion.clone(), scale: mesh.scale.clone() }
       const original = mesh.position.clone()
-      const direction = new THREE.Box3().setFromObject(mesh).getCenter(new THREE.Vector3()).sub(center)
+      const direction = partCenter.clone().sub(center)
       if (robotExplodedOffsets[mesh.name]) direction.set(...robotExplodedOffsets[mesh.name])
-      direction.normalize()
-      const offset = direction.multiplyScalar(span * (id === 'shell' ? .18 : .12))
+      if (direction.lengthSq() < 1e-10) direction.set(index % 2 ? 1 : -1, .25, index % 3 ? .4 : -.4)
+      const offset = direction.normalize().multiplyScalar(span * (id === 'shell' ? .48 : .32))
+      const rank = lower.findIndex(part => part.mesh === mesh)
+      if (rank >= 0) {
+        // Small bottom parts need distinct X/Y/Z lanes, not parallel downward rays.
+        const lane = rank - (lower.length - 1) / 2
+        offset.x = span * lane * .17
+        if (Math.abs(partCenter.x - center.x) > span * .06) {
+          offset.x = Math.sign(partCenter.x - center.x) * Math.max(Math.abs(offset.x), span * .2)
+        }
+        offset.y = -span * (.23 + rank * .075)
+        offset.z = span * (rank % 2 ? .23 : -.23)
+      }
       const exploded = mesh.parent.worldToLocal(mesh.parent.localToWorld(original.clone()).add(offset))
       this.meshes.push(mesh)
-      this.records.push({mesh,id,original,exploded,offset})
+      this.records.push({ mesh, id, original, exploded, offset, delay: index * 65 })
     })
     this.applyExplosion(1)
     this.explodedBox = new THREE.Box3().setFromObject(root)
@@ -66,7 +84,7 @@ export class RobotStructureController {
     this.root.updateMatrixWorld(true)
     const box = new THREE.Box3()
     this.records.filter(r => r.id === id).forEach(r => box.expandByObject(r.mesh))
-    this.focusBox(box)
+    // Selection highlights the part without changing the camera or compressing the exploded view.
     this.onSelect(id)
   }
   applyExplosion(amount) {
@@ -74,6 +92,18 @@ export class RobotStructureController {
       r.mesh.position.lerpVectors(r.original,r.exploded,amount)
       r.mesh.quaternion.copy(r.mesh.userData.originalTransform.quaternion)
       r.mesh.scale.copy(r.mesh.userData.originalTransform.scale)
+    })
+    this.root.updateMatrixWorld(true)
+  }
+  applyEntrance(elapsed) {
+    const ease = value => 1 - (1 - THREE.MathUtils.clamp(value, 0, 1)) ** 3
+    this.records.forEach(record => {
+      const expand = ease((elapsed - 250 - record.delay) / 700)
+      const assemble = ease((elapsed - 1900 - record.delay) / 1100)
+      const amount = this.reducedMotion() || elapsed >= 4100 ? 0 : expand * (1 - assemble)
+      record.mesh.position.lerpVectors(record.original, record.exploded, amount)
+      record.mesh.quaternion.copy(record.mesh.userData.originalTransform.quaternion)
+      record.mesh.scale.copy(record.mesh.userData.originalTransform.scale)
     })
     this.root.updateMatrixWorld(true)
   }
@@ -161,9 +191,14 @@ export class RobotStructureController {
       if(t===1)this.composition=null
     }
     if (this.explodeTween) {
-      const t = this.reducedMotion()?1:Math.max(0,Math.min(1,(time-this.explodeTween.start)/850))
-      this.explodeTween.entries.forEach(r => r.mesh.position.lerpVectors(r.from,r.to,ease(t)))
-      if (t===1) {
+      const elapsed = time - this.explodeTween.start
+      let complete = true
+      this.explodeTween.entries.forEach(r => {
+        const t = this.reducedMotion() ? 1 : THREE.MathUtils.clamp((elapsed - r.delay) / 650, 0, 1)
+        r.mesh.position.lerpVectors(r.from, r.to, ease(t))
+        if (t < 1) complete = false
+      })
+      if (complete) {
         this.explodeTween.entries.forEach(r=>r.mesh.position.copy(r.to))
         this.explodeTween = null
         this.focusBox()
@@ -179,15 +214,28 @@ export class RobotStructureController {
   }
   styleMaterial(mesh, material, original) {
     const id = componentIdForMesh(mesh.name)
-    material.transparent = original.transparent; material.opacity = original.opacity; material.depthWrite = original.depthWrite
-    const faded = this.mode === 'xray' ? id === 'shell' : this.selected && id !== this.selected
-    if (faded) {
-      if (this.mode === 'xray') {
-        material.transparent = true; material.opacity = .27; material.depthWrite = false
-      } else {
-        // Preserve the original texture and color. Context meshes only lose a little saturation.
-        material.color.lerp(new THREE.Color('#aab2ae'), .1)
-      }
+    material.transparent = original.transparent
+    material.opacity = original.opacity
+    material.depthWrite = original.depthWrite
+    if (this.mode === 'xray' && id === 'shell') {
+      material.transparent = true
+      material.opacity = .27
+      material.depthWrite = false
+      return
+    }
+    const palette = ['#ec9d6f', '#74b9ad', '#ddbd72', '#8baacb', '#b1a0c6', '#79a8bf', '#cba784', '#a4bb83']
+    const index = this.records.findIndex((record) => record.mesh === mesh)
+    if (this.mode === 'exploded' && index >= 0) {
+      material.color.lerp(new THREE.Color(palette[index % palette.length]), .4)
+    }
+    if (this.selected === id) {
+      material.color.lerp(new THREE.Color('#ed8753'), .58)
+      material.emissive?.set('#a6401f')
+      material.emissiveIntensity = Math.max(material.emissiveIntensity || 0, .32)
+    } else if (this.hovered === id) {
+      material.color.lerp(new THREE.Color('#64b7a5'), .36)
+    } else if (this.selected) {
+      material.color.lerp(new THREE.Color('#aab2ae'), .16)
     }
   }
   dispose() {

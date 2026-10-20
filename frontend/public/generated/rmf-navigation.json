@@ -55,7 +55,9 @@
         "v45",
         "v46",
         "v47",
-        "v48"
+        "v48",
+        "v49",
+        "v50"
       ],
       "laneIds": [
         "l0",
@@ -157,7 +159,11 @@
         "l96",
         "l97",
         "l98",
-        "l99"
+        "l99",
+        "l100",
+        "l101",
+        "l102",
+        "l103"
       ]
     }
   ],
@@ -216,10 +222,10 @@
       "level": "L1",
       "x": 30.3092568897228,
       "y": -15.112453265904858,
-      "name": "storage_junction",
+      "name": "waste_return_junction",
       "isCharger": false,
       "params": {
-        "name": "storage_junction"
+        "name": "waste_return_junction"
       }
     },
     {
@@ -348,10 +354,10 @@
       "level": "L1",
       "x": 8.951629691103937,
       "y": -14.842637593225325,
-      "name": "ward_d_junction",
+      "name": "consult_2_junction",
       "isCharger": false,
       "params": {
-        "name": "ward_d_junction"
+        "name": "consult_2_junction"
       }
     },
     {
@@ -384,10 +390,10 @@
       "level": "L1",
       "x": 6.5875159249811945,
       "y": -14.789956783972599,
-      "name": "ward_d_1",
+      "name": "consult_2_1",
       "isCharger": false,
       "params": {
-        "name": "ward_d_1"
+        "name": "consult_2_1"
       }
     },
     {
@@ -396,10 +402,10 @@
       "level": "L1",
       "x": 6.438549695655915,
       "y": -11.044928570040774,
-      "name": "ward_c_1",
+      "name": "consult_3_1",
       "isCharger": false,
       "params": {
-        "name": "ward_c_1"
+        "name": "consult_3_1"
       }
     },
     {
@@ -408,10 +414,10 @@
       "level": "L1",
       "x": 8.97722068485052,
       "y": -11.072268189173512,
-      "name": "ward_c_junction",
+      "name": "consult_3_junction",
       "isCharger": false,
       "params": {
-        "name": "ward_c_junction"
+        "name": "consult_3_junction"
       }
     },
     {
@@ -505,9 +511,9 @@
       "x": 26.98159502391176,
       "y": -8.367505544252712,
       "name": "charging_station_1",
-      "isCharger": true,
+      "isCharger": false,
       "params": {
-        "is_charger": true,
+        "is_charger": false,
         "name": "charging_station_1"
       }
     },
@@ -553,10 +559,10 @@
       "level": "L1",
       "x": 26.98159502391176,
       "y": -15.183647299484019,
-      "name": "storage_1",
+      "name": "waste_return_1",
       "isCharger": false,
       "params": {
-        "name": "storage_1"
+        "name": "waste_return_1"
       }
     },
     {
@@ -589,63 +595,88 @@
       "level": "L1",
       "x": 20.120988223146803,
       "y": -14.927515314350108,
-      "name": "recycling_juction",
+      "name": "clothes_return_junction",
       "isCharger": false,
       "params": {
-        "name": "recycling_juction"
+        "name": "clothes_return_junction"
       }
     },
     {
       "id": "v36",
       "sourceVertexIndex": 36,
       "level": "L1",
-      "x": 23.663758767413395,
-      "y": -14.929263939736261,
-      "name": "recycling_juction_1",
+      "x": 23.481291096166068,
+      "y": -14.9728963065146,
+      "name": "clothes_return_1",
       "isCharger": false,
       "params": {
-        "name": "recycling_juction_1"
+        "name": "clothes_return_1"
       }
     },
     {
       "id": "v37",
       "sourceVertexIndex": 37,
       "level": "L1",
-      "x": 23.674444811439898,
-      "y": -12.783117715795637,
-      "name": "recycling_juction_2",
+      "x": 20.182336546657528,
+      "y": -10.813610411815157,
+      "name": "pantry_junction",
       "isCharger": false,
       "params": {
-        "name": "recycling_juction_2"
+        "name": "pantry_junction"
       }
     },
     {
       "id": "v38",
       "sourceVertexIndex": 38,
       "level": "L1",
-      "x": 26.96474715709595,
-      "y": -10.550428413219606,
-      "name": "charging_station_2",
+      "x": 23.176225356178335,
+      "y": -10.813610411815157,
+      "name": "pantry",
       "isCharger": false,
       "params": {
-        "name": "charging_station_2"
+        "name": "pantry"
       }
     },
     {
       "id": "v39",
       "sourceVertexIndex": 39,
       "level": "L1",
-      "x": 27.015096465833803,
-      "y": -13.538551638573011,
-      "name": "storage_2",
+      "x": 23.52880929713586,
+      "y": -12.857670220354555,
+      "name": "clothes_return_2",
       "isCharger": false,
       "params": {
-        "name": "storage_2"
+        "name": "clothes_return_2"
       }
     },
     {
       "id": "v40",
       "sourceVertexIndex": 40,
+      "level": "L1",
+      "x": 26.96474715709595,
+      "y": -10.550428413219606,
+      "name": "charging_station_2",
+      "isCharger": true,
+      "params": {
+        "is_charger": true,
+        "name": "charging_station_2"
+      }
+    },
+    {
+      "id": "v41",
+      "sourceVertexIndex": 41,
+      "level": "L1",
+      "x": 27.015096465833803,
+      "y": -13.538551638573011,
+      "name": "waste_return_2",
+      "isCharger": false,
+      "params": {
+        "name": "waste_return_2"
+      }
+    },
+    {
+      "id": "v42",
+      "sourceVertexIndex": 42,
       "level": "L1",
       "x": 33.96993474574154,
       "y": -6.082246456257997,
@@ -656,8 +687,8 @@
       }
     },
     {
-      "id": "v41",
-      "sourceVertexIndex": 41,
+      "id": "v43",
+      "sourceVertexIndex": 43,
       "level": "L1",
       "x": 33.58004679654605,
       "y": -12.251813157989691,
@@ -668,8 +699,8 @@
       }
     },
     {
-      "id": "v42",
-      "sourceVertexIndex": 42,
+      "id": "v44",
+      "sourceVertexIndex": 44,
       "level": "L1",
       "x": 6.467082821004599,
       "y": -1.6319115806185693,
@@ -680,8 +711,8 @@
       }
     },
     {
-      "id": "v43",
-      "sourceVertexIndex": 43,
+      "id": "v45",
+      "sourceVertexIndex": 45,
       "level": "L1",
       "x": 6.52925616806788,
       "y": -5.735602290421697,
@@ -692,32 +723,32 @@
       }
     },
     {
-      "id": "v44",
-      "sourceVertexIndex": 44,
+      "id": "v46",
+      "sourceVertexIndex": 46,
       "level": "L1",
       "x": 6.421479781172023,
       "y": -9.362806460476904,
-      "name": "ward_c_2",
+      "name": "consult_3_2",
       "isCharger": false,
       "params": {
-        "name": "ward_c_2"
+        "name": "consult_3_2"
       }
     },
     {
-      "id": "v45",
-      "sourceVertexIndex": 45,
+      "id": "v47",
+      "sourceVertexIndex": 47,
       "level": "L1",
       "x": 6.576663345203631,
       "y": -13.2597152793776,
-      "name": "ward_d_2",
+      "name": "consult_2_2",
       "isCharger": false,
       "params": {
-        "name": "ward_d_2"
+        "name": "consult_2_2"
       }
     },
     {
-      "id": "v46",
-      "sourceVertexIndex": 46,
+      "id": "v48",
+      "sourceVertexIndex": 48,
       "level": "L1",
       "x": 6.041112125745594,
       "y": -17.118154339782894,
@@ -728,8 +759,8 @@
       }
     },
     {
-      "id": "v47",
-      "sourceVertexIndex": 47,
+      "id": "v49",
+      "sourceVertexIndex": 49,
       "level": "L1",
       "x": 8.976165958427126,
       "y": -11.61572985680701,
@@ -740,8 +771,8 @@
       }
     },
     {
-      "id": "v48",
-      "sourceVertexIndex": 48,
+      "id": "v50",
+      "sourceVertexIndex": 50,
       "level": "L1",
       "x": 13.432940216440965,
       "y": -11.61006764127089,
@@ -982,9 +1013,9 @@
       "level": "L1",
       "from": "v17",
       "to": "v16",
-      "doorName": "consult_a_door",
+      "doorName": "consult_1_door",
       "params": {
-        "door_name": "consult_a_door"
+        "door_name": "consult_1_door"
       }
     },
     {
@@ -992,9 +1023,9 @@
       "level": "L1",
       "from": "v16",
       "to": "v17",
-      "doorName": "consult_a_door",
+      "doorName": "consult_1_door",
       "params": {
-        "door_name": "consult_a_door"
+        "door_name": "consult_1_door"
       }
     },
     {
@@ -1002,9 +1033,9 @@
       "level": "L1",
       "from": "v18",
       "to": "v15",
-      "doorName": "ward_d_door",
+      "doorName": "consult_2_door",
       "params": {
-        "door_name": "ward_d_door"
+        "door_name": "consult_2_door"
       }
     },
     {
@@ -1012,9 +1043,9 @@
       "level": "L1",
       "from": "v15",
       "to": "v18",
-      "doorName": "ward_d_door",
+      "doorName": "consult_2_door",
       "params": {
-        "door_name": "ward_d_door"
+        "door_name": "consult_2_door"
       }
     },
     {
@@ -1250,9 +1281,9 @@
       "level": "L1",
       "from": "v32",
       "to": "v4",
-      "doorName": "storage_door",
+      "doorName": "waste_return_door",
       "params": {
-        "door_name": "storage_door"
+        "door_name": "waste_return_door"
       }
     },
     {
@@ -1260,9 +1291,9 @@
       "level": "L1",
       "from": "v4",
       "to": "v32",
-      "doorName": "storage_door",
+      "doorName": "waste_return_door",
       "params": {
-        "door_name": "storage_door"
+        "door_name": "waste_return_door"
       }
     },
     {
@@ -1318,9 +1349,9 @@
       "level": "L1",
       "from": "v35",
       "to": "v36",
-      "doorName": "recycling_room",
+      "doorName": "clothes_return_door",
       "params": {
-        "door_name": "recycling_room"
+        "door_name": "clothes_return_door"
       }
     },
     {
@@ -1328,23 +1359,23 @@
       "level": "L1",
       "from": "v36",
       "to": "v35",
-      "doorName": "recycling_room",
+      "doorName": "clothes_return_door",
       "params": {
-        "door_name": "recycling_room"
+        "door_name": "clothes_return_door"
       }
     },
     {
       "id": "l66",
       "level": "L1",
       "from": "v10",
-      "to": "v35",
+      "to": "v37",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l67",
       "level": "L1",
-      "from": "v35",
+      "from": "v37",
       "to": "v10",
       "doorName": null,
       "params": {}
@@ -1352,13 +1383,49 @@
     {
       "id": "l68",
       "level": "L1",
+      "from": "v37",
+      "to": "v35",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l69",
+      "level": "L1",
+      "from": "v35",
+      "to": "v37",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l70",
+      "level": "L1",
+      "from": "v37",
+      "to": "v38",
+      "doorName": "Pantry_room",
+      "params": {
+        "door_name": "Pantry_room"
+      }
+    },
+    {
+      "id": "l71",
+      "level": "L1",
+      "from": "v38",
+      "to": "v37",
+      "doorName": "Pantry_room",
+      "params": {
+        "door_name": "Pantry_room"
+      }
+    },
+    {
+      "id": "l72",
+      "level": "L1",
       "from": "v35",
       "to": "v1",
       "doorName": null,
       "params": {}
     },
     {
-      "id": "l69",
+      "id": "l73",
       "level": "L1",
       "from": "v1",
       "to": "v35",
@@ -1366,41 +1433,9 @@
       "params": {}
     },
     {
-      "id": "l70",
-      "level": "L1",
-      "from": "v36",
-      "to": "v37",
-      "doorName": null,
-      "params": {}
-    },
-    {
-      "id": "l71",
-      "level": "L1",
-      "from": "v37",
-      "to": "v36",
-      "doorName": null,
-      "params": {}
-    },
-    {
-      "id": "l72",
-      "level": "L1",
-      "from": "v28",
-      "to": "v38",
-      "doorName": null,
-      "params": {}
-    },
-    {
-      "id": "l73",
-      "level": "L1",
-      "from": "v38",
-      "to": "v28",
-      "doorName": null,
-      "params": {}
-    },
-    {
       "id": "l74",
       "level": "L1",
-      "from": "v32",
+      "from": "v36",
       "to": "v39",
       "doorName": null,
       "params": {}
@@ -1409,14 +1444,14 @@
       "id": "l75",
       "level": "L1",
       "from": "v39",
-      "to": "v32",
+      "to": "v36",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l76",
       "level": "L1",
-      "from": "v29",
+      "from": "v28",
       "to": "v40",
       "doorName": null,
       "params": {}
@@ -1425,14 +1460,14 @@
       "id": "l77",
       "level": "L1",
       "from": "v40",
-      "to": "v29",
+      "to": "v28",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l78",
       "level": "L1",
-      "from": "v30",
+      "from": "v32",
       "to": "v41",
       "doorName": null,
       "params": {}
@@ -1441,14 +1476,14 @@
       "id": "l79",
       "level": "L1",
       "from": "v41",
-      "to": "v30",
+      "to": "v32",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l80",
       "level": "L1",
-      "from": "v22",
+      "from": "v29",
       "to": "v42",
       "doorName": null,
       "params": {}
@@ -1457,14 +1492,14 @@
       "id": "l81",
       "level": "L1",
       "from": "v42",
-      "to": "v22",
+      "to": "v29",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l82",
       "level": "L1",
-      "from": "v21",
+      "from": "v30",
       "to": "v43",
       "doorName": null,
       "params": {}
@@ -1473,14 +1508,14 @@
       "id": "l83",
       "level": "L1",
       "from": "v43",
-      "to": "v21",
+      "to": "v30",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l84",
       "level": "L1",
-      "from": "v19",
+      "from": "v22",
       "to": "v44",
       "doorName": null,
       "params": {}
@@ -1489,14 +1524,14 @@
       "id": "l85",
       "level": "L1",
       "from": "v44",
-      "to": "v19",
+      "to": "v22",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l86",
       "level": "L1",
-      "from": "v18",
+      "from": "v21",
       "to": "v45",
       "doorName": null,
       "params": {}
@@ -1505,14 +1540,14 @@
       "id": "l87",
       "level": "L1",
       "from": "v45",
-      "to": "v18",
+      "to": "v21",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l88",
       "level": "L1",
-      "from": "v17",
+      "from": "v19",
       "to": "v46",
       "doorName": null,
       "params": {}
@@ -1521,12 +1556,44 @@
       "id": "l89",
       "level": "L1",
       "from": "v46",
-      "to": "v17",
+      "to": "v19",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l90",
+      "level": "L1",
+      "from": "v18",
+      "to": "v47",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l91",
+      "level": "L1",
+      "from": "v47",
+      "to": "v18",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l92",
+      "level": "L1",
+      "from": "v17",
+      "to": "v48",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l93",
+      "level": "L1",
+      "from": "v48",
+      "to": "v17",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l94",
       "level": "L1",
       "from": "v10",
       "to": "v9",
@@ -1534,7 +1601,7 @@
       "params": {}
     },
     {
-      "id": "l91",
+      "id": "l95",
       "level": "L1",
       "from": "v9",
       "to": "v10",
@@ -1542,7 +1609,7 @@
       "params": {}
     },
     {
-      "id": "l92",
+      "id": "l96",
       "level": "L1",
       "from": "v14",
       "to": "v20",
@@ -1550,7 +1617,7 @@
       "params": {}
     },
     {
-      "id": "l93",
+      "id": "l97",
       "level": "L1",
       "from": "v20",
       "to": "v14",
@@ -1558,50 +1625,50 @@
       "params": {}
     },
     {
-      "id": "l94",
-      "level": "L1",
-      "from": "v20",
-      "to": "v47",
-      "doorName": null,
-      "params": {}
-    },
-    {
-      "id": "l95",
-      "level": "L1",
-      "from": "v47",
-      "to": "v20",
-      "doorName": null,
-      "params": {}
-    },
-    {
-      "id": "l96",
-      "level": "L1",
-      "from": "v47",
-      "to": "v15",
-      "doorName": null,
-      "params": {}
-    },
-    {
-      "id": "l97",
-      "level": "L1",
-      "from": "v15",
-      "to": "v47",
-      "doorName": null,
-      "params": {}
-    },
-    {
       "id": "l98",
       "level": "L1",
-      "from": "v47",
-      "to": "v48",
+      "from": "v20",
+      "to": "v49",
       "doorName": null,
       "params": {}
     },
     {
       "id": "l99",
       "level": "L1",
-      "from": "v48",
-      "to": "v47",
+      "from": "v49",
+      "to": "v20",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l100",
+      "level": "L1",
+      "from": "v49",
+      "to": "v15",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l101",
+      "level": "L1",
+      "from": "v15",
+      "to": "v49",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l102",
+      "level": "L1",
+      "from": "v49",
+      "to": "v50",
+      "doorName": null,
+      "params": {}
+    },
+    {
+      "id": "l103",
+      "level": "L1",
+      "from": "v50",
+      "to": "v49",
       "doorName": null,
       "params": {}
     }
@@ -1635,7 +1702,7 @@
         "neighborVertexId": "v3"
       },
       {
-        "laneId": "l69",
+        "laneId": "l73",
         "neighborVertexId": "v35"
       }
     ],
@@ -1739,7 +1806,7 @@
         "neighborVertexId": "v27"
       },
       {
-        "laneId": "l91",
+        "laneId": "l95",
         "neighborVertexId": "v10"
       }
     ],
@@ -1750,10 +1817,10 @@
       },
       {
         "laneId": "l66",
-        "neighborVertexId": "v35"
+        "neighborVertexId": "v37"
       },
       {
-        "laneId": "l90",
+        "laneId": "l94",
         "neighborVertexId": "v9"
       }
     ],
@@ -1809,7 +1876,7 @@
         "neighborVertexId": "v21"
       },
       {
-        "laneId": "l92",
+        "laneId": "l96",
         "neighborVertexId": "v20"
       }
     ],
@@ -1823,8 +1890,8 @@
         "neighborVertexId": "v18"
       },
       {
-        "laneId": "l97",
-        "neighborVertexId": "v47"
+        "laneId": "l101",
+        "neighborVertexId": "v49"
       }
     ],
     "v16": [
@@ -1843,8 +1910,8 @@
         "neighborVertexId": "v16"
       },
       {
-        "laneId": "l88",
-        "neighborVertexId": "v46"
+        "laneId": "l92",
+        "neighborVertexId": "v48"
       }
     ],
     "v18": [
@@ -1853,8 +1920,8 @@
         "neighborVertexId": "v15"
       },
       {
-        "laneId": "l86",
-        "neighborVertexId": "v45"
+        "laneId": "l90",
+        "neighborVertexId": "v47"
       }
     ],
     "v19": [
@@ -1863,8 +1930,8 @@
         "neighborVertexId": "v20"
       },
       {
-        "laneId": "l84",
-        "neighborVertexId": "v44"
+        "laneId": "l88",
+        "neighborVertexId": "v46"
       }
     ],
     "v20": [
@@ -1873,12 +1940,12 @@
         "neighborVertexId": "v19"
       },
       {
-        "laneId": "l93",
+        "laneId": "l97",
         "neighborVertexId": "v14"
       },
       {
-        "laneId": "l94",
-        "neighborVertexId": "v47"
+        "laneId": "l98",
+        "neighborVertexId": "v49"
       }
     ],
     "v21": [
@@ -1887,8 +1954,8 @@
         "neighborVertexId": "v14"
       },
       {
-        "laneId": "l82",
-        "neighborVertexId": "v43"
+        "laneId": "l86",
+        "neighborVertexId": "v45"
       }
     ],
     "v22": [
@@ -1897,8 +1964,8 @@
         "neighborVertexId": "v23"
       },
       {
-        "laneId": "l80",
-        "neighborVertexId": "v42"
+        "laneId": "l84",
+        "neighborVertexId": "v44"
       }
     ],
     "v23": [
@@ -1945,8 +2012,8 @@
         "neighborVertexId": "v7"
       },
       {
-        "laneId": "l72",
-        "neighborVertexId": "v38"
+        "laneId": "l76",
+        "neighborVertexId": "v40"
       }
     ],
     "v29": [
@@ -1955,8 +2022,8 @@
         "neighborVertexId": "v8"
       },
       {
-        "laneId": "l76",
-        "neighborVertexId": "v40"
+        "laneId": "l80",
+        "neighborVertexId": "v42"
       }
     ],
     "v30": [
@@ -1965,8 +2032,8 @@
         "neighborVertexId": "v6"
       },
       {
-        "laneId": "l78",
-        "neighborVertexId": "v41"
+        "laneId": "l82",
+        "neighborVertexId": "v43"
       }
     ],
     "v31": [
@@ -1981,8 +2048,8 @@
         "neighborVertexId": "v4"
       },
       {
-        "laneId": "l74",
-        "neighborVertexId": "v39"
+        "laneId": "l78",
+        "neighborVertexId": "v41"
       }
     ],
     "v33": [
@@ -2007,11 +2074,11 @@
         "neighborVertexId": "v36"
       },
       {
-        "laneId": "l67",
-        "neighborVertexId": "v10"
+        "laneId": "l69",
+        "neighborVertexId": "v37"
       },
       {
-        "laneId": "l68",
+        "laneId": "l72",
         "neighborVertexId": "v1"
       }
     ],
@@ -2021,88 +2088,108 @@
         "neighborVertexId": "v35"
       },
       {
-        "laneId": "l70",
-        "neighborVertexId": "v37"
+        "laneId": "l74",
+        "neighborVertexId": "v39"
       }
     ],
     "v37": [
       {
-        "laneId": "l71",
-        "neighborVertexId": "v36"
+        "laneId": "l67",
+        "neighborVertexId": "v10"
+      },
+      {
+        "laneId": "l68",
+        "neighborVertexId": "v35"
+      },
+      {
+        "laneId": "l70",
+        "neighborVertexId": "v38"
       }
     ],
     "v38": [
       {
-        "laneId": "l73",
-        "neighborVertexId": "v28"
+        "laneId": "l71",
+        "neighborVertexId": "v37"
       }
     ],
     "v39": [
       {
         "laneId": "l75",
-        "neighborVertexId": "v32"
+        "neighborVertexId": "v36"
       }
     ],
     "v40": [
       {
         "laneId": "l77",
-        "neighborVertexId": "v29"
+        "neighborVertexId": "v28"
       }
     ],
     "v41": [
       {
         "laneId": "l79",
-        "neighborVertexId": "v30"
+        "neighborVertexId": "v32"
       }
     ],
     "v42": [
       {
         "laneId": "l81",
-        "neighborVertexId": "v22"
+        "neighborVertexId": "v29"
       }
     ],
     "v43": [
       {
         "laneId": "l83",
-        "neighborVertexId": "v21"
+        "neighborVertexId": "v30"
       }
     ],
     "v44": [
       {
         "laneId": "l85",
-        "neighborVertexId": "v19"
+        "neighborVertexId": "v22"
       }
     ],
     "v45": [
       {
         "laneId": "l87",
-        "neighborVertexId": "v18"
+        "neighborVertexId": "v21"
       }
     ],
     "v46": [
       {
         "laneId": "l89",
-        "neighborVertexId": "v17"
+        "neighborVertexId": "v19"
       }
     ],
     "v47": [
       {
-        "laneId": "l95",
-        "neighborVertexId": "v20"
-      },
-      {
-        "laneId": "l96",
-        "neighborVertexId": "v15"
-      },
-      {
-        "laneId": "l98",
-        "neighborVertexId": "v48"
+        "laneId": "l91",
+        "neighborVertexId": "v18"
       }
     ],
     "v48": [
       {
+        "laneId": "l93",
+        "neighborVertexId": "v17"
+      }
+    ],
+    "v49": [
+      {
         "laneId": "l99",
-        "neighborVertexId": "v47"
+        "neighborVertexId": "v20"
+      },
+      {
+        "laneId": "l100",
+        "neighborVertexId": "v15"
+      },
+      {
+        "laneId": "l102",
+        "neighborVertexId": "v50"
+      }
+    ],
+    "v50": [
+      {
+        "laneId": "l103",
+        "neighborVertexId": "v49"
       }
     ]
   },
@@ -2161,10 +2248,10 @@
       "level": "L1",
       "x": 30.3092568897228,
       "y": -15.112453265904858,
-      "name": "storage_junction",
+      "name": "waste_return_junction",
       "isCharger": false,
       "params": {
-        "name": "storage_junction"
+        "name": "waste_return_junction"
       }
     },
     {
@@ -2293,10 +2380,10 @@
       "level": "L1",
       "x": 8.951629691103937,
       "y": -14.842637593225325,
-      "name": "ward_d_junction",
+      "name": "consult_2_junction",
       "isCharger": false,
       "params": {
-        "name": "ward_d_junction"
+        "name": "consult_2_junction"
       }
     },
     {
@@ -2329,10 +2416,10 @@
       "level": "L1",
       "x": 6.5875159249811945,
       "y": -14.789956783972599,
-      "name": "ward_d_1",
+      "name": "consult_2_1",
       "isCharger": false,
       "params": {
-        "name": "ward_d_1"
+        "name": "consult_2_1"
       }
     },
     {
@@ -2341,10 +2428,10 @@
       "level": "L1",
       "x": 6.438549695655915,
       "y": -11.044928570040774,
-      "name": "ward_c_1",
+      "name": "consult_3_1",
       "isCharger": false,
       "params": {
-        "name": "ward_c_1"
+        "name": "consult_3_1"
       }
     },
     {
@@ -2353,10 +2440,10 @@
       "level": "L1",
       "x": 8.97722068485052,
       "y": -11.072268189173512,
-      "name": "ward_c_junction",
+      "name": "consult_3_junction",
       "isCharger": false,
       "params": {
-        "name": "ward_c_junction"
+        "name": "consult_3_junction"
       }
     },
     {
@@ -2450,9 +2537,9 @@
       "x": 26.98159502391176,
       "y": -8.367505544252712,
       "name": "charging_station_1",
-      "isCharger": true,
+      "isCharger": false,
       "params": {
-        "is_charger": true,
+        "is_charger": false,
         "name": "charging_station_1"
       }
     },
@@ -2498,10 +2585,10 @@
       "level": "L1",
       "x": 26.98159502391176,
       "y": -15.183647299484019,
-      "name": "storage_1",
+      "name": "waste_return_1",
       "isCharger": false,
       "params": {
-        "name": "storage_1"
+        "name": "waste_return_1"
       }
     },
     {
@@ -2534,63 +2621,88 @@
       "level": "L1",
       "x": 20.120988223146803,
       "y": -14.927515314350108,
-      "name": "recycling_juction",
+      "name": "clothes_return_junction",
       "isCharger": false,
       "params": {
-        "name": "recycling_juction"
+        "name": "clothes_return_junction"
       }
     },
     {
       "id": "v36",
       "sourceVertexIndex": 36,
       "level": "L1",
-      "x": 23.663758767413395,
-      "y": -14.929263939736261,
-      "name": "recycling_juction_1",
+      "x": 23.481291096166068,
+      "y": -14.9728963065146,
+      "name": "clothes_return_1",
       "isCharger": false,
       "params": {
-        "name": "recycling_juction_1"
+        "name": "clothes_return_1"
       }
     },
     {
       "id": "v37",
       "sourceVertexIndex": 37,
       "level": "L1",
-      "x": 23.674444811439898,
-      "y": -12.783117715795637,
-      "name": "recycling_juction_2",
+      "x": 20.182336546657528,
+      "y": -10.813610411815157,
+      "name": "pantry_junction",
       "isCharger": false,
       "params": {
-        "name": "recycling_juction_2"
+        "name": "pantry_junction"
       }
     },
     {
       "id": "v38",
       "sourceVertexIndex": 38,
       "level": "L1",
-      "x": 26.96474715709595,
-      "y": -10.550428413219606,
-      "name": "charging_station_2",
+      "x": 23.176225356178335,
+      "y": -10.813610411815157,
+      "name": "pantry",
       "isCharger": false,
       "params": {
-        "name": "charging_station_2"
+        "name": "pantry"
       }
     },
     {
       "id": "v39",
       "sourceVertexIndex": 39,
       "level": "L1",
-      "x": 27.015096465833803,
-      "y": -13.538551638573011,
-      "name": "storage_2",
+      "x": 23.52880929713586,
+      "y": -12.857670220354555,
+      "name": "clothes_return_2",
       "isCharger": false,
       "params": {
-        "name": "storage_2"
+        "name": "clothes_return_2"
       }
     },
     {
       "id": "v40",
       "sourceVertexIndex": 40,
+      "level": "L1",
+      "x": 26.96474715709595,
+      "y": -10.550428413219606,
+      "name": "charging_station_2",
+      "isCharger": true,
+      "params": {
+        "is_charger": true,
+        "name": "charging_station_2"
+      }
+    },
+    {
+      "id": "v41",
+      "sourceVertexIndex": 41,
+      "level": "L1",
+      "x": 27.015096465833803,
+      "y": -13.538551638573011,
+      "name": "waste_return_2",
+      "isCharger": false,
+      "params": {
+        "name": "waste_return_2"
+      }
+    },
+    {
+      "id": "v42",
+      "sourceVertexIndex": 42,
       "level": "L1",
       "x": 33.96993474574154,
       "y": -6.082246456257997,
@@ -2601,8 +2713,8 @@
       }
     },
     {
-      "id": "v41",
-      "sourceVertexIndex": 41,
+      "id": "v43",
+      "sourceVertexIndex": 43,
       "level": "L1",
       "x": 33.58004679654605,
       "y": -12.251813157989691,
@@ -2613,8 +2725,8 @@
       }
     },
     {
-      "id": "v42",
-      "sourceVertexIndex": 42,
+      "id": "v44",
+      "sourceVertexIndex": 44,
       "level": "L1",
       "x": 6.467082821004599,
       "y": -1.6319115806185693,
@@ -2625,8 +2737,8 @@
       }
     },
     {
-      "id": "v43",
-      "sourceVertexIndex": 43,
+      "id": "v45",
+      "sourceVertexIndex": 45,
       "level": "L1",
       "x": 6.52925616806788,
       "y": -5.735602290421697,
@@ -2637,32 +2749,32 @@
       }
     },
     {
-      "id": "v44",
-      "sourceVertexIndex": 44,
+      "id": "v46",
+      "sourceVertexIndex": 46,
       "level": "L1",
       "x": 6.421479781172023,
       "y": -9.362806460476904,
-      "name": "ward_c_2",
+      "name": "consult_3_2",
       "isCharger": false,
       "params": {
-        "name": "ward_c_2"
+        "name": "consult_3_2"
       }
     },
     {
-      "id": "v45",
-      "sourceVertexIndex": 45,
+      "id": "v47",
+      "sourceVertexIndex": 47,
       "level": "L1",
       "x": 6.576663345203631,
       "y": -13.2597152793776,
-      "name": "ward_d_2",
+      "name": "consult_2_2",
       "isCharger": false,
       "params": {
-        "name": "ward_d_2"
+        "name": "consult_2_2"
       }
     },
     {
-      "id": "v46",
-      "sourceVertexIndex": 46,
+      "id": "v48",
+      "sourceVertexIndex": 48,
       "level": "L1",
       "x": 6.041112125745594,
       "y": -17.118154339782894,
@@ -2673,8 +2785,8 @@
       }
     },
     {
-      "id": "v47",
-      "sourceVertexIndex": 47,
+      "id": "v49",
+      "sourceVertexIndex": 49,
       "level": "L1",
       "x": 8.976165958427126,
       "y": -11.61572985680701,
@@ -2685,8 +2797,8 @@
       }
     },
     {
-      "id": "v48",
-      "sourceVertexIndex": 48,
+      "id": "v50",
+      "sourceVertexIndex": 50,
       "level": "L1",
       "x": 13.432940216440965,
       "y": -11.61006764127089,
@@ -2699,16 +2811,16 @@
   ],
   "chargingWaypoints": [
     {
-      "id": "v28",
-      "sourceVertexIndex": 28,
+      "id": "v40",
+      "sourceVertexIndex": 40,
       "level": "L1",
-      "x": 26.98159502391176,
-      "y": -8.367505544252712,
-      "name": "charging_station_1",
+      "x": 26.96474715709595,
+      "y": -10.550428413219606,
+      "name": "charging_station_2",
       "isCharger": true,
       "params": {
         "is_charger": true,
-        "name": "charging_station_1"
+        "name": "charging_station_2"
       }
     }
   ],
@@ -2742,7 +2854,21 @@
       ]
     },
     {
-      "name": "consult_a_door",
+      "name": "clothes_return_door",
+      "level": "L1",
+      "endpoints": [
+        [
+          22.152641118232054,
+          -15.454462186669923
+        ],
+        [
+          22.14320409233852,
+          -14.44994629222028
+        ]
+      ]
+    },
+    {
+      "name": "consult_1_door",
       "level": "L1",
       "endpoints": [
         [
@@ -2752,6 +2878,20 @@
         [
           7.701973171090503,
           -18.058998065409693
+        ]
+      ]
+    },
+    {
+      "name": "consult_2_door",
+      "level": "L1",
+      "endpoints": [
+        [
+          7.686735149868298,
+          -15.375468728749343
+        ],
+        [
+          7.694368038458655,
+          -14.186181418496014
         ]
       ]
     },
@@ -2808,20 +2948,6 @@
         [
           31.51122867301538,
           -5.205852066292331
-        ]
-      ]
-    },
-    {
-      "name": "recycling_room",
-      "level": "L1",
-      "endpoints": [
-        [
-          22.13954030581515,
-          -15.502424482975881
-        ],
-        [
-          22.14320409233852,
-          -14.44994629222028
         ]
       ]
     },
@@ -2966,20 +3092,6 @@
       ]
     },
     {
-      "name": "storage_door",
-      "level": "L1",
-      "endpoints": [
-        [
-          28.189090242947906,
-          -15.616529228412107
-        ],
-        [
-          28.20146940044354,
-          -14.512896806121853
-        ]
-      ]
-    },
-    {
       "name": "therapy_room_door",
       "level": "L1",
       "endpoints": [
@@ -3050,16 +3162,16 @@
       ]
     },
     {
-      "name": "ward_d_door",
+      "name": "waste_return_door",
       "level": "L1",
       "endpoints": [
         [
-          7.686735149868298,
-          -15.375468728749343
+          28.189090242947906,
+          -15.616529228412107
         ],
         [
-          7.694368038458655,
-          -14.186181418496014
+          28.20146940044354,
+          -14.512896806121853
         ]
       ]
     }

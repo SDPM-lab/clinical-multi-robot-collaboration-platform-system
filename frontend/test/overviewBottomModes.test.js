@@ -51,3 +51,14 @@ it('keeps battery bar groups clear of the y-axis and each other',()=>{
  expect(chart.findAll('.chart-axes text').map(label=>label.attributes('x'))).toEqual(['30','30','30'])
  wrapper.unmount()
 })
+
+
+it('keeps demo connectivity unknown and places the robot legend beside each chart', () => {
+ const wrapper = mount(ClinicOverviewView, { props: { data: overviewDemoData }, global: { stubs: { ClinicOverviewScene: true } } })
+ expect(wrapper.findAll('.connectivity-panel')).toHaveLength(2)
+ for (const status of wrapper.findAll('.connectivity-panel')) expect(status.text()).toContain('Unavailable')
+ expect(wrapper.text()).not.toContain('機器人連線成功')
+ expect(wrapper.text()).not.toContain('網路正常')
+ expect(wrapper.findAll('.chart-legend span').map(item => item.text())).toEqual(['Robot 01', 'Robot 02', 'Robot 03'])
+ wrapper.unmount()
+})

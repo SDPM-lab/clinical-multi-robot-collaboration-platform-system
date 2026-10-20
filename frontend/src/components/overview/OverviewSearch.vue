@@ -185,10 +185,10 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   color: var(--text-secondary);
   background: var(--search-background);
   border: 1px solid var(--search-border);
-  border-radius: 9px;
+  border-radius: var(--radius-control);
   box-shadow: var(--control-shadow);
-  backdrop-filter: blur(18px) saturate(125%);
-  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  backdrop-filter: var(--control-backdrop);
+  -webkit-backdrop-filter: var(--control-backdrop);
   transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -234,7 +234,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   color: var(--text-secondary);
   background: transparent;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-control);
   cursor: pointer;
   place-items: center;
 }
@@ -255,8 +255,8 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   border: 1px solid var(--glass-border);
   border-radius: 5px;
   box-shadow: var(--dropdown-shadow);
-  backdrop-filter: blur(24px) saturate(125%);
-  -webkit-backdrop-filter: blur(24px) saturate(125%);
+  backdrop-filter: var(--control-backdrop);
+  -webkit-backdrop-filter: var(--control-backdrop);
 }
 
 .search-result-group + .search-result-group { margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--glass-divider); }
@@ -270,7 +270,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   text-align: left;
   background: transparent;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   cursor: pointer;
 }
 .search-result-group button:hover,
@@ -304,11 +304,11 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
     color: var(--icon-color);
     background: var(--icon-button-background);
     border: 1px solid var(--icon-button-border);
-    border-radius: 9px;
+    border-radius: var(--radius-control);
     box-shadow: var(--control-shadow);
     cursor: pointer;
     place-items: center;
-    backdrop-filter: blur(18px) saturate(125%);
+    backdrop-filter: var(--control-backdrop);
   }
   .overview-search--expanded .overview-search__mobile-trigger { display: none; }
   .overview-search__dropdown { width: 100%; }
