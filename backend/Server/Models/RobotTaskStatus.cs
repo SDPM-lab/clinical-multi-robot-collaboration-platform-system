@@ -7,6 +7,5 @@ public enum RobotTaskStatus
     Running,
     Completed,
     Failed,
-    Cancelled,
-    Reassigning
+    Cancelled
 }
