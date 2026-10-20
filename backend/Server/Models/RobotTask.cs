@@ -13,6 +13,7 @@ public class RobotTask
     public RobotTaskStatus Status { get; set; } = RobotTaskStatus.Pending;
     public string? AssignedRobot { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string? Note { get; set; }
 
     // =========================
     // 舊前端 / API 暫時使用
@@ -22,7 +23,6 @@ public class RobotTask
     public List<string> Items { get; set; } = [];
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
-    public string? Note { get; set; }
 
     // Human-in-the-loop
     [JsonIgnore]
