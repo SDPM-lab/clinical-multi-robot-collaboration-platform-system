@@ -11,7 +11,7 @@ const destination = ref('Nurse Reception')
 const origin = ref('Pharmacy')
 const selectedDate = ref('2026-08-31')
 const activePanel = ref('create')
-const panelTopOffset = ref(10)
+const panelTopOffset = ref(2)
 const activatePanel = async (panel, focus = false) => {
   activePanel.value = panel
   if (focus) { await nextTick(); document.getElementById(`dispatch-${panel}-tab`)?.focus() }
@@ -103,7 +103,7 @@ const notification = computed(() => {
           <TaskScheduleSidebar v-model:date="selectedDate" :editing="scheduleEditing" :robots="demoFleetStore.robots.value" :tasks="visibleTasks" @edit="scheduleEditing = !scheduleEditing" @reschedule="handleReschedule" @request-delete="pendingDelete = $event" />
         </div>
       </aside>
-      <DispatchMapScene class="dispatch-map" :robots="demoFleetStore.robots.value" :robot-id="selectedRobotId" :origin="origin" :destination="destination" :selection-step="selectionStep" :route-confirmed="routeConfirmed" :allowed-locations="locations" :viewport-insets="mapInsets" @select-location="selectMapLocation" @visual-top-change="panelTopOffset = $event" />
+      <DispatchMapScene class="dispatch-map" :robots="demoFleetStore.robots.value" :robot-id="selectedRobotId" :origin="origin" :destination="destination" :selection-step="selectionStep" :route-confirmed="routeConfirmed" :allowed-locations="locations" :viewport-insets="mapInsets" @select-location="selectMapLocation" @visual-top-change="panelTopOffset = Math.max(0, $event - 8)" />
     </div>
     <div v-if="pendingDelete" class="dispatch-confirm-backdrop" @click.self="pendingDelete=null" @keydown.esc="pendingDelete=null">
       <section class="dispatch-confirm" role="alertdialog" aria-modal="true" aria-labelledby="dispatch-delete-title" aria-describedby="dispatch-delete-message">

@@ -40,7 +40,7 @@ describe('demo fleet store scheduling rules', () => {
   it('atomically rejects a conflicting batch without changing task times', () => {
     const task = demoFleetStore.tasks.value.find((entry) => entry.id === 'T006')
     const original = task.startTime
-    const result = demoFleetStore.moveTasks([{ taskId: 'T006', startSeconds: timeToSeconds('14:25:00') }])
+    const result = demoFleetStore.moveTasks([{ taskId: 'T006', startSeconds: timeToSeconds('09:35:00') }])
     expect(result.ok).toBe(false)
     expect(result.reason).toContain('時間重疊')
     expect(task.startTime).toBe(original)
@@ -49,12 +49,25 @@ describe('demo fleet store scheduling rules', () => {
   it('removes a task and clears its robot queue entry', () => {
     const robot = demoFleetStore.robots.value.find((entry) => entry.id === 'R02')
     const queuedBefore = robot.queuedTasks
-    const created = demoFleetStore.createTask({ robotId:'R02', title:'檢體運送', type:'檢體運送', origin:'Pharmacy', destination:'Laboratory', date:'2026-10-01', startTime:'08:00:00', durationSeconds:720, priority:'normal', notes:'' })
+    const created = demoFleetStore.createTask({ robotId:'R02', title:'檢體配送', type:'檢體配送', taskType:'SpecimenDelivery', origin:'Pharmacy', destination:'Laboratory', date:'2026-10-01', startTime:'08:00:00', durationSeconds:720, priority:'normal', note:'' })
     expect(created.ok).toBe(true)
+    expect(created.task.requiredCapabilities).toEqual(['Navigation', 'SpecimenDelivery'])
+    expect(Number.isFinite(Date.parse(created.task.createdAt))).toBe(true)
     expect(robot.queuedTaskIds).toContain(created.task.id)
     expect(demoFleetStore.deleteTask(created.task.id).ok).toBe(true)
     expect(demoFleetStore.tasks.value.some((task) => task.id === created.task.id)).toBe(false)
     expect(robot.queuedTaskIds).not.toContain(created.task.id)
     expect(robot.queuedTasks).toBe(queuedBefore)
+  })
+
+  it('rejects task types that do not match the backend enum', () => {
+    const input = { robotId:'R02', title:'巡檢', type:'巡檢', taskType:'Inspection', origin:'Pharmacy', destination:'Laboratory', date:'2026-10-01', startTime:'08:00:00', durationSeconds:720, priority:'normal' }
+    expect(demoFleetStore.createTask(input).ok).toBe(false)
+    expect(demoFleetStore.createTask({ ...input, type:'藥品配送', taskType:'SpecimenDelivery' }).ok).toBe(false)
+  })
+
+  it('uses the backend capability rule for waste collection', () => {
+    const task = demoFleetStore.tasks.value.find((entry) => entry.taskType === 'WasteCollection')
+    expect(task.requiredCapabilities).toEqual(['Navigation', 'GeneralDelivery'])
   })
 })

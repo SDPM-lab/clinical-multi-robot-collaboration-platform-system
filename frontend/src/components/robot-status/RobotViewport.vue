@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { clone as cloneScene } from 'three/addons/utils/SkeletonUtils.js'
@@ -329,6 +329,10 @@ async function start() {
     resetView()
     loading.value = false
     emit('ready', { structureAvailable })
+    await nextTick()
+    if (disposed || token !== loadToken) return
+    resize()
+    resetView()
     if (!frame) frame = requestAnimationFrame(animate)
   } catch (reason) {
     if (disposed || token !== loadToken) return

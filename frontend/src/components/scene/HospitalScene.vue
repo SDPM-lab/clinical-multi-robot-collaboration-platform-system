@@ -109,7 +109,7 @@ const selectedActiveTask = computed(() => selectedRobotTasks.value.find((task) =
 const selectedQueuedTasks = computed(() => selectedRobotTasks.value.filter((task) => task.status !== 'executing'))
 const robotDrawerCounts = computed(() => ({
   all: demoFleetStore.robots.value.length,
-  executing: demoFleetStore.robots.value.filter((robot) => robot.state === 'executing').length,
+  busy: demoFleetStore.robots.value.filter((robot) => robot.state === 'busy').length,
   idle: demoFleetStore.robots.value.filter((robot) => robot.state === 'idle').length,
 }))
 const filteredDrawerRobots = computed(() => robotDrawerFilter.value === 'all'
@@ -631,7 +631,7 @@ const previewQueuedTask = (task) => {
   const preview = buildActiveRoutes(navigationData.value, [{ ...task, status: 'executing' }])[0]
   navigationLayer?.setPreviewRoute(preview || null)
 }
-const robotDisplayState = (robot) => ({ executing: '執行中', charging: '充電中', idle: '待命' }[robot?.state] || '待命')
+const robotDisplayState = (robot) => ({ busy: '忙碌', charging: '充電中', idle: '待命', error: '異常', offline: '離線' }[robot?.state] || '待命')
 const applyPriorityFilter = () => {
   navigationLayer?.setPriorityFilter(selectedPriorities.value, isolatePriorities.value)
   locationMarkerLayer?.setPriorityFilter(selectedPriorities.value, isolatePriorities.value)
@@ -1183,7 +1183,7 @@ onBeforeUnmount(() => {
         <div v-else-if="activeMapTool === 'robots'" class="map-robot-list">
           <div class="robot-segmented-filter" aria-label="機器人狀態篩選">
             <button
-              v-for="filter in [{ id: 'all', label: '全部' }, { id: 'executing', label: '執行中' }, { id: 'idle', label: '待命' }]"
+              v-for="filter in [{ id: 'all', label: '全部' }, { id: 'busy', label: '忙碌' }, { id: 'idle', label: '待命' }]"
               :key="filter.id"
               type="button"
               :class="{ 'is-active': robotDrawerFilter === filter.id }"
@@ -1421,7 +1421,7 @@ onBeforeUnmount(() => {
 .robot-list-identity small { font-size:10.5px; line-height:14px; font-weight:500; }
 .robot-list-battery { color:var(--map-text); font-size:12px; line-height:16px; font-weight:650; }
 .robot-state-dot { width:6px; height:6px; background:var(--color-neutral); border-radius:50%; }
-.robot-state-dot.is-executing { background:var(--map-primary); }.robot-state-dot.is-charging { background:var(--charging-station); }.robot-state-dot.is-idle { background:var(--color-neutral); }
+.robot-state-dot.is-busy { background:var(--map-primary); }.robot-state-dot.is-charging { background:var(--charging-station); }.robot-state-dot.is-idle { background:var(--color-neutral); }
 .map-follow-toggle,.map-layer-list label { display:flex; align-items:center; min-height:31px; gap:8px; padding:0 5px; color:var(--map-muted); font-size:12px; cursor:pointer; }
 .map-follow-toggle { margin-top:4px; padding-top:8px; border-top:1px solid var(--map-divider); }
 .map-tool-drawer input { accent-color:var(--map-primary); }

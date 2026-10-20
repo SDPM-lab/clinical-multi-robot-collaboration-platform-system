@@ -12,10 +12,10 @@ const palettes = {
 }
 const taskNames = {
  '藥品配送':'medicine','藥品盤點配送':'medicine',
- '檢體運送':'specimen','檢驗報告運送':'specimen',
- '病房物資補充':'supplies','物資補充':'supplies',
+ '檢體配送':'specimen','檢體運送':'specimen','檢驗報告運送':'specimen',
+ '一般配送':'supplies','病房物資補充':'supplies','物資補充':'supplies',
  '門診文件配送':'documents','文件配送':'documents',
- '醫療廢棄物運送':'waste',
+ '廢棄物收集':'waste','醫療廢棄物運送':'waste',
  '清潔用品補充':'cleaning',
  '前往護理站':'inspection','前往護理站／巡檢':'inspection','巡檢':'inspection',
  '充電':'charging','前往充電':'charging','返回充電站':'charging',
@@ -24,17 +24,10 @@ export const taskColorMap = Object.freeze(Object.fromEntries(Object.entries(task
 // The theme orange is resolved from the same token used by Hospital RMF Overview.
 export const historyStatusColors=Object.freeze({
  all:'var(--theme-primary)',
- completed:'#2FA58F',
- cancelled:'#4F7DF3',
- overdue:'#E0B52E',
- failed:'#E45D63',
+ completed:'#679A7B',
+ cancelled:'#6489C7',
+ failed:'#C47C70',
 })
-const completedHistoryStatuses=new Set(['completed','failed','cancelled'])
-export const isHistoryEventOverdue=(event,now=Date.now())=>(
- !completedHistoryStatuses.has(event?.status)
- && Number.isFinite(Date.parse(event?.end))
- && Date.parse(event.end)<Number(now)
-)
 export const getHistoryTaskColor = name => taskColorMap[String(name||'').trim()] || palettes.other
 export const historyTaskStyle = name => {
  const color=getHistoryTaskColor(name)
@@ -45,14 +38,13 @@ export const historyStatusPresentation = {
  running:{label:'執行中',icon:'Activity',color:'#c78d4a'},
  waiting:{label:'等待中',icon:'Clock',color:'#a59168'},
  failed:{label:'失敗',icon:'CircleAlert',color:'#c67870'},
- cancelled:{label:'已取消',icon:'CircleMinus',color:'#96928a'},
+ cancelled:{label:'已取消',icon:'CircleMinus',color:'#6489C7'},
 }
-export function summarizeHistory(events,now=Date.now()) {
+export function summarizeHistory(events) {
  return {
  total:events.length,
  completed:events.filter(event=>event.status==='completed').length,
  cancelled:events.filter(event=>event.status==='cancelled').length,
- overdue:events.filter(event=>isHistoryEventOverdue(event,now)).length,
  failed:events.filter(event=>event.status==='failed').length,
  }
 }

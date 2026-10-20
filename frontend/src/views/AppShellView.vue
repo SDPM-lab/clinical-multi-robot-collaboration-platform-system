@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   Maximize,
+  Minimize,
   Moon,
   RadioTower,
   Sun,
@@ -37,6 +38,7 @@ const readStoredTheme = () => {
 }
 
 const darkMode = ref(readStoredTheme() === 'dark')
+const isFullscreen = ref(Boolean(document.fullscreenElement))
 const router = useRouter()
 const route = useRoute()
 const userMenuRoot = ref(null)
@@ -142,7 +144,10 @@ const toggleFullscreen = () => {
     document.exitFullscreen?.()
   }
 }
-const handleFullscreenChange = () => requestAnimationFrame(() => window.dispatchEvent(new Event('resize')))
+const handleFullscreenChange = () => {
+  isFullscreen.value = Boolean(document.fullscreenElement)
+  requestAnimationFrame(() => window.dispatchEvent(new Event('resize')))
+}
 
 const toggleColorMode = () => {
   darkMode.value = !darkMode.value
@@ -234,8 +239,8 @@ onBeforeUnmount(() => {
               <Moon v-else key="moon" class="theme-icon" :size="17" :stroke-width="1.8" />
             </Transition>
           </button>
-          <button type="button" class="overview-action" :title="t('common.fullscreen')" :aria-label="t('common.fullscreen')" @click="toggleFullscreen">
-            <Maximize :size="17" :stroke-width="1.8" />
+          <button type="button" class="overview-action fullscreen-action" :title="t(isFullscreen ? 'common.exitFullscreen' : 'common.fullscreen')" :aria-label="t(isFullscreen ? 'common.exitFullscreen' : 'common.fullscreen')" :aria-pressed="isFullscreen" @click="toggleFullscreen">
+            <component :is="isFullscreen ? Minimize : Maximize" :size="17" :stroke-width="1.8" />
           </button>
           <div ref="userMenuRoot" class="user-menu-root" @mouseenter="openUserMenu" @mouseleave="closeUserMenuSoon" @focusin="openUserMenu" @focusout="onUserMenuFocusOut" @keydown.esc="userMenuOpen = false">
             <button type="button" class="overview-action user-menu-trigger" :aria-label="t('user.menu')" :aria-expanded="userMenuOpen" aria-haspopup="menu" @click="userMenuOpen = !userMenuOpen">
@@ -475,6 +480,15 @@ onBeforeUnmount(() => {
   outline: 2px solid var(--wood-accent);
   outline-offset: 3px;
 }
+.fullscreen-action,
+.fullscreen-action:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+.fullscreen-action:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
 .user-menu-root { position:relative; }
 .navbar-user-avatar{width:24px;height:24px;object-fit:cover;border-radius:50%}.navbar-user-initial{display:grid;width:24px;height:24px;place-items:center;color:var(--text-secondary);font-size:10px;font-weight:700;background:var(--surface-2);border-radius:50%}
 .user-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:70; width:180px; padding:5px; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:8px; box-shadow:var(--navbar-shadow); }
@@ -658,4 +672,7 @@ onBeforeUnmount(() => {
 :global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-navbar :deep(.overview-search__field),:global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border)}
 :is(.app-shell--overview,.app-shell--dispatch) .overview-action:hover{color:var(--theme-primary);background:var(--overview-accent-soft)}
 :is(.app-shell--overview,.app-shell--dispatch) .overview-action:focus-visible{outline-color:var(--theme-primary)}
+.overview-action.fullscreen-action,.overview-action.fullscreen-action:hover{border-color:transparent;box-shadow:none}
+.overview-action.fullscreen-action[aria-pressed=false],.overview-action.fullscreen-action[aria-pressed=false]:hover{color:var(--icon-color)}
+.overview-action.fullscreen-action[aria-pressed=true]{color:var(--theme-primary)}
 </style>

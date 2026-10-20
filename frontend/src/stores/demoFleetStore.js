@@ -1,5 +1,6 @@
 import { computed, reactive, readonly } from 'vue'
 import { dispatchTaskLocations } from '@/config/dispatchDestinations.js'
+import { REQUIRED_CAPABILITIES_BY_TASK_TYPE, TASK_TYPE_BY_LABEL } from '@/config/taskTypes.js'
 
 export const ROBOT_CAPABILITY_OPTIONS = Object.freeze([
   '藥品配送', '檢體運送', '物資補充', '醫療廢棄物運送', '文件配送',
@@ -55,9 +56,9 @@ const makeRobot = (robot) => ({
 })
 
 const initialRobots = [
-  makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', floorId: 'floor1', rosNamespace: '/robot_01', battery: 82, state: 'executing', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', floorId: 'floor1', rosNamespace: '/robot_02', battery: 34, state: 'executing', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', floorId: 'floor1', rosNamespace: '/robot_03', battery: 18, state: 'executing', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: ['T006', 'T009'], queuedTasks: 2 }),
+  makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', floorId: 'floor1', rosNamespace: '/robot_01', battery: 82, state: 'busy', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: ['T006'], queuedTasks: 1 }),
+  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', floorId: 'floor1', rosNamespace: '/robot_02', battery: 34, state: 'busy', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: ['T009'], queuedTasks: 1 }),
+  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', floorId: 'floor1', rosNamespace: '/robot_03', battery: 18, state: 'busy', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: [], queuedTasks: 0 }),
   makeRobot({ id: 'R04', name: 'Robot 04', floorId: 'floor2', rosNamespace: '/robot_04', battery: 76, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
   makeRobot({ id: 'R05', name: 'Robot 05', floorId: 'floor2', rosNamespace: '/robot_05', battery: 62, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
   makeRobot({ id: 'R06', name: 'Robot 06', floorId: 'floor3', rosNamespace: '/robot_06', battery: 88, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
@@ -65,11 +66,11 @@ const initialRobots = [
 ]
 
 const initialTasks = [
-  { id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy', destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720, status: 'executing', direction: 'outbound', progress: 42 },
-  { id: 'T002', robotId: 'R02', title: '檢體運送', origin: 'Consultation Room 2', destination: 'Pantry', priority: 'normal', startTime: '11:00:00', endTime: '11:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
-  { id: 'T003', robotId: 'R03', title: '病房物資補充', origin: 'Nurse Station', destination: 'Ward A', priority: 'high', startTime: '14:20:00', endTime: '14:38:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 30 },
-  { id: 'T006', robotId: 'R03', title: '前往充電', origin: 'Ward A', destination: 'Charging Station A', priority: 'normal', startTime: '16:00:00', endTime: '16:15:00', durationSeconds: 900, status: 'scheduled' },
-  { id: 'T009', robotId: 'R03', title: '文件配送', origin: 'Nurse Station', destination: 'Nurse Reception', priority: 'low', startTime: '17:00:00', endTime: '17:12:00', durationSeconds: 720, status: 'scheduled' },
+  { id: 'T001', robotId: 'R01', title: '藥品配送', type: '藥品配送', taskType: 'MedicineDelivery', origin: 'Pharmacy', destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720, status: 'executing', direction: 'outbound', progress: 42 },
+  { id: 'T002', robotId: 'R02', title: '檢體配送', type: '檢體配送', taskType: 'SpecimenDelivery', origin: 'Consultation Room 2', destination: 'Pantry', priority: 'normal', startTime: '11:00:00', endTime: '11:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
+  { id: 'T003', robotId: 'R03', title: '一般配送', type: '一般配送', taskType: 'GeneralDelivery', origin: 'Nurse Station', destination: 'Ward A', priority: 'high', startTime: '14:20:00', endTime: '14:38:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 30 },
+  { id: 'T006', robotId: 'R01', title: '廢棄物收集', type: '廢棄物收集', taskType: 'WasteCollection', origin: 'Ward A', destination: 'Waste Return', priority: 'normal', startTime: '16:00:00', endTime: '16:15:00', durationSeconds: 900, status: 'scheduled' },
+  { id: 'T009', robotId: 'R02', title: '一般配送', type: '一般配送', taskType: 'GeneralDelivery', origin: 'Nurse Station', destination: 'Nurse Reception', priority: 'low', startTime: '17:00:00', endTime: '17:12:00', durationSeconds: 720, status: 'scheduled' },
 ]
 
 export const timeToSeconds = (value) => {
@@ -84,7 +85,7 @@ export const secondsToTime = (value) => {
 
 const state = reactive({
   robots: initialRobots.map(makeRobot),
-  tasks: initialTasks.map((task) => ({ ...task })),
+  tasks: initialTasks.map((task) => ({ ...task, requiredCapabilities: [...REQUIRED_CAPABILITIES_BY_TASK_TYPE[task.taskType]] })),
   notification: '',
 })
 
@@ -150,9 +151,14 @@ const moveTasks = (changes) => {
 }
 
 const createTask = (input) => {
+  if (!input.type || TASK_TYPE_BY_LABEL[input.type] !== input.taskType) {
+    return { ok: false, reason: '任務類型不符合後端 TaskType 選項。' }
+  }
   const durationSeconds = Number(input.durationSeconds)
   const candidate = {
     ...input,
+    requiredCapabilities: [...REQUIRED_CAPABILITIES_BY_TASK_TYPE[input.taskType]],
+    createdAt: new Date().toISOString(),
     id: `T${String(Math.max(0, ...state.tasks.map((task) => Number(/^T(\d+)$/.exec(task.id)?.[1]) || 0)) + 1).padStart(3, '0')}`,
     durationSeconds,
     endTime: secondsToTime(timeToSeconds(input.startTime) + durationSeconds),
@@ -179,7 +185,7 @@ const deleteTask = (taskId) => {
     robot.queuedTasks = robot.queuedTaskIds.length
     if (robot.activeTaskId === taskId) {
       robot.activeTaskId = null
-      if (robot.state === 'executing') robot.state = 'idle'
+      if (robot.state === 'busy') robot.state = 'idle'
     }
   }
   return { ok: true, task }
@@ -237,6 +243,17 @@ const addRobot = (input) => {
   return { ok: true, robot }
 }
 
+const removeRobot = (id) => {
+  const index = state.robots.findIndex((robot) => robot.id === id)
+  if (index < 0) return { ok: false, reason: '找不到指定機器人。' }
+  const [robot] = state.robots.splice(index, 1)
+  const assignedTaskIds = state.tasks.filter((task) => task.robotId === id).map((task) => task.id)
+  for (let taskIndex = state.tasks.length - 1; taskIndex >= 0; taskIndex -= 1) {
+    if (state.tasks[taskIndex].robotId === id) state.tasks.splice(taskIndex, 1)
+  }
+  return { ok: true, robot, assignedTaskIds }
+}
+
 export const demoFleetStore = {
   state: readonly(state),
   robots: computed(() => state.robots),
@@ -249,6 +266,7 @@ export const demoFleetStore = {
   deleteTask,
   validateRobot,
   addRobot,
+  removeRobot,
 }
 
 export const fleetStore = demoFleetStore

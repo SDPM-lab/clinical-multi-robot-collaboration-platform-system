@@ -86,6 +86,11 @@ describe('dispatch SVG map', () => {
   it('retains historical SVG coordinates and read-only selection behavior', async () => {
     const w=await create({compact:true,historical:true,readOnly:true,routeCoordinates:[[10,20],[30,40]],historyStatus:'completed'})
     expect(w.get('.estimate-route').attributes('points')).toBe('10,20 30,40')
+    expect(w.findAll('.map-controls button').map(button=>button.attributes('aria-label'))).toEqual(['重設','放大地圖','縮小地圖'])
+    await w.get('.map-controls button[aria-label="放大地圖"]').trigger('click')
+    expect(w.get('.map-world').attributes('transform')).not.toBe('translate(0 0) scale(1)')
+    await w.get('.map-controls button[aria-label="重設"]').trigger('click')
+    expect(w.get('.map-world').attributes('transform')).toBe('translate(0 0) scale(1)')
     expect(w.findAll('.room-region')).toHaveLength(0)
     await w.get('[data-waypoint="lab"]').trigger('keydown',{key:'Enter'})
     expect(w.emitted('select-destination')).toBeUndefined()
