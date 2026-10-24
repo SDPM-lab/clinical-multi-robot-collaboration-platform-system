@@ -92,3 +92,13 @@ blender --background blender/scenes/floor_L1.blend \
 cd ~/clinical-multi-robot-collaboration-platform-system/frontend
 npm run models:update
 ```
+
+
+### 任務派遣表單 API
+
+Task Dispatch 頁面使用後端 API 建立、查詢、修改排程及刪除任務，不再寫入前端 demo store。
+先啟動 ASP.NET Core 後端（`http://localhost:5100`），再於 `frontend` 執行 `npm run dev`。
+Vite 將 `/api` 代理到後端。部署時需設定同源 `/api` 反向代理，或使用 `VITE_API_BASE_URL` 指向後端並設定 CORS。
+表單地點標籤會轉成 Graph 0 waypoint ID，建立成功回傳 HTTP 201 與後端產生的任務 ID。
+目前分鐘代表立即排入派送，未來時間則等待背景排程；早於目前分鐘會被拒絕。
+任務仍存於後端記憶體，重啟會清空。機器人選單讀取 `/api/robots`，ROS 未連線時不會顯示示範機器人。

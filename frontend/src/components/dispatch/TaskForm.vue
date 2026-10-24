@@ -1,18 +1,19 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { ChevronDown, Clock3 } from '@lucide/vue'
-import { t, translateLocation, translateTask } from '@/i18n/index.js'
+import { CalendarDays, ChevronLeft, ChevronRight, ChevronDown, Clock3 } from '@lucide/vue'
+import { localeTag, t, translateLocation, translateTask } from '@/i18n/index.js'
 import { robotStateLabels } from '@/data/robotStatus.js'
 import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
 import { taskPriorityColor } from '@/config/taskPriorityColors.js'
 import { REQUIRED_CAPABILITIES_BY_TASK_TYPE, TASK_TYPE_BY_LABEL, TASK_TYPE_LABELS } from '@/config/taskTypes.js'
 
 const props = defineProps({
+  submitting: { type: Boolean, default: false },
   robots: { type: Array, required: true },
   locations: { type: Array, required: true },
   destination: { type: String, default: '' },
   origin: { type: String, default: 'Pharmacy' },
-  robotId: { type: String, default: 'R01' },
+  robotId: { type: String, default: null },
   date: { type: String, required: true },
 })
 const emit = defineEmits(['submit', 'update:destination', 'update:origin', 'update:robotId'])
@@ -29,8 +30,14 @@ const robotPickerOpen = ref(false)
 const robotPicker = ref(null)
 const timePickerOpen = ref(false)
 const timePicker = ref(null)
-const timeText = ref('09:30 AM')
-const timeOptions = Array.from({ length: 48 }, (_, index) => { const hour = Math.floor(index / 2); return `${String(hour % 12 || 12).padStart(2, '0')}:${index % 2 ? '30' : '00'} ${hour < 12 ? 'AM' : 'PM'}` })
+const localDate = (now) => `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
+const localTime = (now) => `${String(now.getHours()%12 || 12).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} ${now.getHours()<12 ? 'AM' : 'PM'}`
+const timeText = ref(localTime(new Date()))
+const hours = Array.from({length:24},(_,i)=>String(i).padStart(2,'0'))
+const minutes = Array.from({length:60},(_,i)=>String(i).padStart(2,'0'))
+const datePickerOpen = ref(false)
+const datePicker = ref(null)
+const calendarMonth = ref(new Date())
 const parseTimeText = (value) => {
   const match = /^(0?[1-9]|1[0-2]):([0-5][0-9])\s*(AM|PM)$/i.exec(value.trim())
   if (!match) return null
@@ -38,7 +45,12 @@ const parseTimeText = (value) => {
   return `${String(hour).padStart(2, '0')}:${match[2]}:00`
 }
 const normalizeTimeText = () => { const time = parseTimeText(timeText.value); if (time) { const hour = Number(time.slice(0, 2)); timeText.value = `${String(hour % 12 || 12).padStart(2, '0')}:${time.slice(3, 5)} ${hour < 12 ? 'AM' : 'PM'}` } }
-const chooseTime = (value) => { timeText.value = value; timePickerOpen.value = false }
+const chooseTimePart = (index,value) => {
+  const parts = (parseTimeText(timeText.value) || '00:00:00').split(':')
+  parts[index] = value
+  const hour = Number(parts[0])
+  timeText.value = `${String(hour%12 || 12).padStart(2,'0')}:${parts[1]} ${hour<12 ? 'AM' : 'PM'}`
+}
 const robotStateKey = { busy: 'robotStateBusy', idle: 'robotStateIdle', charging: 'robotStateCharging', error: 'robotStateError', offline: 'robotStateOffline' }
 const robotStateText = (robot) => robotStateKey[robot.state] ? t(`dispatch.${robotStateKey[robot.state]}`) : robotStateLabels[robot.state] || robot.state
 const selectRobot = (id) => { form.robotId = id; robotPickerOpen.value = false }
@@ -49,6 +61,7 @@ const selectLocation = (field, value) => {
 const onOutsidePointer = (event) => {
   if (!taskTypePicker.value?.contains(event.target)) taskTypeOpen.value = false
   if (!robotPicker.value?.contains(event.target)) robotPickerOpen.value = false
+  if (!datePicker.value?.contains(event.target)) datePickerOpen.value = false
   if (!timePicker.value?.contains(event.target)) timePickerOpen.value = false
   if (!originPicker.value?.contains(event.target)) originPickerOpen.value = false
   if (!destinationPicker.value?.contains(event.target)) destinationPickerOpen.value = false
@@ -57,7 +70,7 @@ onMounted(() => document.addEventListener('pointerdown', onOutsidePointer))
 onBeforeUnmount(() => document.removeEventListener('pointerdown', onOutsidePointer))
 
 const makeDefaults = () => ({
-  type: '藥品配送', robotId: props.robotId || 'R01',
+  type: '藥品配送', robotId: props.robotId ?? null,
   date: props.date,
   priority: 'normal', note: '',
 })
@@ -67,32 +80,54 @@ const destinationValue = computed({ get: () => props.destination, set: (value) =
 const selectedRobot = computed(() => props.robots.find((robot) => robot.id === form.robotId))
 const requiredCapabilities = computed(() => REQUIRED_CAPABILITIES_BY_TASK_TYPE[TASK_TYPE_BY_LABEL[form.type]] || [])
 
-watch(() => props.robotId, (value) => { if (value && value !== form.robotId) form.robotId = value })
+watch(() => props.robotId, (value) => { if (value !== form.robotId) form.robotId = value })
 watch(() => props.date, (value) => { form.date = value })
 watch(() => form.robotId, (value) => emit('update:robotId', value), { immediate: true })
 watch(timePickerOpen, async (open) => {
   if (!open) return
   await nextTick()
-  const index = timeOptions.indexOf(timeText.value)
-  const list = timePicker.value?.querySelector('.dispatch-time-options')
-  if (list && index >= 0) list.scrollTop = Math.max(0, index * 29 - list.clientHeight / 2)
+  timePicker.value?.querySelectorAll('[aria-selected="true"]').forEach(option => {
+    option.parentElement.scrollTop = option.offsetTop - 54
+  })
 })
+
+const calendarHeading = computed(()=>new Intl.DateTimeFormat(localeTag.value,{year:'numeric',month:'long'}).format(calendarMonth.value))
+const weekdays = computed(()=>Array.from({length:7},(_,i)=>new Intl.DateTimeFormat(localeTag.value,{weekday:'short'}).format(new Date(2026,0,4+i))))
+const calendarDays = computed(()=>{
+  const month = calendarMonth.value
+  const first = new Date(month.getFullYear(),month.getMonth(),1)
+  return Array.from({length:42},(_,i)=>{
+    const date = new Date(first.getFullYear(),first.getMonth(),1-first.getDay()+i)
+    return {value:localDate(date),day:date.getDate(),outside:date.getMonth()!==month.getMonth(),today:localDate(date)===localDate(new Date())}
+  })
+})
+const toggleCalendar = () => {
+  if (!datePickerOpen.value) calendarMonth.value = new Date(`${form.date}T12:00:00`)
+  datePickerOpen.value = !datePickerOpen.value
+  timePickerOpen.value = false
+}
+const shiftMonth = (offset) => { calendarMonth.value = new Date(calendarMonth.value.getFullYear(),calendarMonth.value.getMonth()+offset,1) }
+const selectDate = (value) => { form.date = value; datePickerOpen.value = false }
 
 const reset = () => {
   Object.assign(form, makeDefaults())
-  timeText.value = '09:30 AM'
+  const now = new Date()
+  form.date = localDate(now)
+  timeText.value = localTime(now)
   taskTypeOpen.value = false
   timePickerOpen.value = false
+  datePickerOpen.value = false
 }
 const submit = () => {
   const startTime = parseTimeText(timeText.value)
-  if (!startTime) return
+  if (!startTime || !form.date || !originValue.value || !destinationValue.value) return
   emit('submit', {
     robotId: form.robotId, title: form.type, type: form.type,
     taskType: TASK_TYPE_BY_LABEL[form.type],
     origin: originValue.value, destination: destinationValue.value, date: form.date,
     startTime, durationSeconds: DEFAULT_DURATION_SECONDS,
-    priority: form.priority, note: form.note,
+    priority: form.priority, note: form.note || null,
+    scheduledAt: new Date(`${form.date}T${startTime}`).toISOString(),
   })
 }
 </script>
@@ -102,28 +137,29 @@ const submit = () => {
     <header><div><span class="panel-eyebrow">{{ t('dispatchForm.eyebrow') }}</span><strong>{{ t('dispatchForm.title') }}</strong></div></header>
     <form @submit.prevent="submit">
       <div class="form-scroll task-form-grid">
-        <div ref="taskTypePicker" class="field task-type-picker full-width" @keydown.esc.stop="taskTypeOpen=false"><span>{{ t('dispatchForm.type') }}</span><button type="button" class="task-type-trigger" :aria-label="t('dispatchForm.type')" :aria-expanded="taskTypeOpen" aria-haspopup="listbox" @click="taskTypeOpen=!taskTypeOpen"><span>{{ translateTask(form.type) }}</span><ChevronDown :size="14" /></button><div v-if="taskTypeOpen" class="task-type-options" role="listbox" :aria-label="t('dispatchForm.type')"><button v-for="type in taskTypes" :key="type" type="button" role="option" :aria-selected="form.type===type" @click="form.type=type;taskTypeOpen=false">{{ translateTask(type) }}</button></div></div>
+        <div ref="taskTypePicker" class="field task-type-picker full-width" @keydown.esc.stop="taskTypeOpen=false"><span>{{ t('dispatchForm.type') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="task-type-trigger" :aria-label="t('dispatchForm.type')" :aria-expanded="taskTypeOpen" aria-haspopup="listbox" @click="taskTypeOpen=!taskTypeOpen"><span>{{ translateTask(form.type) }}</span><ChevronDown :size="14" /></button><div v-if="taskTypeOpen" class="task-type-options" role="listbox" :aria-label="t('dispatchForm.type')"><button v-for="type in taskTypes" :key="type" type="button" role="option" :aria-selected="form.type===type" @click="form.type=type;taskTypeOpen=false">{{ translateTask(type) }}</button></div></div>
         <div class="required-capabilities full-width"><span>{{ t('dispatchForm.requiredCapabilities') }}</span><div><span v-for="capability in requiredCapabilities" :key="capability" :data-capability="capability">{{ t(`dispatchForm.capabilities.${capability}`) }}</span></div></div>
 
         <div ref="robotPicker" class="field full-width dispatch-robot-picker" @keydown.esc.stop="robotPickerOpen=false">
           <span>{{ t('dispatch.robotSelect') }}</span>
           <button type="button" class="robot-trigger" :aria-label="t('dispatch.robotSelect')" :aria-expanded="robotPickerOpen" aria-haspopup="listbox" @click="robotPickerOpen=!robotPickerOpen">
-            <span class="robot-trigger-name">{{ selectedRobot?.name || form.robotId }}</span><span class="robot-trigger-state">{{ selectedRobot ? robotStateText(selectedRobot) : '' }}</span><span class="robot-trigger-battery">{{ selectedRobot?.battery }}%</span><ChevronDown :size="14" />
+            <span class="robot-trigger-name">{{ selectedRobot?.name || t('dispatchForm.defaultRobot') }}</span><span class="robot-trigger-state">{{ selectedRobot ? robotStateText(selectedRobot) : '' }}</span><span v-if="selectedRobot" class="robot-trigger-battery">{{ selectedRobot?.battery }}%</span><ChevronDown :size="14" />
           </button>
           <div v-if="robotPickerOpen" class="robot-options" role="listbox" :aria-label="t('dispatch.robotSelect')">
+            <button type="button" role="option" :aria-selected="form.robotId === null" @click="selectRobot(null)">{{ t('dispatchForm.defaultRobot') }}</button>
             <button v-for="robot in robots" :key="robot.id" type="button" role="option" :aria-selected="form.robotId===robot.id" @click="selectRobot(robot.id)"><i :style="{ backgroundColor: getRobotVisualTheme(robot.id).main }"></i><span class="robot-option-name">{{ robot.name }}</span><span class="robot-option-state">{{ robotStateText(robot) }}</span><strong>{{ robot.battery }}%</strong></button>
           </div>
         </div>
-        <div ref="originPicker" class="field dispatch-location-picker" @keydown.esc.stop="originPickerOpen=false"><span>{{ t('dispatchForm.origin') }}</span><button type="button" class="location-trigger" :aria-label="t('dispatchForm.origin')" :aria-expanded="originPickerOpen" aria-haspopup="listbox" @click="originPickerOpen=!originPickerOpen;destinationPickerOpen=false"><span>{{ translateLocation(originValue) }}</span><ChevronDown :size="15" /></button><div v-if="originPickerOpen" class="location-options" role="listbox" :aria-label="t('dispatchForm.origin')"><button v-for="location in locations" :key="location" type="button" role="option" :aria-selected="originValue===location" @click="selectLocation('origin', location)">{{ translateLocation(location) }}</button></div></div>
-        <div ref="destinationPicker" class="field dispatch-location-picker" @keydown.esc.stop="destinationPickerOpen=false"><span>{{ t('dispatchForm.destination') }}</span><button type="button" class="location-trigger" :aria-label="t('dispatchForm.destination')" :aria-expanded="destinationPickerOpen" aria-haspopup="listbox" @click="destinationPickerOpen=!destinationPickerOpen;originPickerOpen=false"><span>{{ translateLocation(destinationValue) }}</span><ChevronDown :size="15" /></button><div v-if="destinationPickerOpen" class="location-options" role="listbox" :aria-label="t('dispatchForm.destination')"><button v-for="location in locations" :key="location" type="button" role="option" :aria-selected="destinationValue===location" @click="selectLocation('destination', location)">{{ translateLocation(location) }}</button></div></div>
+        <div ref="originPicker" class="field dispatch-location-picker" @keydown.esc.stop="originPickerOpen=false"><span>{{ t('dispatchForm.origin') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="location-trigger" :aria-label="t('dispatchForm.origin')" :aria-expanded="originPickerOpen" aria-haspopup="listbox" @click="originPickerOpen=!originPickerOpen;destinationPickerOpen=false"><span>{{ translateLocation(originValue) }}</span><ChevronDown :size="15" /></button><div v-if="originPickerOpen" class="location-options" role="listbox" :aria-label="t('dispatchForm.origin')"><button v-for="location in locations" :key="location" type="button" role="option" :aria-selected="originValue===location" @click="selectLocation('origin', location)">{{ translateLocation(location) }}</button></div></div>
+        <div ref="destinationPicker" class="field dispatch-location-picker" @keydown.esc.stop="destinationPickerOpen=false"><span>{{ t('dispatchForm.destination') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="location-trigger" :aria-label="t('dispatchForm.destination')" :aria-expanded="destinationPickerOpen" aria-haspopup="listbox" @click="destinationPickerOpen=!destinationPickerOpen;originPickerOpen=false"><span>{{ translateLocation(destinationValue) }}</span><ChevronDown :size="15" /></button><div v-if="destinationPickerOpen" class="location-options" role="listbox" :aria-label="t('dispatchForm.destination')"><button v-for="location in locations" :key="location" type="button" role="option" :aria-selected="destinationValue===location" @click="selectLocation('destination', location)">{{ translateLocation(location) }}</button></div></div>
 
-        <label class="field"><span>{{ t('dispatchForm.date') }}</span><input v-model="form.date" type="date" required></label>
-        <div ref="timePicker" class="field dispatch-time-picker" @keydown.esc.stop="timePickerOpen=false"><label for="dispatch-start-time">{{ t('dispatchForm.start') }}</label><div class="dispatch-time-entry"><input id="dispatch-start-time" v-model.trim="timeText" type="text" inputmode="text" pattern="(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)" placeholder="09:30 AM" required @blur="normalizeTimeText"><button type="button" :aria-label="t('dispatchForm.chooseTime')" :aria-expanded="timePickerOpen" @click="timePickerOpen=!timePickerOpen"><Clock3 :size="14" /></button></div><div v-if="timePickerOpen" class="dispatch-time-options" role="listbox" :aria-label="t('dispatchForm.chooseTime')"><button v-for="time in timeOptions" :key="time" type="button" role="option" :aria-selected="timeText===time" @click="chooseTime(time)">{{ time }}</button></div></div>
+        <div ref="datePicker" class="field dispatch-date-picker" @keydown.esc.stop="datePickerOpen=false"><span>{{ t('dispatchForm.date') }} <span class="required-marker" aria-hidden="true">＊</span></span><button class="date-trigger" type="button" :aria-label="t('dispatchForm.date')" :aria-expanded="datePickerOpen" @click="toggleCalendar"><span>{{ form.date.replaceAll('-',' / ') }}</span><CalendarDays :size="14" /></button><div v-if="datePickerOpen" class="dispatch-calendar"><div class="calendar-heading"><button type="button" :aria-label="t('dispatch.previousMonth')" @click="shiftMonth(-1)"><ChevronLeft :size="16" /></button><strong>{{ calendarHeading }}</strong><button type="button" :aria-label="t('dispatch.nextMonth')" @click="shiftMonth(1)"><ChevronRight :size="16" /></button></div><div class="calendar-grid"><span v-for="(day,index) in weekdays" :key="index" class="calendar-weekday">{{ day }}</span><button v-for="day in calendarDays" :key="day.value" type="button" :data-date="day.value" :class="{outside:day.outside,today:day.today}" :aria-label="day.value" :aria-pressed="form.date===day.value" @click="selectDate(day.value)">{{ day.day }}</button></div></div></div>
+        <div ref="timePicker" class="field dispatch-time-picker" @keydown.esc.stop="timePickerOpen=false"><label for="dispatch-start-time">{{ t('dispatchForm.start') }} <span class="required-marker" aria-hidden="true">＊</span></label><div class="dispatch-time-entry"><input id="dispatch-start-time" v-model.trim="timeText" type="text" inputmode="text" pattern="(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)" placeholder="09:30 AM" required @blur="normalizeTimeText"><button type="button" :aria-label="t('dispatchForm.chooseTime')" :aria-expanded="timePickerOpen" @click="timePickerOpen=!timePickerOpen"><Clock3 :size="14" /></button></div><div v-if="timePickerOpen" class="dispatch-time-options"><div class="time-scroll-column" role="listbox" :aria-label="t('dispatch.hours')"><button v-for="hour in hours" :key="hour" type="button" role="option" :aria-selected="parseTimeText(timeText)?.slice(0,2)===hour" @click="chooseTimePart(0,hour)">{{ hour }}</button></div><span aria-hidden="true" class="time-separator">:</span><div class="time-scroll-column" role="listbox" :aria-label="t('dispatch.minutes')"><button v-for="minute in minutes" :key="minute" type="button" role="option" :aria-selected="parseTimeText(timeText)?.slice(3,5)===minute" @click="chooseTimePart(1,minute)">{{ minute }}</button></div></div></div>
 
-        <fieldset class="priority-control full-width"><legend>{{ t('dispatchForm.priority') }}</legend><div><button v-for="priority in priorities" :key="priority.value" type="button" :data-priority="priority.value" :style="{ '--priority-color': taskPriorityColor(priority.value) }" :class="{ active: form.priority === priority.value }" :aria-pressed="form.priority === priority.value" @click="form.priority=priority.value">{{ t(`priority.${priority.value}`) }}</button></div></fieldset>
+        <fieldset class="priority-control full-width"><legend>{{ t('dispatchForm.priority') }} <span class="required-marker" aria-hidden="true">＊</span></legend><div><button v-for="priority in priorities" :key="priority.value" type="button" :data-priority="priority.value" :style="{ '--priority-color': taskPriorityColor(priority.value) }" :class="{ active: form.priority === priority.value }" :aria-pressed="form.priority === priority.value" @click="form.priority=priority.value">{{ t(`priority.${priority.value}`) }}</button></div></fieldset>
         <label class="field notes-field"><span>{{ t('dispatchForm.note') }}</span><textarea v-model.trim="form.note" rows="3" :placeholder="t('dispatchForm.notePlaceholder')"></textarea></label>
       </div>
-      <footer><button type="button" @click="reset">{{ t('dispatchForm.cancel') }}</button><button type="submit" class="create-button">{{ t('dispatchForm.create') }}</button></footer>
+      <footer><button type="button" @click="reset">{{ t('dispatchForm.cancel') }}</button><button type="submit" class="create-button" :disabled="submitting">{{ t('dispatchForm.create') }}</button></footer>
     </form>
   </section>
 </template>
@@ -168,4 +204,14 @@ header{display:flex;align-items:center;justify-content:space-between;padding-bot
 .task-panel footer button:not(.create-button):hover{color:var(--text-primary);background:color-mix(in srgb,#fb9966 10%,var(--panel-bg-strong));border-color:#fb9966}
 .task-panel footer .create-button:hover{background:#f8874d!important;box-shadow:0 6px 16px #fb99664d;transform:translateY(-1px)}
 .task-panel footer button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:2px}
+</style>
+
+<style scoped>
+.required-marker { color: #b43e35; }
+</style>
+
+<style scoped>
+.dispatch-date-picker{position:relative}.date-trigger{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;height:31px;padding:0 8px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:7px;font:inherit;font-size:12.5px;cursor:pointer}
+.dispatch-calendar{position:absolute;z-index:40;top:100%;left:0;width:260px;max-width:calc(100vw - 72px);box-sizing:border-box;margin-top:5px;padding:12px;color:var(--text-primary);background:var(--panel-bg-strong,#fff);border:1px solid var(--panel-border);border-radius:12px;box-shadow:0 10px 28px #34433825}.calendar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.calendar-heading strong{font-size:13px}.dispatch-calendar button{color:inherit;background:transparent;border:0;border-radius:6px;font:inherit;cursor:pointer}.calendar-heading button{display:grid;place-items:center;width:28px;height:28px}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}.calendar-weekday{padding:5px 0;color:var(--text-muted);font-size:10px}.calendar-grid button{height:28px;font-size:12px}.calendar-grid button.outside{color:var(--text-muted);opacity:.55}.calendar-grid button.today{font-weight:700;color:#ba5424}.dispatch-calendar button:hover{background:#ffe4d4;color:#813c1c}.calendar-grid button[aria-pressed=true]{background:#fb9966;color:#462918;opacity:1}.date-trigger:focus-visible,.dispatch-calendar button:focus-visible{outline:2px solid #fb9966;outline-offset:1px}
+.dispatch-time-options{grid-template-columns:1fr 10px 1fr;align-items:start;max-height:none;overflow:hidden;border:0;background:var(--panel-bg-strong,#fff)}.time-scroll-column{position:relative;display:grid;gap:3px;max-height:150px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#fb9966 transparent}.dispatch-time-options button{text-align:center}.dispatch-time-options button:hover,.dispatch-time-options button[aria-selected=true]{background:#ffe4d4;color:#813c1c}.time-separator{padding-top:6px;text-align:center}
 </style>

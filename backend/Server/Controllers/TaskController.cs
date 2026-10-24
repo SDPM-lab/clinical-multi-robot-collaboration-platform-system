@@ -22,12 +22,12 @@ public class TaskController : ControllerBase
     {
         try
         {
-            await _taskService.CreateTaskAsync(request);
-            return StatusCode(201);
+            var task = await _taskService.CreateTaskAsync(request);
+            return CreatedAtAction(nameof(GetTask), new { task_id = task.Id }, task);
         }
         catch (ArgumentException ex)
         {
-            return BadRequest($"傳送資料格式不符：{ex.Message}");
+            return BadRequest($"Invalid request: {ex.Message}");
         }
         catch (InvalidOperationException ex)
         {
@@ -98,6 +98,22 @@ public class TaskController : ControllerBase
             DeleteTaskResult.Forbidden => StatusCode(403, "任務已被處理無法刪除"),
             _                          => NotFound("查無此任務"),
         };
+    }
+
+    [HttpPatch("{task_id}/schedule")]
+    public async Task<IActionResult> UpdateTaskSchedule(string task_id, [FromBody] UpdateTaskScheduleRequest request)
+    {
+        try
+        {
+            var result = await _taskService.UpdateTaskScheduleAsync(task_id, request);
+            return result switch
+            {
+                UpdateTaskScheduleResult.Success => NoContent(),
+                UpdateTaskScheduleResult.Forbidden => StatusCode(403, "任務已被處理無法修改排程"),
+                _ => NotFound("查無此任務"),
+            };
+        }
+        catch (ArgumentException ex) { return BadRequest(ex.Message); }
     }
 
     [HttpPatch("{task_id}/abort")]

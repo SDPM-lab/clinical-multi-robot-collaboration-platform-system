@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Server.Services;
+using Server.Services.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,10 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddHttpClient();
+builder.Services.AddSingleton<TaskStore>();
+builder.Services.AddScoped<RosTaskClient>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddHostedService<TaskScheduleWorker>();
 builder.Services.AddSingleton<RobotStateStore>();
 builder.Services.AddSingleton<RosBridgeTestService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<RosBridgeTestService>());
