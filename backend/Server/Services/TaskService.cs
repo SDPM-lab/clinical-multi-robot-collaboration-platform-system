@@ -1,142 +1,191 @@
-using System.Collections.Concurrent;
-using System.Text;
-using System.Text.Json;
 using Server.Models;
 using Server.Requests;
+using Server.Services.Tasks;
 
 namespace Server.Services;
 
 public class TaskService : ITaskService
 {
-    private static readonly ConcurrentDictionary<string, RobotTask> _store = new(SeedData());
-
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IConfiguration _configuration;
+    // Dependencies for task storage, ROS communication, and logging.
+    private readonly TaskStore _store;
+    private readonly RosTaskClient _rosTaskClient;
     private readonly ILogger<TaskService> _logger;
 
-    public TaskService(
-        IHttpClientFactory httpClientFactory,
-        IConfiguration configuration,
-        ILogger<TaskService> logger)
+    // Receive dependencies from the application service container.
+    public TaskService(TaskStore store, RosTaskClient rosTaskClient, ILogger<TaskService> logger)
     {
-        _httpClientFactory = httpClientFactory;
-        _configuration = configuration;
+        _store = store;
+        _rosTaskClient = rosTaskClient;
         _logger = logger;
     }
 
-    internal static void ResetForTests()
-    {
-        _store.Clear();
-
-        foreach (var kv in SeedData())
-            _store[kv.Key] = kv.Value;
-    }
-
-    private static IEnumerable<KeyValuePair<string, RobotTask>> SeedData() =>
-        new[]
-        {
-            Seed(
-                "task-1",
-                TaskType.MedicineDelivery,
-                "pharmacy",
-                "ward_a",
-                TaskPriority.High,
-                RobotTaskStatus.Running,
-                "hospital_robot_1"
-            ),
-
-            Seed(
-                "task-2",
-                TaskType.SpecimenDelivery,
-                "ward_b",
-                "lab",
-                TaskPriority.Emergency,
-                RobotTaskStatus.Pending
-            ),
-
-            Seed(
-                "task-3",
-                TaskType.GeneralDelivery,
-                "storage",
-                "nurse_station",
-                TaskPriority.Normal,
-                RobotTaskStatus.Pending
-            ),
-
-            Seed(
-                "task-4",
-                TaskType.WasteCollection,
-                "ward_c",
-                "storage",
-                TaskPriority.Low,
-                RobotTaskStatus.Completed,
-                "hospital_robot_2"
-            )
-        }
-        .Select(task => new KeyValuePair<string, RobotTask>(task.Id, task));
-
-    private static RobotTask Seed(
-        string id,
-        TaskType taskType,
-        string source,
-        string destination,
-        TaskPriority priority,
-        RobotTaskStatus status,
-        string? assignedRobot = null)
-    {
-        return new RobotTask
-        {
-            Id = id,
-            TaskType = taskType,
-            Source = source,
-            Destination = destination,
-            Priority = priority,
-
-            RequiredCapabilities = GetRequiredCapabilities(taskType),
-
-            Status = status,
-            AssignedRobot = assignedRobot,
-            CreatedAt = DateTime.UtcNow,
-        };
-    }
-
+    // Return all stored tasks.
     public Task<List<RobotTask>> GetTasksAsync()
     {
-        return Task.FromResult(_store.Values.ToList());
+        return Task.FromResult(_store.GetAll());
     }
 
+    // Find a task by ID, or return null when it does not exist.
     public Task<RobotTask?> GetTaskByIdAsync(string taskId)
     {
-        _store.TryGetValue(taskId, out var task);
+        _store.TryGet(taskId, out var task);
 
         return Task.FromResult(task);
     }
 
-    public async Task CreateTaskAsync(CreateTaskRequest request)
+    // Return the latest assigned or running task for each robot.
+    public Task<Dictionary<string, RobotTask>> GetActiveTasksByRobotAsync()
     {
+        var result =
+            _store.GetAll()
+                .Where(task =>
+                    task.Status is
+                        RobotTaskStatus.Assigned
+                        or RobotTaskStatus.Running
+                    &&
+                    !string.IsNullOrEmpty(
+                        task.AssignedRobot
+                    )
+                )
+                .GroupBy(task =>
+                    task.AssignedRobot!
+                )
+                .ToDictionary(
+                    group => group.Key,
+                    group =>
+                        group
+                            .OrderByDescending(
+                                task => task.CreatedAt
+                            )
+                            .First()
+                );
+
+        return Task.FromResult(result);
+    }
+
+    // Validate the scheduled time, then create and store a pending task.
+    public Task<RobotTask> CreateTaskAsync(CreateTaskRequest request)
+    {
+        if (request.ScheduledAt is null || request.ScheduledAt <= DateTimeOffset.UtcNow)
+            throw new ArgumentException("Scheduled time must be in the future.");
+
         var task = new RobotTask
         {
             Id = Guid.NewGuid().ToString(),
+            TaskCode = _store.NextTaskCode(),
 
             TaskType = request.TaskType,
-            Source = request.Source,
+            Source = request.Origin,
             Destination = request.Destination,
             Priority = request.Priority,
 
-            RequiredCapabilities =
-                GetRequiredCapabilities(request.TaskType),
+            RequiredCapabilities = GetRequiredCapabilities(request.TaskType),
 
             Status = RobotTaskStatus.Pending,
 
-            AssignedRobot = null,
+            AssignedRobot = request.RobotId,
+            ScheduledAt = request.ScheduledAt,
+            Note = request.Note,
             CreatedAt = DateTime.UtcNow,
         };
 
-        await SendTaskToRosBridgeAsync(task);
-
-        _store[task.Id] = task;
+        _store.Add(task);
+        return Task.FromResult(task);
     }
 
+    // Update the schedule only for pending tasks that have not been dispatched.
+    public async Task<UpdateTaskScheduleResult> UpdateTaskScheduleAsync(
+        string taskId, UpdateTaskScheduleRequest request)
+    {
+        if (request.ScheduledAt is null || request.ScheduledAt <= DateTimeOffset.UtcNow)
+            throw new ArgumentException("Scheduled time must be in the future.");
+
+        await _store.DispatchGate.WaitAsync();
+        try
+        {
+            if (!_store.TryGet(taskId, out var task))
+                return UpdateTaskScheduleResult.NotFound;
+            if (task.Status != RobotTaskStatus.Pending || task.Dispatched)
+                return UpdateTaskScheduleResult.Forbidden;
+            task.ScheduledAt = request.ScheduledAt;
+            return UpdateTaskScheduleResult.Success;
+        }
+        finally
+        {
+            _store.DispatchGate.Release();
+        }
+    }
+
+    // Delete only pending tasks that have not been dispatched.
+    public async Task<DeleteTaskResult> DeleteTaskAsync(string taskId)
+    {
+        await _store.DispatchGate.WaitAsync();
+        try
+        {
+            if (!_store.TryGet(taskId, out var task))
+                return DeleteTaskResult.NotFound;
+            if (task.Status != RobotTaskStatus.Pending || task.Dispatched)
+                return DeleteTaskResult.Forbidden;
+            _store.Remove(taskId);
+            return DeleteTaskResult.Success;
+        }
+        finally
+        {
+            _store.DispatchGate.Release();
+        }
+    }
+
+    // Update a task status while preventing concurrent dispatch changes.
+    public async Task<bool> UpdateTaskStatusAsync(
+        string taskId,
+        RobotTaskStatus status)
+    {
+        await _store.DispatchGate.WaitAsync();
+        try
+        {
+            if (!_store.TryGet(taskId, out var task))
+                return false;
+            task.Status = status;
+            return true;
+        }
+        finally
+        {
+            _store.DispatchGate.Release();
+        }
+    }
+
+    // Dispatch due pending tasks to the ROS bridge when called by the background worker.
+    internal async Task DispatchDueTasksAsync(CancellationToken cancellationToken)
+    {
+        await _store.DispatchGate.WaitAsync(cancellationToken);
+        try
+        {
+            foreach (var task in _store.GetAll().Where(task =>
+                task.Status == RobotTaskStatus.Pending && !task.Dispatched &&
+                task.ScheduledAt.HasValue && task.ScheduledAt <= DateTimeOffset.UtcNow))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    await _rosTaskClient.SendAsync(task);
+                    task.Dispatched = true;
+                    task.Status = RobotTaskStatus.Assigned;
+                }
+                catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+                {
+                    // Do not automatically retry an ambiguous submission: ROS may already have accepted it.
+                    task.Status = RobotTaskStatus.Failed;
+                    _logger.LogError(ex, "Scheduled task {TaskId} dispatch failed", task.Id);
+                }
+            }
+        }
+        finally
+        {
+            _store.DispatchGate.Release();
+        }
+    }
+
+    // Map each task type to the robot capabilities it requires.
     private static List<RobotCapability> GetRequiredCapabilities(TaskType taskType)
     {
         return taskType switch
@@ -170,195 +219,5 @@ public class TaskService : ITaskService
                 RobotCapability.Navigation
             ]
         };
-    }
-
-    private async Task SendTaskToRosBridgeAsync(RobotTask task)
-    {
-        var bridgeBaseUrl =
-            _configuration["RosBridge:BaseUrl"]
-            ?? "http://localhost:5050";
-
-        var bridgeUrl =
-            $"{bridgeBaseUrl}/api/hospital/tasks";
-
-        var payload = new
-        {
-            task_id = task.Id,
-
-            task_type =
-                ToSnakeCase(task.TaskType),
-
-            source = task.Source,
-
-            destination = task.Destination,
-
-            priority = (int)task.Priority,
-
-            required_capabilities =
-                task.RequiredCapabilities
-                    .Select(ToSnakeCase)
-                    .ToList(),
-
-            created_at =
-                new DateTimeOffset(
-                    task.CreatedAt
-                ).ToUnixTimeMilliseconds()
-                / 1000.0
-        };
-
-        var json = JsonSerializer.Serialize(payload);
-
-        _logger.LogInformation(
-            "Forwarding task to ROS bridge: {Json}",
-            json
-        );
-
-        var client =
-            _httpClientFactory.CreateClient();
-
-        try
-        {
-            using var content =
-                new StringContent(
-                    json,
-                    Encoding.UTF8,
-                    "application/json"
-                );
-
-            var response =
-                await client.PostAsync(
-                    bridgeUrl,
-                    content
-                );
-
-            var responseBody =
-                await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-            {
-                _logger.LogError(
-                    "ROS bridge request failed. Status={Status}, Body={Body}",
-                    response.StatusCode,
-                    responseBody
-                );
-
-                var statusCode = (int)response.StatusCode;
-
-                if (statusCode >= 400 && statusCode < 500)
-                {
-                    throw new ArgumentException(
-                        $"ROS bridge rejected task: {statusCode} {responseBody}"
-                    );
-                }
-
-                throw new InvalidOperationException(
-                    $"ROS bridge unavailable: {statusCode} {responseBody}"
-                );
-            }
-
-            _logger.LogInformation(
-                "ROS bridge accepted task. Body={Body}",
-                responseBody
-            );
-        }
-        catch (ArgumentException)
-        {
-            throw;
-        }
-        catch (InvalidOperationException)
-        {
-            throw;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(
-                ex,
-                "Failed to forward task to ROS bridge"
-            );
-
-            throw new InvalidOperationException(
-                "Failed to connect to ROS bridge",
-                ex
-            );
-        }
-    }
-
-    private static string ToSnakeCase(TaskType taskType)
-    {
-        return taskType switch
-        {
-            TaskType.MedicineDelivery => "medicine_delivery",
-            TaskType.SpecimenDelivery => "specimen_delivery",
-            TaskType.GeneralDelivery => "general_delivery",
-            TaskType.WasteCollection => "waste_collection",
-            _ => "general_delivery"
-        };
-    }
-
-    private static string ToSnakeCase(RobotCapability capability)
-    {
-        return capability switch
-        {
-            RobotCapability.Navigation => "navigation",
-            RobotCapability.GeneralDelivery => "general_delivery",
-            RobotCapability.MedicineDelivery => "medicine_delivery",
-            RobotCapability.SpecimenDelivery => "specimen_delivery",
-            RobotCapability.Manipulation => "manipulation",
-            _ => capability.ToString().ToLowerInvariant()
-        };
-    }
-
-    public Task<DeleteTaskResult> DeleteTaskAsync(string taskId)
-    {
-        if (!_store.TryGetValue(taskId, out var task))
-            return Task.FromResult(DeleteTaskResult.NotFound);
-
-        if (task.Status != RobotTaskStatus.Pending)
-            return Task.FromResult(DeleteTaskResult.Forbidden);
-
-        _store.TryRemove(taskId, out _);
-
-        return Task.FromResult(DeleteTaskResult.Success);
-    }
-
-    public Task<bool> UpdateTaskStatusAsync(
-        string taskId,
-        RobotTaskStatus status)
-    {
-        if (!_store.TryGetValue(taskId, out var task))
-            return Task.FromResult(false);
-
-        task.Status = status;
-        return Task.FromResult(true);
-    }
-
-    public Task<Dictionary<string, RobotTask>>
-        GetActiveTasksByRobotAsync()
-    {
-        var result =
-            _store.Values
-                .Where(task =>
-                    task.Status is
-                        RobotTaskStatus.Assigned
-                        or RobotTaskStatus.Running
-                    &&
-                    !string.IsNullOrEmpty(
-                        task.AssignedRobot
-                    )
-                )
-                .GroupBy(task =>
-                    task.AssignedRobot!
-                )
-                .ToDictionary(
-                    group => group.Key,
-                    group =>
-                        group
-                            .OrderByDescending(
-                                task => task.CreatedAt
-                            )
-                            .First()
-                );
-
-        return Task.FromResult(result);
     }
 }

@@ -164,6 +164,14 @@ const createTask = (input) => {
     endTime: secondsToTime(timeToSeconds(input.startTime) + durationSeconds),
     status: 'scheduled',
   }
+  if (candidate.robotId == null) {
+    const available = [...state.robots]
+      .sort((a, b) => a.queuedTasks - b.queuedTasks || b.battery - a.battery)
+      .find((robot) => robot.state !== 'error' && robot.state !== 'charging'
+        && validateTask({ ...candidate, robotId: robot.id }).ok)
+    if (!available) return { ok: false, reason: '目前沒有可自動分配的機器人。' }
+    candidate.robotId = available.id
+  }
   const validation = validateTask(candidate)
   if (!validation.ok) return validation
   state.tasks.push(candidate)
