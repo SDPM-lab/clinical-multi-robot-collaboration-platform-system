@@ -1,0 +1,81 @@
+tasks:
+
+  waste_transport:
+    required_capabilities:
+      - waste_transport
+
+    sources:
+      - ward_a_2
+      - ward_b_2
+      - consult_1_2
+      - consult_2_2
+      - consult_3_2
+      - nurse_station
+      - blood_draw
+      - x-ray
+      - ultrasound_2
+      - ecg_2
+      - therapy_room
+
+    destinations:
+      - waste_return_2
+
+
+  clothes_collection:
+    required_capabilities:
+      - clothes_collection
+
+    sources:
+      - ward_a_2
+      - ward_b_2
+      - x-ray
+      - ultrasound_2
+      - ecg_2
+      - therapy_room
+
+    destinations:
+      - clothes_return_2
+
+
+  specimen_delivery:
+    required_capabilities:
+      - specimen_delivery
+
+    sources:
+      - ward_a_2
+      - ward_b_2
+      - consult_1_2
+      - consult_2_2
+      - consult_3_2
+      - blood_draw
+
+    destinations:
+      - lab
+
+
+  medication_delivery:
+    required_capabilities:
+      - medication_delivery
+
+    sources:
+      - pharmacy
+
+    destinations:
+      - ward_a_2
+      - ward_b_2
+      - consult_1_2
+      - consult_2_2
+      - consult_3_2
+      - nurse_station
+
+
+  ward_service:
+    required_capabilities:
+      - ward_service
+
+    sources:
+      - nurse_station
+
+    destinations:
+      - ward_a_2
+      - ward_b_2

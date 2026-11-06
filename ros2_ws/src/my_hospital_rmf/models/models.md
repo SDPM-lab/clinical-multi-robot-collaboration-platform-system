@@ -6,7 +6,6 @@
 |------|------|
 | `hospital_L1/` | 由 `L1.building.yaml` 生成的醫院建築 |
 | `hospital_nav_overlay/` | 由導航圖生成的路網視覺化 |
-| `simple_robot/` | 模擬機器人模型 |
 | `*_real/` | Gazebo 儲存世界時產生或使用的本地模型 |
 | 其他資料夾 | 自訂醫院設備、家具與場景模型 |
 

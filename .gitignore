@@ -1,55 +1,122 @@
-# OS / editor
+# OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# IDE settings and caches (keep shareable VS Code project configuration)
+.idea/
+.fleet/
 .vscode/settings.json
+.history/
+
+# Blender autosaves
 *.blend1
 
-# Node / frontend
+# Python caches and environments
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+.venv_*/
+venv/
+ENV/
+
+# Node.js / frontend
 node_modules/
 dist/
 .vite/
+coverage/
 
-# .NET
+# .NET build outputs
 bin/
 obj/
 *.user
 *.suo
 
-# ROS 2 / colcon
-build/
-install/
-log/
+# ROS 2 / colcon generated workspace outputs
+/ros2_ws/build/
+/ros2_ws/install/
+/ros2_ws/log/
 
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.venv/
-venv/
-
-# Logs / env
-*.log
-.env
-.env.local
-vertex-env.sh
-
-# RMF runtime cache
+# Runtime files and logs
 run/
 .rmf_schedule_node.yaml
+*.log
+logs/
+*.tmp
+*.swp
+*.orig
+*.bak
+*.bak_*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+vertex-env.sh
+
+# Existing ROS experiment outputs generated locally
 ros2_ws/src/my_hospital_rmf/scripts/experiment/results/plots/
-
-# RL virtual environment
-.venv_rl/
-
-# RL generated training logs
 ros2_ws/src/my_hospital_rmf/scripts/rl/logs/
-
-# Version 2 experiment outputs and local backups
 ros2_ws/src/my_hospital_rmf/scripts/experiment_v2/results/
 ros2_ws/src/my_hospital_rmf/scripts/rl_v2/models/
 ros2_ws/src/my_hospital_rmf/scripts/rl_v2/results/
-*.bak_*
 
-# RL generated training logs
-ros2_ws/src/my_hospital_rmf/scripts/rl/logs/
+# Fleet-sizing RL checkpoints and trained policies (keep local)
+experiments/**/results_rl/checkpoints/
+experiments/**/results_rl/models/
+experiments/**/results_rl/final_models/
+*.pt
+*.pth
+*.ckpt
+
+# TensorBoard event data and generated experiment plots
+events.out.tfevents.*
+experiments/**/results_rl/runs/
+experiments/**/results_rl/tensorboard/
+experiments/**/results_rl/**/plots/
+
+# Fleet-sizing results are local by default; explicitly allow research summaries.
+experiments/fleet_sizing/results/*.csv
+experiments/fleet_sizing/results/*.json
+!experiments/fleet_sizing/results/fleet_sizing_sweep.csv
+!experiments/fleet_sizing/results/demand_fleet_sensitivity_selected.csv
+!experiments/fleet_sizing/results/dynamic_weight_priority_summary.csv
+!experiments/fleet_sizing/results/dynamic_weight_sensitivity_summary.csv
+!experiments/fleet_sizing/results/static_weight_sensitivity_summary.csv
+
+# RL results are local by default; retain only final research tables.
+experiments/fleet_sizing/results_rl/**/*.csv
+experiments/fleet_sizing/results_rl/**/*.json
+!experiments/fleet_sizing/results_rl/reward_tuned_final/final_aggregate_summary.csv
+!experiments/fleet_sizing/results_rl/final_reward_confirmation_validation/confirmation_config_summary.csv
+!experiments/fleet_sizing/results_rl/final_policy_vs_baselines_seed7104/comparison_summary.csv
+!experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k.json
+
+# Raw run outputs remain local, including bootstrap results outside the final evaluation.
+experiments/**/results_rl/**/*_runs.csv
+experiments/**/results_rl/**/*_episode_runs.csv
+experiments/fleet_sizing/results_rl/**/paired_bootstrap_results.csv
+!experiments/fleet_sizing/results_rl/final_policy_vs_baselines_seed7104/paired_bootstrap_results.csv
+
+# Accidental root-level colcon outputs
+/build/
+/install/
+/log/
+
+# Root-level colcon outputs
+/build/
+/install/
+/log/
+
+# Local route experiment outputs
+/ros2_ws/batch_route_results.csv
+/ros2_ws/batch_route_summary.csv
+/ros2_ws/route_travel_times.csv

@@ -1,11 +1,15 @@
 from launch import LaunchDescription
 from launch.actions import (
-    DeclareLaunchArgument, ExecuteProcess,
-    RegisterEventHandler
+    DeclareLaunchArgument,
+    ExecuteProcess,
+    RegisterEventHandler,
+    IncludeLaunchDescription,
+    TimerAction,
 )
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node, LifecycleNode
 from ament_index_python.packages import get_package_prefix, get_package_share_directory
 import os
@@ -22,6 +26,12 @@ def generate_launch_description():
     cleanup_executable = os.path.join(
         get_package_prefix("my_hospital_rmf"),
         "lib", "my_hospital_rmf", "hospital_cleanup_gazebo_runtime"
+    )
+
+    g1_fleet_launch = os.path.join(
+        pkg,
+        "launch",
+        "hospital_g1_fleet.launch.py",
     )
 
     use_sim_time_arg = DeclareLaunchArgument(
@@ -47,7 +57,7 @@ def generate_launch_description():
 
     # ── Gz Sim（Gazebo Harmonic）────────────────────────────────
     gz_sim = ExecuteProcess(
-        cmd=["gz", "sim", world_file, "--verbose"],
+        cmd=["gz", "sim", "-r", world_file, "--verbose"],
         additional_env={
             # Keep model paths inherited from the shell (including the source
             # workspace used by Traffic Editor) and add the installed models.
@@ -62,6 +72,58 @@ def generate_launch_description():
         # ROS launch escalates only if graceful shutdown does not finish in time.
         sigterm_timeout="10.0",
         sigkill_timeout="5.0",
+    )
+
+    # ── Gazebo /clock → ROS 2 ─────────────────────────────────
+    # G1 的 gz_ros2_control / controller_manager 使用模擬時間，
+    # 正式 hospital launch 必須提供 ROS /clock。
+    clock_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="hospital_clock_bridge",
+        arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"
+        ],
+        output="screen",
+        condition=IfCondition(launch_gazebo),
+    )
+
+    # ── Gazebo LiDAR → ROS 2 ───────────────────────────────────
+    lidar_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="hospital_lidar_bridge",
+        arguments=[
+            "/hospital_robot_1/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/hospital_robot_2/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/hospital_robot_3/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/hospital_robot_4/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/hospital_robot_5/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/hospital_robot_6/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/hospital_robot_7/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+        ],
+        output="screen",
+        condition=IfCondition(launch_gazebo),
+    )
+
+    # ── G1 Fleet ────────────────────────────────────────────────
+    # Gazebo 已由 hospital.launch.py 啟動，因此所有 G1 只負責 spawn。
+    g1_fleet = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            g1_fleet_launch
+        ),
+        launch_arguments={
+            "start_world": "false",
+        }.items(),
+        condition=IfCondition(launch_gazebo),
+    )
+
+    # 正式醫院 world 較大，先給 Gazebo 幾秒初始化再 spawn G1。
+    g1_fleet_delayed = TimerAction(
+        period=5.0,
+        actions=[
+            g1_fleet,
+        ],
     )
 
     # ── RViz2（自動載入醫院地圖設定）────────────────────────────
@@ -88,6 +150,17 @@ def generate_launch_description():
         executable="rmf_traffic_blockade",
         output="screen",
         parameters=[{"use_sim_time": use_sim_time}],
+    )
+
+    # ── RMF Task Dispatcher（任務競標與派工）──────────────────────
+    task_dispatcher = Node(
+        package="rmf_task_ros2",
+        executable="rmf_task_dispatcher",
+        name="rmf_dispatcher_node",
+        output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+        }],
     )
 
     # ── Robot State Aggregator（/robot_state → /fleet_states
@@ -169,11 +242,19 @@ def generate_launch_description():
         }],
     )
 
-    # ── 模擬機器人狀態發布者 ──────────────────────────────────────
-    fake_robot = Node(
+    # ── G1 真實導航橋 ────────────────────────────────────────────
+    # RMF /robot_path_requests
+    #   -> G1 /cmd_vel
+    # G1 odometry
+    #   -> RMF /robot_state
+    g1_navigation_bridge = Node(
         package="my_hospital_rmf",
-        executable="hospital_fake_robot_state_publisher",
+        executable="hospital_g1_navigation_bridge",
+        name="hospital_g1_navigation_bridge",
         output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+        }],
     )
 
     # ── WebSocket 推播（port 9090）───────────────────────────────
@@ -239,10 +320,15 @@ def generate_launch_description():
         launch_gazebo_arg,
         launch_rviz_arg,
         gz_sim,
+        clock_bridge,
+        lidar_bridge,
+        g1_fleet_delayed,
         rviz2,
+        # RMF 核心
         # RMF 核心
         traffic_schedule,
         traffic_blockade,
+        task_dispatcher,
         # state_aggregator,
         fleet_manager,
         hospital_fleet_adapter_sim,
@@ -251,7 +337,7 @@ def generate_launch_description():
         door_supervisor,
         fake_door,
         # 自定義節點
-        fake_robot,
+        g1_navigation_bridge,
         ws_adapter,
         # 地圖
         map_server,

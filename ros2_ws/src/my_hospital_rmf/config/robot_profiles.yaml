@@ -1,0 +1,19 @@
+robot_types:
+
+  clean:
+    model: agibot_g1
+    capabilities:
+      - waste_transport
+      - clothes_collection
+
+  medical:
+    model: agibot_g1
+    capabilities:
+      - specimen_delivery
+      - medication_delivery
+
+  ward:
+    model: agibot_g1
+    capabilities:
+      - medication_delivery
+      - ward_service
