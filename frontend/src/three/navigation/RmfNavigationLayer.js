@@ -1,9 +1,10 @@
 import * as THREE from 'three'
+import { visualTokens, colorHex } from '@/config/visualTokens.js'
 import { rmfToThree } from '@/config/rmfMapTransform.js'
 import { overviewRouteColors, robotRouteColors, routeLayerY, routeVisualConfig } from '@/data/demoActiveRoutes.js'
 import { RobotRouteController } from './RobotRouteController.js'
 
-const BASE_COLOR = 0xd8cfc5
+const BASE_COLOR = 0xDAC9A6
 const UP = new THREE.Vector3(0, 1, 0)
 
 export const routeStyle = Object.freeze({
@@ -221,7 +222,7 @@ export class RmfNavigationLayer {
       const arrowCount = Math.max(1, Math.floor(total / routeVisualConfig.arrowSpacing))
       const arrows = []
       for (let index = 0; index < arrowCount; index += 1) {
-        const arrowColor = new THREE.Color(0xe6e0d8).lerp(new THREE.Color(colors.main), 0.22)
+        const arrowColor = new THREE.Color(visualTokens.white).lerp(new THREE.Color(colors.arrow), 0.35)
         const material = new THREE.MeshBasicMaterial({ color: arrowColor, transparent: true, opacity: 0.82, blending: THREE.NormalBlending, depthTest: true, depthWrite: false, side: THREE.DoubleSide })
         material.userData.baseOpacity = 0.82
         const arrow = new THREE.Mesh(chevronGeometry(routeVisualConfig.arrowLength, routeVisualConfig.arrowWidth), material)
@@ -261,9 +262,10 @@ export class RmfNavigationLayer {
       progress,
       color,
       offline: robot?.state === 'offline',
+      modelAssetKey: robot?.modelAssetKey,
     })
     this.robotControllers.set(id, controller)
-    controller.load().catch((error) => console.error(`${id} robot.glb load failed:`, error))
+    controller.load().catch((error) => console.error(`${id} robot model load failed:`, error))
   }
 
   applyEmphasis() {
@@ -312,7 +314,7 @@ export class RmfNavigationLayer {
         arrow.visible = this.arrowsVisible
       })
     })
-    this.robotControllers.forEach((controller) => controller.update(delta, this.camera, this.elapsed))
+    this.robotControllers.forEach((controller) => controller.update(delta, this.camera, this.elapsed, this.doorController))
   }
 
   setSelectedRobot(id = null) { this.selectedRobotId = id; this.applyEmphasis() }
@@ -323,7 +325,7 @@ export class RmfNavigationLayer {
     const points = route.vertexIds.map((id) => this.vertices.get(id)).filter(Boolean).map((vertex) => pointOf(vertex, 0.075))
     if (points.length < 2) return
     const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    const material = new THREE.LineDashedMaterial({ color: route.colors?.main || robotRouteColors[route.robotId]?.main || 0x9a72dc, dashSize: 0.34, gapSize: 0.2, transparent: true, opacity: 0.72, depthTest: true })
+    const material = new THREE.LineDashedMaterial({ color: route.colors?.main || robotRouteColors[route.robotId]?.main || colorHex(visualTokens.neutral), dashSize: 0.34, gapSize: 0.2, transparent: true, opacity: 0.72, depthTest: true })
     const line = new THREE.Line(geometry, material)
     line.computeLineDistances(); line.renderOrder = 4; this.previewGroup.add(line)
   }

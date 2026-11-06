@@ -82,9 +82,9 @@ html[data-theme='dark'] .top-navbar { background: transparent; }
 .app-shell::before,.app-shell::after{content:"";position:fixed;pointer-events:none;z-index:0}
 .app-shell::before{inset:-15%;background:linear-gradient(128deg,transparent 31%,rgba(255,255,255,.22) 39%,rgba(255,207,136,.075) 43%,transparent 51%),linear-gradient(142deg,transparent 58%,rgba(255,223,174,.065) 64%,transparent 70%);filter:blur(18px);opacity:.85}
 .app-shell::after{inset:0;background:radial-gradient(circle at 50% 18%,rgba(255,255,255,.20),transparent 42%);opacity:.7}
-/* Shared values taken from the original Overview calendar panel. */
-.clinic-overview-dashboard{--overview-panel-background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(248,250,249,.84));--overview-panel-backdrop:blur(18px) saturate(108%);--overview-panel-radius:var(--panel-radius);--overview-panel-border:1px solid rgba(255,255,255,.72);--overview-panel-shadow:0 7px 18px rgba(42,52,58,.045),inset 0 1px 0 rgba(255,255,255,.82)}
-.overview-tool-panel{position:relative;isolation:isolate;overflow:hidden;color:rgba(35,37,36,.88);background:var(--overview-panel-background);backdrop-filter:var(--overview-panel-backdrop);-webkit-backdrop-filter:var(--overview-panel-backdrop);border:1px solid rgba(255,255,255,.72);border-radius:var(--overview-panel-radius);box-shadow:0 1px 0 rgba(255,255,255,.82) inset,0 8px 24px rgba(45,52,58,.055)}
+/* Overview panels share the global information surface, including teleported dialogs. */
+.clinic-overview-dashboard{--overview-panel-background:var(--info-background);--overview-panel-backdrop:var(--info-backdrop);--overview-panel-radius:var(--info-radius);--overview-panel-border:var(--info-border);--overview-panel-shadow:var(--info-shadow)}
+.overview-tool-panel{position:relative;isolation:isolate;overflow:hidden;color:var(--text-primary);background:var(--overview-panel-background);backdrop-filter:var(--overview-panel-backdrop);-webkit-backdrop-filter:var(--overview-panel-backdrop);border:var(--overview-panel-border);border-radius:var(--overview-panel-radius);box-shadow:var(--overview-panel-shadow)}
 .dashboard-panel-enter{animation:dashboard-panel-enter 520ms cubic-bezier(.22,.8,.3,1) var(--panel-delay,0ms) both}
 @keyframes dashboard-panel-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes dashboard-fade{from{opacity:0}to{opacity:1}}

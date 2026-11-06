@@ -10,13 +10,20 @@ export const taskTypeColors = Object.freeze({
 
 const taskTypeByLabel = Object.freeze({
   藥品配送: 'medicine',
+  MedicineDelivery: 'medicine',
+  檢體配送: 'specimen',
   檢體運送: 'specimen',
+  SpecimenDelivery: 'specimen',
+  一般配送: 'supplies',
   病房物資補充: 'supplies',
+  GeneralDelivery: 'supplies',
+  廢棄物收集: 'waste',
   醫療廢棄物運送: 'waste',
+  WasteCollection: 'waste',
   文件配送: 'document',
   巡檢: 'inspection',
   前往充電: 'charging',
 })
 
-export const getTaskTypeKey = (task) => taskTypeByLabel[task.type || task.title] || 'document'
+export const getTaskTypeKey = (task) => taskTypeByLabel[task.taskType] || taskTypeByLabel[task.type || task.title] || 'document'
 export const getTaskTypeColor = (task) => taskTypeColors[getTaskTypeKey(task)]

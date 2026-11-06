@@ -20,42 +20,46 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
-              required:
-                - title
-                - items
-                - place
+              required: [taskType, origin, destination, priority, scheduledAt]
               properties:
-                title:
-                  $ref: "#/components/schemas/Task/properties/title"
-                robot:
-                  type: ["string", "null"]
-                  description: 指派機器人的 id，預設為 "系統指定"
-                place:
-                  $ref: "#/components/schemas/Place/properties/id"
-                startTime:
-                  type: ["string", "null"]
-                  format: time
-                  description: 任務預計開始時間，預設為 "系統指定"
-                items:
-                  $ref: "#/components/schemas/Task/properties/items"
+                taskType:
+                  type: string
+                  enum: [medicineDelivery, specimenDelivery, generalDelivery, wasteCollection]
+                origin:
+                  type: string
+                  description: Graph 0 起點 waypoint ID
+                destination:
+                  type: string
+                  description: Graph 0 目的地 waypoint ID
+                priority:
+                  type: string
+                  enum: [low, normal, high, emergency]
+                robotId:
+                  type: [string, 'null']
+                scheduledAt:
+                  type: string
+                  format: date-time
+                  description: 含時區，目前分鐘代表立即派送
                 note:
-                  $ref: "#/components/schemas/Task/properties/note"
-
+                  type: [string, 'null']
       responses:
         '201':
-          description: 新增任務成功
+          description: 已建立；回傳任務物件及 Location 標頭
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskCode:
+                    type: string
+                    example: T0001
+                  id:
+                    type: string
         '400':
-          description: |
-            傳送資料格式不符：<錯誤原因> </br>
-            錯誤原因有以下:
-            * 標題不可為空白
-            * 任務地點不可為空白
-            * 時間格式不符
-            * 開始時間不可早於現在
-            * 系統不處理該事項
+          description: 缺少必填資料、格式錯誤或時間早於目前分鐘
     get:
       tags: ["任務管理"]
       description: 取得所有任務紀錄
@@ -96,6 +100,38 @@ paths:
           description: 任務已被處理無法刪除
         '404':
           $ref: "#/components/responses/TaskNotFound"
+  /task/{task_id}/schedule:
+    patch:
+      tags: ["任務管理"]
+      description: 修改尚未派送的待處理任務之預定時間
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scheduledAt]
+              properties:
+                scheduledAt:
+                  type: string
+                  format: date-time
+                  description: 含時區且晚於現在的預定時間
+      responses:
+        '204':
+          description: 排程時間已更新
+        '400':
+          description: 缺少時間、格式錯誤或時間不晚於現在
+        '403':
+          description: 任務已處理或已派送
+        '404':
+          description: 查無任務
+
   /task/{task_id}/abort:
     patch:
       tags: ["任務管理"]

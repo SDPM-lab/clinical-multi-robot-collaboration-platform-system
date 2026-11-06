@@ -16,14 +16,14 @@ it('maps progress to the needle angle and updates the same gauge in reduced moti
   wrapper.unmount()
 })
 
-it.each([18, 34, 64, 86])('renders one warm gradient arc at %s percent', async (value) => {
+it.each([18, 34, 64, 86])('renders one orange and yellow gradient arc at %s percent', async (value) => {
   vi.stubGlobal('matchMedia', () => ({ matches: true }))
   const wrapper = mount(F1SpeedGauge, { props: { value } })
   await wrapper.vm.$nextTick()
   const arcs = wrapper.findAll('.speed-arc')
   expect(arcs).toHaveLength(1)
   expect(arcs[0].attributes('stroke-dasharray')).toBe(`${value} 100`)
-  expect(wrapper.findAll('stop').map(stop => stop.attributes('stop-color'))).toEqual(['#C95E2E', '#E88746', '#F4B26D'])
+  expect(wrapper.findAll('stop').map(stop => stop.attributes('stop-color'))).toEqual(['var(--overview-accent)', 'var(--overview-accent)', 'var(--overview-yellow)'])
   expect(wrapper.findAll('.speed-track')).toHaveLength(1)
   expect(wrapper.findAll('.speed-ticks line')).toHaveLength(37)
   expect(wrapper.find('.speed-core').exists()).toBe(true)

@@ -1,15 +1,12 @@
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js'
-import { SCENE_ASSETS } from '@/config/sceneAssets.js'
+import { DEFAULT_ROBOT_ASSET, loadRobotAsset } from '@/three/robot/robotModelAssets.js'
+import { poseAgibotMapArms } from '@/three/robot/poseAgibotMapArms.js'
 
-let robotAssetPromise
 export const REALTIME_ROBOT_SCALE_MULTIPLIER = 1.4
 export const ROBOT_HIT_TARGET = Object.freeze({ radius: 0.45, height: 0.8, segments: 16 })
-const loadRobotAsset = () => {
-  if (!robotAssetPromise) robotAssetPromise = new GLTFLoader().loadAsync(SCENE_ASSETS.robot)
-  return robotAssetPromise
-}
+// Robot Status views the AGIBOT face from roughly +X; align that direction with map route forward (+Z).
+const AGIBOT_ROUTE_YAW = -Math.atan2(1, 0.28)
 
 const samplePolyline = (points, distance) => {
   if (points.length < 2) return { point: points[0]?.clone(), tangent: new THREE.Vector3(0, 0, 1), total: 0 }
@@ -25,7 +22,7 @@ const samplePolyline = (points, distance) => {
 }
 
 export class RobotRouteController {
-  constructor({ id, parent, points = [], progress = 0, color, floorY = 0, targetHeight = 0.72, offline = false }) {
+  constructor({ id, parent, points = [], progress = 0, color, floorY = 0, targetHeight = 0.72, offline = false, modelAssetKey = DEFAULT_ROBOT_ASSET }) {
     this.id = id
     this.wrapper = new THREE.Group()
     this.wrapper.name = `Robot ${id.slice(1)} Wrapper`
@@ -45,6 +42,7 @@ export class RobotRouteController {
     this.selected = false
     this.following = false
     this.offline = offline
+    this.modelAssetKey = modelAssetKey
     this.emphasis = 1
     this.boundsHeight = targetHeight
     this.targetQuaternion = new THREE.Quaternion()
@@ -58,13 +56,16 @@ export class RobotRouteController {
   }
 
   async load() {
-    const gltf = await loadRobotAsset()
+    const gltf = await loadRobotAsset(this.modelAssetKey)
     if (this.disposed) return
     this.model = cloneSkeleton(gltf.scene)
-    this.model.name = `${this.id} robot.glb`
+    this.model.name = `${this.id} ${this.modelAssetKey}`
+    if (this.modelAssetKey === DEFAULT_ROBOT_ASSET) {
+      poseAgibotMapArms(this.model)
+      this.model.rotation.y = AGIBOT_ROUTE_YAW
+    }
     this.model.traverse((object) => {
       if (!object.isMesh) return
-      object.geometry = object.geometry.clone()
       object.userData.robotId = this.id
       object.castShadow = true
       object.receiveShadow = true
@@ -161,8 +162,8 @@ export class RobotRouteController {
     this.setEmphasis(this.emphasis)
   }
 
-  update(delta, camera, elapsed) {
-    this.mixer?.update(delta)
+  update(delta, camera, elapsed, doorController) {
+    this.waitingForDoor = false
     if (this.entranceAge != null && this.entranceAge < 1.5) {
       this.entranceAge = Math.min(1.5, this.entranceAge + delta)
       const progress = this.entranceAge / 1.5
@@ -170,13 +171,26 @@ export class RobotRouteController {
       this.wrapper.scale.setScalar(0.94 + eased * 0.06)
     }
     if (this.points.length > 1 && this.totalDistance > 0) {
-      this.distance = Math.min(this.distance + this.speed * delta, this.totalDistance)
+      // Check each small step so a slow frame cannot jump through a closed door.
+      let remaining = Math.min(this.speed * Math.max(0, delta), this.totalDistance - this.distance)
+      while (remaining > 1e-8) {
+        const step = Math.min(remaining, 0.05)
+        const next = samplePolyline(this.points, this.distance + step).point
+        const current = samplePolyline(this.points, this.distance).point
+        if (doorController && !doorController.canMove(current, next)) {
+          this.waitingForDoor = true
+          break
+        }
+        this.distance += step
+        remaining -= step
+      }
       const pose = samplePolyline(this.points, this.distance)
       this.wrapper.position.copy(pose.point).setY(this.floorY)
       const yaw = Math.atan2(pose.tangent.x, pose.tangent.z)
       this.targetQuaternion.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, yaw)
       this.wrapper.quaternion.slerp(this.targetQuaternion, 1 - Math.exp(-8 * delta))
     }
+    if (!this.waitingForDoor) this.mixer?.update(delta)
   }
 
   getWorldPosition() { return this.wrapper.getWorldPosition(new THREE.Vector3()) }
@@ -216,7 +230,7 @@ export class RobotRouteController {
     if (this.mixer && this.model) this.mixer.uncacheRoot(this.model)
     this.wrapper.removeFromParent()
     this.wrapper.traverse((object) => {
-      object.geometry?.dispose()
+      if (object === this.hitTarget) object.geometry.dispose()
       const materials = Array.isArray(object.material) ? object.material : [object.material]
       materials.filter(Boolean).forEach((material) => material.dispose())
     })

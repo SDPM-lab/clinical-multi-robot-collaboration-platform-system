@@ -1,0 +1,2525 @@
+{
+  "schemaVersion": 1,
+  "level": "L1",
+  "coordinateFrame": "rmf",
+  "units": "metres",
+  "isDemo": false,
+  "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+  "nameSources": [
+    "frontend/public/generated/rmf-navigation.json",
+    "frontend/src/three/navigation/RoomLabelLayer.js",
+    "frontend/src/data/demoActiveRoutes.js"
+  ],
+  "labelPolicy": "current-navigation-and-frontend-names",
+  "sourceHashes": {
+    "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml": "88f2e03e4fa6ff58dbce3eab456c10f409743e60e3edae8cbbb0a6bbfa1aa252",
+    "frontend/src/data/hospitalRoomLayout.js": "c7be7c807ea943ae038290a7c0ad8025f5c2c9f8a5e333d7ae06e419fa956c0a",
+    "frontend/public/generated/rmf-navigation.json": "8e2a60ba505185277b66ccb0efd7036e62c03bd8ecee809bab0502f6e0041938"
+  },
+  "transform": {
+    "imageScale": 0.027755958510393218,
+    "invertImageY": true,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "validation": {
+    "matchedWaypoints": 51,
+    "maxWaypointErrorMeters": 0.0,
+    "boundaryToleranceMeters": 0.12,
+    "boundarySampleStepMeters": 0.01
+  },
+  "footprint": [
+    {
+      "x": 0.9551658002181617,
+      "y": -0.4574181962512802
+    },
+    {
+      "x": 1.0113161042846872,
+      "y": -26.395194888462683
+    },
+    {
+      "x": 38.73901904891432,
+      "y": -26.282922036288138
+    },
+    {
+      "x": 38.79514159702234,
+      "y": -0.5135407443592953
+    }
+  ],
+  "walls": [
+    {
+      "sourceWallIndex": 0,
+      "vertexIndices": [
+        38,
+        39
+      ],
+      "endpoints": [
+        {
+          "x": 0.9551658002181617,
+          "y": -0.4574181962512802
+        },
+        {
+          "x": 1.0113161042846872,
+          "y": -26.395194888462683
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 1,
+      "vertexIndices": [
+        39,
+        40
+      ],
+      "endpoints": [
+        {
+          "x": 1.0113161042846872,
+          "y": -26.395194888462683
+        },
+        {
+          "x": 38.73901904891432,
+          "y": -26.282922036288138
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 2,
+      "vertexIndices": [
+        40,
+        41
+      ],
+      "endpoints": [
+        {
+          "x": 38.73901904891432,
+          "y": -26.282922036288138
+        },
+        {
+          "x": 38.79514159702234,
+          "y": -0.5135407443592953
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 3,
+      "vertexIndices": [
+        41,
+        38
+      ],
+      "endpoints": [
+        {
+          "x": 38.79514159702234,
+          "y": -0.5135407443592953
+        },
+        {
+          "x": 0.9551658002181617,
+          "y": -0.4574181962512802
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 4,
+      "vertexIndices": [
+        42,
+        43
+      ],
+      "endpoints": [
+        {
+          "x": 7.654510482037731,
+          "y": -0.477097170835149
+        },
+        {
+          "x": 7.694451306334187,
+          "y": -2.9011915632988514
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 5,
+      "vertexIndices": [
+        44,
+        45
+      ],
+      "endpoints": [
+        {
+          "x": 0.9764823763541437,
+          "y": -4.671549864967261
+        },
+        {
+          "x": 7.709689327556393,
+          "y": -4.671549864967261
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 6,
+      "vertexIndices": [
+        45,
+        46
+      ],
+      "endpoints": [
+        {
+          "x": 7.709689327556393,
+          "y": -4.671549864967261
+        },
+        {
+          "x": 7.685708179403414,
+          "y": -6.650799510384892
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 7,
+      "vertexIndices": [
+        45,
+        47
+      ],
+      "endpoints": [
+        {
+          "x": 7.709689327556393,
+          "y": -4.671549864967261
+        },
+        {
+          "x": 7.699974742077755,
+          "y": -4.142937635136823
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 8,
+      "vertexIndices": [
+        48,
+        49
+      ],
+      "endpoints": [
+        {
+          "x": 0.921303530835482,
+          "y": -8.42448852707455
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -8.42448852707455
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 9,
+      "vertexIndices": [
+        49,
+        50
+      ],
+      "endpoints": [
+        {
+          "x": 7.691287127064002,
+          "y": -8.42448852707455
+        },
+        {
+          "x": 7.692813704782074,
+          "y": -7.8800276449346764
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 10,
+      "vertexIndices": [
+        49,
+        51
+      ],
+      "endpoints": [
+        {
+          "x": 7.691287127064002,
+          "y": -8.42448852707455
+        },
+        {
+          "x": 7.700280057621369,
+          "y": -10.372207403624373
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 11,
+      "vertexIndices": [
+        52,
+        53
+      ],
+      "endpoints": [
+        {
+          "x": 0.9948845768465345,
+          "y": -12.214231590166618
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -12.214231590166618
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 12,
+      "vertexIndices": [
+        53,
+        54
+      ],
+      "endpoints": [
+        {
+          "x": 7.691287127064002,
+          "y": -12.214231590166618
+        },
+        {
+          "x": 7.6963109555543845,
+          "y": -11.590777250106166
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 13,
+      "vertexIndices": [
+        53,
+        55
+      ],
+      "endpoints": [
+        {
+          "x": 7.691287127064002,
+          "y": -12.214231590166618
+        },
+        {
+          "x": 7.694368038458655,
+          "y": -14.186181418496014
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 14,
+      "vertexIndices": [
+        56,
+        57
+      ],
+      "endpoints": [
+        {
+          "x": 0.9580801758617531,
+          "y": -15.911963650796732
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -15.930365851289125
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 15,
+      "vertexIndices": [
+        57,
+        58
+      ],
+      "endpoints": [
+        {
+          "x": 7.691287127064002,
+          "y": -15.930365851289125
+        },
+        {
+          "x": 7.686735149868298,
+          "y": -15.375468728749343
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 16,
+      "vertexIndices": [
+        57,
+        59
+      ],
+      "endpoints": [
+        {
+          "x": 7.691287127064002,
+          "y": -15.930365851289125
+        },
+        {
+          "x": 7.701973171090503,
+          "y": -18.058998065409693
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 17,
+      "vertexIndices": [
+        60,
+        61
+      ],
+      "endpoints": [
+        {
+          "x": 1.0316889778313159,
+          "y": -19.738483358915076
+        },
+        {
+          "x": 7.672912682530122,
+          "y": -19.756885559407465
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 18,
+      "vertexIndices": [
+        61,
+        62
+      ],
+      "endpoints": [
+        {
+          "x": 7.672912682530122,
+          "y": -19.756885559407465
+        },
+        {
+          "x": 7.694368038458655,
+          "y": -19.28639430669779
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 19,
+      "vertexIndices": [
+        66,
+        67
+      ],
+      "endpoints": [
+        {
+          "x": 31.824038325427512,
+          "y": -16.56245229444631
+        },
+        {
+          "x": 38.68983549043391,
+          "y": -16.500667530802176
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 20,
+      "vertexIndices": [
+        68,
+        69
+      ],
+      "endpoints": [
+        {
+          "x": 32.28775712426065,
+          "y": -16.519069731294564
+        },
+        {
+          "x": 32.290754767779774,
+          "y": -15.379798658276965
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 21,
+      "vertexIndices": [
+        70,
+        71
+      ],
+      "endpoints": [
+        {
+          "x": 32.290754767779774,
+          "y": -14.104884216019073
+        },
+        {
+          "x": 32.30615932475304,
+          "y": -12.986874207220435
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 22,
+      "vertexIndices": [
+        71,
+        72
+      ],
+      "endpoints": [
+        {
+          "x": 32.30615932475304,
+          "y": -12.986874207220435
+        },
+        {
+          "x": 38.76341653644496,
+          "y": -12.986874207220435
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 23,
+      "vertexIndices": [
+        71,
+        73
+      ],
+      "endpoints": [
+        {
+          "x": 32.30615932475304,
+          "y": -12.986874207220435
+        },
+        {
+          "x": 32.31953769675505,
+          "y": -11.196781419051135
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 24,
+      "vertexIndices": [
+        74,
+        75
+      ],
+      "endpoints": [
+        {
+          "x": 32.307630390554095,
+          "y": -9.97243833319918
+        },
+        {
+          "x": 32.32453376928692,
+          "y": -8.994790206587599
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 25,
+      "vertexIndices": [
+        75,
+        76
+      ],
+      "endpoints": [
+        {
+          "x": 32.32453376928692,
+          "y": -8.994790206587599
+        },
+        {
+          "x": 38.76341653644496,
+          "y": -8.976388006095208
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 26,
+      "vertexIndices": [
+        75,
+        77
+      ],
+      "endpoints": [
+        {
+          "x": 32.32453376928692,
+          "y": -8.994790206587599
+        },
+        {
+          "x": 32.307630390554095,
+          "y": -8.379607142163245
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 27,
+      "vertexIndices": [
+        78,
+        79
+      ],
+      "endpoints": [
+        {
+          "x": 32.307630390554095,
+          "y": -7.1671713625122475
+        },
+        {
+          "x": 32.30615932475304,
+          "y": -5.241851544480311
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 28,
+      "vertexIndices": [
+        79,
+        80
+      ],
+      "endpoints": [
+        {
+          "x": 32.30615932475304,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 38.80019318147123,
+          "y": -5.241851544480311
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 29,
+      "vertexIndices": [
+        79,
+        81
+      ],
+      "endpoints": [
+        {
+          "x": 32.30615932475304,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 31.51122867301538,
+          "y": -5.205852066292331
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 30,
+      "vertexIndices": [
+        84,
+        85
+      ],
+      "endpoints": [
+        {
+          "x": 29.969773761182182,
+          "y": -0.5139015718199305
+        },
+        {
+          "x": 29.969773761182182,
+          "y": -5.22344934398792
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 31,
+      "vertexIndices": [
+        87,
+        88
+      ],
+      "endpoints": [
+        {
+          "x": 22.445494236475216,
+          "y": -0.49549937132753974
+        },
+        {
+          "x": 22.487211442116337,
+          "y": -5.248374194730253
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 32,
+      "vertexIndices": [
+        89,
+        90
+      ],
+      "endpoints": [
+        {
+          "x": 16.677917081849543,
+          "y": -5.250622427369596
+        },
+        {
+          "x": 13.742835493209503,
+          "y": -5.250122820116408
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 33,
+      "vertexIndices": [
+        91,
+        92
+      ],
+      "endpoints": [
+        {
+          "x": 16.374572211289458,
+          "y": -0.5690804173385922
+        },
+        {
+          "x": 16.374572211289458,
+          "y": -5.241851544480311
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 34,
+      "vertexIndices": [
+        93,
+        94
+      ],
+      "endpoints": [
+        {
+          "x": 12.567009822833716,
+          "y": -5.238770633085657
+        },
+        {
+          "x": 10.800343063647189,
+          "y": -5.241851544480311
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 35,
+      "vertexIndices": [
+        94,
+        95
+      ],
+      "endpoints": [
+        {
+          "x": 10.800343063647189,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 10.800343063647189,
+          "y": -0.4586949703427583
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 36,
+      "vertexIndices": [
+        107,
+        108
+      ],
+      "endpoints": [
+        {
+          "x": 28.15128662745675,
+          "y": -7.5960564334148435
+        },
+        {
+          "x": 25.379021491438674,
+          "y": -7.585509169180894
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 37,
+      "vertexIndices": [
+        108,
+        109
+      ],
+      "endpoints": [
+        {
+          "x": 25.379021491438674,
+          "y": -7.585509169180894
+        },
+        {
+          "x": 25.396063649964056,
+          "y": -15.64148183511295
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 38,
+      "vertexIndices": [
+        109,
+        110
+      ],
+      "endpoints": [
+        {
+          "x": 25.396063649964056,
+          "y": -15.64148183511295
+        },
+        {
+          "x": 28.189090242947906,
+          "y": -15.616529228412107
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 39,
+      "vertexIndices": [
+        111,
+        112
+      ],
+      "endpoints": [
+        {
+          "x": 28.192559737761705,
+          "y": -8.773464193425724
+        },
+        {
+          "x": 28.187064057976645,
+          "y": -12.27995769991923
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 40,
+      "vertexIndices": [
+        112,
+        113
+      ],
+      "endpoints": [
+        {
+          "x": 28.187064057976645,
+          "y": -12.27995769991923
+        },
+        {
+          "x": 25.404529217309726,
+          "y": -12.312959534588087
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 41,
+      "vertexIndices": [
+        112,
+        114
+      ],
+      "endpoints": [
+        {
+          "x": 28.187064057976645,
+          "y": -12.27995769991923
+        },
+        {
+          "x": 28.20146940044354,
+          "y": -14.512896806121853
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 42,
+      "vertexIndices": [
+        108,
+        115
+      ],
+      "endpoints": [
+        {
+          "x": 25.379021491438674,
+          "y": -7.585509169180894
+        },
+        {
+          "x": 22.185393149274322,
+          "y": -7.5587801811353845
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 43,
+      "vertexIndices": [
+        115,
+        116
+      ],
+      "endpoints": [
+        {
+          "x": 22.185393149274322,
+          "y": -7.5587801811353845
+        },
+        {
+          "x": 22.14953245087889,
+          "y": -10.181079873321806
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 44,
+      "vertexIndices": [
+        117,
+        118
+      ],
+      "endpoints": [
+        {
+          "x": 25.385488629771597,
+          "y": -11.426517487641659
+        },
+        {
+          "x": 22.14953245087889,
+          "y": -11.446140950308507
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 45,
+      "vertexIndices": [
+        118,
+        119
+      ],
+      "endpoints": [
+        {
+          "x": 22.14953245087889,
+          "y": -11.446140950308507
+        },
+        {
+          "x": 22.14320409233852,
+          "y": -14.44994629222028
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 46,
+      "vertexIndices": [
+        120,
+        121
+      ],
+      "endpoints": [
+        {
+          "x": 25.318652281678567,
+          "y": -15.446274178909357
+        },
+        {
+          "x": 22.152641118232054,
+          "y": -15.454462186669923
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 47,
+      "vertexIndices": [
+        128,
+        129
+      ],
+      "endpoints": [
+        {
+          "x": 14.400096590735616,
+          "y": -17.12931223510407
+        },
+        {
+          "x": 10.409594679737873,
+          "y": -17.134891182764658
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 48,
+      "vertexIndices": [
+        135,
+        136
+      ],
+      "endpoints": [
+        {
+          "x": 22.96558538704296,
+          "y": -17.237976812672258
+        },
+        {
+          "x": 26.73753688072987,
+          "y": -17.249023684159397
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 49,
+      "vertexIndices": [
+        88,
+        153
+      ],
+      "endpoints": [
+        {
+          "x": 22.487211442116337,
+          "y": -5.248374194730253
+        },
+        {
+          "x": 22.82638925511334,
+          "y": -5.242101348106905
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 50,
+      "vertexIndices": [
+        170,
+        171
+      ],
+      "endpoints": [
+        {
+          "x": 26.354171581784318,
+          "y": -0.6091322654690896
+        },
+        {
+          "x": 26.354171581784318,
+          "y": -5.23466275122612
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 51,
+      "vertexIndices": [
+        83,
+        171
+      ],
+      "endpoints": [
+        {
+          "x": 24.00723875397951,
+          "y": -5.242101348106905
+        },
+        {
+          "x": 26.354171581784318,
+          "y": -5.23466275122612
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 52,
+      "vertexIndices": [
+        85,
+        82
+      ],
+      "endpoints": [
+        {
+          "x": 29.969773761182182,
+          "y": -5.22344934398792
+        },
+        {
+          "x": 30.334431544091725,
+          "y": -5.217731616534779
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 53,
+      "vertexIndices": [
+        171,
+        172
+      ],
+      "endpoints": [
+        {
+          "x": 26.354171581784318,
+          "y": -5.23466275122612
+        },
+        {
+          "x": 26.744420358440447,
+          "y": -5.222644421191119
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 54,
+      "vertexIndices": [
+        173,
+        85
+      ],
+      "endpoints": [
+        {
+          "x": 27.585509169180895,
+          "y": -5.220534968344329
+        },
+        {
+          "x": 29.969773761182182,
+          "y": -5.22344934398792
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 55,
+      "vertexIndices": [
+        174,
+        175
+      ],
+      "endpoints": [
+        {
+          "x": 25.298640235592575,
+          "y": -0.5432118640069057
+        },
+        {
+          "x": 25.284540208669295,
+          "y": -2.0222436251502294
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 56,
+      "vertexIndices": [
+        176,
+        177
+      ],
+      "endpoints": [
+        {
+          "x": 24.15767604910584,
+          "y": -0.5150395661188566
+        },
+        {
+          "x": 24.177632583274814,
+          "y": -2.0373706225383934
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 57,
+      "vertexIndices": [
+        179,
+        180
+      ],
+      "endpoints": [
+        {
+          "x": 24.198865891535267,
+          "y": -3.779473358443224
+        },
+        {
+          "x": 24.198865891535267,
+          "y": -5.224143242950681
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 58,
+      "vertexIndices": [
+        181,
+        182
+      ],
+      "endpoints": [
+        {
+          "x": 25.282375243905484,
+          "y": -3.758240050182773
+        },
+        {
+          "x": 25.292978020056456,
+          "y": -5.245376551211131
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 59,
+      "vertexIndices": [
+        184,
+        185
+      ],
+      "endpoints": [
+        {
+          "x": 27.692813704782075,
+          "y": -0.46163710194486
+        },
+        {
+          "x": 27.684292625519383,
+          "y": -1.9623462666848006
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 60,
+      "vertexIndices": [
+        186,
+        187
+      ],
+      "endpoints": [
+        {
+          "x": 28.860950974650482,
+          "y": -0.47870701642875185
+        },
+        {
+          "x": 28.843908816125097,
+          "y": -1.9879095044728725
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 61,
+      "vertexIndices": [
+        189,
+        190
+      ],
+      "endpoints": [
+        {
+          "x": 27.94597580235537,
+          "y": -3.6404160063061535
+        },
+        {
+          "x": 27.963989419428614,
+          "y": -5.2325532983793295
+        }
+      ]
+    },
+    {
+      "sourceWallIndex": 62,
+      "vertexIndices": [
+        191,
+        192
+      ],
+      "endpoints": [
+        {
+          "x": 29.03942178787231,
+          "y": -3.610384059197908
+        },
+        {
+          "x": 29.02743121379582,
+          "y": -5.214511925347574
+        }
+      ]
+    }
+  ],
+  "doors": [
+    {
+      "sourceDoorIndex": 0,
+      "name": "ward_a_door",
+      "vertexIndices": [
+        47,
+        43
+      ],
+      "endpoints": [
+        {
+          "x": 7.699974742077755,
+          "y": -4.142937635136823
+        },
+        {
+          "x": 7.694451306334187,
+          "y": -2.9011915632988514
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 1,
+      "name": "main_entrance",
+      "vertexIndices": [
+        122,
+        123
+      ],
+      "endpoints": [
+        {
+          "x": 17.413561006209008,
+          "y": -26.319199074061224
+        },
+        {
+          "x": 19.75985544696808,
+          "y": -26.319199074061224
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 2,
+      "name": "ward_b_door",
+      "vertexIndices": [
+        50,
+        46
+      ],
+      "endpoints": [
+        {
+          "x": 7.692813704782074,
+          "y": -7.8800276449346764
+        },
+        {
+          "x": 7.685708179403414,
+          "y": -6.650799510384892
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 3,
+      "name": "lab_door",
+      "vertexIndices": [
+        93,
+        90
+      ],
+      "endpoints": [
+        {
+          "x": 12.567009822833716,
+          "y": -5.238770633085657
+        },
+        {
+          "x": 13.742835493209503,
+          "y": -5.250122820116408
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 4,
+      "name": "pharmacy_door",
+      "vertexIndices": [
+        82,
+        81
+      ],
+      "endpoints": [
+        {
+          "x": 30.334431544091725,
+          "y": -5.217731616534779
+        },
+        {
+          "x": 31.51122867301538,
+          "y": -5.205852066292331
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 5,
+      "name": "ultrasound_door",
+      "vertexIndices": [
+        77,
+        78
+      ],
+      "endpoints": [
+        {
+          "x": 32.307630390554095,
+          "y": -8.379607142163245
+        },
+        {
+          "x": 32.307630390554095,
+          "y": -7.1671713625122475
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 6,
+      "name": "ecg_door",
+      "vertexIndices": [
+        74,
+        73
+      ],
+      "endpoints": [
+        {
+          "x": 32.307630390554095,
+          "y": -9.97243833319918
+        },
+        {
+          "x": 32.31953769675505,
+          "y": -11.196781419051135
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 7,
+      "name": "therapy_room_door",
+      "vertexIndices": [
+        70,
+        69
+      ],
+      "endpoints": [
+        {
+          "x": 32.290754767779774,
+          "y": -14.104884216019073
+        },
+        {
+          "x": 32.290754767779774,
+          "y": -15.379798658276965
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 8,
+      "name": "consult_1_door",
+      "vertexIndices": [
+        62,
+        59
+      ],
+      "endpoints": [
+        {
+          "x": 7.694368038458655,
+          "y": -19.28639430669779
+        },
+        {
+          "x": 7.701973171090503,
+          "y": -18.058998065409693
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 9,
+      "name": "consult_2_door",
+      "vertexIndices": [
+        58,
+        55
+      ],
+      "endpoints": [
+        {
+          "x": 7.686735149868298,
+          "y": -15.375468728749343
+        },
+        {
+          "x": 7.694368038458655,
+          "y": -14.186181418496014
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 10,
+      "name": "ward_c_door",
+      "vertexIndices": [
+        54,
+        51
+      ],
+      "endpoints": [
+        {
+          "x": 7.6963109555543845,
+          "y": -11.590777250106166
+        },
+        {
+          "x": 7.700280057621369,
+          "y": -10.372207403624373
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 11,
+      "name": "Pantry_room",
+      "vertexIndices": [
+        118,
+        116
+      ],
+      "endpoints": [
+        {
+          "x": 22.14953245087889,
+          "y": -11.446140950308507
+        },
+        {
+          "x": 22.14953245087889,
+          "y": -10.181079873321806
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 12,
+      "name": "clothes_return_door",
+      "vertexIndices": [
+        121,
+        119
+      ],
+      "endpoints": [
+        {
+          "x": 22.152641118232054,
+          "y": -15.454462186669923
+        },
+        {
+          "x": 22.14320409233852,
+          "y": -14.44994629222028
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 13,
+      "name": "charging_station_door",
+      "vertexIndices": [
+        107,
+        111
+      ],
+      "endpoints": [
+        {
+          "x": 28.15128662745675,
+          "y": -7.5960564334148435
+        },
+        {
+          "x": 28.192559737761705,
+          "y": -8.773464193425724
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 14,
+      "name": "waste_return_door",
+      "vertexIndices": [
+        110,
+        114
+      ],
+      "endpoints": [
+        {
+          "x": 28.189090242947906,
+          "y": -15.616529228412107
+        },
+        {
+          "x": 28.20146940044354,
+          "y": -14.512896806121853
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 15,
+      "name": "restroom_men",
+      "vertexIndices": [
+        153,
+        83
+      ],
+      "endpoints": [
+        {
+          "x": 22.82638925511334,
+          "y": -5.242101348106905
+        },
+        {
+          "x": 24.00723875397951,
+          "y": -5.242101348106905
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 16,
+      "name": "restroom_women",
+      "vertexIndices": [
+        172,
+        173
+      ],
+      "endpoints": [
+        {
+          "x": 26.744420358440447,
+          "y": -5.222644421191119
+        },
+        {
+          "x": 27.585509169180895,
+          "y": -5.220534968344329
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 17,
+      "name": "restroom_men_1",
+      "vertexIndices": [
+        177,
+        175
+      ],
+      "endpoints": [
+        {
+          "x": 24.177632583274814,
+          "y": -2.0373706225383934
+        },
+        {
+          "x": 25.284540208669295,
+          "y": -2.0222436251502294
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 18,
+      "name": "restroom_men_2",
+      "vertexIndices": [
+        175,
+        178
+      ],
+      "endpoints": [
+        {
+          "x": 25.284540208669295,
+          "y": -2.0222436251502294
+        },
+        {
+          "x": 26.333992999947263,
+          "y": -2.0267678463874232
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 19,
+      "name": "restroom_men_3",
+      "vertexIndices": [
+        179,
+        181
+      ],
+      "endpoints": [
+        {
+          "x": 24.198865891535267,
+          "y": -3.779473358443224
+        },
+        {
+          "x": 25.282375243905484,
+          "y": -3.758240050182773
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 20,
+      "name": "restroom_men_4",
+      "vertexIndices": [
+        181,
+        183
+      ],
+      "endpoints": [
+        {
+          "x": 25.282375243905484,
+          "y": -3.758240050182773
+        },
+        {
+          "x": 26.375987765173488,
+          "y": -3.73753410513402
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 21,
+      "name": "restroom_women_1",
+      "vertexIndices": [
+        185,
+        187
+      ],
+      "endpoints": [
+        {
+          "x": 27.684292625519383,
+          "y": -1.9623462666848006
+        },
+        {
+          "x": 28.843908816125097,
+          "y": -1.9879095044728725
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 22,
+      "name": "restroom_women_2",
+      "vertexIndices": [
+        187,
+        188
+      ],
+      "endpoints": [
+        {
+          "x": 28.843908816125097,
+          "y": -1.9879095044728725
+        },
+        {
+          "x": 29.972882428535346,
+          "y": -1.9721718759974798
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 23,
+      "name": "restroom_women_3",
+      "vertexIndices": [
+        189,
+        191
+      ],
+      "endpoints": [
+        {
+          "x": 27.94597580235537,
+          "y": -3.6404160063061535
+        },
+        {
+          "x": 29.03942178787231,
+          "y": -3.610384059197908
+        }
+      ]
+    },
+    {
+      "sourceDoorIndex": 24,
+      "name": "restroom_women_4",
+      "vertexIndices": [
+        191,
+        193
+      ],
+      "endpoints": [
+        {
+          "x": 29.03942178787231,
+          "y": -3.610384059197908
+        },
+        {
+          "x": 29.98864781296925,
+          "y": -3.5875409053438543
+        }
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "ward-a",
+      "label": "病房 A",
+      "category": "ward",
+      "boundaryVertexIndices": [
+        38,
+        42,
+        45,
+        44
+      ],
+      "waypointNames": [
+        "ward_a_1",
+        "ward_a_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 0.9551658002181617,
+          "y": -0.4574181962512802
+        },
+        {
+          "x": 7.654510482037731,
+          "y": -0.477097170835149
+        },
+        {
+          "x": 7.709689327556393,
+          "y": -4.671549864967261
+        },
+        {
+          "x": 0.9764823763541437,
+          "y": -4.671549864967261
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 0.009728256029173795
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.008027833953641941
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.01213597166589231
+        }
+      ]
+    },
+    {
+      "id": "ward-b",
+      "label": "病房 B",
+      "category": "ward",
+      "boundaryVertexIndices": [
+        44,
+        45,
+        49,
+        48
+      ],
+      "waypointNames": [
+        "ward_b_1",
+        "ward_b_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 0.9764823763541437,
+          "y": -4.671549864967261
+        },
+        {
+          "x": 7.709689327556393,
+          "y": -4.671549864967261
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -8.42448852707455
+        },
+        {
+          "x": 0.921303530835482,
+          "y": -8.42448852707455
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.014253618941755215
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.050099170802150685
+        }
+      ]
+    },
+    {
+      "id": "consultation-3",
+      "label": "診間 3",
+      "category": "consultation",
+      "boundaryVertexIndices": [
+        48,
+        49,
+        53,
+        52
+      ],
+      "waypointNames": [
+        "consult_3_1",
+        "consult_3_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 0.921303530835482,
+          "y": -8.42448852707455
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -8.42448852707455
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -12.214231590166618
+        },
+        {
+          "x": 0.9948845768465345,
+          "y": -12.214231590166618
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.008985883449604352
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.05007706077870269
+        }
+      ]
+    },
+    {
+      "id": "consultation-2",
+      "label": "診間 2",
+      "category": "consultation",
+      "boundaryVertexIndices": [
+        52,
+        53,
+        57,
+        56
+      ],
+      "waypointNames": [
+        "consult_2_1",
+        "consult_2_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 0.9948845768465345,
+          "y": -12.214231590166618
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -12.214231590166618
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -15.930365851289125
+        },
+        {
+          "x": 0.9580801758617531,
+          "y": -15.911963650796732
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.004522868501598854
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 1.9354609201613e-15
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.030057251466504648
+        }
+      ]
+    },
+    {
+      "id": "consultation-1",
+      "label": "診間 1",
+      "category": "consultation",
+      "boundaryVertexIndices": [
+        56,
+        57,
+        61,
+        60
+      ],
+      "waypointNames": [
+        "consult_1_1",
+        "consult_1_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 0.9580801758617531,
+          "y": -15.911963650796732
+        },
+        {
+          "x": 7.691287127064002,
+          "y": -15.930365851289125
+        },
+        {
+          "x": 7.672912682530122,
+          "y": -19.756885559407465
+        },
+        {
+          "x": 1.0316889778313159,
+          "y": -19.738483358915076
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 1.981394441346375e-15
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.020901616429830606
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 2.4420396830027168e-15
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.03410104868990827
+        }
+      ]
+    },
+    {
+      "id": "laboratory",
+      "label": "檢驗室",
+      "category": "examination",
+      "boundaryVertexIndices": [
+        95,
+        91,
+        92,
+        94
+      ],
+      "waypointNames": [
+        "lab"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 10.800343063647189,
+          "y": -0.4586949703427583
+        },
+        {
+          "x": 16.374572211289458,
+          "y": -0.5690804173385922
+        },
+        {
+          "x": 16.374572211289458,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 10.800343063647189,
+          "y": -5.241851544480311
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 0.08714569147160225
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 0.008717547208799135
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        }
+      ]
+    },
+    {
+      "id": "blood-draw",
+      "label": "抽血區",
+      "category": "examination",
+      "boundaryVertexIndices": [
+        91,
+        87,
+        88,
+        92
+      ],
+      "waypointNames": [
+        "blood_draw"
+      ],
+      "sourceNote": "候選邊界僅引用原始頂點；入口若缺少門段，不視為已驗證閉合區域。",
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "unresolved",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": false,
+      "polygon": [],
+      "candidatePolygon": [
+        {
+          "x": 16.374572211289458,
+          "y": -0.5690804173385922
+        },
+        {
+          "x": 22.445494236475216,
+          "y": -0.49549937132753974
+        },
+        {
+          "x": 22.487211442116337,
+          "y": -5.248374194730253
+        },
+        {
+          "x": 16.374572211289458,
+          "y": -5.241851544480311
+        }
+      ],
+      "issues": [
+        "unsupported-boundary-edge:2"
+      ],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 0.08757027778318054
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 1.9612412612756718e-15
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 2.9027992634299085
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        }
+      ]
+    },
+    {
+      "id": "x-ray",
+      "label": "X 光檢查區",
+      "category": "examination",
+      "boundaryVertexIndices": [
+        84,
+        41,
+        80,
+        85
+      ],
+      "waypointNames": [
+        "x-ray"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 29.969773761182182,
+          "y": -0.5139015718199305
+        },
+        {
+          "x": 38.79514159702234,
+          "y": -0.5135407443592953
+        },
+        {
+          "x": 38.80019318147123,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 29.969773761182182,
+          "y": -5.22344934398792
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 0.013419736039973063
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.01528432675799641
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 0.02077049715245781
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        }
+      ]
+    },
+    {
+      "id": "ultrasound",
+      "label": "超音波室",
+      "category": "examination",
+      "boundaryVertexIndices": [
+        79,
+        80,
+        76,
+        75
+      ],
+      "waypointNames": [
+        "ultrasound_1",
+        "ultrasound_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 32.30615932475304,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 38.80019318147123,
+          "y": -5.241851544480311
+        },
+        {
+          "x": 38.76341653644496,
+          "y": -8.976388006095208
+        },
+        {
+          "x": 32.32453376928692,
+          "y": -8.994790206587599
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.015196056083676933
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 1.9459391555799263e-15
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.013873550112876387
+        }
+      ]
+    },
+    {
+      "id": "ecg",
+      "label": "心電圖室",
+      "category": "examination",
+      "boundaryVertexIndices": [
+        75,
+        76,
+        72,
+        71
+      ],
+      "waypointNames": [
+        "ecg_1",
+        "ecg_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 32.32453376928692,
+          "y": -8.994790206587599
+        },
+        {
+          "x": 38.76341653644496,
+          "y": -8.976388006095208
+        },
+        {
+          "x": 38.76341653644496,
+          "y": -12.986874207220435
+        },
+        {
+          "x": 32.30615932475304,
+          "y": -12.986874207220435
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 1.9459391555799263e-15
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.013250532550200455
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.012397042248151696
+        }
+      ]
+    },
+    {
+      "id": "therapy",
+      "label": "治療室",
+      "category": "examination",
+      "boundaryVertexIndices": [
+        71,
+        72,
+        67,
+        68
+      ],
+      "waypointNames": [
+        "therapy_room"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 32.30615932475304,
+          "y": -12.986874207220435
+        },
+        {
+          "x": 38.76341653644496,
+          "y": -12.986874207220435
+        },
+        {
+          "x": 38.68983549043391,
+          "y": -16.500667530802176
+        },
+        {
+          "x": 32.28775712426065,
+          "y": -16.519069731294564
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 8.881784197001252e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.06917686668068504
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 0.038963339231967264
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.009574880023069618
+        }
+      ]
+    },
+    {
+      "id": "charging",
+      "label": "充電區",
+      "category": "charging",
+      "boundaryVertexIndices": [
+        108,
+        107,
+        112,
+        113
+      ],
+      "waypointNames": [
+        "charging_station_1",
+        "charging_station_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 25.379021491438674,
+          "y": -7.585509169180894
+        },
+        {
+          "x": 28.15128662745675,
+          "y": -7.5960564334148435
+        },
+        {
+          "x": 28.187064057976645,
+          "y": -12.27995769991923
+        },
+        {
+          "x": 25.404529217309726,
+          "y": -12.312959534588087
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 5.912353965822931e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.03226984178473129
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 9.806206306378359e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.015441349237077542
+        }
+      ]
+    },
+    {
+      "id": "waste-return",
+      "label": "廢棄物回收區",
+      "category": "support",
+      "boundaryVertexIndices": [
+        113,
+        112,
+        110,
+        109
+      ],
+      "waypointNames": [
+        "waste_return_1",
+        "waste_return_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 25.404529217309726,
+          "y": -12.312959534588087
+        },
+        {
+          "x": 28.187064057976645,
+          "y": -12.27995769991923
+        },
+        {
+          "x": 28.189090242947906,
+          "y": -15.616529228412107
+        },
+        {
+          "x": 25.396063649964056,
+          "y": -15.64148183511295
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 9.806206306378359e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.01301853095051894
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 9.806206306378359e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.01541378295878627
+        }
+      ]
+    },
+    {
+      "id": "pantry",
+      "label": "茶水間",
+      "category": "support",
+      "boundaryVertexIndices": [
+        115,
+        108,
+        117,
+        118
+      ],
+      "waypointNames": [
+        "pantry"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 22.185393149274322,
+          "y": -7.5587801811353845
+        },
+        {
+          "x": 25.379021491438674,
+          "y": -7.585509169180894
+        },
+        {
+          "x": 25.385488629771597,
+          "y": -11.426517487641659
+        },
+        {
+          "x": 22.14953245087889,
+          "y": -11.446140950308507
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 6.280369834735101e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.0016540835607400306
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 9.713522104867314e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.011650887193809146
+        }
+      ]
+    },
+    {
+      "id": "clothes-return",
+      "label": "衣物回收區",
+      "category": "support",
+      "boundaryVertexIndices": [
+        118,
+        117,
+        120,
+        121
+      ],
+      "waypointNames": [
+        "clothes_return_1",
+        "clothes_return_2"
+      ],
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "source-geometry-verified",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": true,
+      "polygon": [
+        {
+          "x": 22.14953245087889,
+          "y": -11.446140950308507
+        },
+        {
+          "x": 25.385488629771597,
+          "y": -11.426517487641659
+        },
+        {
+          "x": 25.318652281678567,
+          "y": -15.446274178909357
+        },
+        {
+          "x": 22.152641118232054,
+          "y": -15.454462186669923
+        }
+      ],
+      "candidatePolygon": [],
+      "issues": [],
+      "boundaryEvidence": [
+        {
+          "edgeIndex": 0,
+          "maxDistanceToSourceMeters": 9.713522104867314e-16
+        },
+        {
+          "edgeIndex": 1,
+          "maxDistanceToSourceMeters": 0.0755026601617291
+        },
+        {
+          "edgeIndex": 2,
+          "maxDistanceToSourceMeters": 9.914623809710498e-16
+        },
+        {
+          "edgeIndex": 3,
+          "maxDistanceToSourceMeters": 0.008643362662524424
+        }
+      ]
+    },
+    {
+      "id": "nurse-station",
+      "label": "護理站",
+      "category": "nursing",
+      "boundaryVertexIndices": [],
+      "waypointNames": [
+        "nurse_station"
+      ],
+      "sourceNote": "頂點 96–106 附近有外形參考，但缺少對應 walls 閉合邊界；不自動連成房間。",
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "unresolved",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": false,
+      "polygon": [],
+      "candidatePolygon": [],
+      "issues": [
+        "missing-room-boundary"
+      ],
+      "boundaryEvidence": []
+    },
+    {
+      "id": "reception",
+      "label": "護理接待處",
+      "category": "nursing",
+      "boundaryVertexIndices": [],
+      "waypointNames": [
+        "reception_back"
+      ],
+      "sourceNote": "開放式櫃檯，沒有經確認的房間邊界。",
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "unresolved",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": false,
+      "polygon": [],
+      "candidatePolygon": [],
+      "issues": [
+        "missing-room-boundary"
+      ],
+      "boundaryEvidence": []
+    },
+    {
+      "id": "pharmacy",
+      "label": "藥局",
+      "category": "support",
+      "boundaryVertexIndices": [],
+      "waypointNames": [
+        "pharmacy"
+      ],
+      "sourceNote": "依目前 pharmacy 導航節點位置；缺少包含該節點且可由現有牆線確認的房間邊界。",
+      "level": "L1",
+      "source": "ros2_ws/src/my_hospital_rmf/maps/L1.building.yaml",
+      "isDemo": false,
+      "verificationStatus": "unresolved",
+      "nameAuthority": "current-navigation-and-frontend-names",
+      "renderable": false,
+      "polygon": [],
+      "candidatePolygon": [],
+      "issues": [
+        "missing-room-boundary"
+      ],
+      "boundaryEvidence": []
+    }
+  ]
+}

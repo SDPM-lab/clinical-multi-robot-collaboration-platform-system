@@ -1,12 +1,12 @@
 export const batteryRanges = ['Day', 'Weekly', 'Monthly']
 
 export const robotStatusLabels = {
-  executing: '執行中', charging: '充電中', idle: '待命', offline: '離線',
+  busy: '忙碌', charging: '充電中', idle: '待命', offline: '離線',
   error: '異常', absent: '未在此樓層', unknown: '樓層資料未知',
 }
 
 const demoProfiles = {
-  R01: { values: [94, 91, 88, 90, 86, 84, 82], status: 'executing', task: '藥品配送', taskId: 'T001' },
+  R01: { values: [94, 91, 88, 90, 86, 84, 82], status: 'busy', task: '藥品配送', taskId: 'T001' },
   R02: { values: [62, 57, 51, 46, 41, 37, 34], status: 'charging', task: '檢驗報告運送', taskId: 'T014' },
   R03: { values: [48, 43, 39, 33, 28, 23, 18], status: 'idle', task: '病房物資補充', taskId: 'T021' },
 }

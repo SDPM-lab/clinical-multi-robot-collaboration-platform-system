@@ -37,26 +37,23 @@ describe('real GLB structure inspection',()=>{
     }
     c.reset();expect(c.mode).toBe('whole');expect(c.selected).toBeNull()
   })
-  it('focuses from computed bounds while preserving selected material color and texture',async()=>{
+  it('highlights selected meshes without zooming into the part',async()=>{
     const {controller:c,camera,controls,setEnabled}=await setup()
     setEnabled(false);c.select('chassis');expect(c.selected).toBeNull()
     setEnabled(true)
-    const before=camera.position.clone();c.select('chassis')
+    const before=camera.position.clone(), targetBefore=controls.target.clone()
+    c.select('chassis')
+    expect(c.focusTween).toBeUndefined()
     expect(camera.position.equals(before)).toBe(true)
-    c.update(c.focusTween.start+375)
-    expect(camera.position.distanceTo(before)).toBeGreaterThan(0)
-    c.update(c.focusTween.start+800)
-    const box=new THREE.Box3();c.records.filter(r=>r.id==='chassis').forEach(r=>box.expandByObject(r.mesh))
-    expect(controls.target.distanceTo(box.getCenter(new THREE.Vector3()))).toBeGreaterThan(.5)
+    expect(controls.target.equals(targetBefore)).toBe(true)
     const chosen=c.records.find(r=>r.id==='chassis'),shell=c.records.find(r=>r.id==='shell')
     const mat=chosen.mesh.material.clone();c.styleMaterial(chosen.mesh,mat,chosen.mesh.material)
-    expect(mat.color.getHex()).toBe(chosen.mesh.material.color.getHex());expect(mat.emissive.getHex()).toBe(chosen.mesh.material.emissive.getHex());mat.dispose()
+    expect(mat.color.getHex()).not.toBe(chosen.mesh.material.color.getHex())
+    expect(mat.map).toBe(chosen.mesh.material.map);mat.dispose()
     const faded=shell.mesh.material.clone();c.styleMaterial(shell.mesh,faded,shell.mesh.material)
-    expect(faded.opacity).toBe(1);expect(faded.color.getHex()).not.toBe(shell.mesh.material.color.getHex());expect(shell.mesh.material.opacity).toBe(1);faded.dispose()
+    expect(faded.opacity).toBe(1);expect(faded.color.getHex()).not.toBe(shell.mesh.material.color.getHex());faded.dispose()
     c.reset();c.setMode('xray')
     const xray=shell.mesh.material.clone();c.styleMaterial(shell.mesh,xray,shell.mesh.material);expect(xray.opacity).toBe(.27);xray.dispose()
-    c.selected='shell'
-    const internal=chosen.mesh.material.clone();c.styleMaterial(chosen.mesh,internal,chosen.mesh.material);expect(internal.opacity).toBe(1);internal.dispose()
   })
   it('keeps every whole-model corner in the overlay safe area when focusing tiny parts or exploding',async()=>{
     const {controller:c,camera,canvas}=await setup()
@@ -89,4 +86,31 @@ describe('real GLB structure inspection',()=>{
     event('pointerdown',100);event('pointerup',100);expect(onSelect).toHaveBeenCalledWith('display')
     const remove=vi.spyOn(canvas,'removeEventListener');c.dispose();expect(remove).toHaveBeenCalledTimes(5)
   })
+})
+
+it('separates bottom meshes in three axes and staggers entrance without changing geometry or materials', async () => {
+ const { controller:c } = await setup()
+ const originals = c.records.map(r => ({ geometry:r.mesh.geometry, material:r.mesh.material, transform:r.mesh.userData.originalTransform }))
+ const lower = c.records.filter(r => ['chassis','baseCenter','baseRear','lowerFront','lowerInner'].includes(r.id))
+ expect(new Set(lower.map(r=>r.offset.x.toFixed(3))).size).toBeGreaterThan(2)
+ expect(new Set(lower.map(r=>r.offset.y.toFixed(3))).size).toBeGreaterThan(2)
+ expect(lower.some(r=>r.offset.z>0)).toBe(true)
+ expect(lower.some(r=>r.offset.z<0)).toBe(true)
+ c.applyEntrance(310)
+ expect(c.records[0].mesh.position.equals(c.records[0].original)).toBe(false)
+ expect(c.records.at(-1).mesh.position.equals(c.records.at(-1).original)).toBe(true)
+ for (let repeat=0;repeat<3;repeat++) {
+  c.applyEntrance(1700)
+  c.applyEntrance(4100)
+  c.records.forEach((r,i)=>{
+   expect(r.mesh.position.equals(originals[i].transform.position)).toBe(true)
+   expect(r.mesh.quaternion.equals(originals[i].transform.quaternion)).toBe(true)
+   expect(r.mesh.scale.equals(originals[i].transform.scale)).toBe(true)
+   expect(r.mesh.geometry).toBe(originals[i].geometry)
+   expect(r.mesh.material).toBe(originals[i].material)
+  })
+ }
+ c.reducedMotion=()=>true
+ c.applyEntrance(1500)
+ expect(c.records.every(r=>r.mesh.position.equals(r.original))).toBe(true)
 })

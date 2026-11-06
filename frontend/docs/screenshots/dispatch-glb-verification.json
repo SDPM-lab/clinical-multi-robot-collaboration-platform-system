@@ -1,0 +1,32 @@
+{
+  "errors": [],
+  "checks": {
+    "scheduleWidth": 414.71875,
+    "floorButtons": [
+      "F1"
+    ],
+    "canvas": {
+      "x": 0,
+      "y": 64,
+      "width": 1536,
+      "height": 800
+    },
+    "zoom": true,
+    "reset": true,
+    "wheel": true,
+    "pan": true,
+    "mapSelection": true,
+    "createTask": true,
+    "alignmentMovesStations": true,
+    "savedAlignment": true,
+    "timeline": true,
+    "mobileNoHorizontalOverflow": true,
+    "cleanup": {
+      "contexts": 1,
+      "allDetached": true,
+      "allContextsLost": true,
+      "remainingAnimationFrames": 0
+    },
+    "remount": true
+  }
+}

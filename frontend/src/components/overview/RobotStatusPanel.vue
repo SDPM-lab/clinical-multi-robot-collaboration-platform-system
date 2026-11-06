@@ -12,10 +12,10 @@ const props = defineProps({
 })
 const previewReady = ref(false)
 const displayedRobots = computed(() => (props.robots.length ? props.robots : props.data).slice(0, 3))
-const stateLabel = { executing: '執行中', charging: '充電中', idle: '待命', offline: '離線', error: '異常' }
+const stateLabel = { busy: '忙碌', charging: '充電中', idle: '待命', offline: '離線', error: '異常' }
 const batteryColor = (battery) => battery >= 60 ? '#ee9b32' : battery >= 30 ? '#d8b73e' : '#d96565'
 const stateColor = (state) => ({
-  executing: '#f3a12b',
+  busy: '#f3a12b',
   charging: '#dfbd43',
   idle: '#70a397',
   offline: '#a8aaa6',

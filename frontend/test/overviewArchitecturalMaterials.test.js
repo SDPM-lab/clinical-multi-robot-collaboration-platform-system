@@ -44,3 +44,29 @@ it('slightly deepens overview model colors without changing lightness or neutral
  expect(neutral.color.getHexString()).toBe('a0a0a0')
  root.children.forEach(mesh=>{mesh.geometry.dispose();mesh.material.dispose()})
 })
+
+it('brightens only context building materials and keeps the tuned colors after floor restoration', () => {
+ const root = new THREE.Group(), resources = new Set(), register = material => resources.add(material)
+ const names = ['CTX_Building_White', 'CTX_Building_Light', 'CTX_Building_Mid', 'CTX_Roof', 'CTX_Road', 'M_GreenFacade', 'M_White']
+ for (const name of names) {
+  const material = new THREE.MeshStandardMaterial({ color: '#9CA2A6', roughness: .88 })
+  material.name = name
+  root.add(new THREE.Mesh(new THREE.BoxGeometry(), material))
+ }
+ applyOverviewArchitecturalMaterials(root, register)
+ expect(root.children.slice(0, 4).map(mesh => mesh.material.color.getHexString())).toEqual(['ffffff', 'fcfcfa', 'f7f8f5', 'f0f2ee'])
+ for (const mesh of root.children.slice(0, 4)) expect(mesh.material.emissiveIntensity).toBe(.42)
+ for (const mesh of root.children.slice(4)) {
+  expect(mesh.material.color.getHexString()).toBe('9ca2a6')
+  expect(mesh.material.emissive.getHexString()).toBe('000000')
+ }
+ for (const mesh of root.children) expect(mesh.material.roughness).toBe(.88)
+ const baseline = captureOverviewOriginalState(root, register)
+ root.children[0].material.color.set('#111111')
+ root.children[0].material.emissiveIntensity = 0
+ restoreOverviewOriginalState(baseline)
+ expect(root.children[0].material.color.getHexString()).toBe('ffffff')
+ expect(root.children[0].material.emissiveIntensity).toBe(.42)
+ resources.forEach(material => material.dispose())
+ root.children.forEach(mesh => { mesh.geometry.dispose(); mesh.material.dispose() })
+})

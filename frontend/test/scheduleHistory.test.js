@@ -17,8 +17,8 @@ describe('readonly schedule history',()=>{
   const night=layoutDayEvents([{...event,start:'2026-09-10T23:30:00',end:'2026-09-11T00:30:00'}],'2026-09-11')[0]
   expect(night.top).toBe(0);expect(night.height).toBe(38)
  })
- it('does not invent historical dates or completed state for planned tasks',()=>{
-  expect(adaptHistoryTasks([{id:'T1',status:'scheduled',date:'2026-09-11',startTime:'09:00',endTime:'10:00'}],[])).toEqual([])
+ it('shows dated planned tasks as waiting without inventing dates for undated tasks',()=>{
+  expect(adaptHistoryTasks([{id:'T1',status:'scheduled',date:'2026-09-11',startTime:'09:00',endTime:'10:00'}],[])).toMatchObject([{taskId:'T1',status:'waiting',start:'2026-09-11T09:00',end:'2026-09-11T10:00'}])
   expect(adaptHistoryTasks([{id:'T1',status:'executing',startTime:'09:00',endTime:'10:00'}],[])).toEqual([])
  })
 })

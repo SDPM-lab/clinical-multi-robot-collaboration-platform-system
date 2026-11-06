@@ -19,7 +19,7 @@ export const overviewDemoData = Object.freeze({
     source: '展示資料',
   }),
   robots: Object.freeze([
-    Object.freeze({ id: 'R01', name: 'Robot 01', state: 'executing', battery: 82, queuedTasks: 2 }),
+    Object.freeze({ id: 'R01', name: 'Robot 01', state: 'busy', battery: 82, queuedTasks: 2 }),
     Object.freeze({ id: 'R02', name: 'Robot 02', state: 'charging', battery: 34, queuedTasks: 0 }),
     Object.freeze({ id: 'R03', name: 'Robot 03', state: 'idle', battery: 18, queuedTasks: 1 }),
   ]),

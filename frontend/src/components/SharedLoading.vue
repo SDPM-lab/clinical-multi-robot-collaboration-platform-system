@@ -21,11 +21,12 @@ defineProps({ loading: Boolean, detail: { type: String, default: '準備資料�
   gap: 10px;
   padding: 22px 26px;
   color: var(--text-primary);
-  background: var(--message-background);
-  border: 1px solid var(--message-border);
-  box-shadow: var(--glass-shadow);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   transform: translate(-50%, -50%);
-  backdrop-filter: blur(10px);
+  backdrop-filter: none;
+  border-radius: var(--info-radius);
 }
 
 .scene-message span:last-child {
@@ -36,19 +37,21 @@ defineProps({ loading: Boolean, detail: { type: String, default: '準備資料�
 }
 
 .scene-message--error {
-  border-color: rgba(170, 82, 54, 0.2);
+  background: var(--info-background);
+  border: var(--info-border);
+  box-shadow: var(--info-shadow);
 }
 
 .scene-message--error strong {
-  color: #9d4e36;
+  color: var(--semantic-error);
 }
 
 .scene-spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid var(--theme-primary-soft);
+  border: 2px solid var(--info-divider);
   border-top-color: var(--theme-primary);
-  border-right-color: #d5ad4e;
+  border-right-color: var(--color-secondary);
   border-radius: 50%;
   animation: scene-spin 0.8s linear infinite;
 }

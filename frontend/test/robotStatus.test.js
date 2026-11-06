@@ -19,7 +19,7 @@ describe('overview robot operational status', () => {
   it('uses the requested muted status colors', () => {
     expect(robotStateColors).toEqual({
       idle: '#6F9B7B',
-      executing: '#C96F3B',
+      busy: '#C96F3B',
       charging: '#4F9F91',
       offline: '#898E8B',
       error: '#C96561',

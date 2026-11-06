@@ -22,6 +22,24 @@ describe('theme switching', () => {
   afterEach(() => {
     localStorage.removeItem('hospital-rmf-color-theme')
     document.documentElement.dataset.theme = 'light'
+    window.history.replaceState({}, '', '/')
+  })
+
+  it('opens Robot Status from the dedicated debug URL', async () => {
+    window.history.replaceState({}, '', '/?robotDebug=1&cameraDebug=1&modelDebug=1')
+    const router = await createTestRouter()
+    const wrapper = mount(AppShellView, {
+      global: {
+        plugins: [router],
+        stubs: {
+          RobotFleetView: { template: '<div class="robot-view-stub" />' },
+          HospitalScene: true,
+        },
+      },
+    })
+
+    expect(wrapper.find('.robot-view-stub').exists()).toBe(true)
+    wrapper.unmount()
   })
 
   it('switches light and dark twice without leaving a transition overlay behind', async () => {
@@ -46,6 +64,28 @@ describe('theme switching', () => {
       expect(wrapper.find('.dark-overlay').exists()).toBe(false)
     }
 
+    wrapper.unmount()
+  })
+
+  it('highlights the fullscreen control only while fullscreen is active', async () => {
+    const router = await createTestRouter()
+    const wrapper = mount(AppShellView, {
+      global: { plugins: [router], stubs: { ClinicOverviewView: true, OverviewSearch: true } },
+    })
+    const button = wrapper.get('.fullscreen-action')
+    expect(button.attributes('aria-pressed')).toBe('false')
+    expect(button.attributes('aria-label')).toBe('進入全螢幕')
+
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: document.documentElement })
+    document.dispatchEvent(new Event('fullscreenchange'))
+    await wrapper.vm.$nextTick()
+    expect(button.attributes('aria-pressed')).toBe('true')
+    expect(button.attributes('aria-label')).toBe('退出全螢幕')
+
+    delete document.fullscreenElement
+    document.dispatchEvent(new Event('fullscreenchange'))
+    await wrapper.vm.$nextTick()
+    expect(button.attributes('aria-pressed')).toBe('false')
     wrapper.unmount()
   })
 

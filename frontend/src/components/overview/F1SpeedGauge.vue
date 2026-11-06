@@ -16,9 +16,9 @@ onMounted(restart)
     <svg viewBox="0 0 240 142" aria-hidden="true">
       <defs>
         <linearGradient :id="gradientId" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#C95E2E" />
-          <stop offset=".52" stop-color="#E88746" />
-          <stop offset="1" stop-color="#F4B26D" />
+          <stop offset="0" stop-color="var(--overview-accent)" />
+          <stop offset=".58" stop-color="var(--overview-accent)" />
+          <stop offset="1" stop-color="var(--overview-yellow)" />
         </linearGradient>
 
       </defs>
@@ -37,5 +37,5 @@ onMounted(restart)
 </template>
 
 <style scoped>
-.f1-speed-gauge{width:278px;height:165px}.f1-speed-gauge svg{display:block;width:100%;height:100%;overflow:visible}.speed-bezel,.speed-track,.speed-arc{fill:none;stroke-linecap:round}.speed-bezel{stroke:rgba(60,70,65,.1);stroke-width:2}.speed-track{stroke:rgba(50,60,55,.12);stroke-width:9}.speed-arc{stroke-width:9;filter:drop-shadow(0 0 5px rgba(200,100,40,.45));transition:stroke-dasharray 180ms linear}.speed-ticks{stroke:rgba(50,60,55,.4);stroke-width:1.5}.speed-ticks line:nth-child(6n + 1){stroke:rgba(30,40,35,.7);stroke-width:2.5}.speed-needle{fill:#e88746;filter:drop-shadow(0 0 4px rgba(232,135,70,.7));transition:transform 200ms linear}.speed-hub{fill:#e88746;stroke:#f4c890;stroke-width:1.5}.speed-limit{fill:rgba(50,60,55,.5);font-size:10px}.speed-number{fill:#1a2420;font-size:31px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-1px}.speed-unit{fill:#d07030;font-size:9px;font-weight:600}.speed-track,.speed-bezel{animation:dashboard-fade 2.6s ease-out both}.speed-ticks line{animation:dashboard-fade 1.8s ease-out both}
+.f1-speed-gauge{width:100%;max-width:254px;height:164px}.f1-speed-gauge svg{display:block;width:100%;height:100%;overflow:visible}.speed-bezel,.speed-track,.speed-arc{fill:none;stroke-linecap:round}.speed-bezel{stroke:rgba(102,113,125,.12);stroke-width:2}.speed-track{stroke:rgba(122,135,148,.16);stroke-width:9}.speed-arc{stroke-width:9;transition:stroke-dasharray 180ms linear}.speed-ticks{stroke:rgba(102,113,125,.42);stroke-width:1.5}.speed-ticks line:nth-child(6n + 1){stroke:rgba(23,33,43,.72);stroke-width:2.5}.speed-needle{fill:var(--overview-accent-text);transition:transform 200ms linear}.speed-hub{fill:var(--overview-accent-text);stroke:var(--overview-accent-soft);stroke-width:1.5}.speed-limit{fill:var(--text-secondary);font-size:10px}.speed-number{fill:var(--overview-ink);font-size:35px;font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:.025em}.speed-unit{fill:var(--overview-accent-text);font-size:11px;font-weight:400}.speed-track,.speed-bezel{animation:dashboard-fade 2.6s ease-out both}.speed-ticks line{animation:dashboard-fade 1.8s ease-out both}
 </style>

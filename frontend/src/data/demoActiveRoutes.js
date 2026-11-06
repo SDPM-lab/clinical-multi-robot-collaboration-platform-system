@@ -1,3 +1,4 @@
+import { visualTokens, colorHex } from '@/config/visualTokens.js'
 import { timeToSeconds } from '@/stores/demoFleetStore.js'
 import { fallbackRobotVisualTheme, getRobotVisualTheme, robotVisualThemes } from '@/config/robotVisualThemes.js'
 
@@ -8,9 +9,9 @@ export const robotRouteColors = Object.freeze({
     arrow: theme.glowHex,
   })])),
   R04: Object.freeze({ main: fallbackRobotVisualTheme.mainHex, completed: fallbackRobotVisualTheme.completedHex, arrow: fallbackRobotVisualTheme.glowHex }),
-  R05: Object.freeze({ main: 0xe15f72, completed: 0xb43e51, arrow: 0xef8494 }),
+  R05: Object.freeze({ main: fallbackRobotVisualTheme.mainHex, completed: fallbackRobotVisualTheme.completedHex, arrow: fallbackRobotVisualTheme.glowHex }),
 })
-export const overviewRouteColors = Object.freeze({ pending: 0xd58a48, completed: 0xa96534, arrow: 0xf0a05b })
+export const overviewRouteColors = Object.freeze({ pending: colorHex(visualTokens.primary), completed: colorHex(visualTokens.primary), arrow: colorHex(visualTokens.primary) })
 export const routeVisualConfig = Object.freeze({
   baseRouteRadius: 0.04,
   width: 0.32,
@@ -37,13 +38,13 @@ export const sortTasksByPriority = (tasks) => [...tasks].sort((first, second) =>
 
 const baseLocationDetails = Object.freeze({
   reception_back: { label: 'Nurse Reception' }, nurse_station: { label: 'Nurse Station' },
-  pharmacy: { label: 'Pharmacy' }, consult_1_1: { label: 'Consultation Room 2' },
+  pharmacy: { label: 'Pharmacy' }, consult_2_1: { label: 'Consultation Room 2' },
   ward_a_1: { label: 'Ward A' }, charging_station_1: { label: 'Charging Station A', statusKey: 'charging' },
   charging_station_2: { label: 'Charging Station B', statusKey: 'charging' },
-  lab: { label: 'Laboratory' },
+  lab: { label: 'Laboratory' }, pantry: { label: 'Pantry' },
 })
 export const locationDetails = baseLocationDetails
-export const demoRobotWaypoints = Object.freeze({ R02: 'consult_1_1', R03: 'nurse_station' })
+export const demoRobotWaypoints = Object.freeze({ R02: 'consult_2_1', R03: 'nurse_station' })
 
 export const shortestVertexPath = (data, from, to) => {
   const adjacency = new Map(data.vertices.map((vertex) => [vertex.id, []]))
