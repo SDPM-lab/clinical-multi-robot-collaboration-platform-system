@@ -1,0 +1,4 @@
+[submodule "ros2_ws/src/robot_descriptions"]
+	path = ros2_ws/src/robot_descriptions
+	url = https://github.com/411277002/robot_descriptions.git
+	branch = hospital-g1

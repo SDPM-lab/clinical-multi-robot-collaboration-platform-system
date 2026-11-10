@@ -2877,34 +2877,26 @@
       <uri>model://hospital_L1</uri>
       <pose>0 0 0.0 0 0 0</pose>
     </include>
-    <include>
-      <name>hospital_nav_overlay</name>
-      <uri>model://hospital_nav_overlay</uri>
-    </include>
     <rmf_charger_waypoints name="charger_waypoints">
       <rmf_vertex name="charging_station_1" x="26.98159502391176" y="-8.367505544252712" level="L1" />
       <rmf_vertex name="charging_station_2" x="26.96474715709595" y="-10.550428413219606" level="L1" />
     </rmf_charger_waypoints>
-    <!-- robots from fleet_config.yaml — do not edit manually -->
-    <include>
-      <name>hospital_robot_1</name>
-      <uri>model://simple_robot_real</uri>
-      <pose>9.0 -16.0 0.05 0.0 0.0 0.0</pose>
-    </include>
-    <include>
-      <name>hospital_robot_2</name>
-      <uri>model://simple_robot_real</uri>
-      <pose>11.0 -16.0 0.05 0.0 0.0 0.0</pose>
-    </include>
-    <include>
-      <name>hospital_robot_3</name>
-      <uri>model://simple_robot_real</uri>
-      <pose>19.0 -16.0 0.05 0.0 0.0 0.0</pose>
-    </include>
-    <include>
-      <name>hospital_robot_4</name>
-      <uri>model://simple_robot_real</uri>
-      <pose>8.953 -16.1995 0.05 0.0 0.0 0.0</pose>
-    </include>
+
+    <!-- Invisible primitive collision floor for robot physics -->
+    <model name="physics_floor">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="floor_link">
+        <collision name="floor_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
   </world>
 </sdf>

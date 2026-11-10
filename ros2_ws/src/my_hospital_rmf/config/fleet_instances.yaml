@@ -1,0 +1,92 @@
+robots:
+
+  hospital_robot_1:
+    type: clean
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 8.953017489029458
+      y: -16.19954313692292
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: left_mid_junction
+      charger: charging_station_2
+
+  hospital_robot_2:
+    type: clean
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 20.120988223146803
+      y: -16.227743190769477
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: center_mid_junction
+      charger: charging_station_2
+
+  hospital_robot_3:
+    type: medical
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 30.32863054876306
+      y: -16.143670392441496
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: right_bottom_junction
+      charger: charging_station_2
+
+  hospital_robot_4:
+    type: medical
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 30.307
+      y: -6.274
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: right_top_junction
+      charger: charging_station_2
+
+  hospital_robot_5:
+    type: ward
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 20.249
+      y: -6.349
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: center_top_junction
+      charger: charging_station_2
+
+  hospital_robot_6:
+    type: ward
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 8.925
+      y: -6.343
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: left_top_junction
+      charger: charging_station_2
+
+  hospital_robot_7:
+    type: ward
+    model: agibot_g1
+    enabled: true
+    spawn:
+      x: 8.976
+      y: -11.616
+      z: 0.2
+      yaw: 0.0
+    rmf:
+      start_waypoint: nurse_station_junction
+      charger: charging_station_2

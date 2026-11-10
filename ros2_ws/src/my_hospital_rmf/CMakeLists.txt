@@ -32,4 +32,19 @@ install(PROGRAMS tools/traffic_editor/sync_gazebo_to_traffic_editor.py
 install(PROGRAMS scripts/hospital_fleet_adapter.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_fleet_adapter)
 
+
+install(PROGRAMS scripts/hospital_robot_registry.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_robot_registry)
+
+install(PROGRAMS scripts/hospital_g1_navigation_bridge.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_g1_navigation_bridge)
+
+
+install(PROGRAMS scripts/hospital_ros_api_bridge.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_ros_api_bridge)
+
+
+install(PROGRAMS scripts/hospital_ppo_scheduler.py
+  DESTINATION lib/${PROJECT_NAME} RENAME hospital_ppo_scheduler)
+
 ament_package()
