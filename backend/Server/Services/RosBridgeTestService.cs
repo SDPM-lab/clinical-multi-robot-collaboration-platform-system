@@ -2,13 +2,16 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using Server.Services.Tasks;
 
 namespace Server.Services;
 
 public class RosBridgeTestService : BackgroundService
 {
     private readonly ILogger<RosBridgeTestService> _logger;
+    private readonly bool _acceptLegacyRmfDispatchReports;
     private readonly RobotStateStore _store;
+    private readonly IServiceScopeFactory _scopeFactory;
     private string _rosBridgeUrl;
     private bool _shouldConnect;
     private int _retryCount;
@@ -55,9 +58,11 @@ public class RosBridgeTestService : BackgroundService
         return prev;
     }
 
-    public RosBridgeTestService(ILogger<RosBridgeTestService> logger, IConfiguration config, RobotStateStore store)
+    public RosBridgeTestService(ILogger<RosBridgeTestService> logger, IConfiguration config, RobotStateStore store, IServiceScopeFactory scopeFactory)
     {
+        _scopeFactory = scopeFactory;
         _logger = logger;
+        _acceptLegacyRmfDispatchReports = config.GetValue<bool>("TaskDispatch:AcceptLegacyRmfDispatchReports");
         _store = store;
         _rosBridgeUrl = config.GetValue<string>("RosBridge:Url") ?? "ws://localhost:9090";
         _store.RosBridgeUrl = _rosBridgeUrl;
@@ -197,6 +202,15 @@ public class RosBridgeTestService : BackgroundService
         await ws.SendAsync(Encoding.UTF8.GetBytes(subscribeWaypoint), WebSocketMessageType.Text, true, ct);
         _logger.LogInformation("已訂閱 /fleet_states 及 /robot_nearest_waypoint，等待資料...");
 
+        var taskSubscription = JsonSerializer.Serialize(new { op = "subscribe", topic = "/task_summaries", type = "rmf_task_msgs/msg/TaskSummary" });
+        await ws.SendAsync(Encoding.UTF8.GetBytes(taskSubscription), WebSocketMessageType.Text, true, ct);
+        if (_acceptLegacyRmfDispatchReports)
+        {
+            var dispatchSubscription = JsonSerializer.Serialize(new { op = "subscribe", topic = "/dispatch_states", type = "rmf_task_msgs/msg/DispatchStates" });
+            await ws.SendAsync(Encoding.UTF8.GetBytes(dispatchSubscription), WebSocketMessageType.Text, true, ct);
+        }
+        _logger.LogInformation("已訂閱 /task_summaries，等待執行回報；RMF 舊派工回報={Enabled}", _acceptLegacyRmfDispatchReports);
+
         var buffer = new byte[1024 * 64];
         while (ws.State == WebSocketState.Open && !ct.IsCancellationRequested)
         {
@@ -212,11 +226,11 @@ public class RosBridgeTestService : BackgroundService
                 break;
 
             var json = Encoding.UTF8.GetString(ms.ToArray());
-            ProcessMessage(json);
+            await ProcessMessageAsync(json);
         }
     }
 
-    private void ProcessMessage(string json)
+    internal async Task ProcessMessageAsync(string json)
     {
         try
         {
@@ -232,6 +246,22 @@ public class RosBridgeTestService : BackgroundService
                 ProcessWaypointMessage(root.GetProperty("msg"));
                 return;
             }
+
+            // 任務回報不得受艦隊狀態的一秒節流限制，避免遺漏快速狀態變更。
+            if (topic == "/task_summaries")
+            {
+                using var scope = _scopeFactory.CreateScope();
+                await scope.ServiceProvider.GetRequiredService<RosTaskStatusHandler>().HandleAsync(root.GetProperty("msg"));
+                return;
+            }
+            if (topic == "/dispatch_states")
+            {
+                using var scope = _scopeFactory.CreateScope();
+                if (_acceptLegacyRmfDispatchReports)
+                    await scope.ServiceProvider.GetRequiredService<RosTaskStatusHandler>().HandleDispatchAsync(root.GetProperty("msg"));
+                return;
+            }
+            if (topic != "/fleet_states") return;
 
             var now = DateTimeOffset.Now;
             if (now - _lastFleetUpdate < FleetUpdateInterval)

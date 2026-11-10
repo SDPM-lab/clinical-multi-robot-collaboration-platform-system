@@ -6,15 +6,17 @@ namespace Server.Requests;
 public class CreateTaskRequest
 {
     [Required]
+    [EnumDataType(typeof(TaskType))]
     public TaskType TaskType { get; set; }
 
     [Required]
-    public string Origin { get; set; } = string.Empty;
+    public string Source { get; set; } = string.Empty;
 
     [Required]
     public string Destination { get; set; } = string.Empty;
 
     [Required]
+    [EnumDataType(typeof(TaskPriority))]
     public TaskPriority Priority { get; set; } = TaskPriority.Normal;
 
     public string? RobotId { get; set; }
