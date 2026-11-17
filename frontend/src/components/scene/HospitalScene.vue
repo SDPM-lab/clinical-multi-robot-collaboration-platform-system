@@ -1,9 +1,10 @@
 <script setup>
 import { visualTokens, colorHex } from '@/config/visualTokens.js'
 import SharedLoading from '@/components/SharedLoading.vue'
-import { computed, onActivated, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { locale, t, translateTask, translateLocation } from '@/i18n/index.js'
+import { computed, nextTick, onActivated, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
-import { Bot, Camera, Eye, Layers3, LayoutDashboard, LocateFixed, Orbit, RotateCcw, Route, X } from '@lucide/vue'
+import { Bot, Camera, Eye, Layers3, LayoutDashboard, LocateFixed, Orbit, RotateCcw, Route, Plus, Minus, X } from '@lucide/vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { getEmbeddedAssetLayer, SCENE_ASSETS } from '@/config/sceneAssets.js'
@@ -41,7 +42,11 @@ import { RmfDoorController } from '@/three/navigation/RmfDoorController.js'
 import { MapAlignmentDebug } from '@/three/navigation/MapAlignmentDebug.js'
 import { getRobotCameraPose } from '@/three/navigation/realtimeRobotCamera.js'
 import { demoFleetStore } from '@/stores/demoFleetStore.js'
+import { taskApi } from '@/services/taskApi.js'
+import { adaptLiveMapSnapshot, buildLiveMapRoutes, buildLiveMapLocationDetails, withPreviewPositions, placeSimulatedRobotsAtRouteStart } from '@/data/liveMapSnapshot.js'
 import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
+import { robotDisplayCode } from '@/config/robotDisplayCode.js'
+import { rmfToThree } from '@/config/rmfMapTransform.js'
 import {
   DEFAULT_OVERVIEW_CAMERA_PRESET,
   isOverviewCameraPreset,
@@ -88,6 +93,93 @@ const showRoomLabels = ref(true)
 const showRouteArrows = ref(true)
 const alignmentVertexId = ref('v0')
 const activeMapTool = ref(null)
+const activeFloor = ref(1)
+const floorPicker = ref(null)
+const floorMenuOpen = ref(false)
+const floorOptions = [1, 2, 3]
+const openFloorMenu = async () => {
+  floorMenuOpen.value = true
+  await nextTick()
+  floorPicker.value?.querySelector('[aria-checked="true"]')?.focus()
+}
+const closeFloorMenu = () => {
+  floorMenuOpen.value = false
+  floorPicker.value?.querySelector('.floor-trigger')?.focus()
+}
+const handleFloorMenuKeydown = event => {
+  if (event.key === 'Escape') { event.preventDefault(); closeFloorMenu(); return }
+  const options = [...(floorPicker.value?.querySelectorAll('.floor-option') || [])]
+  const current = options.indexOf(document.activeElement)
+  const next = event.key === 'ArrowDown' ? (current + 1) % options.length
+    : event.key === 'ArrowUp' ? (current + options.length - 1) % options.length
+      : event.key === 'Home' ? 0 : event.key === 'End' ? options.length - 1 : -1
+  if (next >= 0) { event.preventDefault(); options[next]?.focus() }
+}
+const onFloorPickerOutside = event => {
+  if (!floorPicker.value?.contains(event.target)) floorMenuOpen.value = false
+}
+const liveSnapshot = ref({robots:[],tasks:[]})
+const liveMapLoading = ref(false)
+const liveMapError = ref('')
+let livePollTimer
+let liveRequestActive = false
+let liveNavigationSignature = ''
+const previewPlacements = new Map()
+const arrivalRequests = new Set()
+const arrivalRetryAt = new Map()
+const refreshLiveMap = async () => {
+  if (props.mode !== 'original' || disposed || liveRequestActive) return
+  liveRequestActive = true
+  liveMapLoading.value = true
+  try {
+    const [robots,tasks] = await Promise.all([taskApi.getRobotSnapshot(),taskApi.getTaskRecords()])
+    if (!disposed) { liveSnapshot.value = adaptLiveMapSnapshot(robots,tasks); liveMapError.value = '' }
+  } catch (error) { if (!disposed) liveMapError.value = error.message || t('dispatch.apiLoadError') }
+  finally { liveRequestActive = false; liveMapLoading.value = false }
+}
+const completeArrivedSimulations = () => {
+  if (props.mode !== 'original' || !navigationLayer || !navigationData.value) return
+  const destinations = new Map(navigationData.value.namedWaypoints.map(point => [point.name, point]))
+  for (const task of mapStore.tasks.value) {
+    if (!task.isSimulated || task.status !== 'executing' || !task.robotId || arrivalRequests.has(task.id) ||
+        (arrivalRetryAt.get(task.id) || 0) > Date.now()) continue
+    const destination = destinations.get(task.backendDestination || task.destinationId)
+    const route = buildLiveMapRoutes(navigationData.value, [task])[0]
+    if (!destination || route?.vertexIds.at(-1) !== destination.id) continue
+    const state = navigationLayer.getRobotRouteState(task.robotId)
+    const position = navigationLayer.getRobotPosition(task.robotId)
+    const target = rmfToThree(destination)
+    if (!state || state.progress < 0.9999 || !position || Math.hypot(position.x - target.x, position.z - target.z) > 0.2) continue
+    arrivalRequests.add(task.id)
+    taskApi.completeSimulatedArrival(task.id, task.robotId, task.source, task.backendDestination)
+      .then(() => {
+        previewPlacements.set(task.robotId, { x: destination.x, y: destination.y, yaw: 0 })
+        return refreshLiveMap()
+      })
+      .catch(() => { arrivalRetryAt.set(task.id, Date.now() + 5000) })
+      .finally(() => arrivalRequests.delete(task.id))
+  }
+}
+const mapStore = { robots:computed(()=>props.mode==='original' ? liveSnapshot.value.robots : demoFleetStore.robots.value), tasks:computed(()=>props.mode==='original' ? liveSnapshot.value.tasks : demoFleetStore.tasks.value) }
+const floorRobots = computed(()=>mapStore.robots.value.filter(robot=>robot.floorId===`floor${activeFloor.value}`))
+const unlocatedRobots = computed(()=>mapStore.robots.value.filter(robot=>!robot.floorId))
+const showRunningTasks = ref(true)
+const floorTasks = computed(() => activeTasks.value.filter(task =>
+  mapStore.robots.value.find(robot => robot.id === task.robotId)?.floorId === `floor${activeFloor.value}`,
+))
+const zoomRealtimeMap = factor => {
+  if (!camera || !controls) return
+  const offset = camera.position.clone().sub(controls.target)
+  const distance = Math.max(controls.minDistance || 1, Math.min(controls.maxDistance || Infinity, offset.length() * factor))
+  camera.position.copy(controls.target).add(offset.setLength(distance))
+  controls.update()
+}
+const selectFloor = floor => {
+  activeFloor.value = floor
+  activeMapTool.value = null
+  resetRealtimeFocus()
+  closeFloorMenu()
+}
 const selectedRobotId = ref(null)
 const robotDrawerFilter = ref('all')
 const followRobotId = ref(null)
@@ -98,23 +190,23 @@ const priorityFilters = ref({ emergency: true, high: true, normal: true, low: tr
 const isolatePriorities = ref(false)
 const followWindow = ref({ visible: false, x: 0, y: 0 })
 const activeTasks = computed(() => sortTasksByPriority(
-  demoFleetStore.tasks.value.filter((task) => task.status === 'executing'),
+  mapStore.tasks.value.filter((task) => task.status === 'executing'),
 ))
 const activeRobotId = computed(() => followRobotId.value || selectedRobotId.value)
-const selectedRobot = computed(() => demoFleetStore.robots.value.find((robot) => robot.id === activeRobotId.value))
+const selectedRobot = computed(() => mapStore.robots.value.find((robot) => robot.id === activeRobotId.value))
 const selectedRobotTasks = computed(() => sortTasksByPriority(
-  demoFleetStore.tasks.value.filter((task) => task.robotId === activeRobotId.value),
+  mapStore.tasks.value.filter((task) => task.robotId === activeRobotId.value),
 ))
 const selectedActiveTask = computed(() => selectedRobotTasks.value.find((task) => task.status === 'executing'))
-const selectedQueuedTasks = computed(() => selectedRobotTasks.value.filter((task) => task.status !== 'executing'))
+const selectedQueuedTasks = computed(() => selectedRobotTasks.value.filter((task) => ['scheduled', 'pending', 'assigned'].includes(task.status)))
 const robotDrawerCounts = computed(() => ({
-  all: demoFleetStore.robots.value.length,
-  busy: demoFleetStore.robots.value.filter((robot) => robot.state === 'busy').length,
-  idle: demoFleetStore.robots.value.filter((robot) => robot.state === 'idle').length,
+  all: floorRobots.value.length,
+  busy: floorRobots.value.filter((robot) => robot.state === 'busy').length,
+  idle: floorRobots.value.filter((robot) => robot.state === 'idle').length,
 }))
 const filteredDrawerRobots = computed(() => robotDrawerFilter.value === 'all'
-  ? demoFleetStore.robots.value
-  : demoFleetStore.robots.value.filter((robot) => robot.state === robotDrawerFilter.value))
+  ? floorRobots.value
+  : floorRobots.value.filter((robot) => robot.state === robotDrawerFilter.value))
 const selectedRobotTheme = computed(() => getRobotVisualTheme(activeRobotId.value))
 const robotInfoCardStyle = computed(() => ({
   '--robot-card-color': selectedRobotTheme.value.soft,
@@ -124,8 +216,6 @@ const robotInfoCardStyle = computed(() => ({
   '--robot-soft': selectedRobotTheme.value.soft,
 }))
 const selectedPriorities = computed(() => Object.entries(priorityFilters.value).filter(([, enabled]) => enabled).map(([priority]) => priority))
-const priorityLabels = Object.freeze({ emergency: '緊急', high: '高', normal: '一般', low: '低' })
-const priorityBadgeLabels = Object.freeze({ emergency: '緊急', high: '高優先', normal: '一般', low: '低優先' })
 const normalizedPriority = (priority) => priorityOrder[priority] === undefined ? 'normal' : priority
 const mapTools = Object.freeze([
   { id: 'overview', label: '總覽', icon: LayoutDashboard },
@@ -562,7 +652,10 @@ const updateRealtimeFollowCamera = (delta) => {
   camera.lookAt(controls.target)
 }
 
-const toggleMapTool = (id) => { activeMapTool.value = activeMapTool.value === id ? null : id }
+const toggleMapTool = (id) => {
+  if (id === 'tasks') { showRunningTasks.value = !showRunningTasks.value; return }
+  activeMapTool.value = activeMapTool.value === id ? null : id
+}
 const resetOverviewView = () => {
   if (!environmentCenter) return
   applyOverviewCameraPreset(getActiveOverviewCameraPreset())
@@ -610,7 +703,7 @@ const resetRealtimeFocus = () => {
 const selectRobot = (id) => {
   if (cameraMode.value !== 'global') setCameraMode('global')
   selectedRobotId.value = id
-  realtimeSelectedTaskId.value = demoFleetStore.tasks.value.find((task) => task.robotId === id && task.status === 'executing')?.id || null
+  realtimeSelectedTaskId.value = mapStore.tasks.value.find((task) => task.robotId === id && task.status === 'executing')?.id || null
   navigationLayer?.setPreviewRoute(null)
   navigationLayer?.setSelectedRobot(id)
   locationMarkerLayer?.setSelectedRobot(id)
@@ -628,10 +721,14 @@ const robotCssColor = (id) => `#${new THREE.Color(robotRouteColors[id]?.main || 
 const previewQueuedTask = (task) => {
   if (!navigationData.value) return
   realtimeSelectedTaskId.value = task.id
-  const preview = buildActiveRoutes(navigationData.value, [{ ...task, status: 'executing' }])[0]
+  const preview = buildLiveMapRoutes(navigationData.value, [{ ...task, status: 'executing' }])[0]
   navigationLayer?.setPreviewRoute(preview || null)
 }
-const robotDisplayState = (robot) => ({ busy: '忙碌', charging: '充電中', idle: '待命', error: '異常', offline: '離線' }[robot?.state] || '待命')
+const robotDisplayState = (robot) => {
+  if (robot?.state === 'offline' && mapStore.tasks.value.some(task => task.robotId === robot.id && task.isSimulated && task.status === 'executing'))
+    return t('liveMap.simulatedMovement')
+  return ({ assigned:'已指派待執行', paused:'暫停', unknown:'未提供', busy: '忙碌', charging: '充電中', idle: '待命', error: '異常', offline: '離線' }[robot?.state] || '未提供')
+}
 const applyPriorityFilter = () => {
   navigationLayer?.setPriorityFilter(selectedPriorities.value, isolatePriorities.value)
   locationMarkerLayer?.setPriorityFilter(selectedPriorities.value, isolatePriorities.value)
@@ -688,9 +785,10 @@ const initializeRmfNavigation = async () => {
   const data = await response.json()
   if (disposed) return
   navigationData.value = data
-  const routes = buildActiveRoutes(data, demoFleetStore.tasks.value)
+  const tasks = isOverview ? mapStore.tasks.value : floorTasks.value
+  const routes = isOverview ? buildActiveRoutes(data,tasks) : buildLiveMapRoutes(data,tasks)
   const displayedRoutes = isOverview ? routes.slice(0, 1) : routes
-  const robotWaypoints = Object.fromEntries(demoFleetStore.robots.value.map((robot) => [
+  const robotWaypoints = Object.fromEntries(mapStore.robots.value.map((robot) => [
     robot.id,
     robot.currentWaypoint || demoRobotWaypoints[robot.id] || robot.chargingWaypoint,
   ]))
@@ -698,11 +796,11 @@ const initializeRmfNavigation = async () => {
     data,
     parent: scene,
     routes: displayedRoutes,
-    robots: demoFleetStore.robots.value,
+    robots: mapStore.robots.value,
     robotWaypoints,
     camera,
     overview: isOverview,
-    showRobotModels: !isOverview,
+    showRobotModels: false,
   })
   navigationLayer.setBaseVisible(!isOverview && showNavigation.value)
   navigationLayer.setActiveVisible(showActiveRoute.value)
@@ -710,20 +808,22 @@ const initializeRmfNavigation = async () => {
   if (isOverview) return
   doorController = new RmfDoorController({ model: environmentGroup, doors: data.doors, doorNames: data.doors.map((door) => door.name) })
   navigationLayer.doorController = doorController
-  roomLabelLayer = new RoomLabelLayer({ data, container: container.value, camera, canvas: renderer.domElement })
+  roomLabelLayer = new RoomLabelLayer({ data, container: container.value, camera, canvas: renderer.domElement, translate: translateLocation })
   roomLabelLayer.setVisible(showRoomLabels.value)
   locationMarkerLayer = new LocationMarkerLayer({
     data,
-    details: buildLocationDetails(demoFleetStore.tasks.value),
+    details: buildLiveMapLocationDetails(data,floorTasks.value,floorRobots.value),
     parent: scene,
     container: container.value,
     camera,
     canvas: renderer.domElement,
     environmentGroup,
+    translate: translateLocation,
   })
   locationMarkerLayer.setVisible(showLocations.value)
   locationMarkerLayer.setLabelsVisible(showTaskLabels.value)
   locationMarkerLayer.setRoomLabelsVisible(showRoomLabels.value)
+  syncLiveMap()
   applyPriorityFilter()
   if (mapAlignmentDebugEnabled) {
     mapAlignmentDebug = new MapAlignmentDebug({
@@ -833,12 +933,8 @@ const createScene = () => {
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-  renderer.domElement.setAttribute(
-    'aria-label',
-    cameraDebugEnabled || !isOverview
-      ? '可旋轉、縮放及平移的醫院三維模型'
-      : '固定視角的醫院三維模型',
-  )
+  const sceneDescription = () => t(cameraDebugEnabled || !isOverview ? 'liveMap.sceneDescription' : 'liveMap.fixedSceneDescription')
+  renderer.domElement.setAttribute('aria-label', sceneDescription())
   container.value.appendChild(renderer.domElement)
 
   controls = new OrbitControls(camera, renderer.domElement)
@@ -973,17 +1069,18 @@ const animate = (time = performance.now()) => {
   if (graphActorCoordinator) graphActorCoordinator.update(delta)
   else baymaxControllers.forEach((controller) => controller.update(delta))
   navigationLayer?.update(delta)
-  if (doorController) doorController.update(delta, demoFleetStore.robots.value.map((robot) => navigationLayer?.getRobotPosition(robot.id)))
+  completeArrivedSimulations()
+  if (doorController) doorController.update(delta, mapStore.robots.value.map((robot) => navigationLayer?.getRobotPosition(robot.id)))
   if (locationMarkerLayer) {
-    const robotPositions = new Map(demoFleetStore.robots.value.map((robot) => [
+    const robotPositions = new Map(mapStore.robots.value.map((robot) => [
       robot.id,
       navigationLayer?.getRobotPosition(robot.id),
     ]))
-    const routeStates = new Map(demoFleetStore.robots.value.map((robot) => [
+    const routeStates = new Map(mapStore.robots.value.map((robot) => [
       robot.id,
       navigationLayer?.getRobotRouteState(robot.id),
     ]))
-    locationMarkerLayer.setDestinationState(demoFleetStore.tasks.value, robotPositions, routeStates)
+    locationMarkerLayer.setDestinationState(mapStore.tasks.value, robotPositions, routeStates)
   }
   updateRealtimeFollowCamera(delta)
   if (!isOverview && activeRobotId.value) {
@@ -997,13 +1094,12 @@ const animate = (time = performance.now()) => {
       const navbarHeight = 64
       const projectedX = (projected.x * 0.5 + 0.5) * rect.width
       const projectedY = (-projected.y * 0.5 + 0.5) * rect.height
-      const labelPosition = locationMarkerLayer?.getRobotLabelScreenPosition(activeRobotId.value)
-      const overlayX = labelPosition?.x ?? projectedX
-      const overlayY = labelPosition ? labelPosition.y + 6 : projectedY + 18
+      const overlayX = projectedX
+      const overlayY = projectedY - 12
       followWindow.value = {
         visible: projected.z >= -1 && projected.z <= 1,
         x: THREE.MathUtils.clamp(overlayX, margin + cardWidth / 2, rect.width - margin - cardWidth / 2),
-        y: THREE.MathUtils.clamp(overlayY, navbarHeight + margin, rect.height - margin - cardHeight),
+        y: THREE.MathUtils.clamp(overlayY, navbarHeight + margin + cardHeight, rect.height - margin),
       }
     }
   } else followWindow.value = { ...followWindow.value, visible: false }
@@ -1034,28 +1130,33 @@ watch(showActors, (visible) => { if (actorGroup) actorGroup.visible = visible })
 watch(showRobots, (visible) => navigationLayer?.setRobotsVisible(visible))
 watch(showTaskLabels, (visible) => locationMarkerLayer?.setLabelsVisible(visible))
 watch(showRoomLabels, (visible) => { roomLabelLayer?.setVisible(visible); locationMarkerLayer?.setRoomLabelsVisible(visible) })
+watch(locale, () => {
+  roomLabelLayer?.setTranslation(translateLocation)
+  locationMarkerLayer?.setTranslation(translateLocation)
+  renderer?.domElement?.setAttribute('aria-label', t(cameraDebugEnabled || !isOverview ? 'liveMap.sceneDescription' : 'liveMap.fixedSceneDescription'))
+})
 watch(showRouteArrows, (visible) => navigationLayer?.setArrowsVisible(visible))
 watch(alignmentVertexId, (id) => mapAlignmentDebug?.setSelectedId(id))
 watch([priorityFilters, isolatePriorities], applyPriorityFilter, { deep: true })
-watch(
-  () => demoFleetStore.tasks.value,
-  (tasks) => {
-    if (!navigationData.value || !navigationLayer) return
-    const routes = buildActiveRoutes(navigationData.value, tasks)
-    navigationLayer.setRoutes(isOverview ? routes.slice(0, 1) : routes)
-    navigationLayer.setSelectedRobot(selectedRobotId.value)
-    navigationLayer.setFollowingRobot(followRobotId.value)
-    navigationLayer.setBaseVisible(!isOverview && showNavigation.value)
-    navigationLayer.setActiveVisible(showActiveRoute.value)
-    navigationLayer.setRobotsVisible(!isOverview && showRobots.value)
-    const details = buildLocationDetails(tasks)
-    locationMarkerLayer?.setDetails(details)
-    locationMarkerLayer?.setVisible(showLocations.value)
-    locationMarkerLayer?.setLabelsVisible(showTaskLabels.value)
-    applyPriorityFilter()
-  },
-  { deep: true },
-)
+const syncLiveMap = () => {
+  if (!navigationData.value || !navigationLayer) return
+  const routes = buildLiveMapRoutes(navigationData.value,floorTasks.value)
+  const signature = JSON.stringify(routes.map(route=>[route.id,route.robotId,route.priority,route.vertexIds]))
+  if (signature !== liveNavigationSignature) { navigationLayer.setRoutes(routes); liveNavigationSignature=signature }
+  const displayRobots = placeSimulatedRobotsAtRouteStart(
+    withPreviewPositions(floorRobots.value,navigationData.value,previewPlacements),routes,navigationData.value)
+  navigationLayer.setLiveRobots(displayRobots,routes)
+  navigationLayer.setSelectedRobot(selectedRobotId.value)
+  navigationLayer.setFollowingRobot(followRobotId.value)
+  locationMarkerLayer?.setDetails(buildLiveMapLocationDetails(navigationData.value,floorTasks.value,floorRobots.value))
+  locationMarkerLayer?.setVisible(showLocations.value)
+  locationMarkerLayer?.setLabelsVisible(showTaskLabels.value)
+  applyPriorityFilter()
+}
+watch([()=>mapStore.tasks.value,()=>mapStore.robots.value,activeFloor],()=>{
+  if (!isOverview) syncLiveMap()
+}, {deep:true})
+onMounted(()=>{ if (!isOverview) { refreshLiveMap(); livePollTimer=window.setInterval(refreshLiveMap,5000); document.addEventListener('pointerdown',onFloorPickerOutside) } })
 
 onActivated(() => {
   if (!environmentCenter) return
@@ -1068,7 +1169,9 @@ onActivated(() => {
 })
 
 onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown',onFloorPickerOutside)
   disposed = true
+  window.clearInterval(livePollTimer)
   cancelAnimationFrame(animationFrameId)
   sceneClock.stop()
   resizeObserver?.disconnect()
@@ -1134,6 +1237,7 @@ onBeforeUnmount(() => {
     :class="{
       'hospital-scene--interactive': cameraDebugEnabled || !isOverview,
       'hospital-scene--realtime': !isOverview,
+      'hospital-scene--unavailable-floor': !isOverview && activeFloor !== 1,
       'hospital-scene--dark': !isOverview && theme === 'dark',
     }"
   >
@@ -1145,22 +1249,46 @@ onBeforeUnmount(() => {
     </div>
 
     <template v-if="!isOverview">
+      <div v-if="liveMapError" class="live-map-data-notice" role="alert"><span>{{liveMapError}}</span><button type="button" :disabled="liveMapLoading" @click="refreshLiveMap">{{t('common.retry')}}</button></div>
+      <div v-if="activeFloor !== 1" class="floor-unavailable" role="status"><strong>{{ activeFloor }} 樓</strong><p>尚未提供此樓層的地圖與路網</p></div>
       <nav class="map-tool-rail" aria-label="即時地圖工具列">
         <button
           v-for="tool in mapTools"
           :key="tool.id"
           type="button"
-          :class="{ 'is-active': activeMapTool === tool.id }"
+          :class="{ 'is-active': tool.id === 'tasks' ? showRunningTasks : activeMapTool === tool.id }"
           :aria-label="tool.label"
           @click="toggleMapTool(tool.id)"
         >
           <component :is="tool.icon" :size="17" :stroke-width="1.7" />
         </button>
+        <div ref="floorPicker" class="map-floor-picker">
+          <button type="button" class="floor-trigger" :aria-label="t('map.selectFloor')" aria-haspopup="menu" :aria-expanded="floorMenuOpen" @click="floorMenuOpen ? closeFloorMenu() : openFloorMenu()" @keydown.down.prevent="openFloorMenu" @keydown.up.prevent="openFloorMenu">F{{ activeFloor }}</button>
+          <div v-if="floorMenuOpen" class="floor-options" role="menu" :aria-label="t('map.selectFloor')" @keydown="handleFloorMenuKeydown">
+            <button v-for="floor in floorOptions" :key="floor" type="button" class="floor-option" role="menuitemradio" :aria-checked="activeFloor === floor" @click="selectFloor(floor)">F{{ floor }}</button>
+          </div>
+          <button type="button" :aria-label="t('map.zoomIn')" @click="zoomRealtimeMap(0.8)"><Plus :size="19" /></button>
+          <button type="button" :aria-label="t('map.zoomOut')" @click="zoomRealtimeMap(1.25)"><Minus :size="19" /></button>
+        </div>
         <span class="map-tool-rail__divider"></span>
         <button type="button" aria-label="恢復全域視角" @click="resetRealtimeFocus">
           <RotateCcw :size="17" :stroke-width="1.7" />
         </button>
       </nav>
+
+      <aside v-if="showRunningTasks" class="map-tool-drawer map-running-tasks" :aria-label="t('liveMap.runningRobotInfo')">
+        <header><strong>{{ t('liveMap.activeTasks') }} · F{{ activeFloor }}</strong><button type="button" :aria-label="t('liveMap.collapseActiveTasks')" @click="showRunningTasks = false"><X :size="16" /></button></header>
+        <div class="map-task-list">
+          <article v-for="task in floorTasks" :key="task.id" class="running-task-item" :style="{ '--robot-color': robotCssColor(task.robotId) }">
+            <span class="running-task-copy">
+              <span class="running-task-title"><span>{{ task.taskCode || task.id }}</span><strong>{{ translateTask(task.title) }}</strong><em v-if="task.isSimulated" class="simulation-mark">{{t('liveMap.simulated')}}</em></span>
+              <small>{{ robotDisplayCode(task.robotId) }} · {{ translateLocation(task.source) }} → {{ translateLocation(task.destination) }}</small>
+            </span>
+          </article>
+          <p v-if="!floorTasks.length">目前沒有執行中任務</p>
+        </div>
+
+      </aside>
 
       <aside
         v-if="activeMapTool"
@@ -1174,16 +1302,15 @@ onBeforeUnmount(() => {
         </header>
 
         <div v-if="activeMapTool === 'overview'" class="map-overview-summary">
-          <div><span>機器人路線點</span><strong>{{ navigationData?.vertices.length || 0 }} 個</strong></div>
-          <small class="drawer-meta graph-source">來源：Traffic Editor Graph 0</small>
-          <div><span>執行中</span><strong>{{ activeTasks.length }} 任務</strong></div>
-          <div><span>機器人</span><strong>{{ demoFleetStore.robots.value.length }} 台</strong></div>
+          <div><span>機器人</span><strong>{{ floorRobots.length }} 台</strong></div>
+          <div><span>執行中</span><strong>{{ floorTasks.length }} 任務</strong></div>
+          <p v-if="liveMapLoading" role="status">{{t('common.loading')}}</p>
         </div>
 
         <div v-else-if="activeMapTool === 'robots'" class="map-robot-list">
           <div class="robot-segmented-filter" aria-label="機器人狀態篩選">
             <button
-              v-for="filter in [{ id: 'all', label: '全部' }, { id: 'busy', label: '忙碌' }, { id: 'idle', label: '待命' }]"
+              v-for="filter in [{ id: 'all', label: t('common.all') }, { id: 'busy', label: t('robotStatus.states.busy') }, { id: 'idle', label: t('robotStatus.states.idle') }]"
               :key="filter.id"
               type="button"
               :class="{ 'is-active': robotDrawerFilter === filter.id }"
@@ -1203,58 +1330,47 @@ onBeforeUnmount(() => {
           >
             <span class="robot-list-icon" aria-hidden="true"><Bot :size="16" :stroke-width="1.7" /></span>
             <span class="robot-list-identity">
-              <strong>{{ robot.name }}</strong>
+              <strong>{{ robot.displayCode || robotDisplayCode(robot.id) }}</strong>
               <small>{{ robotDisplayState(robot) }}</small>
             </span>
-            <strong class="robot-list-battery">{{ robot.battery }}%</strong>
+            <strong class="robot-list-battery">{{ robot.battery == null ? '—' : `${robot.battery}%` }}</strong>
           </button>
           <p v-if="!filteredDrawerRobots.length" class="empty-task">此篩選目前沒有機器人</p>
+          <section v-if="unlocatedRobots.length" class="unlocated-robot-list"><p>{{ t('liveMap.unknownFloor',{count:unlocatedRobots.length}) }}</p><div v-for="robot in unlocatedRobots" :key="robot.id">{{robotDisplayCode(robot.id)}}</div></section>
           <section v-if="selectedRobotId" class="selected-robot-tasks">
-            <h3>{{ selectedRobot?.name }}</h3>
             <p class="drawer-section-label">目前執行</p>
             <article v-if="selectedActiveTask" class="robot-task-card is-active" :style="{ '--robot-color': robotCssColor(selectedRobotId) }">
-              <strong>{{ selectedActiveTask.id }}　{{ selectedActiveTask.title }}</strong>
-              <span>{{ selectedActiveTask.origin }} → {{ selectedActiveTask.destination }}</span>
-              <small>{{ priorityLabels[selectedActiveTask.priority] }}優先級・{{ taskDirectionLabel(selectedActiveTask) }}</small>
+              <strong>{{ selectedActiveTask.taskCode || selectedActiveTask.id }}　{{ selectedActiveTask.title }}</strong>
+              <span>{{ selectedActiveTask.source }} → {{ selectedActiveTask.destination }}</span>
+              <small>{{ t(`priority.${normalizedPriority(selectedActiveTask.priority)}`) }}</small>
             </article>
             <p v-else class="empty-task">目前沒有執行中的任務</p>
             <template v-if="selectedQueuedTasks.length">
               <p class="drawer-section-label">等待中</p>
               <button v-for="task in selectedQueuedTasks" :key="task.id" type="button" class="queued-task" @click="previewQueuedTask(task)">
-                <strong>{{ task.id }}　{{ task.title }}</strong>
-                <small>{{ task.startTime.slice(0, 5) }}・{{ priorityLabels[task.priority] }}</small>
+                <strong>{{ task.taskCode || task.id }}　{{ task.title }}</strong>
+                <small>{{ task.startTime.slice(0, 5) }}・{{ t(`priority.${task.priority}`) }}</small>
               </button>
             </template>
           </section>
         </div>
 
-        <div v-else-if="activeMapTool === 'tasks'" class="map-task-list">
-          <article v-for="task in activeTasks" :key="task.id" class="running-task-item" :style="{ '--robot-color': robotCssColor(task.robotId) }">
-            <span class="running-task-copy">
-              <span class="running-task-title"><span>{{ task.id }}</span><strong>{{ task.title }}</strong></span>
-              <small>{{ task.robotId }} · {{ taskDirectionLabel(task) }}</small>
-            </span>
-            <span class="task-priority-badge" :class="`is-${normalizedPriority(task.priority)}`">{{ priorityBadgeLabels[normalizedPriority(task.priority)] }}</span>
-          </article>
-          <p v-if="!activeTasks.length">目前沒有執行中任務</p>
-        </div>
-
         <div v-else class="map-layer-list">
-          <p class="drawer-section-label">顯示內容</p>
-          <label><input v-model="showLocations" type="checkbox">地點方形節點</label>
-          <label><input v-model="showNavigation" type="checkbox">基礎路網</label>
-          <label><input v-model="showActiveRoute" type="checkbox">執行中路線</label>
-          <label><input v-model="showRouteArrows" type="checkbox">方向箭頭</label>
-          <label><input v-model="showTaskLabels" type="checkbox">地點／任務標籤</label>
-          <label><input v-model="showRoomLabels" type="checkbox">所有房間標籤</label>
-          <label><input v-model="showActors" type="checkbox">人物</label>
-          <label><input v-model="showRobots" type="checkbox">機器人</label>
+          <p class="drawer-section-label">{{t('liveMap.visibleLayers')}}</p>
+          <label><input v-model="showLocations" type="checkbox">{{t('liveMap.locationNodes')}}</label>
+          <label><input v-model="showNavigation" type="checkbox">{{t('liveMap.baseGraph')}}</label>
+          <label><input v-model="showActiveRoute" type="checkbox">{{t('liveMap.referenceRoute')}}</label>
+          <label><input v-model="showRouteArrows" type="checkbox">{{t('liveMap.referenceArrows')}}</label>
+          <label><input v-model="showTaskLabels" type="checkbox">{{t('liveMap.taskLabels')}}</label>
+          <label><input v-model="showRoomLabels" type="checkbox">{{t('liveMap.roomLabels')}}</label>
+          <label><input v-model="showActors" type="checkbox">{{t('liveMap.people')}}</label>
+          <label><input v-model="showRobots" type="checkbox">{{t('liveMap.robots')}}</label>
           <fieldset class="priority-filter">
-            <legend class="drawer-section-label">任務優先級</legend>
+            <legend class="drawer-section-label">{{t('liveMap.taskPriority')}}</legend>
             <label v-for="priority in Object.keys(priorityOrder)" :key="priority">
-              <input v-model="priorityFilters[priority]" type="checkbox">{{ priorityLabels[priority] }}
+              <input v-model="priorityFilters[priority]" :data-priority="priority" type="checkbox">{{ t(`priority.${priority}`) }}
             </label>
-            <label class="priority-isolate"><input v-model="isolatePriorities" type="checkbox">只顯示選中優先級</label>
+            <label class="priority-isolate"><input v-model="isolatePriorities" type="checkbox">{{t('liveMap.isolatePriorities')}}</label>
           </fieldset>
           <div v-if="mapAlignmentDebugEnabled && navigationData" class="alignment-debug-control">
             <span>對齊 Vertex</span>
@@ -1272,16 +1388,16 @@ onBeforeUnmount(() => {
         :class="{ 'is-following': followRobotId === activeRobotId }"
         :style="[
           robotInfoCardStyle,
-          { transform: `translate3d(${followWindow.x}px, ${followWindow.y}px, 0) translate(-50%, 0)` },
+          { transform: `translate3d(${followWindow.x}px, ${followWindow.y}px, 0) translate(-50%, -100%)` },
         ]"
       >
         <header class="robot-info-card__header">
-          <strong>{{ selectedRobot.name }}</strong>
+          <strong>{{ selectedRobot.displayCode || robotDisplayCode(selectedRobot.id) }}</strong>
         </header>
-        <p>{{ selectedRobot.battery }}% · {{ robotDisplayState(selectedRobot) }}</p>
+        <p>{{ selectedRobot.battery == null ? '—' : `${selectedRobot.battery}%` }} · {{ robotDisplayState(selectedRobot) }}</p>
         <div class="robot-info-card__actions">
           <button type="button" @click="toggleRobotFollowing">
-            <LocateFixed :size="13" />{{ followRobotId === activeRobotId ? '取消跟隨' : '跟隨' }}
+            <LocateFixed :size="13" />{{ followRobotId === activeRobotId ? t('liveMap.unfollow') : t('liveMap.follow') }}
           </button>
         </div>
       </aside>
@@ -1303,6 +1419,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.map-floor-picker{position:relative;display:grid;gap:4px;justify-items:center;padding:5px 0;color:var(--map-muted);font-size:10px}
+.map-running-tasks.map-tool-drawer{top:auto;bottom:18px;left:18px;width:min(340px,calc(100% - 36px));max-height:min(38%,340px)}
+.floor-unavailable{position:absolute;inset:0;z-index:16;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-secondary);background:var(--bg-page,#f2f5f7)}
+.floor-unavailable strong{font-size:24px;color:var(--text-primary)}
+.hospital-scene--unavailable-floor :deep(canvas),.hospital-scene--unavailable-floor :deep(.rmf-location-overlay){visibility:hidden}
+
 .hospital-scene {
   position: relative;
   width: 100%;
@@ -1402,20 +1524,15 @@ onBeforeUnmount(() => {
 .map-overview-summary>div { display:flex; align-items:center; justify-content:space-between; min-height:36px; padding:0 5px; border-bottom:1px solid var(--map-divider); font-size:12px; }
 .map-overview-summary strong { color:var(--map-text); }
 .drawer-section-label { margin:4px 5px 1px; color:var(--map-muted); font-size:12px; line-height:16px; font-weight:600; }
-.drawer-meta,.graph-source { color:var(--map-muted); font-size:11.5px; line-height:16px; font-weight:500; }
-.graph-source { padding:0 5px 5px; }
-.robot-segmented-filter { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; padding:3px; background:var(--info-divider); border:1px solid var(--map-divider); border-radius:5px; }
-.robot-segmented-filter button { min-height:28px; padding:3px 4px; color:var(--map-muted); background:transparent; border:0; border-radius:3px; font-size:12px; font-weight:550; cursor:pointer; }
-.robot-segmented-filter button.is-active { color:var(--map-text); background:var(--map-surface-strong); box-shadow:0 2px 7px rgba(73,55,40,.08); }
-.map-robot-list>.robot-list-row { position:relative; display:grid; grid-template-columns:32px minmax(0,1fr) auto; align-items:center; min-height:46px; gap:8px; padding:5px 8px; color:var(--map-muted); text-align:left; background:transparent; border:1px solid transparent; border-radius:4px; cursor:pointer; }
-.map-robot-list>.robot-list-row::before { position:absolute; inset:5px auto 5px 0; width:2px; background:var(--robot-color); border-radius:2px; opacity:0; content:''; }
-.map-robot-list>.robot-list-row:hover { color:var(--map-text); background:rgba(120,116,109,.08); border-color:var(--map-divider); }
-.map-robot-list>.robot-list-row.is-selected { color:var(--map-text); background:color-mix(in srgb,var(--robot-color) 10%,transparent); border-color:color-mix(in srgb,var(--robot-color) 28%,transparent); }
-.map-robot-list>.robot-list-row.is-selected { background:color-mix(in srgb,var(--robot-color) 10%,transparent); border-color:color-mix(in srgb,var(--robot-color) 55%,transparent); box-shadow:0 0 0 2px color-mix(in srgb,var(--robot-color) 12%,transparent); }
-.map-robot-list>.robot-list-row.is-selected::before { opacity:1; }
-.map-robot-list>.robot-list-row.is-offline { border-color:rgba(199,101,91,.42); }
-.map-robot-list>.robot-list-row.is-offline.is-selected { background:rgba(199,101,91,.12); border-color:#c7655b; box-shadow:0 0 0 2px rgba(199,101,91,.13); }
-.robot-list-icon { display:grid; width:30px; height:30px; place-items:center; color:var(--robot-color); background:color-mix(in srgb,var(--robot-color) 10%,transparent); border:1px solid color-mix(in srgb,var(--robot-color) 22%,transparent); border-radius:4px; }
+.robot-segmented-filter { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; padding:0; overflow:hidden; background:color-mix(in srgb,var(--map-muted) 8%,#fff); border:0; border-radius:7px; }
+.robot-segmented-filter button { display:grid; width:100%; min-height:32px; place-items:center; padding:3px 4px; color:var(--map-muted); background:transparent; border:0; border-radius:0; font-size:12px; font-weight:550; cursor:pointer; transition:background-color 160ms ease,color 160ms ease; }
+.robot-segmented-filter button.is-active { color:var(--theme-primary); background:color-mix(in srgb,var(--theme-primary) 16%,#fff); box-shadow:none; }
+.hospital-scene--dark .robot-segmented-filter { background:#303735; }
+.hospital-scene--dark .robot-segmented-filter button.is-active { background:color-mix(in srgb,var(--theme-primary) 24%,#252c2b); }
+.map-robot-list>.robot-list-row { display:grid; grid-template-columns:32px minmax(0,1fr) auto; align-items:center; min-height:46px; gap:8px; padding:5px 8px; color:var(--map-muted); text-align:left; background:transparent; border:0; border-radius:5px; cursor:pointer; transition:background-color 160ms ease; }
+.map-robot-list>.robot-list-row:hover { color:var(--map-text); background:color-mix(in srgb,var(--robot-color) 6%,transparent); }
+.map-robot-list>.robot-list-row.is-selected { color:var(--map-text); background:color-mix(in srgb,var(--robot-color) 14%,transparent); box-shadow:none; }
+.robot-list-icon { display:grid; width:30px; height:30px; place-items:center; color:var(--robot-color); background:color-mix(in srgb,var(--robot-color) 10%,transparent); border:0; border-radius:4px; }
 .robot-list-identity { display:grid; min-width:0; gap:1px; }
 .robot-list-identity strong,.selected-robot-tasks h3 { overflow:hidden; color:var(--map-text); font-size:13px; line-height:17px; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
 .robot-list-identity small { font-size:10.5px; line-height:14px; font-weight:500; }
@@ -1427,6 +1544,7 @@ onBeforeUnmount(() => {
 .map-tool-drawer input { accent-color:var(--map-primary); }
 .map-task-list .running-task-item { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; column-gap:10px; padding:9px 8px; background:var(--info-background); border-left:2px solid var(--robot-color); border-radius:4px; }
 .running-task-copy{display:grid;min-width:0;gap:3px}.running-task-title{display:flex;min-width:0;gap:8px;align-items:baseline}.running-task-title>span,.running-task-copy small{flex:none;color:var(--map-muted);font-size:11px}.running-task-title strong{min-width:0;overflow:hidden;color:var(--map-text);font-size:12px;text-overflow:ellipsis;white-space:nowrap}.task-priority-badge{flex:none;padding:3px 7px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}.task-priority-badge.is-emergency,.task-priority-badge.is-high{color:var(--priority-high);background:color-mix(in srgb,var(--priority-high) 13%,transparent)}.task-priority-badge.is-normal{color:var(--priority-normal);background:color-mix(in srgb,var(--priority-normal) 14%,transparent)}.task-priority-badge.is-low{color:var(--priority-low);background:color-mix(in srgb,var(--priority-low) 14%,transparent)}
+.simulation-mark{flex:none;color:var(--map-muted);font-size:10px;font-style:normal;font-weight:500}
 .map-task-list p { margin:8px; font-size:12px; }
 .alignment-debug-control { display:grid; gap:6px; margin-top:5px; padding:9px 5px 2px; border-top:1px solid var(--map-divider); }
 .alignment-debug-control select { width:100%; padding:6px; color:var(--map-text); background:var(--map-surface-strong); border:1px solid var(--map-divider); border-radius:4px; }
@@ -1462,8 +1580,8 @@ onBeforeUnmount(() => {
 .robot-camera-modes { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:4px; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16); border-radius:8px; }
 .robot-camera-modes button { display:grid; min-height:38px; gap:1px; padding:3px 2px; border-color:transparent; font-size:9px; line-height:12px; }
 .robot-camera-modes button.is-active { background:rgba(255,255,255,.25); border-color:rgba(255,255,255,.38); box-shadow:inset 0 1px 0 rgba(255,255,255,.25); }
-.robot-mini-card{ width:170px; gap:7px; padding:10px 11px; color:var(--text-primary); background:var(--info-background); border:var(--info-border); border-radius:5px; box-shadow:var(--info-shadow); backdrop-filter:var(--info-backdrop); -webkit-backdrop-filter:var(--info-backdrop); }
-.robot-mini-card.is-following{box-shadow:var(--info-shadow);border-color:var(--theme-primary);}
+.robot-mini-card{ width:170px; gap:7px; padding:10px 11px; color:var(--text-primary); background:color-mix(in srgb,var(--robot-color) 16%,var(--info-background)); border:0; border-radius:7px; box-shadow:0 5px 18px color-mix(in srgb,var(--robot-color) 16%,transparent); backdrop-filter:var(--info-backdrop); -webkit-backdrop-filter:var(--info-backdrop); }
+.robot-mini-card.is-following{box-shadow:0 5px 18px color-mix(in srgb,var(--robot-color) 20%,transparent);}
 .robot-mini-card .robot-info-card__header { align-items:center; padding:0 0 5px; border-color:rgba(43,42,39,.12); }
 .robot-mini-card .robot-info-card__header strong { color:var(--text-primary); font-size:13px; letter-spacing:0; }
 .robot-mini-card .robot-info-card__header button { width:21px; height:21px; color:var(--text-primary); background:rgba(255,255,255,.28); border-color:rgba(45,43,40,.14); border-radius:4px; }
@@ -1501,8 +1619,8 @@ onBeforeUnmount(() => {
 .robot-info-card__header span,.robot-info-card__details dt{color:var(--text-secondary)}
 .robot-info-card__header{border-color:var(--info-divider)}
 .robot-info-card__header button,.robot-info-card__actions button,.robot-camera-modes button{color:var(--text-secondary);background:transparent;border-color:var(--info-divider)}
-.robot-info-card__header button:hover,.robot-info-card__actions button:hover,.robot-camera-modes button:hover,.robot-segmented-filter button:hover,.map-robot-list>.robot-list-row:hover,.queued-task:hover{color:var(--theme-primary);background:var(--theme-primary-soft)}
-.robot-camera-modes button.is-active,.robot-segmented-filter button.is-active{color:var(--theme-primary);background:var(--theme-primary-soft);border-color:var(--theme-primary-border)}
+.robot-info-card__header button:hover,.robot-info-card__actions button:hover,.robot-camera-modes button:hover,.queued-task:hover{color:var(--theme-primary);background:var(--theme-primary-soft)}
+.robot-camera-modes button.is-active{color:var(--theme-primary);background:var(--theme-primary-soft);border-color:var(--theme-primary-border)}
 :global(.rmf-location small){color:var(--text-primary);text-decoration:none}
 :global(.rmf-location.is-approaching),:global(.rmf-location.is-arrived){box-shadow:var(--info-shadow)}
 :global(.rmf-location.is-charging-station){border-color:var(--charging-station-border)}
@@ -1512,4 +1630,29 @@ onBeforeUnmount(() => {
 :global(.rmf-room-label){position:absolute;top:0;left:0;padding:5px 8px;color:var(--map-text,var(--text-primary));font-size:11px;font-weight:400;line-height:15px;white-space:nowrap;background:color-mix(in srgb,var(--info-background) 78%,transparent);border:1px solid color-mix(in srgb,var(--text-secondary) 20%,transparent);border-radius:6px;box-shadow:0 3px 10px #0001;backdrop-filter:blur(5px)}
 :global(.rmf-room-label::before){position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--room-label-color,#DAC9A6);border-radius:5px 0 0 5px;content:''}
 :global(.rmf-room-label[hidden]){display:none}
+</style>
+
+<style scoped>
+.map-floor-picker{gap:0;padding:5px 0}
+.map-tool-rail .floor-trigger{color:var(--theme-primary);font-size:15px}
+.floor-options{position:absolute;z-index:21;top:4px;left:calc(100% + 9px);display:grid;gap:2px;width:62px;padding:4px;background:#fff;border:1px solid var(--map-divider);border-radius:8px;box-shadow:var(--info-shadow)}
+.map-tool-rail .floor-option{width:100%;height:34px;color:var(--map-text);font-size:13px;border-radius:5px}
+.map-tool-rail .floor-option[aria-checked="true"]{color:var(--theme-primary);background:#ffebe1}
+.map-tool-rail .floor-option::after{display:none}
+.hospital-scene--dark .floor-options{background:#303735}
+.hospital-scene--dark .floor-option[aria-checked="true"]{background:#584036}
+.map-running-tasks.map-tool-drawer{background:linear-gradient(145deg,rgba(255,253,235,.64),rgba(247,232,158,.44));border:1px solid rgba(221,185,69,.26);border-radius:16px;box-shadow:0 10px 30px #3d412910;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.map-running-tasks header{margin:0 14px;padding:6px 0;border-bottom:1px solid #82744024}
+.map-running-tasks .map-task-list{gap:0;padding:4px 14px 12px}
+.map-running-tasks .running-task-item{display:block;padding:12px 0;background:transparent;border:0;border-bottom:1px solid #8274401a;border-radius:0}
+.map-running-tasks .running-task-item:last-child{border-bottom:0}
+.map-running-tasks .running-task-title strong{font-size:13px}
+.robot-mini-card .robot-info-card__actions{display:grid;grid-template-columns:1fr;gap:6px}
+.robot-mini-card .robot-info-card__actions .cancel-robot-task{color:#ad5149;background:#fff1ee90;border:0}
+.robot-mini-card .robot-info-card__actions .cancel-robot-task:hover{color:#fff;background:#c95b50}
+.hospital-scene--dark .map-running-tasks.map-tool-drawer{background:linear-gradient(145deg,#333a31bb,#49432699)}
+</style>
+
+<style scoped>
+.live-map-data-notice{position:absolute;top:80px;right:20px;z-index:20;display:flex;align-items:center;gap:10px;max-width:calc(100% - 110px);padding:7px 10px;border-radius:7px;background:var(--info-background,#fff);color:var(--text-secondary);font-size:11px}.live-map-data-notice button{border:0;background:transparent;color:inherit;cursor:pointer}.unlocated-robot-list{padding:10px;border-top:1px solid var(--panel-border);font-size:11px;line-height:1.8;color:var(--text-secondary)}
 </style>

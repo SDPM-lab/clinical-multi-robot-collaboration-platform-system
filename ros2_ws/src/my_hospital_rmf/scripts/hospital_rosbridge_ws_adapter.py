@@ -37,11 +37,14 @@ from copy import deepcopy
 import rclpy
 from rclpy.node import Node
 from rmf_fleet_msgs.msg import FleetState
+from rmf_task_msgs.msg import TaskSummary, DispatchStates
 
 import websockets
 
 
 FLEET_TOPIC = "/fleet_states"
+TASK_TOPIC = "/task_summaries"
+DISPATCH_TOPIC = "/dispatch_states"
 WS_HOST = "0.0.0.0"
 WS_PORT = 9090
 
@@ -53,6 +56,8 @@ class FleetStateWsAdapter(Node):
         super().__init__("hospital_rosbridge_ws_adapter")
 
         self.latest_msg = None      # 快取最近一筆 FleetState（JSON 格式）
+        self.latest_tasks = {}     # 快取各任務最近一次回報，重連時補送
+        self.latest_dispatches = {}  # 快取各任務最近一次派工結果
         self.ws_clients = set()     # 目前所有已連線的 WebSocket 客戶端
         self.loop = None            # asyncio event loop（在 ws server 啟動後設定）表示「WebSocket server還沒啟動，地址還不知道」
 
@@ -63,8 +68,59 @@ class FleetStateWsAdapter(Node):
             10,
         )
 
-        self.get_logger().info(f"Subscribed to {FLEET_TOPIC}")
+        self.create_subscription(TaskSummary, TASK_TOPIC, self.task_summary_cb, 10)
+        self.create_subscription(DispatchStates, DISPATCH_TOPIC, self.dispatch_states_cb, 10)
+        self.get_logger().info(f"Subscribed to {FLEET_TOPIC}, {TASK_TOPIC} and {DISPATCH_TOPIC}")
         self.get_logger().info(f"Will serve rosbridge-like websocket on ws://localhost:{WS_PORT}")
+
+    def task_summary_cb(self, msg: TaskSummary):
+        """原樣轉送 RMF 明確的任務狀態與時間，不從機器人閒置推測完成。"""
+        payload = {
+            "op": "publish", "topic": TASK_TOPIC,
+            "msg": {
+                "task_id": msg.task_id, "state": int(msg.state),
+                "robot_name": msg.robot_name,
+                "start_time": {"sec": int(msg.start_time.sec), "nanosec": int(msg.start_time.nanosec)},
+                "end_time": {"sec": int(msg.end_time.sec), "nanosec": int(msg.end_time.nanosec)},
+            },
+        }
+        self.latest_tasks[msg.task_id] = payload
+        # 限制重連快取大小；完整歷史仍由後端保存。
+        while len(self.latest_tasks) > 256:
+            self.latest_tasks.pop(next(iter(self.latest_tasks)))
+        if self.loop and self.ws_clients:
+            asyncio.run_coroutine_threadsafe(self.broadcast_payload(payload), self.loop)
+
+    def dispatch_states_cb(self, msg: DispatchStates):
+        """轉送 RMF 派工結果；排隊與選定階段仍不代表已指派。"""
+        for state in [*msg.active, *msg.finished]:
+            payload = {
+                "op": "publish", "topic": DISPATCH_TOPIC,
+                "msg": {
+                    "task_id": state.task_id, "status": int(state.status),
+                    "assignment": {
+                        "is_assigned": bool(state.assignment.is_assigned),
+                        "fleet_name": state.assignment.fleet_name,
+                        "expected_robot_name": state.assignment.expected_robot_name,
+                    },
+                    "errors": list(state.errors),
+                },
+            }
+            if self.latest_dispatches.get(state.task_id) == payload:
+                continue
+            self.latest_dispatches[state.task_id] = payload
+            while len(self.latest_dispatches) > 256:
+                self.latest_dispatches.pop(next(iter(self.latest_dispatches)))
+            if self.loop and self.ws_clients:
+                asyncio.run_coroutine_threadsafe(self.broadcast_payload(payload), self.loop)
+
+    async def broadcast_payload(self, payload):
+        data = json.dumps(payload)
+        for ws in list(self.ws_clients):
+            try:
+                await ws.send(data)
+            except Exception:
+                self.ws_clients.discard(ws)
 
     def fleet_state_cb(self, msg: FleetState):
         """收到新的 FleetState 時更新快取並廣播給所有客戶端。"""
@@ -150,6 +206,12 @@ class FleetStateWsAdapter(Node):
             # 新連線立即推送最新狀態，不必等下一次 /fleet_states 發佈
             if self.latest_msg is not None:
                 await websocket.send(json.dumps(self.latest_msg))
+
+            for payload in list(self.latest_dispatches.values()):
+                await websocket.send(json.dumps(payload))
+
+            for payload in list(self.latest_tasks.values()):
+                await websocket.send(json.dumps(payload))
 
             async for message in websocket:
                 try:

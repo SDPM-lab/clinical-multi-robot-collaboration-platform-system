@@ -1,5 +1,7 @@
 export const taskTypeColors = Object.freeze({
   medicine: Object.freeze({ main: '#C96F3B', soft: 'rgba(201, 111, 59, 0.12)' }),
+  clothes: Object.freeze({ main: '#8C72D8', soft: '#DCD2F5' }),
+  ward: Object.freeze({ main: '#4F9F91', soft: 'rgba(79, 159, 145, 0.15)' }),
   specimen: Object.freeze({ main: '#4F8FD8', soft: '#C8DDF4' }),
   supplies: Object.freeze({ main: '#8C72D8', soft: '#DCD2F5' }),
   waste: Object.freeze({ main: '#C96561', soft: 'rgba(201, 101, 97, 0.15)' }),
@@ -9,17 +11,21 @@ export const taskTypeColors = Object.freeze({
 })
 
 const taskTypeByLabel = Object.freeze({
+  medication_delivery: 'medicine',
+  specimen_delivery: 'specimen',
+  waste_transport: 'waste',
+  clothes_collection: 'clothes',
+  ward_service: 'ward',
+  廢棄物運送: 'waste',
+  衣物回收: 'clothes',
+  病房服務: 'ward',
   藥品配送: 'medicine',
-  MedicineDelivery: 'medicine',
   檢體配送: 'specimen',
   檢體運送: 'specimen',
-  SpecimenDelivery: 'specimen',
   一般配送: 'supplies',
   病房物資補充: 'supplies',
-  GeneralDelivery: 'supplies',
   廢棄物收集: 'waste',
   醫療廢棄物運送: 'waste',
-  WasteCollection: 'waste',
   文件配送: 'document',
   巡檢: 'inspection',
   前往充電: 'charging',

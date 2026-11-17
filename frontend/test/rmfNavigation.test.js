@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { demoFleetStore } from '../src/stores/demoFleetStore.js'
 import navigation from '../public/generated/rmf-navigation.json'
 import * as THREE from 'three'
 import { rmfMapTransform, rmfToThree } from '../src/config/rmfMapTransform.js'
 import { buildActiveRoutes, buildLocationDetails, robotRouteColors, routeLayerY, routeVisualConfig, sortTasksByPriority } from '../src/data/demoActiveRoutes.js'
 import { LocationMarkerLayer } from '../src/three/navigation/LocationMarkerLayer.js'
-import { REALTIME_ROBOT_SCALE_MULTIPLIER, ROBOT_HIT_TARGET } from '../src/three/navigation/RobotRouteController.js'
+import { RobotRouteController, REALTIME_ROBOT_SCALE_MULTIPLIER, ROBOT_HIT_TARGET } from '../src/three/navigation/RobotRouteController.js'
 import { RmfNavigationLayer } from '../src/three/navigation/RmfNavigationLayer.js'
 import { robotVisualThemes, semanticColors } from '../src/config/robotVisualThemes.js'
 
@@ -44,7 +44,7 @@ describe('RMF navigation data', () => {
   it('builds active routes dynamically and keeps every hop on an actual RMF lane', () => {
     const lanes = new Set(navigation.lanes.map((lane) => `${lane.from}:${lane.to}`))
     const ids = buildActiveRoutes(navigation, [{
-      id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy',
+      id: 'T001', robotId: 'R01', title: '藥品配送', source: 'Pharmacy',
       destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', status: 'executing',
     }])[0].vertexIds
     ids.slice(1).forEach((id, index) => expect(lanes.has(`${ids[index]}:${id}`)).toBe(true))
@@ -52,10 +52,10 @@ describe('RMF navigation data', () => {
 
   it('uses the actual Graph 0 path and yellow visual treatment for Robot 02', () => {
     const route = buildActiveRoutes(navigation, [{
-      id: 'T002', robotId: 'R02', title: '檢體運送', origin: 'Consultation Room 2',
+      id: 'T002', robotId: 'R02', title: '檢體運送', source: 'Consultation Room 2',
       destination: 'Laboratory', priority: 'normal', startTime: '11:00:00', status: 'executing',
     }])[0]
-    expect(route.vertexIds.map((id) => navigation.vertices.find((vertex) => vertex.id === id).name)).toEqual(['consult_2_1', 'consult_2_junction', 'nurse_station_junction', 'consult_3_junction', 'ward_b_junction', 'left_top_junction', 'lab_junction', 'lab'])
+    expect(route.vertexIds.map((id) => navigation.vertices.find((vertex) => vertex.id === id).name)).toEqual(['consult_2_2', 'consult_2_1', 'consult_2_junction', 'nurse_station_junction', 'consult_3_junction', 'ward_b_junction', 'left_top_junction', 'lab_junction', 'lab'])
     expect(route.colors.main).toBe(0xfbe251)
     expect(robotVisualThemes.R02.main).toBe('#FBE251')
     expect(robotVisualThemes.R03.main).toBe('#77746D')
@@ -66,7 +66,7 @@ describe('RMF navigation data', () => {
 
   it('draws the entire active route in saturated color and overlays completed segments', () => {
     const route = buildActiveRoutes(navigation, [{
-      id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy',
+      id: 'T001', robotId: 'R01', title: '藥品配送', source: 'Pharmacy',
       destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', status: 'executing',
     }])[0]
     const parent = new THREE.Group()
@@ -91,7 +91,7 @@ describe('RMF navigation data', () => {
 
   it('controls navigation, active routes, arrows, and robots independently', () => {
     const route = buildActiveRoutes(navigation, [{
-      id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy',
+      id: 'T001', robotId: 'R01', title: '藥品配送', source: 'Pharmacy',
       destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', status: 'executing',
     }])[0]
     const layer = new RmfNavigationLayer({
@@ -139,7 +139,7 @@ describe('RMF navigation data', () => {
       arrowHeight: 0.085,
     })
     expect(robotRouteColors.R01).toMatchObject({ main: 0xfb9966, completed: 0xfb9966 })
-    expect(routeLayerY).toEqual({ R01: 0.031, R02: 0.034, R03: 0.037 })
+    expect(routeLayerY).toMatchObject({ R01: 0.031, R02: 0.034, R03: 0.037 })
     expect(REALTIME_ROBOT_SCALE_MULTIPLIER).toBe(1.4)
     expect(ROBOT_HIT_TARGET).toMatchObject({ radius: 0.45, height: 0.8 })
   })
@@ -205,7 +205,7 @@ describe('RMF navigation data', () => {
     expect(entry.root.style.getPropertyValue('--location-color')).toBe('#ab3b3a')
 
     const chargingRoute = buildActiveRoutes(navigation, [{
-      id: 'T006', robotId: 'R03', title: '前往充電', origin: 'Ward A', destination: 'Charging Station A',
+      id: 'T006', robotId: 'R03', title: '前往充電', source: 'Ward A', destination: 'Charging Station A',
       priority: 'normal', startTime: '16:00:00', status: 'executing', direction: 'outbound',
     }])[0]
     expect(chargingRoute.colors.main).toBe(0x77746d)
@@ -214,7 +214,7 @@ describe('RMF navigation data', () => {
 
   it('reverses Graph 0 vertices and the active destination for a return leg', () => {
     const task = {
-      id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy',
+      id: 'T001', robotId: 'R01', title: '藥品配送', source: 'Pharmacy',
       destination: 'Nurse Reception', direction: 'return', priority: 'high', status: 'executing',
     }
     const route = buildActiveRoutes(navigation, [task])[0]
@@ -244,15 +244,58 @@ it('keeps a charging destination red when Robot 02 is assigned to it', () => {
 })
 
 
-it('routes Robot 02 from Consultation Room 2 through the Pantry door', () => {
+it('routes Robot 02 from Ward B to Clothes Return', () => {
   const route = buildActiveRoutes(navigation, demoFleetStore.tasks.value).find((entry) => entry.robotId === 'R02')
-  expect(route.origin).toBe('Consultation Room 2')
-  expect(route.destination).toBe('Pantry')
+  expect(route.source).toBe('Ward B')
+  expect(route.destination).toBe('Clothes Return')
   const byId = new Map(navigation.vertices.map((vertex) => [vertex.id, vertex]))
-  expect(byId.get(route.vertexIds[0]).name).toBe('consult_2_1')
-  expect(byId.get(route.vertexIds.at(-1)).name).toBe('pantry')
+  expect(byId.get(route.vertexIds[0]).name).toBe('ward_b_2')
+  expect(byId.get(route.vertexIds.at(-1)).name).toBe('clothes_return_2')
   const lanes = route.vertexIds.slice(1).map((to, index) => navigation.lanes.find((lane) => lane.from === route.vertexIds[index] && lane.to === to))
   expect(lanes.every(Boolean)).toBe(true)
-  expect(lanes.at(-1).doorName).toBe('Pantry_room')
-  expect(buildLocationDetails(demoFleetStore.tasks.value).pantry).toMatchObject({ taskId: 'T002', robotId: 'R02', isDestination: true })
+  expect(lanes.every(Boolean)).toBe(true)
+  expect(buildLocationDetails(demoFleetStore.tasks.value).clothes_return_2).toMatchObject({ taskId: 'T002', robotId: 'R02', isDestination: true })
+})
+
+it('places seven models from backend poses and does not simulate movement along reference routes',()=>{
+ const load=vi.spyOn(RobotRouteController.prototype,'load').mockResolvedValue()
+ const layer=new RmfNavigationLayer({data:navigation,parent:new THREE.Scene(),camera:new THREE.PerspectiveCamera(),routes:[],showRobotModels:false})
+ try {
+  const robots=Array.from({length:7},(_,i)=>({id:`backend-${i}`,hasPose:true,x:i,y:2,yaw:0,state:'idle'}))
+  layer.setLiveRobots(robots)
+  expect(layer.robotControllers.size).toBe(7)
+  const first=layer.robotControllers.get('backend-0')
+  const position=first.wrapper.position.clone()
+  layer.update(10)
+  expect(first.wrapper.position.equals(position)).toBe(true)
+  layer.setLiveRobots(robots.map(robot=>({...robot,x:robot.x+1})))
+  expect(layer.robotControllers.get('backend-0')).toBe(first)
+  expect(load).toHaveBeenCalledTimes(7)
+  layer.setLiveRobots([{...robots[0],hasPose:false}])
+  expect(layer.robotControllers.size).toBe(0)
+ } finally { layer.dispose();load.mockRestore() }
+})
+
+it('animates only simulated preview robots and keeps progress through polling',()=>{
+ const load=vi.spyOn(RobotRouteController.prototype,'load').mockResolvedValue()
+ const layer=new RmfNavigationLayer({data:navigation,parent:new THREE.Scene(),camera:new THREE.PerspectiveCamera(),routes:[],showRobotModels:false})
+ try {
+  const waypoints=['ward_a_1','ward_b_2'].map(name=>navigation.namedWaypoints.find(point=>point.name===name))
+  const route={id:'task-1',robotId:'robot-a',isSimulated:true,vertexIds:waypoints.map(point=>point.id)}
+  const preview={id:'robot-a',hasPose:true,positionSource:'preview',x:waypoints[0].x,y:waypoints[0].y,yaw:0,state:'offline'}
+  layer.setLiveRobots([preview],[route])
+  const controller=layer.robotControllers.get('robot-a')
+  const initial=controller.wrapper.position.clone()
+  layer.update(1)
+  const afterMove=controller.wrapper.position.clone()
+  expect(afterMove.distanceTo(initial)).toBeGreaterThan(0)
+  layer.setLiveRobots([preview],[route])
+  expect(layer.robotControllers.get('robot-a')).toBe(controller)
+  expect(controller.wrapper.position.equals(afterMove)).toBe(true)
+  const actual={...preview,positionSource:undefined,hasTelemetry:true,x:4,y:5}
+  layer.setLiveRobots([actual],[route])
+  const actualPosition=controller.wrapper.position.clone()
+  layer.update(1)
+  expect(controller.wrapper.position.equals(actualPosition)).toBe(true)
+ } finally { layer.dispose();load.mockRestore() }
 })

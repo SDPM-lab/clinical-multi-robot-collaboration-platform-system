@@ -1,7 +1,9 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import ClinicOverviewView from '@/views/ClinicOverviewView.vue'
+import TaskProgressTimeline from '@/components/overview/TaskProgressTimeline.vue'
 import { overviewDemoData } from '@/data/overviewDemoData.js'
+import { taskApi } from '@/services/taskApi.js'
 
 const SceneStub = {
   props: ['activeFloor', 'cameraDebug', 'modelDebug', 'interactionTarget', 'cameraPreset', 'modelPreset'],
@@ -10,7 +12,46 @@ const SceneStub = {
 }
 
 describe('clinic overview view', () => {
-  it('keeps floor selection connected to the scene and shows vertical task progress', async () => {
+  it('shows stale backend data and allows retrying the snapshot', async () => {
+    vi.spyOn(taskApi, 'getRobotSnapshot')
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockResolvedValue({ robots: [] })
+    vi.spyOn(taskApi, 'getTaskRecords').mockResolvedValue([])
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+    const wrapper = mount(ClinicOverviewView, {
+      props: { data: overviewDemoData, theme: 'light' },
+      global: { stubs: { ClinicOverviewScene: SceneStub, RobotPreviewStrip: true } },
+    })
+    await flushPromises()
+
+    expect(wrapper.get('.dashboard-data-status').attributes('data-state')).toBe('stale')
+    expect(wrapper.get('.dashboard-data-status').text()).toContain('資料更新失敗')
+
+    await wrapper.get('.dashboard-data-status button').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('.dashboard-data-status').attributes('data-state')).toBe('fresh')
+    expect(wrapper.get('.dashboard-data-status').text()).toContain('資料來源更新於')
+
+    wrapper.unmount()
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+
+  it('places backend freshness above the daily schedule in the right information rail', async () => {
+    const wrapper = mount(ClinicOverviewView, {
+      props: { data: overviewDemoData, theme: 'light' },
+      global: { stubs: { ClinicOverviewScene: SceneStub, RobotPreviewStrip: true } },
+    })
+    const rightRail = wrapper.get('.right-information-stack')
+
+    expect(rightRail.element.firstElementChild).toBe(wrapper.get('.dashboard-data-status').element)
+    expect(rightRail.element.children[1]).toBe(wrapper.get('.overview-calendar').element)
+    expect(wrapper.element.querySelector(':scope > .dashboard-data-status')).toBeNull()
+
+    wrapper.unmount()
+  })
+
+  it('keeps floor selection connected and does not show demo task data', async () => {
     const wrapper = mount(ClinicOverviewView, {
       props: { data: overviewDemoData, theme: 'light' },
       global: { stubs: { ClinicOverviewScene: SceneStub, RobotPreviewStrip: true } },
@@ -18,29 +59,54 @@ describe('clinic overview view', () => {
 
     expect(wrapper.get('.scene-stub').attributes('data-floor')).toBe('all')
     expect(wrapper.get('.task-progress-panel').text()).toContain('任務進度')
-    expect(wrapper.get('.task-progress-panel').text()).toContain('T001')
+    expect(wrapper.get('.task-progress-panel').text()).not.toContain('T001')
     const gauge = wrapper.get('.f1-speed-gauge').element
     expect(wrapper.findAll('.f1-speed-gauge')).toHaveLength(1)
     expect(wrapper.findAll('.completion-panel-content')).toHaveLength(1)
-    expect(wrapper.get('.f1-speed-gauge').attributes('aria-label')).toContain('75%')
+    expect(wrapper.get('.f1-speed-gauge').attributes('aria-label')).toContain('尚無資料')
     expect(wrapper.findAll('.completion-summary > div')).toHaveLength(3)
 
-    const floorTwo = wrapper.findAll('.clinic-floor-selector button').find((button) => button.text().includes('Floor 2'))
+    const floorTwo = wrapper.get('.clinic-floor-selector [data-floor="2"]')
     await floorTwo.trigger('click')
 
     expect(wrapper.get('.scene-stub').attributes('data-floor')).toBe('2')
     expect(wrapper.get('.f1-speed-gauge').element).toBe(gauge)
-    expect(wrapper.get('.f1-speed-gauge').attributes('aria-label')).toContain('72%')
-    expect(wrapper.get('.completion-panel').text()).toContain('13 / 18')
-    expect(wrapper.findAll('.task-progress-panel li')).toHaveLength(4)
+    expect(wrapper.get('.f1-speed-gauge').attributes('aria-label')).toContain('尚無資料')
+    expect(wrapper.get('.completion-panel').text()).not.toContain('13 / 18')
+    expect(wrapper.findAll('.task-progress-panel li')).toHaveLength(0)
 
-    await wrapper.findAll('.overview-calendar nav button')[1].trigger('click')
-    expect(wrapper.findAll('.overview-calendar nav button')).toHaveLength(7)
-    expect(wrapper.get('.overview-calendar header').text()).toContain('星期')
+    expect(wrapper.get('.overview-calendar').text()).not.toContain('T014')
+    wrapper.unmount()
+  })
 
-    await wrapper.get('.robot-select > button').trigger('click')
-    await wrapper.findAll('.robot-options button')[1].trigger('click')
-    expect(wrapper.get('.task-progress-panel').text()).toContain('T014')
+  it('opens dispatch schedule from the daily schedule View all action', async () => {
+    const wrapper = mount(ClinicOverviewView, {
+      props: { data: overviewDemoData, theme: 'light' },
+      global: { stubs: { ClinicOverviewScene: SceneStub, RobotPreviewStrip: true } },
+    })
+
+    await wrapper.get('.overview-calendar header > button').trigger('click')
+    expect(wrapper.emitted('open-dispatch')).toEqual([['schedule']])
+    wrapper.unmount()
+  })
+
+  it('omits the task progress source note while preserving route steps', () => {
+    const wrapper = mount(TaskProgressTimeline, {
+      props: {
+        modelValue: 'robot-a',
+        progressByRobot: {
+          'robot-a': {
+            taskId: 'T001',
+            floor: '1F',
+            robotId: 'R01',
+            steps: [{ location: 'pharmacy', status: 'active', label: 'Source' }],
+          },
+        },
+      },
+    })
+
+    expect(wrapper.find('.progress-source-note').exists()).toBe(false)
+    expect(wrapper.findAll('.progress-content li')).toHaveLength(1)
     wrapper.unmount()
   })
 
@@ -74,17 +140,14 @@ describe('clinic overview view', () => {
 })
 
 
-it('expands the existing completion panel without replacing its gauge or changing floors', async () => {
+it('does not show an expand arrow on the completion rate panel', async () => {
  const wrapper = mount(ClinicOverviewView, {
   props: { data: overviewDemoData, theme: 'light' },
   global: { stubs: { ClinicOverviewScene: SceneStub } },
  })
- const panel = wrapper.get('.completion-panel').element
- const gauge = wrapper.get('.f1-speed-gauge').element
- panel.requestFullscreen = vi.fn()
- await wrapper.get('.completion-expand').trigger('click')
- expect(panel.requestFullscreen).toHaveBeenCalledOnce()
- expect(wrapper.get('.f1-speed-gauge').element).toBe(gauge)
+ expect(wrapper.find('.completion-expand').exists()).toBe(false)
+ expect(wrapper.find('.completion-header button').exists()).toBe(false)
+ expect(wrapper.find('.f1-speed-gauge').exists()).toBe(true)
  expect(wrapper.get('.scene-stub').attributes('data-floor')).toBe('all')
  wrapper.unmount()
 })

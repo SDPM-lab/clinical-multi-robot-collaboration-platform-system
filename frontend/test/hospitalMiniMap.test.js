@@ -16,7 +16,7 @@ const pointer = async (element, type, x, y) => {
 }
 const create = async (props = {}, navigation = graph) => {
   vi.stubGlobal('fetch',vi.fn(async (url) => ({ok:true,json:async () => String(url).includes('hospital-floorplan') ? floorplan : navigation})))
-  const wrapper = mount(HospitalMiniMap,{props:{robots,origin:'Pharmacy',destination:'Nurse Reception',...props}})
+  const wrapper = mount(HospitalMiniMap,{props:{robots,source:'Pharmacy',destination:'Nurse Reception',...props}})
   wrappers.push(wrapper); await flushPromises(); return wrapper
 }
 beforeEach(() => vi.stubGlobal('ResizeObserver',class {observe(){} disconnect(){}}))
@@ -33,9 +33,9 @@ describe('dispatch SVG map', () => {
     vertexIds.slice(1).forEach((id,i)=>expect(graph.lanes.some(lane=>lane.from===vertexIds[i]&&lane.to===id)).toBe(true))
   })
   it('selects either endpoint using markers or explicit room mapping', async () => {
-    const w = await create({selectionMode:'origin',allowedLocations:['Laboratory','Nurse Reception']})
+    const w = await create({selectionMode:'source',allowedLocations:['Laboratory','Nurse Reception']})
     await w.get('[data-waypoint="lab"]').trigger('keydown',{key:'Enter'})
-    expect(w.emitted('select-origin')[0]).toEqual(['Laboratory'])
+    expect(w.emitted('select-source')[0]).toEqual(['Laboratory'])
     await w.setProps({selectionMode:'destination'})
     await w.get('[data-room="laboratory"]').trigger('keydown',{key:'Enter'})
     expect(w.emitted('select-destination')[0]).toEqual(['Laboratory'])
@@ -70,9 +70,9 @@ describe('dispatch SVG map', () => {
   it('updates robot positions and both endpoint highlights without remounting', async () => {
     const w=await create()
     const before=w.get('[data-robot="R01"]').attributes('transform')
-    await w.setProps({robots:[{...robots[0],currentLocation:'Laboratory'}],origin:'Laboratory',destination:'Ward A'})
+    await w.setProps({robots:[{...robots[0],currentLocation:'Laboratory'}],source:'Laboratory',destination:'Ward A'})
     expect(w.get('[data-robot="R01"]').attributes('transform')).not.toBe(before)
-    expect(w.get('[data-waypoint="lab"] .origin').exists()).toBe(true)
+    expect(w.get('[data-waypoint="lab"] .source').exists()).toBe(true)
     expect(w.get('[data-waypoint="ward_a_1"] .destination').exists()).toBe(true)
     await w.setProps({robots:[{...robots[0],rmfPosition:{x:10,y:-10,level:'L1'}}]})
     const point=rmfToMapPoint({x:10,y:-10})

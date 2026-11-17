@@ -39,6 +39,7 @@ bin/
 obj/
 *.user
 *.suo
+backend/Server/App_Data/
 
 # ROS 2 / colcon generated workspace outputs
 /ros2_ws/build/

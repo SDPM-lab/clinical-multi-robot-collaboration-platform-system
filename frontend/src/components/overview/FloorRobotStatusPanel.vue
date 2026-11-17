@@ -1,9 +1,11 @@
 <script setup>
-import { overviewRobotColors, overviewThemeVars } from '@/styles/overviewTheme.js'
+import { overviewThemeVars } from '@/styles/overviewTheme.js'
+import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
 import { computed, reactive, ref } from 'vue'
 import { Maximize2, X } from '@lucide/vue'
 import RobotBatteryTrend from './RobotBatteryTrend.vue'
 import { batteryRanges, fixedDemoBatteryHistory, robotStatusLabels, selectBatteryHistory } from '@/data/robotBatteryTrend.js'
+import { t } from '@/i18n/index.js'
 
 const props = defineProps({
   history: { type: Array, default: () => [] },
@@ -13,8 +15,8 @@ const props = defineProps({
   demo: Boolean,
 })
 
-const robotColors = { R01: overviewRobotColors[0], R02: overviewRobotColors[1], R03: overviewRobotColors[2] }
-const rangeByRobot = reactive({ R01: 'Day', R02: 'Day', R03: 'Day' })
+const robotColors = Object.fromEntries(['C01','C02','M01','M02','W01','W02','W03'].map(id=>[id,getRobotVisualTheme(id).main]))
+const rangeByRobot = reactive(Object.fromEntries(Object.keys(robotColors).map(id=>[id,'Day'])))
 const expandedRobotId = ref(null)
 const robotList = computed(() => Object.values(props.robots))
 const expandedRobot = computed(() => props.robots[expandedRobotId.value] || null)
@@ -25,7 +27,7 @@ function realPoints(robotId, range) {
 function pointsFor(robot, range = rangeByRobot[robot.robotId]) {
   const actual = realPoints(robot.robotId, range)
   if (props.demo) return fixedDemoBatteryHistory(robot.robotId, range)
-  return actual.length < 2 ? fixedDemoBatteryHistory(robot.robotId, range, actual.at(-1)) : actual
+  return actual
 }
 function latestFor(robot) {
   return pointsFor(robot).at(-1) || {
@@ -49,7 +51,7 @@ function closeExpanded() {
 </script>
 
 <template>
-  <section class="floor-realtime-panel" :aria-label="`Floor ${floor.slice(-1)} 機器人電量趨勢`">
+  <section class="floor-realtime-panel" :aria-label="t('dashboard.robotBatteryTrend', { number: floor.slice(-1) })">
     <article v-for="(robot, index) in robotList" :key="robot.robotId" class="robot-trend-column" :style="{ '--robot-color': robotColors[robot.robotId], '--robot-index': index }">
       <header class="robot-column-header">
         <strong class="robot-name">{{ robot.name }}</strong>
@@ -96,4 +98,5 @@ function closeExpanded() {
 .battery-dialog .battery-range-tabs{position:static;transform:none}
 .battery-dialog .battery-value{grid-column:auto;grid-row:auto}
 button:focus,button:focus-visible{outline:none;box-shadow:none}
+.floor-realtime-panel{grid-template-columns:repeat(7,minmax(180px,1fr));overflow-x:auto}
 </style>

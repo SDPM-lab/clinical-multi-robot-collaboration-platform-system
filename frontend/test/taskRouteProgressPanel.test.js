@@ -18,9 +18,9 @@ describe('Overview task route progress panel', () => {
     const route = buildActiveRoutes(navigation, demoFleetStore.tasks.value).find((entry) => entry.taskId === 'T001')
     expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('rmf-navigation.json'), { cache: 'no-store' })
     expect(wrapper.findAll('.task-route-progress__stops li')).toHaveLength(route.vertexIds.length)
-    expect(wrapper.text()).toContain('目前 3 / 5')
-    expect(wrapper.text()).toContain('Pharmacy')
-    expect(wrapper.text()).toContain('Nurse Reception')
+    expect(wrapper.text()).toContain(`目前 7 / ${route.vertexIds.length}`)
+    expect(wrapper.text()).toContain('Ward A')
+    expect(wrapper.text()).toContain('Waste Return')
     route.vertexIds.filter((id) => !navigation.vertices.find((vertex) => vertex.id === id)?.name).forEach((id) => {
       expect(wrapper.text()).toContain(`路線點 ${id}`)
     })
@@ -35,7 +35,7 @@ describe('Overview task route progress panel', () => {
     const wrapper = mount(TaskRouteProgressPanel)
     await flushPromises()
 
-    expect(wrapper.find('.task-route-progress').attributes('style')).toContain('--task-progress-ratio: 0.5')
+    expect(wrapper.find('.task-route-progress').attributes('style')).toContain('--task-progress-ratio: 0.461538')
     vi.advanceTimersByTime(0)
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(1)
@@ -44,8 +44,8 @@ describe('Overview task route progress panel', () => {
     expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(2)
     vi.advanceTimersByTime(1000)
     await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(3)
-    expect(wrapper.findAll('.task-route-progress__stops li')).toHaveLength(5)
+    expect(wrapper.findAll('.task-route-progress__stops li.is-revealed')).toHaveLength(7)
+    expect(wrapper.findAll('.task-route-progress__stops li')).toHaveLength(14)
     wrapper.unmount()
   })
 

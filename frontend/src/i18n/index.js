@@ -17,7 +17,10 @@ export const setLocale = (next) => {
 // global `t` wrapper alone does not register that effect as a locale subscriber.
 export const t = (key, ...args) => { locale.value; return i18n.global.t(key, ...args) }
 export const translateTask = (value) => { const key=`tasks.${value}`; return i18n.global.te(key) ? t(key) : value }
-export const translateLocation = (value) => { const key=`locations.${value}`; return i18n.global.te(key) ? t(key) : value }
+export const translateLocation = (value) => {
+  const translation = typeof value === 'string' ? i18n.global.getLocaleMessage(locale.value).locations?.[value] : undefined
+  return typeof translation === 'string' ? translation : value
+}
 if (typeof document !== 'undefined') document.documentElement.lang = locale.value
 
 const phraseMap = new Map()

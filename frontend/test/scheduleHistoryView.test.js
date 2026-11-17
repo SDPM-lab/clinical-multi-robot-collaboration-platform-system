@@ -7,12 +7,12 @@ import HospitalMiniMap from '@/components/dispatch/HospitalMiniMap.vue'
 import { setLocale } from '@/i18n/index.js'
 import { addDays, dayKey } from '@/data/scheduleHistory.js'
 
-const historyControl=vi.hoisted(()=>({events:[]}))
-vi.mock('@/data/scheduleHistorySource.js',()=>({createHistorySource:()=>computed(()=>({events:historyControl.events,demo:false,error:''}))}))
+const historyControl=vi.hoisted(()=>({events:[],robots:[]}))
+vi.mock('@/data/scheduleHistorySource.js',()=>({createHistorySource:()=>computed(()=>({events:historyControl.events,robots:historyControl.robots,demo:false,error:''}))}))
 
 const makeHistoryEvents=()=>{
  const today=dayKey(new Date()),yesterday=addDays(today,-1)
- const make=(id,date,start,end,status,priority,routeCoordinates)=>({id,taskId:`H${id}`,title:'藥品配送',robotId:'R01',robotName:'Robot 01',start:`${date}T${start}`,end:`${date}T${end}`,startLocation:'Pharmacy',endLocation:'Nurse Reception',status,priority,routeCoordinates,requiredCapabilities:['Navigation','MedicineDelivery'],note:'Keep refrigerated',createdAt:`${date}T07:00:00`})
+ const make=(id,date,start,end,status,priority,routeCoordinates)=>({id,taskId:`H${id}`,title:'藥品配送',robotId:'robot-a',robotName:'C01',start:`${date}T${start}`,end:`${date}T${end}`,startLocation:'Pharmacy',endLocation:'Nurse Reception',status,priority,routeCoordinates,requiredCapabilities:['Navigation','medication_delivery'],note:'Keep refrigerated',createdAt:`${date}T07:00:00`})
  return [
   make('001',today,'10:00:00','10:35:00','completed','high',[[180,330],[530,270]]),
   make('002',today,'09:00:00','09:35:00','cancelled','normal',[[250,270],[570,440]]),
@@ -22,11 +22,35 @@ const makeHistoryEvents=()=>{
  ]
 }
 
-beforeEach(()=>{historyControl.events=makeHistoryEvents();vi.stubGlobal('ResizeObserver',class{observe(){} disconnect(){}})})
+const makeRobotRoster=()=>[
+ {id:'robot-a',name:'C01',robotType:'clean'},
+ {id:'robot-b',name:'C02',robotType:'clean'},
+ {id:'robot-hospital_robot_3',name:'M01',robotType:'medical'},
+ {id:'robot-hospital_robot_4',name:'M02',robotType:'medical'},
+ {id:'robot-hospital_robot_5',name:'W01',robotType:'ward'},
+ {id:'robot-hospital_robot_6',name:'W02',robotType:'ward'},
+ {id:'robot-hospital_robot_7',name:'W03',robotType:'ward'},
+]
+
+beforeEach(()=>{historyControl.events=makeHistoryEvents();historyControl.robots=makeRobotRoster();vi.stubGlobal('ResizeObserver',class{observe(){} disconnect(){}})})
 afterEach(()=>{setLocale('zh-TW');vi.unstubAllGlobals()})
 const ready=async()=>{const wrapper=mount(ScheduleHistoryView);await vi.dynamicImportSettled();await flushPromises();return wrapper}
 
 describe('schedule history dashboard',()=>{
+ it('shows actual times, scheduled time and delay without invented execution stages',async()=>{
+  const event=makeHistoryEvents()[0]
+  historyControl.events=[{...event,backendRecord:true,scheduledAt:event.start,startedAt:null,finishedAt:null,durationMinutes:null,delayMinutes:null}]
+  const wrapper=await ready()
+  expect(wrapper.get('.row-start').text()).toBe('—')
+  expect(wrapper.get('.row-end').text()).toBe('—')
+  expect(wrapper.get('.duration-value').text()).toBe('—')
+  expect(wrapper.get('.task-record').text()).toContain('預定開始時間')
+  expect(wrapper.get('.history-column-head').text()).toContain('開始延遲')
+  expect(wrapper.get('.task-record').text()).not.toContain('開始延遲')
+  expect(wrapper.get('.delay-label').text()).toBe('—')
+  expect(wrapper.findAll('.task-timeline li')).toHaveLength(1)
+  wrapper.unmount()
+ })
  it('shows a compact status strip, task list, route and history details',async()=>{
   const wrapper=await ready()
   const cards=wrapper.findAll('.history-metric')
@@ -42,7 +66,9 @@ describe('schedule history dashboard',()=>{
   expect(wrapper.text()).not.toContain('時間模式')
   expect(wrapper.get('.list-header').element.firstElementChild.classList.contains('history-search')).toBe(true)
   expect(wrapper.find('.heading-copy').exists()).toBe(false)
-  expect(wrapper.get('.history-column-head').findAll('span').map(item=>item.text())).toEqual(['任務類型','時間','機器人','起點 → 終點','優先級','狀態','任務時長'])
+  expect(wrapper.get('.history-list-context').text()).not.toContain('筆紀錄')
+  expect(wrapper.find('.clear-history-filters').exists()).toBe(false)
+  expect(wrapper.get('.history-column-head').findAll('span').map(item=>item.text())).toEqual(['任務類型','實際時間','開始延遲','機器人','來源點 → 終點','優先級','狀態','任務時長'])
   expect(wrapper.get('.history-column-head').element.nextElementSibling.classList.contains('history-list-scroll')).toBe(true)
   expect(wrapper.get('.history-list-scroll').find('.history-column-head').exists()).toBe(false)
   expect(wrapper.find('.history-calendar').exists()).toBe(false)
@@ -94,8 +120,40 @@ describe('schedule history dashboard',()=>{
   await wrapper.get('.icon-control').trigger('click')
   await wrapper.findAll('.filter-choice button').find(button=>button.text()==='高').trigger('click')
   expect(wrapper.get('.icon-control').text()).toContain('1')
+  expect(wrapper.find('.clear-history-filters').exists()).toBe(false)
   await wrapper.get('.history-search input').setValue('impossible-task-id')
   expect(wrapper.find('.history-empty').exists()).toBe(true)
+  wrapper.unmount()
+ })
+ it('lets users recover from an empty filtered result without losing the date range',async()=>{
+  const wrapper=await ready()
+  const date=wrapper.get('.history-date-picker').text()
+  await wrapper.get('.history-search input').setValue('unknown-task')
+  expect(wrapper.get('.history-empty').text()).toContain('找不到符合條件')
+  expect(wrapper.get('.history-empty button').text()).toBe('重設條件')
+  await wrapper.get('.history-empty button').trigger('click')
+  expect(wrapper.get('.history-search input').element.value).toBe('')
+  expect(wrapper.findAll('.history-row').length).toBeGreaterThan(0)
+  expect(wrapper.get('.history-date-picker').text()).toBe(date)
+  wrapper.unmount()
+ })
+ it('shows the seven registered backend robots and filters using their backend IDs',async()=>{
+  const today=dayKey(new Date())
+  historyControl.events=[
+   {...makeHistoryEvents()[0],id:'robot-a-task',robotId:'robot-a',start:`${today}T10:00:00`,end:`${today}T10:35:00`},
+   {...makeHistoryEvents()[0],id:'robot-m01-task',taskId:'HM01',robotId:'robot-hospital_robot_3',robotName:'M01',start:`${today}T09:00:00`,end:`${today}T09:35:00`},
+  ]
+  const wrapper=await ready()
+  await wrapper.get('.icon-control').trigger('click')
+  const robotOptions=wrapper.findAll('.filter-choice').at(0).findAll('button')
+  expect(robotOptions).toHaveLength(7)
+  expect(robotOptions.map(option=>option.text())).toEqual([
+   'C01 · 清潔型','C02 · 清潔型','M01 · 醫療型','M02 · 醫療型','W01 · 病房型','W02 · 病房型','W03 · 病房型',
+  ])
+  await robotOptions[2].trigger('click')
+  await wrapper.get('.filter-popover footer button').trigger('click')
+  expect(wrapper.findAll('.history-row')).toHaveLength(1)
+  expect(wrapper.get('.history-row').get('.row-task-id').text()).toBe('HM01')
   wrapper.unmount()
  })
  it('navigates dates from the toolbar and keeps the selected task detail in sync',async()=>{

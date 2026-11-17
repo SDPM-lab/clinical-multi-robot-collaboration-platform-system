@@ -25,10 +25,26 @@ export const semanticTheme = Object.freeze({
 const withCardTokens = theme => Object.freeze({
   ...theme, cardBackground: theme.soft, cardBorder: theme.border, cardGlow: theme.soft,
 })
-export const robotVisualThemes = Object.freeze({
+const displayThemes = Object.freeze({
   R01: withCardTokens(robotTheme.primary),
   R02: withCardTokens(robotTheme.secondary),
   R03: withCardTokens(robotTheme.third),
+  R04: withCardTokens(robotPalette('R04', '#5D9DD3')),
+  R05: withCardTokens(robotPalette('R05', '#8F79BD')),
+  R06: withCardTokens(robotPalette('R06', '#58A691')),
+  R07: withCardTokens(robotPalette('R07', '#CE718A')),
+})
+// Visual aliases only: canonical backend IDs are never rewritten.
+export const robotVisualThemes = Object.freeze({
+  ...displayThemes,
+  ...Object.fromEntries(['C01', 'C02', 'M01', 'M02', 'W01', 'W02', 'W03'].map((code, index) => [
+    code,
+    displayThemes[`R${String(index + 1).padStart(2, '0')}`],
+  ])),
+  ...Object.fromEntries(Array.from({length:7},(_,index)=>[
+    index===0 ? 'robot-a' : index===1 ? 'robot-b' : `robot-hospital_robot_${index+1}`,
+    displayThemes[`R${String(index+1).padStart(2,'0')}`],
+  ])),
 })
 export const fallbackRobotVisualTheme = withCardTokens(robotPalette(null, visualTokens.neutral))
 export const semanticColors = Object.freeze({ ...semanticTheme })
