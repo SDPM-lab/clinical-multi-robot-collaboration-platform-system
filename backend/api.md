@@ -110,7 +110,7 @@ X-CSRF-TOKEN: <token>
 {
   "taskType": "medication_delivery",
   "source": "nurse_station",
-  "destination": "ward_a",
+  "destination": "ward_a_2",
   "priority": "normal",
   "robotId": null,
   "scheduledAt": "2026-11-09T08:00:00+08:00",
@@ -132,7 +132,7 @@ X-CSRF-TOKEN: <token>
   "taskCode": "T0001",
   "taskType": "medication_delivery",
   "source": "nurse_station",
-  "destination": "ward_a",
+  "destination": "ward_a_2",
   "priority": "normal",
   "requiredCapabilities": ["medication_delivery"],
   "status": "pending",

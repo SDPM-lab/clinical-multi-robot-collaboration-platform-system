@@ -1,11 +1,13 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue'
-import { Activity, AlertCircle, ArrowRight, Ban, CalendarDays, Check, ChevronLeft, ChevronRight, Clock, Filter, Search } from '@lucide/vue'
+import { Activity, AlertCircle, ArrowRight, Ban, CalendarDays, Check, ChevronLeft, ChevronRight, Clock, Filter, RefreshCw, Search } from '@lucide/vue'
 import SharedLoading from '@/components/SharedLoading.vue'
 import HistorySummary from '@/components/history/HistorySummary.vue'
 import HospitalMiniMap from '@/components/dispatch/HospitalMiniMap.vue'
 import { addDays, dayKey, eventsOnDay, filterHistory, historyRange, monthDays, parseDay } from '@/data/scheduleHistory.js'
+import { notificationStore } from '@/stores/notificationStore.js'
 import { localeTag, t, translateLocation, translateTask } from '@/i18n/index.js'
+import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 
 const today=dayKey(new Date())
 const selectedDate=ref(today)
@@ -16,6 +18,8 @@ const view=ref('weekly')
 const statusFilter=ref('all')
 const query=ref('')
 const filterOpen=ref(false)
+const filterRoot=ref(null)
+const lastUpdated=ref(null)
 const filters=reactive({priority:[],robotId:[]})
 const source=shallowRef(null)
 const loading=ref(true)
@@ -27,9 +31,10 @@ const loadHistory=async()=>{
   loadError.value=''
   try {
     const module=await import('@/data/scheduleHistorySource.js')
-    if(generation===loadGeneration)source.value=module.createHistorySource()
+    const result=await module.createHistorySource()
+    if(generation===loadGeneration){source.value=result;lastUpdated.value=new Date()}
   } catch {
-    if(generation===loadGeneration)loadError.value='load-error'
+    if(generation===loadGeneration){loadError.value='load-error';notificationStore.add({key:'history.loadError',type:'error'})}
   } finally {
     if(generation===loadGeneration)loading.value=false
   }
@@ -62,7 +67,7 @@ const matches=computed(()=>{
       .join(' ').toLocaleLowerCase().includes(search)
   })
 })
-const overlaps=(event,period)=>Date.parse(event.start)<parseDay(period[1]).getTime()&&Date.parse(event.end)>parseDay(period[0]).getTime()
+const overlaps=(event,period)=>Date.parse(event.start)<parseDay(period[1]).getTime()&&(Date.parse(event.end)>parseDay(period[0]).getTime() || (event.end===event.start && Date.parse(event.start)>=parseDay(period[0]).getTime()))
 const rangeEvents=computed(()=>matches.value.filter(event=>overlaps(event,range.value)).sort((a,b)=>Date.parse(b.start)-Date.parse(a.start)||a.taskId.localeCompare(b.taskId)))
 const previousEvents=computed(()=>matches.value.filter(event=>overlaps(event,previousRange.value)))
 const inRange=computed(()=>rangeEvents.value.filter(event=>statusFilter.value==='all'||event.status===statusFilter.value))
@@ -75,11 +80,12 @@ const formatDate=key=>parseDay(key).toLocaleDateString(localeTag.value,{year:'nu
 const calendarTitle=computed(()=>parseDay(calendarMonth.value).toLocaleDateString(localeTag.value,{year:'numeric',month:'long'}))
 const calendarDays=computed(()=>monthDays(calendarMonth.value))
 const calendarWeekdays=computed(()=>Array.from({length:7},(_,index)=>parseDay(addDays('2026-09-14',index)).toLocaleDateString(localeTag.value,{weekday:'short'}).replace(/^週/,'') ))
-const time=value=>new Date(value).toLocaleTimeString(localeTag.value,{hour:'2-digit',minute:'2-digit',hour12:false})
-const duration=event=>Math.max(0,Math.round((Date.parse(event.end)-Date.parse(event.start))/60000))
+const time=value=>!value||!Number.isFinite(Date.parse(value)) ? '—' : new Date(value).toLocaleTimeString(localeTag.value,{hour:'2-digit',minute:'2-digit',hour12:false})
+const duration=event=>event.backendRecord ? (event.durationMinutes == null ? '—' : Math.round(event.durationMinutes)) : Math.max(0,Math.round((Date.parse(event.end)-Date.parse(event.start))/60000))
+const delay=event=>event.delayMinutes == null ? '—' : `${Math.ceil(event.delayMinutes)} ${t('common.minutes')}`
 const createdAt=value=>{
   if(!value||!Number.isFinite(Date.parse(value)))return t('robotStatus.noValue')
-  return new Date(value).toLocaleString(localeTag.value,{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})
+  return new Date(value).toLocaleString(localeTag.value,{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'})
 }
 const selectMode=mode=>{view.value=mode}
 const chooseDate=key=>{selectedDate.value=key;calendarMonth.value=key;calendarOpen.value=false}
@@ -90,7 +96,7 @@ const shiftCalendarMonth=amount=>{
   calendarMonth.value=dayKey(date)
 }
 const toggleCalendar=()=>{calendarMonth.value=selectedDate.value;calendarOpen.value=!calendarOpen.value}
-const closeCalendarOnOutside=event=>{if(!calendarRoot.value?.contains(event.target))calendarOpen.value=false}
+const closeCalendarOnOutside=event=>{if(!calendarRoot.value?.contains(event.target))calendarOpen.value=false;if(!filterRoot.value?.contains(event.target))filterOpen.value=false}
 const moveDate=amount=>{
   if(view.value==='monthly'){
     const date=parseDay(selectedDate.value)
@@ -100,16 +106,35 @@ const moveDate=amount=>{
   }else selectedDate.value=addDays(selectedDate.value,amount*(view.value==='weekly'?7:1))
 }
 const resetFilters=()=>{filters.priority=[];filters.robotId=[];statusFilter.value='all';query.value='';filterOpen.value=false}
+const hasFilters=computed(()=>filters.priority.length>0||filters.robotId.length>0||statusFilter.value!=='all'||!!query.value.trim())
+const rangeLabel=computed(()=>`${formatDate(range.value[0])} – ${formatDate(addDays(range.value[1],-1))}`)
 const activeFilterCount=computed(()=>filters.priority.length+filters.robotId.length)
-const robots=computed(()=>[...new Set(events.value.map(event=>event.robotId).filter(Boolean))])
+const robots=computed(()=>{
+  const registered=source.value?.value.robots||[]
+  const knownIds=new Set(registered.map(robot=>robot.id))
+  const recorded=events.value.filter(event=>event.robotId&&!knownIds.has(event.robotId)).map(event=>({id:event.robotId,robotType:''}))
+  return [...registered,...new Map(recorded.map(robot=>[robot.id,robot])).values()]
+})
+const robotFilterLabel=robot=>{
+  const code=robotDisplayCode(robot.id)
+  const type=robot.robotType||({C:'clean',M:'medical',W:'ward'}[code[0]]||'unknown')
+  return `${code} · ${t(`history.robotTypes.${type}`)}`
+}
 const priorityOptions=['urgent','high','normal','low']
 const statusIcons={completed:Check,running:Activity,failed:AlertCircle,waiting:Clock,cancelled:Ban}
 
-const timelineKeys=['created','received','toOrigin','pickedUp','toDestination','completed']
+const timelineKeys=['created','received','toSource','pickedUp','toDestination','completed']
 const stageProgress=event=>event.timelineProgress??({completed:6,running:4,waiting:1,failed:5,cancelled:2}[event.status]||6)
 const timeline=computed(()=>{
   const event=selectedEvent.value
   if(!event)return []
+  if(event.backendRecord){
+    return [
+      event.createdAt && {key:'created',state:'done',time:event.createdAt,note:''},
+      event.startedAt && {key:'started',state:'done',time:event.startedAt,note:event.startLocation},
+      event.finishedAt && {key:event.status,state:event.status==='completed'?'done':'terminal',time:event.finishedAt,note:event.endLocation},
+    ].filter(Boolean)
+  }
   const start=Date.parse(event.start),end=Date.parse(event.end),span=Math.max(1,end-start)
   const fractions=[-.05,0,.18,.4,.57,1]
   const notes=[event.startLocation,event.robotName,event.startLocation,event.startLocation,event.endLocation,event.endLocation]
@@ -132,6 +157,7 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
       <HistorySummary
         class="history-stats"
         :events="rangeEvents"
+        :range-start="range[0]"
         :previous-events="previousEvents"
         :period="view"
         :selected-status="statusFilter"
@@ -141,15 +167,15 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
         <header class="list-header">
           <label class="history-search"><Search :size="17"/><input v-model="query" type="search" :placeholder="t('history.search')" :aria-label="t('history.search')"/></label>
           <div class="header-controls">
-            <div class="filter-root">
+            <div ref="filterRoot" class="filter-root" @keydown.esc.stop="filterOpen=false">
               <button type="button" class="icon-control" :class="{'is-active':filterOpen||activeFilterCount}" :aria-expanded="filterOpen" :aria-label="t('common.filter')" @click="filterOpen=!filterOpen"><Filter :size="17"/><i v-if="activeFilterCount">{{activeFilterCount}}</i></button>
-              <div v-if="filterOpen" class="filter-popover">
+              <div v-if="filterOpen" class="filter-popover" role="group" :aria-label="t('common.filter')">
                 <strong>{{t('common.filter')}}</strong>
                 <small>{{t('history.robot')}}</small>
-                <div class="filter-choice"><button v-for="robot in robots" :key="robot" type="button" :aria-pressed="filters.robotId.includes(robot)" @click="filters.robotId=filters.robotId.includes(robot)?filters.robotId.filter(id=>id!==robot):[...filters.robotId,robot]">{{robot}}</button></div>
+                <div class="filter-choice"><button v-for="robot in robots" :key="robot.id" type="button" :title="robot.id" :aria-label="`${robotFilterLabel(robot)} (${robot.id})`" :aria-pressed="filters.robotId.includes(robot.id)" @click="filters.robotId=filters.robotId.includes(robot.id)?filters.robotId.filter(id=>id!==robot.id):[...filters.robotId,robot.id]">{{robotFilterLabel(robot)}}</button></div>
                 <small>{{t('history.priority')}}</small>
                 <div class="filter-choice"><button v-for="priority in priorityOptions" :key="priority" type="button" :aria-pressed="filters.priority.includes(priority)" @click="filters.priority=filters.priority.includes(priority)?filters.priority.filter(id=>id!==priority):[...filters.priority,priority]">{{t(`priority.${priority}`)}}</button></div>
-                <footer><button type="button" @click="resetFilters">{{t('common.clear')}}</button><button type="button" @click="filterOpen=false">{{t('common.apply')}}</button></footer>
+                <footer><button type="button" @click="filterOpen=false">{{t('common.apply')}}</button></footer>
               </div>
             </div>
             <div class="range-controls date-navigation">
@@ -164,25 +190,33 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
               </div>
               <button type="button" :aria-label="t('common.next')" @click="moveDate(1)"><ChevronRight :size="17"/></button>
             </div>
+            <button type="button" class="history-refresh" :disabled="loading" :aria-label="t('historyUx.refresh')" :title="t('historyUx.refresh')" @click="loadHistory"><RefreshCw :size="16"/></button>
             <nav class="view-switch" :aria-label="t('history.timeMode')"><button v-for="mode in ['daily','weekly','monthly']" :key="mode" type="button" :aria-pressed="view===mode" @click="selectMode(mode)">{{t(`history.${mode}`)}}</button></nav>
           </div>
         </header>
+        <div class="history-list-context">
+          <div><span>{{ rangeLabel }}</span></div>
+          <small v-if="lastUpdated">{{ t('historyUx.updated', { time: time(lastUpdated) }) }}</small>
+        </div>
+        <p v-if="source?.value.robotLookupFailed" class="history-notice" role="status">{{ t('historyUx.robotLookupFailed') }}</p>
+        <p v-if="error && events.length" class="history-notice is-error" role="alert">{{ error }} <button type="button" :disabled="loading" @click="loadHistory">{{ t('common.retry') }}</button></p>
         <div class="list-content" :aria-busy="loading">
-          <SharedLoading :loading="loading" :detail="t('common.loading')" :error="error" :error-title="t('history.title')"><template #error-action><button type="button" @click="loadHistory">{{t('common.retry')}}</button></template></SharedLoading>
-          <div v-if="!loading&&!error&&!inRange.length" class="history-empty" role="status"><CalendarDays :size="27"/><strong>{{t('common.noData')}}</strong><p>{{t('common.noDataHint')}}</p></div>
-          <div v-if="!loading&&!error&&inRange.length" class="history-column-head"><span>{{t('history.name')}}</span><span>{{t('history.time')}}</span><span>{{t('history.robot')}}</span><span>{{t('history.origin')}} → {{t('history.destination')}}</span><span>{{t('history.priority')}}</span><span>{{t('history.status')}}</span><span>{{t('history.duration')}}</span></div>
-          <div v-if="!loading&&!error&&inRange.length" class="history-list-scroll themed-scroll">
+          <SharedLoading :loading="loading && !events.length" :detail="t('common.loading')" :error="!events.length ? error : ''" :error-title="t('history.title')"><template #error-action><button type="button" @click="loadHistory">{{t('common.retry')}}</button></template></SharedLoading>
+          <div v-if="!loading&&!error&&!inRange.length" class="history-empty" role="status"><CalendarDays :size="27"/><strong>{{t(hasFilters ? 'historyUx.noMatches' : 'historyUx.noRecords')}}</strong><p>{{t(hasFilters ? 'historyUx.noMatchesHint' : 'historyUx.noRecordsHint')}}</p><button v-if="hasFilters" type="button" @click="resetFilters">{{t('historyUx.resetFilters')}}</button></div>
+          <div v-if="inRange.length && (!error || events.length)" class="history-column-head"><span>{{t('history.name')}}</span><span>{{t('history.actualTime')}}</span><span>{{t('history.delay')}}</span><span>{{t('history.robot')}}</span><span>{{t('history.source')}} → {{t('history.destination')}}</span><span>{{t('history.priority')}}</span><span>{{t('history.status')}}</span><span>{{t('history.duration')}}</span></div>
+          <div v-if="inRange.length && (!error || events.length)" class="history-list-scroll themed-scroll">
             <section v-for="group in groups" :key="group.key" class="date-group">
               <h2>{{formatDate(group.key)}} <small>{{group.events.length}} {{t('common.tasks')}}</small></h2>
               <div class="rows-scroll">
                 <button v-for="event in group.events" :key="event.id" type="button" class="history-row" :class="{'is-selected':event.id===selectedId}" :aria-pressed="event.id===selectedId" @click="selectedId=event.id">
                   <span class="row-identity"><strong>{{translateTask(event.title)}}</strong><small class="row-task-id">{{event.taskId}}</small></span>
-                  <span class="row-time"><span class="row-start">{{time(event.start)}}</span><span class="time-arrow">–</span><span class="row-end">{{time(event.end)}}</span></span>
-                  <span class="robot-label">{{event.robotName}}</span>
+                  <span class="row-time"><span class="row-start">{{time(event.backendRecord ? event.startedAt : event.start)}}</span><span class="time-arrow">–</span><span class="row-end">{{time(event.backendRecord ? event.finishedAt : event.end)}}</span></span>
+                  <span class="delay-label">{{delay(event)}}</span>
+                  <span class="robot-label">{{event.robotId?robotDisplayCode(event.robotId):t('dispatch.unassigned')}}<small v-if="event.robotName && event.robotName!==robotDisplayCode(event.robotId)">{{event.robotName}}</small></span>
                   <span class="route-label"><span :title="translateLocation(event.startLocation)">{{translateLocation(event.startLocation)}}</span><ArrowRight :size="14"/><span :title="translateLocation(event.endLocation)">{{translateLocation(event.endLocation)}}</span></span>
                   <span class="priority-chip" :data-priority="event.priority">{{t(`priority.${event.priority}`)}}</span>
                   <span class="status-label" :data-status="event.status">{{t(`status.${event.status}`)}}</span>
-                  <span class="duration-label"><span class="duration-value">{{duration(event)}}</span><span class="duration-unit">{{t('common.minutes')}}</span></span>
+                  <span class="duration-label"><span class="duration-value">{{duration(event)}}</span><span v-if="duration(event)!=='—'" class="duration-unit">{{t('common.minutes')}}</span></span>
                 </button>
               </div>
             </section>
@@ -194,9 +228,11 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
       <aside class="task-record-panel" :aria-label="t('history.details')">
         <h2>{{t('history.details')}} <span v-if="selectedEvent">· {{selectedEvent.taskId}}</span></h2>
         <dl v-if="selectedEvent" class="task-record">
+          <div><dt>{{t('history.robot')}}</dt><dd>{{selectedEvent.robotId?robotDisplayCode(selectedEvent.robotId):t('dispatch.unassigned')}}</dd></div>
           <div><dt>{{t('history.note')}}</dt><dd>{{selectedEvent.note?.trim()||t('robotStatus.noValue')}}</dd></div>
           <div><dt>{{t('history.requiredCapabilities')}}</dt><dd class="capability-list"><template v-if="selectedEvent.requiredCapabilities?.length"><span v-for="capability in selectedEvent.requiredCapabilities" :key="capability">{{t(`dispatchForm.capabilities.${capability}`)}}</span></template><template v-else>{{t('robotStatus.noValue')}}</template></dd></div>
           <div><dt>{{t('history.createdAt')}}</dt><dd>{{createdAt(selectedEvent.createdAt)}}</dd></div>
+          <div><dt>{{t('history.scheduledAt')}}</dt><dd>{{createdAt(selectedEvent.scheduledAt)}}</dd></div>
         </dl>
         <p v-else class="task-record-empty">{{t('common.noData')}}</p>
       </aside>
@@ -204,9 +240,10 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
         <div class="detail-scroll">
         <template v-if="selectedEvent">
           <header class="detail-header"><h2>{{t('history.routeHeader')}} <span>· {{selectedEvent.taskId}}</span></h2><span class="floor-label">1F</span></header>
-          <div class="route-map"><HospitalMiniMap :key="selectedEvent.id" :robots="[]" :robot-id="selectedEvent.robotId" :origin="selectedEvent.startLocation" :destination="selectedEvent.endLocation" :route-coordinates="selectedEvent.routeCoordinates||[]" :route-progress="1" :history-status="selectedEvent.status" compact historical read-only /></div>
+          <div class="route-map"><HospitalMiniMap :key="selectedEvent.id" :robots="[]" :robot-id="selectedEvent.robotId" :source="selectedEvent.startLocation" :destination="selectedEvent.endLocation" :route-coordinates="selectedEvent.routeCoordinates||[]" :route-progress="1" :history-status="selectedEvent.status" compact historical read-only /></div>
+          <p class="history-route-hint">{{t('historyUx.routeHint')}}</p>
           <div class="detail-section-heading"><h3>{{t('history.timeline')}}</h3></div>
-          <ol class="task-timeline" :data-status="selectedEvent.status"><li v-for="step in timeline" :key="step.key" :data-state="step.state"><span class="timeline-marker"><Check v-if="step.state==='done'" :size="12"/><component v-else-if="step.state==='terminal'" :is="statusIcons[selectedEvent.status]" :size="12"/></span><div><strong>{{t(`stages.${step.key}`)}}</strong><small>{{translateLocation(step.note)}}</small></div><time>{{time(step.time)}}</time></li></ol>
+          <ol class="task-timeline" :data-status="selectedEvent.status"><li v-for="step in timeline" :key="step.key" :data-state="step.state"><span class="timeline-marker"><Check v-if="step.state==='done'" :size="12"/><component v-else-if="step.state==='terminal'" :is="statusIcons[selectedEvent.status]" :size="12"/></span><div><strong>{{t(`stages.${step.key}`)}}</strong><small>{{translateLocation(step.note)}}</small></div><time :title="createdAt(step.time)">{{time(step.time)}}</time></li></ol>
         </template>
         <div v-else class="detail-empty"><CalendarDays :size="26"/><strong>{{t('common.noData')}}</strong><p>{{t('common.noDataHint')}}</p></div>
         </div>

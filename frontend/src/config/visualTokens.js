@@ -1,9 +1,9 @@
 // Shared UI palette. Robot series retain the approved Overview chart colors.
 export const visualTokens = Object.freeze({
-  primary: '#FB9966', secondary: '#FBE251', neutral: '#77746D',
+  primary: '#FB9966', secondary: '#FBE251', tertiary: '#9656A1', neutral: '#77746D',
   chargingStation: '#AB3B3A',
   text: '#343434', textSecondary: '#6D6D6D', textMuted: '#929292', textDisabled: '#B5B5B5',
-  darkText: '#EFEFEF', darkTextSecondary: '#C2C2C2', darkTextMuted: '#939393', darkTextDisabled: '#626262',
+  darkText: '#FFF3EC', darkTextSecondary: '#FFC0AD', darkTextMuted: '#D6C1B9', darkTextDisabled: '#927D74',
   white: '#FFFFFF', error: '#C96561',
 })
 export const colorHex = hex => parseInt(hex.slice(1), 16)

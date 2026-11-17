@@ -21,6 +21,13 @@ public class RobotRegistrationTests
             store.GetRegistrations().Select(registration => registration.RobotType));
         Assert.Equal(new[] { "C01", "C02", "M01", "M02", "W01", "W02", "W03" },
             store.GetRegistrations().Select(registration => registration.Name));
+        Assert.All(store.GetRegistrations(), registration =>
+        {
+            Assert.Equal("agibot_g1", registration.Model);
+            Assert.Equal("Agibot", registration.Manufacturer);
+            Assert.Equal("agibot_g1_description", registration.DescriptionPackage);
+            Assert.Equal(2, registration.Capabilities?.Length);
+        });
         Assert.Equal(new[] { "robot-a", "robot-b", "robot-hospital_robot_3", "robot-hospital_robot_4",
                 "robot-hospital_robot_5", "robot-hospital_robot_6", "robot-hospital_robot_7" },
             store.GetAllMappings().Select(mapping => mapping.Id));

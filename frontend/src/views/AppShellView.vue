@@ -15,7 +15,7 @@ import {
   X,
 } from '@lucide/vue'
 import ClinicOverviewView from '@/views/ClinicOverviewView.vue'
-import OverviewSearch from '@/components/overview/OverviewSearch.vue'
+import NotificationCenter from '@/components/NotificationCenter.vue'
 import HospitalScene from '@/components/scene/HospitalScene.vue'
 import TaskDispatchView from '@/views/TaskDispatchView.vue'
 import RobotFleetView from '@/views/RobotFleetView.vue'
@@ -25,9 +25,21 @@ import { demoFleetStore } from '@/stores/demoFleetStore.js'
 import { overviewDemoData } from '@/data/overviewDemoData.js'
 import { rosConnectionStore } from '@/stores/rosConnectionStore.js'
 import { authStore } from '@/stores/authStore.js'
+import { notificationStore } from '@/stores/notificationStore.js'
 import { locale, setLocale, t } from '@/i18n/index.js'
 
 const THEME_STORAGE_KEY = 'hospital-rmf-color-theme'
+const FONT_SIZE_STORAGE_KEY = 'hospital-rmf-font-size'
+const fontSizeOptions = ['small', 'medium', 'large']
+
+const readStoredFontSize = () => {
+  try {
+    const stored = localStorage.getItem(FONT_SIZE_STORAGE_KEY)
+    return fontSizeOptions.includes(stored) ? stored : 'small'
+  } catch {
+    return 'small'
+  }
+}
 
 const readStoredTheme = () => {
   try {
@@ -38,6 +50,7 @@ const readStoredTheme = () => {
 }
 
 const darkMode = ref(readStoredTheme() === 'dark')
+const fontSize = ref(readStoredFontSize())
 const isFullscreen = ref(Boolean(document.fullscreenElement))
 const router = useRouter()
 const route = useRoute()
@@ -49,6 +62,12 @@ const profileName = ref('')
 const profileAvatarPreview = ref(null)
 const profileError = ref('')
 const profileFileInput = ref(null)
+const sessionError = ref('')
+const loggingOut = ref(false)
+const savingProfile = ref(false)
+watch(() => authStore.authenticated.value, authenticated => {
+  if (!authenticated) router.replace({ name: 'login', query: { redirect: route.fullPath } })
+})
 let userMenuCloseTimer
 const openUserMenu = () => { clearTimeout(userMenuCloseTimer); userMenuOpen.value = true }
 const closeUserMenuSoon = () => {
@@ -62,10 +81,19 @@ const onDocumentPointerDown = (event) => {
   if (!userMenuRoot.value?.contains(event.target)) { userMenuOpen.value = false; languageMenuOpen.value = false }
 }
 const chooseLanguage = (next) => { setLocale(next); languageMenuOpen.value=false; userMenuOpen.value=false }
+const chooseFontSize = (size) => {
+  if (fontSizeOptions.includes(size)) fontSize.value = size
+}
 const handleLogout = async () => {
-  await authStore.logout()
-  userMenuOpen.value = false
-  await router.replace('/login')
+  if (loggingOut.value) return
+  loggingOut.value = true
+  sessionError.value = ''
+  try {
+    await authStore.logout()
+    userMenuOpen.value = false
+    await router.replace('/login')
+  } catch { sessionError.value = t('user.logoutError'); notificationStore.add({ key: 'user.logoutError', type: 'error' }) }
+  finally { loggingOut.value = false }
 }
 const openProfileDialog = () => {
   profileName.value = authStore.currentUser.value.name
@@ -75,28 +103,39 @@ const openProfileDialog = () => {
   userMenuOpen.value = false
 }
 const selectProfileAvatar = () => profileFileInput.value?.click()
+const showProfileFileError = (key) => {
+  profileError.value = key
+  notificationStore.add({ key: `user.${key}`, type: 'error' })
+}
 const previewProfileAvatar = (event) => {
   const file = event.target.files?.[0]
   event.target.value = ''
   if (!file) return
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { profileError.value = 'invalidImage'; return }
-  if (file.size > 3 * 1024 * 1024) { profileError.value = 'imageTooLarge'; return }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { showProfileFileError('invalidImage'); return }
+  if (file.size > 3 * 1024 * 1024) { showProfileFileError('imageTooLarge'); return }
   const reader = new FileReader()
   reader.onload = () => { profileAvatarPreview.value = reader.result; profileError.value = '' }
-  reader.onerror = () => { profileError.value = 'imageReadError' }
+  reader.onerror = () => showProfileFileError('imageReadError')
   reader.readAsDataURL(file)
 }
 const saveProfile = async () => {
+  if (savingProfile.value) return
+  savingProfile.value = true
   try {
     await authStore.updateProfile({ name:profileName.value, avatarUrl:profileAvatarPreview.value })
     profileDialogOpen.value = false
-  } catch { profileError.value = 'invalidName' }
+    notificationStore.add({ key: 'notifications.profileSaved', type: 'success' })
+  } catch (error) { profileError.value = error.code === 'invalid_name' ? 'invalidName' : 'saveError'; notificationStore.add({ key: `user.${profileError.value}`, type: 'error' }) }
+  finally { savingProfile.value = false }
 }
 const currentTheme = computed(() => darkMode.value ? 'dark' : 'light')
 const themeToggleLabel = computed(() => (
   darkMode.value ? t('common.lightMode') : t('common.darkMode')
 ))
-const rosStatus = computed(() => rosConnectionStore.status.value)
+const rosStatus = computed(() => ({
+  ...rosConnectionStore.status.value,
+  label: t(`rosConnection.${rosConnectionStore.state.value}`),
+}))
 const rosStatusIcon = computed(() => rosConnectionStore.state.value === 'disconnected' ? Unplug : RadioTower)
 const searchParams = new URLSearchParams(window.location.search)
 const activeSection = ref(
@@ -108,6 +147,7 @@ const activeSection = ref(
     ? 'map'
     : 'overview',
 )
+const dispatchInitialPanel = ref('create')
 const sharedOverviewData = computed(() => ({
   ...overviewDemoData,
   robots: demoFleetStore.robots.value,
@@ -127,14 +167,11 @@ const navItems = Object.freeze([
   { id: 'robots' },
 ])
 
-const selectSection = (sectionId) => {
+const selectSection = (sectionId, panel = 'create') => {
   if (!['overview', 'map', 'dispatch', 'robots', 'history'].includes(sectionId)) return
+  dispatchInitialPanel.value = sectionId === 'dispatch' && panel === 'schedule' ? 'schedule' : 'create'
   activeSection.value = sectionId
   if (route.name !== 'overview') router.push('/')
-}
-
-const selectSearchResult = (result) => {
-  selectSection(result.section)
 }
 
 const toggleFullscreen = () => {
@@ -163,8 +200,16 @@ watch(
       // The visual theme still works when browser storage is unavailable.
     }
   },
-  { immediate: true },
+  { immediate: true, flush: 'sync' },
 )
+watch(fontSize, size => {
+  document.documentElement.dataset.uiFontSize = size
+  try {
+    localStorage.setItem(FONT_SIZE_STORAGE_KEY, size)
+  } catch {
+    // The preference remains active for the current page when browser storage is unavailable.
+  }
+}, { immediate: true, flush: 'sync' })
 onMounted(() => {
   document.addEventListener('pointerdown', onDocumentPointerDown)
   document.addEventListener('fullscreenchange', handleFullscreenChange)
@@ -181,11 +226,10 @@ onBeforeUnmount(() => {
     class="overview-page app-shell"
     :class="{ 'app-shell--overview': activeSection === 'overview', 'app-shell--dispatch': activeSection === 'dispatch' }"
     :style="['overview', 'dispatch'].includes(activeSection) ? overviewThemeVars : undefined"
-    :data-theme="currentTheme"
-    aria-label="醫院三維場景總覽"
+    :aria-label="t('common.appShell')"
   >
     <ScheduleHistoryView v-if="activeSection === 'history'" />
-    <TaskDispatchView v-else-if="activeSection === 'dispatch'" />
+    <TaskDispatchView v-else-if="activeSection === 'dispatch'" :initial-panel="dispatchInitialPanel" />
     <RobotFleetView v-else-if="activeSection === 'robots'" />
     <HospitalScene
       v-else-if="activeSection === 'map'"
@@ -198,10 +242,11 @@ onBeforeUnmount(() => {
       v-if="activeSection === 'overview'"
       :data="sharedOverviewData"
       :theme="currentTheme"
+      @open-dispatch="panel => selectSection('dispatch', panel)"
     />
     <div class="overview-overlay">
       <header class="overview-navbar top-navbar" :class="{'history-navbar':activeSection==='history'}">
-        <div class="brand">Hospital RMF</div>
+        <button type="button" class="brand" :aria-label="t('common.returnHome')" @click="selectSection('overview')">Hospital RMF</button>
         <nav class="overview-nav" :aria-label="t('common.navigation')">
           <button
             v-for="item in navItems"
@@ -214,7 +259,7 @@ onBeforeUnmount(() => {
           >{{ t(`nav.${item.id}`) }}</button>
         </nav>
         <div class="overview-actions">
-          <OverviewSearch @select="selectSearchResult" />
+          <NotificationCenter />
           <button
             type="button"
             class="overview-action ros-connection-action"
@@ -224,7 +269,7 @@ onBeforeUnmount(() => {
             :data-tooltip="rosStatus.label"
           >
             <component :is="rosStatusIcon" :size="17" :stroke-width="1.8" />
-            <span class="ros-status-dot" :style="{ backgroundColor: rosStatus.color }"></span>
+            <span class="ros-status-dot" :style="{ backgroundColor: rosConnectionStore.state.value === 'disconnected' ? 'var(--theme-primary)' : rosStatus.color }"></span>
           </button>
           <button
             type="button"
@@ -252,7 +297,13 @@ onBeforeUnmount(() => {
                 <button type="button" role="menuitem" @click="openProfileDialog"><UserRoundPen :size="14" />{{t('user.profile')}}</button>
                 <button type="button" role="menuitem" :aria-expanded="languageMenuOpen" @click="languageMenuOpen=!languageMenuOpen"><Languages :size="14" />{{t('user.language')}}：{{locale==='en'?'English':'中文'}}</button>
                 <div v-if="languageMenuOpen" class="language-options" role="group" :aria-label="t('user.language')"><button type="button" :aria-pressed="locale==='zh-TW'" @click="chooseLanguage('zh-TW')">中文</button><button type="button" :aria-pressed="locale==='en'" @click="chooseLanguage('en')">English</button></div>
-                <button type="button" role="menuitem" @click="handleLogout"><LogOut :size="14" />{{t('user.logout')}}</button>
+                <div class="font-size-setting" role="group" :aria-label="t('user.fontSize')">
+                  <span>{{ t('user.fontSize') }}</span>
+                  <div class="font-size-options">
+                    <button v-for="size in fontSizeOptions" :key="size" type="button" :aria-pressed="fontSize===size" @click="chooseFontSize(size)">{{ t(`user.fontSizeOptions.${size}`) }}</button>
+                  </div>
+                </div>
+                <button type="button" role="menuitem" :disabled="loggingOut" @click="handleLogout"><LogOut :size="14" />{{t('user.logout')}}</button>
               </div>
             </Transition>
           </div>
@@ -260,14 +311,24 @@ onBeforeUnmount(() => {
       </header>
     </div>
     <Teleport to="body">
+      <p v-if="sessionError" class="session-error" role="alert">{{ sessionError }}</p>
       <div v-if="profileDialogOpen" class="profile-dialog-backdrop" @click.self="profileDialogOpen=false">
         <section class="profile-dialog" role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title">
           <header><h2 id="profile-dialog-title">{{t('user.profile')}}</h2><button type="button" :aria-label="t('user.close')" @click="profileDialogOpen=false"><X :size="17"/></button></header>
-          <div class="profile-avatar-preview"><span>{{ (profileName.trim() || authStore.currentUser.value.name).charAt(0).toUpperCase() }}</span><img v-if="profileAvatarPreview" :src="profileAvatarPreview" alt="頭像預覽"></div>
-          <label>{{t('user.displayName')}}<input v-model="profileName" maxlength="40" autocomplete="name"></label>
-          <label>{{t('user.avatar')}}<input ref="profileFileInput" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" @change="previewProfileAvatar"><button type="button" class="profile-file-button" @click="selectProfileAvatar">{{t('user.chooseImage')}}</button><small>JPG, PNG, WebP · 3 MB max</small></label>
+          <div class="profile-edit-row">
+            <div class="profile-avatar-control">
+              <button type="button" class="profile-avatar-edit" :aria-label="t('user.avatar')" @click="selectProfileAvatar">
+                <span v-if="!profileAvatarPreview">{{ (profileName.trim() || authStore.currentUser.value.name).charAt(0).toUpperCase() }}</span>
+                <img v-if="profileAvatarPreview" :src="profileAvatarPreview" alt="">
+                <span class="profile-avatar-edit__badge" aria-hidden="true"><UserRoundPen :size="16" /></span>
+              </button>
+              <small>{{t('user.avatarHint')}}</small>
+            </div>
+            <label class="profile-name-field" for="profile-display-name">{{t('user.displayName')}}<input id="profile-display-name" v-model="profileName" maxlength="40" autocomplete="name"></label>
+          </div>
+          <input ref="profileFileInput" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" aria-hidden="true" tabindex="-1" @change="previewProfileAvatar">
           <p v-if="profileError" role="alert">{{ t(`user.${profileError}`) }}</p>
-          <footer><button type="button" @click="profileDialogOpen=false">{{t('user.cancel')}}</button><button type="button" class="profile-save" :disabled="!profileName.trim()" @click="saveProfile">{{t('user.save')}}</button></footer>
+          <footer><button type="button" @click="profileDialogOpen=false">{{t('user.cancel')}}</button><button type="button" class="profile-save" :disabled="savingProfile || profileName.trim().length < 2" @click="saveProfile">{{t('user.save')}}</button></footer>
         </section>
       </div>
     </Teleport>
@@ -341,19 +402,19 @@ onBeforeUnmount(() => {
   box-shadow: none;
 }
 
-.overview-navbar :deep(.overview-search__field),
 .overview-action {
-  background-color: rgba(255, 255, 255, 0.68);
-  border-color: rgba(25, 30, 27, 0.08);
+  background-color: var(--icon-button-background);
+  border-color: var(--icon-button-border);
 }
 
-:global([data-theme='dark']) .overview-navbar :deep(.overview-search__field),
 :global([data-theme='dark']) .overview-action {
-  background-color: rgba(37, 40, 38, 0.78);
-  border-color: rgba(255, 255, 255, 0.09);
+  background-color: var(--icon-button-background);
+  border-color: var(--icon-button-border);
 }
 
 .brand {
+  cursor: pointer;
+  font-family: inherit;
   flex: 0 0 auto;
   display: flex;
   height: 36px;
@@ -490,11 +551,12 @@ onBeforeUnmount(() => {
   outline-offset: 2px;
 }
 .user-menu-root { position:relative; }
-.navbar-user-avatar{width:24px;height:24px;object-fit:cover;border-radius:50%}.navbar-user-initial{display:grid;width:24px;height:24px;place-items:center;color:var(--text-secondary);font-size:10px;font-weight:700;background:var(--surface-2);border-radius:50%}
-.user-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:70; width:180px; padding:5px; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:8px; box-shadow:var(--navbar-shadow); }
+.navbar-user-avatar{width:24px;height:24px;object-fit:cover;border-radius:50%}.navbar-user-initial{display:grid;width:24px;height:24px;place-items:center;color:#271c19;font-size:10px;font-weight:700;background:var(--theme-primary);border-radius:50%}
+.user-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:70; width:218px; padding:5px; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:8px; box-shadow:var(--navbar-shadow); }
 .user-menu button { display:flex; width:100%; min-height:32px; align-items:center; gap:7px; padding:0 9px; color:var(--text-primary); font-size:12px; background:transparent; border:0; border-radius:5px; cursor:pointer; }
 .user-menu button:hover,.user-menu button:focus-visible { color:var(--accent-orange); background:var(--icon-button-hover); outline:none; }
 .language-options{display:flex;gap:4px;padding:3px 4px 6px 24px}.language-options button{justify-content:center;min-height:27px;padding:0 6px;font-size:11px}.language-options button[aria-pressed=true]{color:var(--accent-orange);background:var(--theme-primary-soft);font-weight:700}
+.font-size-setting{display:grid;gap:4px;padding:5px 7px 7px;color:var(--text-secondary);font-size:11px}.font-size-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.user-menu .font-size-options button{justify-content:center;min-height:27px;padding:0 3px;font-size:11px;white-space:nowrap}.user-menu .font-size-options button[aria-pressed=true]{color:var(--accent-orange);background:var(--theme-primary-soft);font-weight:700}
 .user-menu-pop-enter-active,.user-menu-pop-leave-active { transition:opacity 140ms ease,transform 140ms ease; }
 .user-menu-pop-enter-from,.user-menu-pop-leave-to { opacity:0; transform:translateY(-3px); }
 
@@ -511,7 +573,7 @@ onBeforeUnmount(() => {
 .ros-status-dot { position:absolute; right:4px; bottom:4px; width:6px; height:6px; border:1px solid var(--icon-button-background); border-radius:50%; }
 .ros-connection-action.is-connected { color:#42a66b; }
 .ros-connection-action.is-connecting { color:var(--semantic-warning); }
-.ros-connection-action.is-disconnected { color:var(--semantic-error); }
+.ros-connection-action.is-disconnected { color:var(--theme-primary); }
 .ros-connection-action.is-connecting .ros-status-dot { animation:ros-connection-breathe 1.8s ease-in-out infinite; }
 .ros-connection-action::after { position:absolute; top:calc(100% + 9px); right:-5px; z-index:30; padding:6px 9px; color:var(--text-primary); font-size:.7rem; line-height:1; white-space:nowrap; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:7px; box-shadow:var(--navbar-shadow); opacity:0; pointer-events:none; content:attr(data-tooltip); transform:translateY(-3px); transition:opacity 160ms ease,transform 160ms ease; }
 .ros-connection-action:hover::after,.ros-connection-action:focus-visible::after { opacity:1; transform:translateY(0); }
@@ -546,7 +608,9 @@ onBeforeUnmount(() => {
   transform: translateY(0);
 }
 
-:global(.profile-dialog-backdrop){position:fixed;z-index:2000;inset:0;display:grid;place-items:center;padding:20px;background:rgba(11,11,10,.52);backdrop-filter:blur(4px)}:global(.profile-dialog){display:grid;box-sizing:border-box;width:min(390px,calc(100vw - 32px));gap:15px;padding:18px;color:var(--text-primary);background:var(--panel-background-strong);border:1px solid var(--panel-border);border-radius:var(--radius-panel);box-shadow:var(--dropdown-shadow)}:global(.profile-dialog>header){display:flex;align-items:center;justify-content:space-between}:global(.profile-dialog h2){margin:0;font-size:17px}:global(.profile-dialog header button){display:grid;width:30px;height:30px;place-items:center;padding:0;color:var(--text-muted);background:transparent;border:0;border-radius:var(--radius-control);cursor:pointer}:global(.profile-avatar-preview){position:relative;display:grid;width:68px;height:68px;place-items:center;overflow:hidden;color:var(--text-secondary);font-size:24px;background:var(--surface-3);border:1px solid var(--panel-border);border-radius:50%}:global(.profile-avatar-preview img){position:absolute;width:100%;height:100%;object-fit:cover}:global(.profile-dialog>label){display:grid;gap:7px;color:var(--text-secondary);font-size:12px}:global(.profile-dialog label input:not(.sr-only)){height:38px;padding:0 10px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--panel-border);border-radius:var(--radius-control);outline:none}:global(.profile-dialog label input:focus){border-color:var(--theme-primary-border);box-shadow:0 0 0 3px var(--focus-ring)}:global(.profile-file-button){justify-self:start;padding:7px 10px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--panel-border);border-radius:var(--radius-control);cursor:pointer}:global(.profile-dialog label small){color:var(--text-muted)}:global(.profile-dialog>p){margin:0;color:var(--semantic-error);font-size:11px}:global(.profile-dialog>footer){display:flex;justify-content:flex-end;gap:8px}:global(.profile-dialog footer button){min-width:70px;height:34px;color:var(--text-secondary);background:transparent;border:1px solid var(--panel-border);border-radius:var(--radius-control);cursor:pointer}:global(.profile-dialog footer .profile-save){color:#fff;background:var(--theme-primary);border-color:transparent}:global(.profile-dialog footer .profile-save:disabled){color:var(--text-disabled);background:var(--surface-3);cursor:not-allowed}
+:global(.profile-dialog-backdrop){position:fixed;z-index:2000;inset:0;display:grid;place-items:center;padding:20px;background:rgba(11,11,10,.52);backdrop-filter:blur(4px)}:global(.profile-dialog){display:grid;box-sizing:border-box;width:min(460px,calc(100vw - 32px));gap:18px;padding:22px;color:var(--text-primary);background:var(--panel-background-strong);border:1px solid var(--panel-border);border-radius:var(--radius-panel);box-shadow:var(--dropdown-shadow)}:global(.profile-dialog>header){display:flex;align-items:center;justify-content:space-between}:global(.profile-dialog h2){margin:0;font-size:18px}:global(.profile-dialog header button){display:grid;width:32px;height:32px;place-items:center;padding:0;color:var(--text-muted);background:transparent;border:0;border-radius:var(--radius-control);cursor:pointer;transition:color 160ms ease,background 160ms ease}:global(.profile-dialog header button:hover){color:var(--text-primary);background:var(--surface-2)}:global(.profile-edit-row){display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:18px}:global(.profile-avatar-control){display:grid;justify-items:center;gap:8px}:global(.profile-avatar-edit){position:relative;display:grid;width:78px;height:78px;place-items:center;overflow:visible;padding:0;color:#271c19;font-size:26px;font-weight:600;background:var(--theme-primary);border:2px solid color-mix(in srgb,var(--theme-primary) 50%,var(--panel-border));border-radius:50%;cursor:pointer;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease}:global(.profile-avatar-edit img){position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}:global(.profile-avatar-edit__badge){position:absolute;right:-3px;bottom:-1px;z-index:1;display:grid;width:29px;height:29px;place-items:center;color:var(--accent-foreground);background:var(--panel-background-strong);border:1px solid var(--panel-border);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:color 180ms ease,background 180ms ease,transform 180ms ease}:global(.profile-avatar-edit:hover){transform:translateY(-2px);border-color:var(--theme-primary);box-shadow:0 7px 18px color-mix(in srgb,var(--theme-primary) 24%,transparent)}:global(.profile-avatar-edit:hover .profile-avatar-edit__badge){color:#271c19;background:var(--theme-primary);transform:scale(1.06)}:global(.profile-avatar-edit:focus-visible){outline:2px solid var(--theme-primary);outline-offset:4px}:global(.profile-avatar-control small){max-width:112px;color:var(--text-muted);font-size:10px;line-height:1.4;text-align:center}:global(.profile-name-field){display:grid;gap:8px;color:var(--text-secondary);font-size:12px}:global(.profile-name-field input){box-sizing:border-box;width:100%;height:42px;padding:0 12px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--panel-border);border-radius:var(--radius-control);outline:none;transition:border-color 160ms ease,box-shadow 160ms ease,background 160ms ease}:global(.profile-name-field input:focus){background:var(--panel-background-strong);border-color:var(--theme-primary-border);box-shadow:0 0 0 3px var(--focus-ring)}:global(.profile-dialog>p){margin:0;color:var(--semantic-error);font-size:12px;line-height:1.5}:global(.profile-dialog>footer){display:flex;justify-content:flex-end;gap:9px;padding-top:4px}:global(.profile-dialog footer button){min-width:78px;height:36px;padding:0 12px;color:var(--text-secondary);background:transparent;border:1px solid var(--panel-border);border-radius:var(--radius-control);cursor:pointer;transition:color 160ms ease,background 160ms ease,border-color 160ms ease,transform 160ms ease}:global(.profile-dialog footer button:hover){color:var(--text-primary);background:var(--surface-2);border-color:var(--theme-primary-border)}:global(.profile-dialog footer .profile-save){color:#271c19;background:var(--theme-primary);border-color:transparent}:global(.profile-dialog footer .profile-save:hover){background:var(--theme-primary-hover);transform:translateY(-1px)}:global(.profile-dialog footer .profile-save:disabled){color:var(--text-disabled);background:var(--surface-3);cursor:not-allowed;transform:none}:global(.profile-dialog .sr-only){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:480px){:global(.profile-edit-row){grid-template-columns:1fr;justify-items:center}:global(.profile-name-field){width:100%}}
+@media(prefers-reduced-motion:reduce){:global(.profile-dialog button),:global(.profile-name-field input){transition:none!important}}
 
 .theme-icon-enter-active,
 .theme-icon-leave-active {
@@ -641,9 +705,8 @@ onBeforeUnmount(() => {
   --surface-glass:rgba(255,255,255,.52);
   --surface-glass-strong:rgba(255,255,255,.68);
   --glass-border:rgba(255,255,255,.72);
-  --text-primary:var(--color-text);
-  --text-secondary:var(--color-text-secondary);
-  --text-muted:var(--color-text-muted);
+  --overview-stage-background:radial-gradient(circle at 52% 38%,rgba(255,255,255,.5),transparent 48%),linear-gradient(145deg,#eef2f5 0%,var(--bg-map,#E8EDF2) 54%,#e3e9ee 100%);
+  --overview-completion-background:linear-gradient(160deg,#fff8df 0%,#fff1bd 58%,#f7e7a5 100%);
   --primary-blue:var(--overview-accent);
   --primary-blue-soft:var(--overview-accent-soft);
   --success-teal:var(--overview-yellow-text);
@@ -667,12 +730,37 @@ onBeforeUnmount(() => {
   --control-shadow:var(--info-shadow);
   background:var(--overview-stage-background)
 }
-:global(html[data-theme='dark']) .overview-page:is(.app-shell--overview,.app-shell--dispatch){background:var(--overview-stage-background)}
-:is(.app-shell--overview,.app-shell--dispatch) .overview-navbar :deep(.overview-search__field),:is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border);box-shadow:var(--control-shadow);backdrop-filter:var(--control-backdrop);-webkit-backdrop-filter:var(--control-backdrop)}
-:global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-navbar :deep(.overview-search__field),:global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border)}
+:global(html[data-theme='dark']) .overview-page:is(.app-shell--overview,.app-shell--dispatch){
+  --bg-page:var(--app-bg);
+  --bg-map:#493833;
+  --surface-glass:rgba(85,66,61,.94);
+  --surface-glass-strong:rgba(73,56,51,.98);
+  --glass-border:rgba(255,243,236,.10);
+  --overview-stage-background:var(--app-background-image);
+  --overview-completion-background:linear-gradient(160deg,#654d46 0%,#5b453f 68%,#55423d 100%);
+  --search-border:rgba(255,243,236,.12);
+  --search-border-active:var(--theme-primary-border);
+  --icon-button-background:rgba(73,56,51,.96);
+  --icon-button-border:rgba(255,243,236,.12);
+  background:var(--overview-stage-background)
+}
+:global(html[data-theme='dark']) .overview-page .overview-navbar .brand,
+:global(html[data-theme='dark']) .overview-page .overview-navbar .overview-nav__link,
+:global(html[data-theme='dark']) .overview-page .overview-navbar .overview-nav__link:hover,
+:global(html[data-theme='dark']) .overview-page .overview-navbar .overview-nav__link:focus-visible{color:#fffffe}
+:global(html[data-theme='light']) .overview-page .overview-navbar .overview-nav__link{color:var(--text-secondary)}
+:global(html[data-theme='light']) .overview-page .overview-navbar .overview-nav__link:hover,
+:global(html[data-theme='light']) .overview-page .overview-navbar .overview-nav__link:focus-visible,
+:global(html[data-theme='light']) .overview-page .overview-navbar .overview-nav__link--active{color:var(--color-primary)}
+:is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border);box-shadow:var(--control-shadow);backdrop-filter:var(--control-backdrop);-webkit-backdrop-filter:var(--control-backdrop)}
+:global(html[data-theme='dark']) :is(.app-shell--overview,.app-shell--dispatch) .overview-action{background-color:var(--surface-glass);border-color:var(--glass-border)}
 :is(.app-shell--overview,.app-shell--dispatch) .overview-action:hover{color:var(--theme-primary);background:var(--overview-accent-soft)}
 :is(.app-shell--overview,.app-shell--dispatch) .overview-action:focus-visible{outline-color:var(--theme-primary)}
 .overview-action.fullscreen-action,.overview-action.fullscreen-action:hover{border-color:transparent;box-shadow:none}
 .overview-action.fullscreen-action[aria-pressed=false],.overview-action.fullscreen-action[aria-pressed=false]:hover{color:var(--icon-color)}
 .overview-action.fullscreen-action[aria-pressed=true]{color:var(--theme-primary)}
+</style>
+
+<style scoped>
+.session-error{position:fixed;z-index:2100;top:85px;right:24px;max-width:340px;padding:13px 18px;border:1px solid #f0c6c1;border-radius:10px;background:#fff1ef;color:#a85851;font-size:13px;box-shadow:0 8px 25px #0001}
 </style>

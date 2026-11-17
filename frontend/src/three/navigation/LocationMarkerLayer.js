@@ -49,11 +49,12 @@ const makeDestinationPin = (color) => {
 }
 
 export class LocationMarkerLayer {
-  constructor({ data, details, parent, container, camera, canvas, environmentGroup }) {
+  constructor({ data, details, parent, container, camera, canvas, environmentGroup, translate = (value) => value }) {
     this.data = data
     this.camera = camera
     this.canvas = canvas
     this.environmentGroup = environmentGroup
+    this.translate = translate
     this.visible = true
     this.labelsVisible = true
     this.roomLabelsVisible = false
@@ -85,6 +86,11 @@ export class LocationMarkerLayer {
     this.entries = []
     const visibleWaypoints = this.data.namedWaypoints.filter((waypoint) => details[waypoint.name])
     visibleWaypoints.forEach((waypoint, index) => this.addLocation(waypoint, details[waypoint.name], index, visibleWaypoints.length))
+  }
+
+  setTranslation(translate) {
+    this.translate = translate
+    for (const entry of this.entries) entry.title.textContent = translate(entry.detail.label)
   }
 
   addLocation(waypoint, detail, sequenceIndex = 0, sequenceTotal = 1) {
@@ -137,10 +143,24 @@ export class LocationMarkerLayer {
     root.style.setProperty('--robot-soft', detail.theme?.soft || colorAlpha(visualTokens.neutral, .12))
     root.style.setProperty('--robot-glow', detail.theme?.glow || visualTokens.neutral)
     root.style.setProperty('--success-color', semanticColors.success)
-    root.innerHTML = `<strong>${detail.label}</strong>${detail.taskId ? `<small class="rmf-location__task">${detail.taskId} · ${detail.robot}</small>` : ''}<span class="rmf-location__success" aria-label="任務完成">✓</span>`
+    const title = document.createElement('strong')
+    title.textContent = this.translate(detail.label)
+    root.appendChild(title)
+    if (detail.taskId) {
+      const task = document.createElement('small')
+      task.className = 'rmf-location__task'
+      task.textContent = `${detail.taskCode || detail.taskId} · ${detail.robot}`
+      root.appendChild(task)
+    }
+    const success = document.createElement('span')
+    success.className = 'rmf-location__success'
+    success.setAttribute('aria-label','任務完成')
+    success.textContent = '✓'
+    root.appendChild(success)
     this.overlay.appendChild(root)
     const entry = {
       detail,
+      title,
       anchorWorld,
       nodeWorld,
       root,

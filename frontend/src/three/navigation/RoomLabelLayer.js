@@ -45,7 +45,7 @@ export function buildRoomLabels(data) {
 }
 
 export class RoomLabelLayer {
-  constructor({ data, container, camera, canvas }) {
+  constructor({ data, container, camera, canvas, translate = (value) => value }) {
     this.camera = camera
     this.canvas = canvas
     this.visible = true
@@ -59,7 +59,7 @@ export class RoomLabelLayer {
       if (room.id.startsWith('charging_station_')) {
         root.style.setProperty('--room-label-color', visualTokens.chargingStation)
       }
-      root.textContent = room.label
+      root.textContent = translate(room.label)
       this.overlay.appendChild(root)
       const point = rmfToThree(room)
       return { root, label: room.label, point: new THREE.Vector3(point.x, point.y + 0.6, point.z) }
@@ -72,6 +72,10 @@ export class RoomLabelLayer {
   }
 
   setSuppressedLabels(labels) { this.suppressed = new Set(labels) }
+
+  setTranslation(translate) {
+    for (const entry of this.entries) entry.root.textContent = translate(entry.label)
+  }
 
   update() {
     if (!this.visible) return

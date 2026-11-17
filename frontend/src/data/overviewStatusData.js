@@ -1,5 +1,7 @@
 // Deterministic fallback only; no history endpoint is currently connected.
-export const robotIds = ['R01', 'R02', 'R03']
+import { robotDisplayCode, robotDisplayCodes } from '@/config/robotDisplayCode.js'
+
+export const robotIds = robotDisplayCodes
 export const normalizeFloor = (value) => {
   const match = /^(?:floor\s*|f|l)?([123])$/i.exec(String(value ?? ''))
   return match ? `floor${match[1]}` : null
@@ -13,19 +15,19 @@ const samples = {
 export const buildingBatteryHistory = Object.fromEntries(Object.entries(samples).map(([floorId, rows]) => [floorId,
   rows.map((values, index) => ({ time: hours[index], batteries: Object.fromEntries(robotIds.map((id, i) => [id, values[i]])) })),
 ]))
-export const fallbackRobotLocations = { R01: 'floor1', R02: 'floor2', R03: 'floor3' }
+export const fallbackRobotLocations = { C01: 'floor1', C02: 'floor2', M01: 'floor3' }
 export const fallbackUpdatedAt = '2026-09-11T12:00:00+08:00'
 
 export function createFloorRobotStatus(robots, tasks = [], demo = false) {
   return Object.fromEntries(['floor1','floor2','floor3'].map((floorId) => [floorId,
     Object.fromEntries(robotIds.map((robotId, index) => {
-      const robot = robots.find((entry) => entry.id === robotId)
+      const robot = robots.find((entry) => (entry.displayCode || robotDisplayCode(entry.id)) === robotId)
       const explicitFloor = robot?.floorId ?? robot?.floor ?? robot?.location?.level_name
       const location = normalizeFloor(explicitFloor) || (demo && explicitFloor == null ? fallbackRobotLocations[robotId] : null)
       const present = location === floorId
       const task = tasks.find((entry) => entry.id === robot?.activeTaskId)
       return [robotId, {
-        floorId, robotId, name: robot?.name || `Robot 0${index + 1}`,
+        floorId, robotId, name: robot?.displayCode || robotId,
         battery: present && Number.isFinite(robot?.battery) ? robot.battery : null,
         status: present ? robot?.state || 'unknown' : location ? 'absent' : 'unknown',
         currentTask: present ? task?.title ?? robot?.currentTask ?? null : null,

@@ -48,7 +48,7 @@ describe('realtime robot selection and camera helpers', () => {
     expect(local.target.x).toBe(position.x)
   })
 
-  it('stops at the destination instead of teleporting back to the route origin', () => {
+  it('stops at the destination instead of teleporting back to the route source', () => {
     const parent = new THREE.Group()
     const controller = new RobotRouteController({
       id: 'R01', parent, points: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0)], color: 0xff6700,

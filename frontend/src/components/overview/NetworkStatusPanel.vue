@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { t } from '@/i18n/index.js'
 // A network-health adapter can supply this prop; browser connectivity alone is not proof of health.
 const props = defineProps({ status: { type: String, default: null } })
 const state = computed(() => ['online', 'offline'].includes(props.status) ? props.status : 'unknown')
-const label = computed(() => ({ online: 'Online', offline: 'Offline', unknown: 'Unavailable' }[state.value]))
+const label = computed(() => t(`dashboard.networkStates.${state.value}`))
 </script>
 <template>
   <section class="connectivity-panel overview-tool-panel" :data-state="state" aria-label="網路">

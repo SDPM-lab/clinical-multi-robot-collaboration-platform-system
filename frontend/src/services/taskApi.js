@@ -1,14 +1,15 @@
 import { t } from '@/i18n/index.js'
-import { dispatchWaypointLabels } from '@/config/dispatchDestinations.js'
+import { dispatchWaypointLabels, PPO_TASK_WAYPOINT_IDS } from '@/config/dispatchDestinations.js'
 import { TASK_TYPE_BY_LABEL } from '@/config/taskTypes.js'
+import { sessionFetch } from './sessionApi.js'
 
 const baseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
-const waypointIds = Object.fromEntries(Object.entries(dispatchWaypointLabels).map(([id, label]) => [label, id]))
+const taskWaypointIds = new Set(PPO_TASK_WAYPOINT_IDS)
 const taskLabels = Object.fromEntries(Object.entries(TASK_TYPE_BY_LABEL).map(([label, value]) => [value.toLowerCase(), label]))
 
 async function apiFetch(url, options) {
-  try { return await fetch(url, options) }
-  catch { throw new Error(t('dispatch.connectionError')) }
+  try { return await sessionFetch(url, options) }
+  catch (error) { throw new Error(t(error.code === 'connection_error' ? 'dispatch.connectionError' : 'dispatch.apiError')) }
 }
 async function responseError(response) {
   const text = await response.text()
@@ -38,7 +39,7 @@ export function toScheduleTask(task) {
   const title = taskLabels[String(task.taskType).toLowerCase()] || task.taskType
   return {
     ...task, title, type: title, robotId: task.assignedRobot,
-    origin: dispatchWaypointLabels[task.source] || task.source,
+    source: dispatchWaypointLabels[task.source] || task.source,
     destination: dispatchWaypointLabels[task.destination] || task.destination,
     date: `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`,
     startTime: `${pad(date.getHours())}:${pad(date.getMinutes())}:00`,
@@ -47,25 +48,45 @@ export function toScheduleTask(task) {
   }
 }
 export const taskApi = {
+  async getPlaces() {
+    const response = await apiFetch(`${baseUrl}/api/v1/place`)
+    if (!response.ok) throw await responseError(response)
+    const places = await response.json()
+    if (!Array.isArray(places) || places.length !== PPO_TASK_WAYPOINT_IDS.length ||
+      places.some((place, index) => place?.id !== PPO_TASK_WAYPOINT_IDS[index] || place?.index !== index)) {
+      throw new Error(t('dispatch.apiError'))
+    }
+    return places
+  },
+  async getRobotSnapshot() {
+    const response = await apiFetch(`${baseUrl}/api/robots`)
+    if (!response.ok) throw await responseError(response)
+    return response.json()
+  },
   async getRobots() {
     const response = await apiFetch(`${baseUrl}/api/robots`)
     if (!response.ok) throw await responseError(response)
     const { robots } = await response.json()
-    const states = { '待命中': 'idle', '執行任務中': 'busy', '充電中': 'charging', '緊急停止': 'error', '離線': 'offline' }
-    return robots.map(robot => ({ ...robot, state: states[robot.status] || 'idle' }))
+    const states = { '待命':'idle', '在線':'idle', '忙碌':'busy', '已指派待執行':'assigned', '暫停':'paused', '待命中': 'idle', '執行任務中': 'busy', '充電中': 'charging', '緊急停止': 'error', '離線': 'offline' }
+    return robots.map(robot => ({ ...robot, state: states[robot.status] || 'unknown' }))
   },
-  async getTasks() { return (await request('')).map(toScheduleTask) },
+  getTaskRecords() { return request('') },
+  async getTasks() { return (await request('')).map(toScheduleTask)   },
   async createTask(payload) {
-    const origin = waypointIds[payload.origin]
-    const destination = waypointIds[payload.destination]
-    if (!origin || !destination) throw new Error('Invalid task waypoint')
+    if (!taskWaypointIds.has(payload.source) || !taskWaypointIds.has(payload.destination)) throw new Error(t('dispatch.invalidLocations'))
     return request('', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-      taskType: payload.taskType, origin, destination, priority: payload.priority,
+      taskType: payload.taskType, source: payload.source, destination: payload.destination, priority: payload.priority,
       robotId: payload.robotId ?? null, scheduledAt: payload.scheduledAt, note: payload.note || null,
     }) })
   },
   deleteTask(id) { return request(`/${encodeURIComponent(id)}`, { method: 'DELETE' }) },
+  updatePriority(id, priority) {
+    return request(`/${encodeURIComponent(id)}/priority`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priority }) })
+  },
   updateSchedule(id, scheduledAt) {
     return request(`/${encodeURIComponent(id)}/schedule`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scheduledAt }) })
+  },
+  completeSimulatedArrival(id, robotId, source, destination) {
+    return request(`/${encodeURIComponent(id)}/simulation/arrive`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ robotId, source, destination }) })
   },
 }

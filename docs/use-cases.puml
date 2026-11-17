@@ -1,0 +1,65 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Microsoft JhengHei"
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFF9EC
+  BorderColor #D69B29
+}
+
+actor "醫護人員" as Medical
+actor "機器人機隊" as Robot
+
+rectangle "醫療異質多機調度平台（軟體系統）" {
+  package "帳號管理" {
+    usecase "註冊帳號" as Register
+    usecase "登入與登出" as Login
+    usecase "編輯個人資料" as Profile
+  }
+
+  package "任務管理" {
+    usecase "UC001\n建立醫療服務任務" as Create
+    usecase "UC002\n修改未派送任務" as Edit
+    usecase "刪除未派送任務" as Delete
+    usecase "取消已派送任務" as Cancel
+    usecase "驗證任務資料" as Validate
+    Create ..> Validate : <<include>>
+    Edit ..> Validate : <<include>>
+  }
+
+  package "任務排程與執行" {
+    usecase "智慧排程與機器人分配\n（PPO／Baseline）" as Schedule
+    usecase "異質機器人能力匹配" as Match
+    usecase "派送任務供機器人執行" as Dispatch
+    Create ..> Schedule : <<include>>
+    Schedule ..> Match : <<include>>
+    Schedule ..> Dispatch : <<include>>
+  }
+
+  package "UC003 即時監控與查詢" {
+    usecase "檢視 Dashboard 任務概況" as Dashboard
+    usecase "檢視 Live Map 位置與路線" as Map
+    usecase "檢視 Robot Status 狀態" as Status
+    usecase "UC004\n查詢歷史任務與執行資訊" as History
+    usecase "同步任務與機器人狀態" as Sync
+  }
+}
+
+Medical -- Register
+Medical -- Login
+Medical -- Profile
+Medical -- Create
+Medical -- Edit
+Medical -- Delete
+Medical -- Cancel
+Medical -- Dashboard
+Medical -- Map
+Medical -- Status
+Medical -- History
+Robot -- Dispatch
+Robot -- Cancel
+Robot -- Sync
+
+@enduml

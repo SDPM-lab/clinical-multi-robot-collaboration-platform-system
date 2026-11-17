@@ -2,10 +2,7 @@ import { computed, reactive, readonly } from 'vue'
 import { dispatchTaskLocations } from '@/config/dispatchDestinations.js'
 import { REQUIRED_CAPABILITIES_BY_TASK_TYPE, TASK_TYPE_BY_LABEL } from '@/config/taskTypes.js'
 
-export const ROBOT_CAPABILITY_OPTIONS = Object.freeze([
-  '藥品配送', '檢體運送', '物資補充', '醫療廢棄物運送', '文件配送',
-  '巡檢', '自動充電', '門控制', '電梯',
-])
+export const ROBOT_CAPABILITY_OPTIONS = Object.freeze(['廢棄物運送', '衣物回收', '藥品配送', '檢體配送', '病房服務'])
 
 export const ROBOT_NAV_GRAPHS = Object.freeze([
   Object.freeze({ index: 0, label: 'Graph 0・機器人導航路網' }),
@@ -14,12 +11,13 @@ export const ROBOT_NAV_GRAPHS = Object.freeze([
 export const GRAPH_0_CHARGING_WAYPOINTS = Object.freeze(['charging_station_1'])
 
 const commonRobot = Object.freeze({
-  model: 'Hospital AMR',
+  model: 'agibot_g1',
   floorId: null,
   motorTemperature: null,
   temperatureSource: 'unavailable',
   chargingCommand: null,
-  manufacturer: null,
+  manufacturer: 'Agibot',
+  descriptionPackage: 'agibot_g1_description',
   serialNumber: null,
   thumbnailUrl: '/images/robot-thumbnail.png',
   fleetName: 'hospital_fleet',
@@ -36,7 +34,7 @@ const commonRobot = Object.freeze({
   maxSpeedMps: 0.7,
   footprintRadiusM: 0.35,
   chargingWaypoint: 'charging_station_1',
-  capabilities: Object.freeze(['藥品配送', '檢體運送', '物資補充', '文件配送', '巡檢', '自動充電']),
+  capabilities: Object.freeze([]),
   completedTaskIds: Object.freeze([]),
   firmwareVersion: null,
   estimatedAvailableTime: null,
@@ -56,21 +54,21 @@ const makeRobot = (robot) => ({
 })
 
 const initialRobots = [
-  makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'Robot 01', floorId: 'floor1', rosNamespace: '/robot_01', battery: 82, state: 'busy', currentLocation: 'Nurse Reception', currentWaypoint: 'reception_back', activeTaskId: 'T001', queuedTaskIds: ['T006'], queuedTasks: 1 }),
-  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'Robot 02', floorId: 'floor1', rosNamespace: '/robot_02', battery: 34, state: 'busy', currentLocation: 'Consultation Room 2', currentWaypoint: 'consult_2_1', activeTaskId: 'T002', queuedTaskIds: ['T009'], queuedTasks: 1 }),
-  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'Robot 03', floorId: 'floor1', rosNamespace: '/robot_03', battery: 18, state: 'busy', currentLocation: 'Nurse Station', currentWaypoint: 'nurse_station', activeTaskId: 'T003', queuedTaskIds: [], queuedTasks: 0 }),
-  makeRobot({ id: 'R04', name: 'Robot 04', floorId: 'floor2', rosNamespace: '/robot_04', battery: 76, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
-  makeRobot({ id: 'R05', name: 'Robot 05', floorId: 'floor2', rosNamespace: '/robot_05', battery: 62, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
-  makeRobot({ id: 'R06', name: 'Robot 06', floorId: 'floor3', rosNamespace: '/robot_06', battery: 88, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
-  makeRobot({ id: 'R07', name: 'Robot 07', floorId: 'floor3', rosNamespace: '/robot_07', battery: 45, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 48, temperatureSource: 'demo', id: 'R01', name: 'C01', robotType:'clean', capabilities:['廢棄物運送','衣物回收'], floorId: 'floor1', rosNamespace: '/hospital_robot_1', battery: 82, state: 'busy', currentLocation: 'Ward A', currentWaypoint: 'ward_a_2', activeTaskId: 'T001', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 61, temperatureSource: 'demo', id: 'R02', name: 'C02', robotType:'clean', capabilities:['廢棄物運送','衣物回收'], floorId: 'floor1', rosNamespace: '/hospital_robot_2', battery: 34, state: 'busy', currentLocation: 'Ward B', currentWaypoint: 'ward_b_2', activeTaskId: 'T002', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ motorTemperature: 73, temperatureSource: 'demo', id: 'R03', name: 'M01', robotType:'medical', capabilities:['藥品配送','檢體配送'], floorId: 'floor1', rosNamespace: '/hospital_robot_3', battery: 38, state: 'busy', currentLocation: 'Pharmacy', currentWaypoint: 'pharmacy', activeTaskId: 'T003', queuedTaskIds: [], queuedTasks: 0 }),
+  makeRobot({ id: 'R04', name: 'M02', robotType:'medical', capabilities:['藥品配送','檢體配送'], floorId: 'floor1', rosNamespace: '/hospital_robot_4', battery: 76, state: 'busy', currentLocation: 'Consultation Room 2', currentWaypoint:'consult_2_2', activeTaskId: 'T004', queuedTasks: 0 }),
+  makeRobot({ id: 'R05', name: 'W01', robotType:'ward', capabilities:['藥品配送','病房服務'], floorId: 'floor1', rosNamespace: '/hospital_robot_5', battery: 62, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
+  makeRobot({ id: 'R06', name: 'W02', robotType:'ward', capabilities:['藥品配送','病房服務'], floorId: 'floor1', rosNamespace: '/hospital_robot_6', battery: 88, state: 'busy', currentLocation: 'Nurse Station', currentWaypoint:'nurse_station', activeTaskId: 'T006', queuedTasks: 0 }),
+  makeRobot({ id: 'R07', name: 'W03', robotType:'ward', capabilities:['藥品配送','病房服務'], floorId: 'floor1', rosNamespace: '/hospital_robot_7', battery: 45, state: 'idle', currentLocation: null, activeTaskId: null, queuedTasks: 0 }),
 ]
 
 const initialTasks = [
-  { id: 'T001', robotId: 'R01', title: '藥品配送', type: '藥品配送', taskType: 'MedicineDelivery', origin: 'Pharmacy', destination: 'Nurse Reception', priority: 'high', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720, status: 'executing', direction: 'outbound', progress: 42 },
-  { id: 'T002', robotId: 'R02', title: '檢體配送', type: '檢體配送', taskType: 'SpecimenDelivery', origin: 'Consultation Room 2', destination: 'Pantry', priority: 'normal', startTime: '11:00:00', endTime: '11:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
-  { id: 'T003', robotId: 'R03', title: '一般配送', type: '一般配送', taskType: 'GeneralDelivery', origin: 'Nurse Station', destination: 'Ward A', priority: 'high', startTime: '14:20:00', endTime: '14:38:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 30 },
-  { id: 'T006', robotId: 'R01', title: '廢棄物收集', type: '廢棄物收集', taskType: 'WasteCollection', origin: 'Ward A', destination: 'Waste Return', priority: 'normal', startTime: '16:00:00', endTime: '16:15:00', durationSeconds: 900, status: 'scheduled' },
-  { id: 'T009', robotId: 'R02', title: '一般配送', type: '一般配送', taskType: 'GeneralDelivery', origin: 'Nurse Station', destination: 'Nurse Reception', priority: 'low', startTime: '17:00:00', endTime: '17:12:00', durationSeconds: 720, status: 'scheduled' },
+  { id: 'T001', robotId: 'R01', title: '廢棄物運送', type: '廢棄物運送', taskType: 'waste_transport', source: 'Ward A', destination: 'Waste Return', priority: 'high', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720, status: 'executing', direction: 'outbound', progress: 42 },
+  { id: 'T002', robotId: 'R02', title: '衣物回收', type: '衣物回收', taskType: 'clothes_collection', source: 'Ward B', destination: 'Clothes Return', priority: 'normal', startTime: '11:00:00', endTime: '11:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
+  { id: 'T003', robotId: 'R03', title: '藥品配送', type: '藥品配送', taskType: 'medication_delivery', source: 'Pharmacy', destination: 'Ward A', priority: 'high', startTime: '14:20:00', endTime: '14:38:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 30 },
+  { id: 'T004', robotId: 'R04', title: '檢體配送', type: '檢體配送', taskType: 'specimen_delivery', source: 'Consultation Room 2', destination: 'Laboratory', priority: 'normal', startTime: '15:00:00', endTime: '15:18:00', durationSeconds: 1080, status: 'executing', direction: 'outbound', progress: 18 },
+  { id: 'T006', robotId: 'R06', title: '病房服務', type: '病房服務', taskType: 'ward_service', source: 'Nurse Station', destination: 'Ward A', priority: 'normal', startTime: '16:00:00', endTime: '16:15:00', durationSeconds: 900, status: 'executing', direction: 'outbound', progress: 18 },
 ]
 
 export const timeToSeconds = (value) => {
@@ -99,12 +97,14 @@ const normalizeRosNamespace = (value) => {
 const validateTask = (candidate, ignoreId = null) => {
   const robot = state.robots.find((entry) => entry.id === candidate.robotId)
   if (!robot) return { ok: false, reason: '找不到指定機器人。' }
+  const supportedTypes = { clean:['waste_transport','clothes_collection'], medical:['medication_delivery','specimen_delivery'], ward:['medication_delivery','ward_service'] }
+  if (candidate.taskType && !supportedTypes[robot.robotType]?.includes(candidate.taskType)) return { ok: false, reason: '機器人類型不支援此任務。' }
   if (robot.state === 'offline') return { ok: false, reason: '機器人目前離線。' }
   if (robot.battery < 20 && candidate.title !== '前往充電') return { ok: false, reason: '機器人電量不足 20%。' }
-  if (!reachableLocations.has(candidate.origin) || !reachableLocations.has(candidate.destination)) return { ok: false, reason: '請選擇 RMF 路網中可達的起點與目的地。' }
+  if (!reachableLocations.has(candidate.source) || !reachableLocations.has(candidate.destination)) return { ok: false, reason: '請選擇 RMF 路網中可達的起點與目的地。' }
   const start = timeToSeconds(candidate.startTime)
   const end = timeToSeconds(candidate.endTime)
-  const sameDate = (task) => (task.date || '2026-08-31') === (candidate.date || '2026-08-31')
+  const sameDate = (task) => !['cancelled', 'completed', 'failed'].includes(task.status) && (task.date || '2026-08-31') === (candidate.date || '2026-08-31')
   const chargingConflict = state.tasks.find((task) => task.robotId === candidate.robotId && task.id !== ignoreId && sameDate(task) && task.title === '前往充電' && start < timeToSeconds(task.endTime) && end > timeToSeconds(task.startTime))
   if (chargingConflict) return { ok: false, reason: '與充電時段衝突。' }
   const overlap = state.tasks.find((task) => task.robotId === candidate.robotId && task.id !== ignoreId && sameDate(task) && start < timeToSeconds(task.endTime) && end > timeToSeconds(task.startTime))
@@ -199,6 +199,26 @@ const deleteTask = (taskId) => {
   return { ok: true, task }
 }
 
+const cancelTask = (taskId) => {
+  const task = state.tasks.find(entry => entry.id === taskId)
+  if (!task) return { ok: false, reason: 'notFound' }
+  if (task.status === 'cancelled') return { ok: true, task }
+  if (['completed', 'failed'].includes(task.status)) return { ok: false, reason: 'finished' }
+  if (!['pending', 'scheduled'].includes(task.status) || task.startedAt) return { ok: false, reason: 'locked' }
+  task.status = 'cancelled'
+  task.finishedAt = new Date().toISOString()
+  const robot = state.robots.find(entry => entry.id === task.robotId)
+  if (robot) {
+    robot.queuedTaskIds = robot.queuedTaskIds.filter(id => id !== taskId)
+    robot.queuedTasks = robot.queuedTaskIds.length
+    if (robot.activeTaskId === taskId) {
+      robot.activeTaskId = null
+      if (robot.state === 'busy') robot.state = 'idle'
+    }
+  }
+  return { ok: true, task }
+}
+
 const validateRobot = (candidate) => {
   const id = String(candidate.id || '').trim()
   const name = String(candidate.name || '').trim()
@@ -272,6 +292,7 @@ export const demoFleetStore = {
   moveTasks,
   createTask,
   deleteTask,
+  cancelTask,
   validateRobot,
   addRobot,
   removeRobot,

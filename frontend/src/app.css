@@ -8,11 +8,24 @@
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --ui-font-scale:1;
   --font-brand:18px; --navbar-font-size:14px; --font-nav:var(--navbar-font-size);
   --tool-panel-title-size:13.5px; --font-panel-title:var(--tool-panel-title-size);
   --font-item-title:11.5px; --font-body:11px; --font-meta:10px;
   --font-small-value:17px; --font-gauge-value:26px;
   --control-radius:4px; --small-control-radius:3px;
+  --info-title-size:var(--font-panel-title); --info-body-size:12.5px; --info-meta-size:11px;
+}
+
+html[data-ui-font-size='medium'] {
+  --ui-font-scale:1.08;
+}
+
+html[data-ui-font-size='large'] {
+  --ui-font-scale:1.16;
+}
+
+body {
   font-size:var(--font-body);
 }
 

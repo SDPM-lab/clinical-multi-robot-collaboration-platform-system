@@ -808,10 +808,21 @@ components:
           type: string
         model:
           type: string
+          example: agibot_g1
+        manufacturer:
+          type: string
+          example: Agibot
+        descriptionPackage:
+          type: string
+          example: agibot_g1_description
+        capabilities:
+          type: array
+          items:
+            type: string
         robotType:
           type: string
           enum: [clean, medical, ward]
-          description: PPO 名冊對照：robot 1–2 clean、3–4 medical、5–7 ward。
+          description: 執行名冊對照：robot 1–2 clean、3–5 medical、6–7 ward。
         status:
           type: string
         battery:

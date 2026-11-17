@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
 import { laneDisplayPoints, routeDisplayPoints, shortestLanePath, validateDispatchMapping, waypointDisplayPoint } from '../src/components/dispatch/dispatchRouteMapping.js'
-import { dispatchTaskLocations, dispatchWaypointLabels } from '../src/config/dispatchDestinations.js'
+import { dispatchTaskLocations, dispatchWaypointLabels, PPO_TASK_WAYPOINT_IDS } from '../src/config/dispatchDestinations.js'
+import { dispatchLocations } from '../src/config/dispatchMap.js'
+import { TASK_LOCATION_IDS } from '../src/config/taskTypes.js'
 
 const root = path.resolve(import.meta.dirname, '..')
 const graph = JSON.parse(fs.readFileSync(path.join(root, 'public/generated/rmf-navigation.json'), 'utf8'))
@@ -49,6 +51,15 @@ describe('L1 Traffic Editor to GLB display mapping', () => {
 
   it('offers every dispatch destination at a mapped and reachable TE waypoint', () => {
     expect(new Set(dispatchTaskLocations).size).toBe(dispatchTaskLocations.length)
+    expect(dispatchTaskLocations).toHaveLength(16)
+    expect(PPO_TASK_WAYPOINT_IDS).toHaveLength(16)
+    expect(PPO_TASK_WAYPOINT_IDS[0]).toBe('charging_station_2')
+    expect(PPO_TASK_WAYPOINT_IDS.every(waypoint => dispatchWaypointLabels[waypoint])).toBe(true)
+    expect(PPO_TASK_WAYPOINT_IDS.every(waypoint => dispatchLocations[waypoint])).toBe(true)
+    for (const profile of Object.values(TASK_LOCATION_IDS)) {
+      expect(profile.sources).not.toContain('charging_station_2')
+      expect(profile.destinations).not.toContain('charging_station_2')
+    }
     for (const waypoint of Object.keys(dispatchWaypointLabels)) {
       const id = byName.get(waypoint)
       expect(id, waypoint).toBeDefined()

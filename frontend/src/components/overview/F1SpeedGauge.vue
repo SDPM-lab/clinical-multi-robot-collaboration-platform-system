@@ -1,8 +1,9 @@
 <script setup>
 import { computed, onMounted, useId } from 'vue'
 import { useCountUp } from '@/composables/useCountUp.js'
+import { t } from '@/i18n/index.js'
 
-const props = defineProps({ value: { type: Number, default: 0 }, label: { type: String, default: '全棟完成率' } })
+const props = defineProps({ value: { type: Number, default: null }, label: { type: String, default: '全棟完成率' } })
 const progress = computed(() => Number.isFinite(props.value) ? Math.max(0, Math.min(100, props.value)) : 0)
 const easeInOutCubic = value => value < 0.5 ? 4 * value ** 3 : 1 - ((-2 * value + 2) ** 3) / 2
 const { displayed, restart } = useCountUp(progress, { duration: 2800, delay: 180, easing: easeInOutCubic })
@@ -12,7 +13,7 @@ onMounted(restart)
 </script>
 
 <template>
-  <div class="f1-speed-gauge" role="img" :aria-label="`${label} ${progress}%`">
+  <div class="f1-speed-gauge" role="img" :aria-label="Number.isFinite(value) ? `${label} ${progress}%` : `${label} ${t('common.noDataAvailable')}`">
     <svg viewBox="0 0 240 142" aria-hidden="true">
       <defs>
         <linearGradient :id="gradientId" x1="0" y1="0" x2="1" y2="0">
@@ -24,12 +25,12 @@ onMounted(restart)
       </defs>
 <path class="speed-bezel" d="M 18 108 A 102 102 0 0 1 222 108" />
       <path class="speed-track" d="M 27 108 A 93 93 0 0 1 213 108" pathLength="100" />
-      <path class="speed-arc" d="M 27 108 A 93 93 0 0 1 213 108" pathLength="100" :stroke="`url(#${gradientId})`" :stroke-dasharray="`${displayed} 100`" />
+      <path v-if="Number.isFinite(value)" class="speed-arc" d="M 27 108 A 93 93 0 0 1 213 108" pathLength="100" :stroke="`url(#${gradientId})`" :stroke-dasharray="`${displayed} 100`" />
       <g class="speed-ticks"><line v-for="index in 37" :key="index" :style="{ animationDelay: `${150 + Math.abs(index - 19) * 14}ms` }" x1="120" y1="16" x2="120" :y2="index % 6 === 1 ? 27 : 22" :transform="`rotate(${-90 + (index - 1) * 5} 120 108)`" /></g>
-      <g class="speed-needle" :transform="`rotate(${needleAngle} 120 108)`"><path d="M 117.5 108 L 120 35 L 122.5 108 Z" /></g>
+      <g v-if="Number.isFinite(value)" class="speed-needle" :transform="`rotate(${needleAngle} 120 108)`"><path d="M 117.5 108 L 120 35 L 122.5 108 Z" /></g>
       <circle class="speed-hub speed-core" cx="120" cy="108" r="5" />
-      <text class="speed-number" x="120" y="87" text-anchor="middle">{{ displayed }}</text>
-      <text class="speed-unit" x="120" y="101" text-anchor="middle">%</text>
+      <text class="speed-number" x="120" y="87" text-anchor="middle">{{ Number.isFinite(value) ? displayed : '—' }}</text>
+      <text v-if="Number.isFinite(value)" class="speed-unit" x="120" y="101" text-anchor="middle">%</text>
       <text class="speed-limit" x="25" y="127" text-anchor="middle">0</text>
       <text class="speed-limit" x="215" y="127" text-anchor="middle">100</text>
     </svg>

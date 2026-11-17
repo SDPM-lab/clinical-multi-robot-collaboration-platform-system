@@ -1,5 +1,7 @@
+import { dispatchWaypointLabels } from '@/config/dispatchDestinations.js'
 import { locationDetails } from './demoActiveRoutes.js'
 import { REQUIRED_CAPABILITIES_BY_TASK_TYPE, TASK_TYPE_BY_LABEL } from '@/config/taskTypes.js'
+import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 export const priorityOptions = [{id:'urgent',label:'緊急',from:'#f06a50',to:'#ff9a62'},{id:'high',label:'高',from:'#ed8b2c',to:'#ffc061'},{id:'normal',label:'一般',from:'#f2bd43',to:'#f6dc79'},{id:'low',label:'低',from:'#70b99c',to:'#a4d6b9'}]
 export const statusOptions = [{id:'completed',label:'已完成'},{id:'cancelled',label:'已取消'},{id:'failed',label:'失敗'},{id:'running',label:'執行中'},{id:'waiting',label:'等待中'}]
 export const historyLocations = Object.values(locationDetails).map(location=>location.label)
@@ -23,7 +25,7 @@ export function filterHistory(events,filters,search='') {
 }
 export function eventsOnDay(events,key) {
  const start=parseDay(key).getTime(),end=parseDay(addDays(key,1)).getTime()
- return events.filter(event=>Date.parse(event.start)<end && Date.parse(event.end)>start)
+ return events.filter(event=>Date.parse(event.start)<end && (Date.parse(event.end)>start || (event.end===event.start && Date.parse(event.start)>=start)))
 }
 // Split cross-midnight records for display and allocate separate overlap lanes.
 export function layoutDayEvents(events,key) {
@@ -43,9 +45,11 @@ export function adaptHistoryTasks(tasks,robots) {
   const status=statuses[String(task.status||'').toLowerCase()]
   if(!status || !Number.isFinite(Date.parse(start)) || !(Date.parse(end)>Date.parse(start)))return []
   const robotId=task.robotId||task.assignedRobot||''
+  const displayCode=robotDisplayCode(robotId)
+  const robotName=displayCode!==robotId?displayCode:robots.find(robot=>robot.id===robotId)?.name||robotId
   const taskType=TASK_TYPE_BY_LABEL[task.type]||TASK_TYPE_BY_LABEL[task.title]||TASK_TYPE_BY_LABEL[labelsByType[task.taskType]]||task.taskType
   const title=task.title||labelsByType[taskType]||task.type||''
-  return [{id:task.id,taskId:task.taskId||task.id,title,robotId,robotName:robots.find(robot=>robot.id===robotId)?.name||robotId,start,end,startLocation:task.origin||task.source||task.startLocation,endLocation:task.destination||task.endLocation,priority:String(task.priority||'normal').toLowerCase()==='emergency'?'urgent':String(task.priority||'normal').toLowerCase(),status,taskType,requiredCapabilities:task.requiredCapabilities??REQUIRED_CAPABILITIES_BY_TASK_TYPE[taskType]??[],note:task.note??null,createdAt:task.createdAt??null}]
+  return [{id:task.id,taskId:task.taskId||task.id,title,robotId,robotName,start,end,startLocation:task.source||task.startLocation,endLocation:task.destination||task.endLocation,priority:String(task.priority||'normal').toLowerCase()==='emergency'?'urgent':String(task.priority||'normal').toLowerCase(),status,taskType,requiredCapabilities:task.requiredCapabilities??REQUIRED_CAPABILITIES_BY_TASK_TYPE[taskType]??[],note:task.note??null,createdAt:task.createdAt??null}]
  })
 }
 // Explicit demo history, generated once from existing task templates; never persisted as real history.
@@ -59,8 +63,44 @@ export function createDemoHistory(tasks,robots,today=dayKey(new Date())) {
    const begin=new Date(`${date}T${String(hour).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:00`)
    const end=new Date(begin.getTime()+(50+((day+14)%3)*15)*60000)
    const priority=priorityOptions[(day+14+index)%4].id
-   events.push({id:`history-${date}-${task.id}`,taskId:`H${String((day+14)*3+index+1).padStart(4,'0')}`,title:task.title,robotId:task.robotId,robotName:robots.find(robot=>robot.id===task.robotId)?.name||task.robotId,start:begin.toISOString(),end:end.toISOString(),startLocation:task.origin,endLocation:task.destination,priority,status:date===today&&index===1?'running':(day+14+index)%13===0?'failed':(day+14+index)%11===0?'cancelled':'completed',taskType:task.taskType||TASK_TYPE_BY_LABEL[task.title]})
+   events.push({id:`history-${date}-${task.id}`,taskId:`H${String((day+14)*3+index+1).padStart(4,'0')}`,title:task.title,robotId:task.robotId,robotName:robotDisplayCode(task.robotId),start:begin.toISOString(),end:end.toISOString(),startLocation:task.source,endLocation:task.destination,priority,status:date===today&&index===1?'running':(day+14+index)%13===0?'failed':(day+14+index)%11===0?'cancelled':'completed',taskType:task.taskType||TASK_TYPE_BY_LABEL[task.title]})
   })
  }
  return events
+}
+
+// Keep actual execution times separate from the date used to group records.
+export function adaptBackendHistoryTasks(tasks, robots = []) {
+ const terminalStatuses = new Set(['completed', 'failed', 'cancelled'])
+ const labels = Object.fromEntries(Object.entries(TASK_TYPE_BY_LABEL).map(([label, type]) => [type.toLowerCase(), label]))
+ const validDate = value => value && Number.isFinite(Date.parse(value)) ? value : null
+ return tasks.flatMap(task => {
+  const status = String(task.status || '').toLowerCase()
+  if (!terminalStatuses.has(status)) return []
+  const scheduledAt = validDate(task.scheduledAt)
+  const startedAt = validDate(task.startedAt)
+  const finishedAt = validDate(task.finishedAt)
+  const createdAt = validDate(task.createdAt)
+  const start = startedAt || finishedAt || scheduledAt || createdAt
+  if (!start) return []
+  const robotId = task.assignedRobot || ''
+  const displayCode=robotDisplayCode(robotId)
+  const robotName=displayCode!==robotId?displayCode:robots.find(robot=>robot.id===robotId)?.name||robotId
+  const capabilityNames = Object.values(REQUIRED_CAPABILITIES_BY_TASK_TYPE).flat()
+  const requiredCapabilities = (task.requiredCapabilities || []).map(value => capabilityNames.find(name => name.toLowerCase() === String(value).toLowerCase()) || value)
+  return [{
+   id: task.id, taskId: task.taskCode || task.id, backendRecord: true,
+   title: labels[String(task.taskType).toLowerCase()] || task.taskType,
+   taskType: task.taskType, robotId, robotName,
+   startLocation: dispatchWaypointLabels[task.source] || task.source,
+   endLocation: dispatchWaypointLabels[task.destination] || task.destination,
+   status, priority: String(task.priority).toLowerCase() === 'emergency' ? 'urgent' : String(task.priority).toLowerCase(),
+   scheduledAt, startedAt, finishedAt, createdAt,
+   // start/end are only range-selection anchors; actual times above remain nullable.
+   start, end: finishedAt || start,
+   delayMinutes: scheduledAt && startedAt ? Math.max(0, (Date.parse(startedAt)-Date.parse(scheduledAt))/60000) : null,
+   durationMinutes: startedAt && finishedAt && Date.parse(finishedAt)>=Date.parse(startedAt) ? (Date.parse(finishedAt)-Date.parse(startedAt))/60000 : null,
+   note: task.note, requiredCapabilities,
+  }]
+ })
 }

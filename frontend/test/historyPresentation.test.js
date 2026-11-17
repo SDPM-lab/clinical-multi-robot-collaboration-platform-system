@@ -25,8 +25,8 @@ it('assigns six requested task names six stable and distinct colors',()=>{
  expect(new Set(names.map(name=>getHistoryTaskColor(name).ink)).size).toBe(6)
 })
 it('adapts RobotTask fields and enum values for the history list',()=>{
- const tasks=[{id:'a1',taskType:'medicineDelivery',source:'Pharmacy',destination:'Nurse Reception',priority:'emergency',status:'completed',assignedRobot:'R01',start:'2026-10-19T09:00:00',end:'2026-10-19T09:12:00',note:'Keep refrigerated',createdAt:'2026-10-18T08:00:00Z',requiredCapabilities:['Navigation','MedicineDelivery']}]
- expect(adaptHistoryTasks(tasks,[{id:'R01',name:'Robot 01'}])).toMatchObject([{taskId:'a1',title:'藥品配送',taskType:'MedicineDelivery',robotId:'R01',startLocation:'Pharmacy',endLocation:'Nurse Reception',priority:'urgent',status:'completed',requiredCapabilities:['Navigation','MedicineDelivery'],note:'Keep refrigerated',createdAt:'2026-10-18T08:00:00Z'}])
+ const tasks=[{id:'a1',taskType:'medication_delivery',source:'Pharmacy',destination:'Nurse Reception',priority:'emergency',status:'completed',assignedRobot:'R01',start:'2026-10-19T09:00:00',end:'2026-10-19T09:12:00',note:'Keep refrigerated',createdAt:'2026-10-18T08:00:00Z',requiredCapabilities:['Navigation','medication_delivery']}]
+ expect(adaptHistoryTasks(tasks,[{id:'R01',name:'Robot 01'}])).toMatchObject([{taskId:'a1',title:'藥品配送',taskType:'medication_delivery',robotId:'R01',startLocation:'Pharmacy',endLocation:'Nurse Reception',priority:'urgent',status:'completed',requiredCapabilities:['Navigation','medication_delivery'],note:'Keep refrigerated',createdAt:'2026-10-18T08:00:00Z'}])
 })
 it('uses the four RobotTask types in demo schedule history',()=>{
  const events=createRichDemoHistory('2026-10-19')

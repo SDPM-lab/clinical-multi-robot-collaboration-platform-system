@@ -91,6 +91,7 @@ function applyModelPreset() {
 }
 
 function saveDebugPreset() {
+  captureCamera()
   if (!validRobotCameraPreset(cameraPreset) || !validRobotModelPreset(modelPreset)) { debugStatus.value = t('robotDebug.invalid'); return }
   try {
     storeRobotCameraPreset(cameraPreset)
@@ -226,13 +227,13 @@ function resize() {
   camera.updateProjectionMatrix()
   viewportWidth = width
   viewportHeight = height
-  if (!assembly || !controls) return
+  if (!assembly || !controls || !sizeChanged) return
   const needed = fitDistance(bounds, direction)
   const distance = camera.position.distanceTo(controls.target)
   // Preserve the user's zoom across fullscreen and other container resizes.
   const nextDistance = previousFit
     ? distance * needed / previousFit
-    : Math.max(distance, needed)
+    : distance
   if (nextDistance !== distance) camera.position.copy(controls.target).addScaledVector(direction, nextDistance)
   controls.update()
   if (sizeChanged) captureCamera()
@@ -368,7 +369,7 @@ defineExpose({ focusArm, focusZone, showWholeRobot, resetView })
 </script>
 
 <template>
-  <div ref="host" class="robot-viewport" aria-label="AGIBOT A2D 互動式 3D 模型">
+  <div ref="host" class="robot-viewport" :aria-label="t('robotStatus.modelView')">
     <div v-if="loading" class="viewport-message" role="status">{{ t('robotStatus.loading') }}</div>
     <div v-else-if="error" class="viewport-message" role="alert">{{ t(props.modelAssetKey === DEFAULT_ROBOT_ASSET ? 'robotStatus.loadError' : 'robotStatus.customLoadError') }}<button type="button" @click="start">{{ t('robotStatus.retry') }}</button></div>
     <div v-else class="viewport-controls">

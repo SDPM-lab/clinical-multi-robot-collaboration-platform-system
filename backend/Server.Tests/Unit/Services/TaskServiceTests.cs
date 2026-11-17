@@ -59,7 +59,7 @@ public class TaskServiceTests
     [InlineData(TaskType.ClothesCollection, "robot-a")]
     [InlineData(TaskType.MedicationDelivery, "robot-hospital_robot_3")]
     [InlineData(TaskType.SpecimenDelivery, "robot-hospital_robot_3")]
-    [InlineData(TaskType.WardService, "robot-hospital_robot_5")]
+    [InlineData(TaskType.WardService, "robot-hospital_robot_6")]
     public async Task SimulationUsesCompatibleRobotProfile(TaskType type, string expectedRobot)
     {
         var service = CreateService();

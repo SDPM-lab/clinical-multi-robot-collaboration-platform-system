@@ -1,12 +1,13 @@
 <script setup>
-import { computed, nextTick, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { Check, Clock3, ChevronLeft, ChevronRight, Pencil, RotateCcw, X } from '@lucide/vue'
 import { localeTag, t, translateLocation, translateTask } from '@/i18n/index.js'
 import { taskPriorityColor } from '@/config/taskPriorityColors.js'
+import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 import { shiftIsoDate } from './taskTimeline.js'
 
 const props = defineProps({ date: { type: String, required: true }, tasks: { type: Array, required: true }, robots: { type: Array, required: true }, editing: { type: Boolean, default: false } })
-const emit = defineEmits(['update:date', 'edit', 'reschedule', 'request-delete'])
+const emit = defineEmits(['update:date', 'edit', 'save-edits', 'request-delete'])
 const dateValue = (date) => new Date(`${date}T12:00:00`)
 const todayIsoDate = () => { const now = new Date(); return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}` }
 const heading = computed(() => new Intl.DateTimeFormat(localeTag.value, { year: 'numeric', month: 'long', day: 'numeric' }).format(dateValue(props.date)))
@@ -16,6 +17,13 @@ const days = computed(() => Array.from({ length: 5 }, (_, index) => {
   return { date, day: value.getDate(), weekday: new Intl.DateTimeFormat(localeTag.value, { weekday: 'short' }).format(value) }
 }))
 const openTimePicker = ref(null)
+const sidebarRoot = ref(null)
+const closeTimePickerOutside = event => {
+  const picker = sidebarRoot.value?.querySelector('.schedule-time-options')?.closest('.schedule-time-picker')
+  if (picker && !picker.contains(event.target)) openTimePicker.value = null
+}
+onMounted(() => document.addEventListener('pointerdown', closeTimePickerOutside))
+onBeforeUnmount(() => document.removeEventListener('pointerdown', closeTimePickerOutside))
 const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 const validTime = (value) => /^([01]\d|2[0-3]):[0-5]\d$/.test(value || '')
@@ -37,9 +45,24 @@ const chooseTimePart = (id, part, value) => {
   parts[part] = value
   draftTimes[id] = parts.join(':')
 }
-watch(() => props.editing, () => { openTimePicker.value = null })
+watch(() => props.editing, () => {
+  openTimePicker.value = null
+  for (const task of props.tasks) {
+    draftTimes[task.id] = task.startTime.slice(0,5)
+  }
+})
 const draftTimes = reactive({})
 watch(() => props.tasks.map((task) => `${task.id}:${task.startTime}`).join('|'), () => { for (const task of props.tasks) draftTimes[task.id] = task.startTime.slice(0, 5) }, { immediate: true })
+const canEditTask = task => ['pending', 'assigned'].includes(String(task.status).toLowerCase()) && !task.startedAt
+const canDeleteTask = task => String(task.status).toLowerCase() === 'pending'
+const canSaveEdits = task => canEditTask(task) && validTime(draftTimes[task.id]) &&
+  draftTimes[task.id] !== task.startTime.slice(0, 5) &&
+  new Date(`${props.date}T${draftTimes[task.id]}:00`) > new Date()
+const saveEdits = task => {
+  if (!canSaveEdits(task)) return
+  emit('save-edits', task.id, draftTimes[task.id])
+  openTimePicker.value = null
+}
 const sortedTasks = computed(() => [...props.tasks].sort((a, b) => a.startTime.localeCompare(b.startTime) || (a.robotId || '').localeCompare(b.robotId || '')))
 const timeSlots = computed(() => {
   const slots = []
@@ -51,13 +74,13 @@ const timeSlots = computed(() => {
   }
   return slots
 })
-const robotName = (id) => props.robots.find((robot) => robot.id === id)?.name || id || t('dispatch.unassigned')
-const taskTitle = (task) => `${robotName(task.robotId)} · ${translateTask(task.title)} · ${translateLocation(task.origin)} → ${translateLocation(task.destination)} · ${task.startTime.slice(0, 5)}–${task.endTime.slice(0, 5)}`
-const saveTime = (task) => { if (validTime(draftTimes[task.id]) && draftTimes[task.id] !== task.startTime.slice(0, 5)) emit('reschedule', task.id, draftTimes[task.id]) }
+const assignedRobotId = task => task.assignedRobot || task.robotId || ''
+const robotName = (id) => id ? robotDisplayCode(id) : t('dispatch.unassigned')
+const taskTitle = (task) => `${robotName(task.robotId)} · ${translateTask(task.title)} · ${translateLocation(task.source)} → ${translateLocation(task.destination)} · ${task.startTime.slice(0, 5)}–${task.endTime.slice(0, 5)}`
 </script>
 
 <template>
-  <section class="schedule-sidebar" :aria-label="t('dispatch.scheduleTab')">
+  <section ref="sidebarRoot" class="schedule-sidebar" :aria-label="t('dispatch.scheduleTab')">
     <div class="schedule-date-navigation">
       <button type="button" :aria-label="t('dispatch.previousDay')" @click="emit('update:date', shiftIsoDate(date, -1))"><ChevronLeft :size="16" /></button>
       <strong>{{ heading }}</strong>
@@ -75,11 +98,14 @@ const saveTime = (task) => { if (validTime(draftTimes[task.id]) && draftTimes[ta
         <div class="schedule-time"><strong>{{ slot.time }}</strong><span>{{ slot.tasks.length === 1 ? slot.tasks[0].endTime.slice(0, 5) : t('dispatch.robotCount', { count: slot.tasks.length }) }}</span></div>
         <div class="schedule-slot-cards" :class="{ 'is-editing': editing }" :style="{ '--slot-columns': Math.min(slot.tasks.length, 3) }">
           <article v-for="task in slot.tasks" :key="task.id" class="schedule-item" :data-priority="task.priority" :style="{ '--item-color': taskPriorityColor(task.priority) }" :title="taskTitle(task)" :aria-label="taskTitle(task)">
-            <button v-if="editing" class="schedule-delete" type="button" :aria-label="`${t('dispatch.deleteTask')} ${task.taskCode || task.id}`" :title="t('dispatch.deleteTask')" @click="emit('request-delete', task)"><X :size="13" /></button>
-            <div class="schedule-card-top"><span>{{ task.taskCode || task.id }} · {{ task.robotId || robotName(task.robotId) }}</span></div>
+            <button v-if="editing && canDeleteTask(task)" class="schedule-delete" type="button" :aria-label="`${t('dispatch.deleteTask')} ${task.taskCode || task.id}`" :title="t('dispatch.deleteTask')" @click="emit('request-delete', task)"><X :size="13" /></button>
+            <div class="schedule-card-top"><span>{{ task.taskCode || task.id }} · {{ robotName(assignedRobotId(task)) }}</span></div>
+            <span v-if="['assigned','running'].includes(String(task.status).toLowerCase())" class="assignment-status" :data-status="String(task.status).toLowerCase()">{{ t(String(task.status).toLowerCase() === 'assigned' ? 'dispatchUx.assignedWaiting' : 'status.running') }}</span>
             <h3>{{ translateTask(task.title) }}</h3>
-            <p>{{ translateLocation(task.origin) }} → {{ translateLocation(task.destination) }}</p>
-            <div v-if="editing" class="schedule-inline-edit"><label><span>{{ t('dispatch.startTime') }}</span><div class="schedule-time-picker" @keydown.esc.stop="openTimePicker=null" @focusout="!$event.currentTarget.contains($event.relatedTarget) && (openTimePicker=null)"><div class="schedule-time-entry"><input v-model="draftTimes[task.id]" type="text" inputmode="numeric" placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id}`" @click="openPicker(task.id,$event)" @keydown.down.prevent="openPicker(task.id,$event)"><button class="schedule-time-toggle" type="button" :aria-label="`${t('dispatchForm.chooseTime')} ${task.taskCode || task.id}`" :aria-expanded="openTimePicker===task.id" @click="openTimePicker===task.id ? openTimePicker=null : openPicker(task.id,$event)"><Clock3 :size="14" /></button></div><div v-if="openTimePicker===task.id" class="schedule-time-options" :class="{ 'opens-above': pickerAbove }"><div class="schedule-time-column" role="listbox" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id} HH`"><button v-for="hour in hours" :key="hour" type="button" role="option" :aria-selected="draftTimes[task.id]?.slice(0,2)===hour" @click="chooseTimePart(task.id,0,hour)">{{ hour }}</button></div><span class="time-colon" aria-hidden="true">:</span><div class="schedule-time-column" role="listbox" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id} mm`"><button v-for="minute in minutes" :key="minute" type="button" role="option" :aria-selected="draftTimes[task.id]?.slice(3,5)===minute" @click="chooseTimePart(task.id,1,minute)">{{ minute }}</button></div></div></div></label><button type="button" :aria-label="`${t('dispatch.saveTime')} ${task.taskCode || task.id}`" :title="t('dispatch.saveTime')" :disabled="!validTime(draftTimes[task.id]) || draftTimes[task.id] === task.startTime.slice(0, 5)" @click="saveTime(task);openTimePicker=null"><Check :size="14" /></button></div>
+            <p>{{ translateLocation(task.source) }} → {{ translateLocation(task.destination) }}</p>
+            <div v-if="editing && canEditTask(task)" class="schedule-inline-edit"><label><span>{{ t('dispatch.startTime') }}</span><div class="schedule-time-picker" @keydown.esc.stop="openTimePicker=null" @focusout="!$event.currentTarget.contains($event.relatedTarget) && (openTimePicker=null)"><div class="schedule-time-entry"><input v-model="draftTimes[task.id]" type="text" inputmode="numeric" placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id}`" @click="openPicker(task.id,$event)" @keydown.down.prevent="openPicker(task.id,$event)"><button class="schedule-time-toggle" type="button" :aria-label="`${t('dispatchForm.chooseTime')} ${task.taskCode || task.id}`" :aria-expanded="openTimePicker===task.id" @click="openTimePicker===task.id ? openTimePicker=null : openPicker(task.id,$event)"><Clock3 :size="14" /></button></div><div v-if="openTimePicker===task.id" class="schedule-time-options" :class="{ 'opens-above': pickerAbove }"><div class="schedule-time-column" role="listbox" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id} HH`"><button v-for="hour in hours" :key="hour" type="button" role="option" :aria-selected="draftTimes[task.id]?.slice(0,2)===hour" @click="chooseTimePart(task.id,0,hour)">{{ hour }}</button></div><span class="time-colon" aria-hidden="true">:</span><div class="schedule-time-column" role="listbox" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id} mm`"><button v-for="minute in minutes" :key="minute" type="button" role="option" :aria-selected="draftTimes[task.id]?.slice(3,5)===minute" @click="chooseTimePart(task.id,1,minute)">{{ minute }}</button></div></div></div></label></div>
+            <p v-if="editing" class="schedule-edit-hint">{{ t(canEditTask(task) ? 'dispatchUx.rescheduleHint' : 'dispatchUx.taskLocked') }}</p>
+            <div v-if="editing && canEditTask(task)" class="schedule-edit-actions"><button class="save-task-edits" type="button" :aria-label="`${t('dispatchUx.requeue')} ${task.taskCode || task.id}`" :disabled="!canSaveEdits(task)" @click="saveEdits(task)"><Check :size="14" /><span>{{ t('dispatchUx.requeue') }}</span></button></div>
           </article>
         </div>
       </div>
@@ -103,11 +129,27 @@ const saveTime = (task) => { if (validTime(draftTimes[task.id]) && draftTimes[ta
 .schedule-list-tools .schedule-today,.schedule-list-tools .schedule-edit{color:var(--text-secondary);background:#fff;border:1px solid var(--panel-border);transition:background .15s,color .15s}
 .schedule-list-tools .schedule-today:hover,.schedule-list-tools .schedule-edit:hover{color:#b85525;background:#ffe9dc;border-color:#fb9966}
 .schedule-list-tools button:focus-visible,.schedule-time-picker button:focus-visible{outline:2px solid #fb9966;outline-offset:2px}
-.schedule-time-picker{width:142px;max-width:100%}.schedule-time-entry{display:flex;align-items:center;background:var(--panel-bg-strong);border:1px solid var(--panel-border);border-radius:6px}.schedule-time-entry:focus-within{border-color:#fb9966;box-shadow:0 0 0 2px #fb996633}.schedule-time-entry input{width:100%;min-width:0;border:0;background:transparent;outline:none}.schedule-inline-edit .schedule-time-toggle{flex:none;width:25px;height:25px;color:var(--text-secondary);background:transparent;border:0}.schedule-time-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;max-height:150px;margin-top:4px;padding:5px;overflow:auto;background:var(--panel-bg-strong);border:0;border-radius:7px;scrollbar-width:thin;scrollbar-color:#fb9966 transparent}.schedule-inline-edit .schedule-time-options button{width:100%;height:27px;color:var(--text-primary);background:transparent;border:0;font:inherit;font-size:11px}.schedule-inline-edit .schedule-time-options button:hover,.schedule-inline-edit .schedule-time-options button[aria-selected=true]{color:#813c1c;background:#ffe4d4}.schedule-time-options button[aria-selected=true]{box-shadow:inset 0 0 0 1px #fb9966}
+.schedule-time-picker{width:142px;max-width:100%}.schedule-time-entry{display:flex;align-items:center;background:var(--panel-bg-strong);border:1px solid var(--panel-border);border-radius:6px}.schedule-time-entry:focus-within{border-color:#fb9966;box-shadow:0 0 0 2px #fb996633}.schedule-time-entry input{width:100%;min-width:0;border:0;background:transparent;outline:none}.schedule-inline-edit .schedule-time-toggle{flex:none;width:25px;height:25px;color:var(--text-secondary);background:transparent;border:0}.schedule-time-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;max-height:150px;margin-top:4px;padding:5px;overflow:auto;background:var(--panel-bg-strong);border:0;border-radius:7px;scrollbar-width:thin;scrollbar-color:#fb9966 transparent}.schedule-inline-edit .schedule-time-options button{width:100%;height:27px;color:var(--text-primary);background:transparent;border:0;font:inherit;font-size:11px}.schedule-inline-edit .schedule-time-options button:hover,.schedule-inline-edit .schedule-time-options button[aria-selected=true]{color:#813c1c;background:#ffe4d4}
 
 .schedule-time-picker{position:relative}
 .schedule-time-options{position:absolute;z-index:40;top:100%;left:0;box-sizing:border-box;width:142px;grid-template-columns:1fr 10px 1fr;align-items:start;max-height:none;overflow:hidden;box-shadow:0 8px 24px #70361126;background:var(--panel-bg-strong,#fff)}
 .schedule-time-options.opens-above{top:auto;bottom:100%;margin-top:0;margin-bottom:4px}
 .schedule-time-column{position:relative;display:grid;gap:3px;max-height:150px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#fb9966 transparent}
 .time-colon{padding-top:6px;text-align:center;color:var(--text-secondary);font-weight:600}
+</style>
+
+<style scoped>
+.schedule-edit-hint{margin-top:8px!important;white-space:normal!important;font-size:10px!important;line-height:1.6}
+.save-task-edits{color:#4b856b;background:#ecf8f1;border:1px solid #bbdfca;border-radius:6px;cursor:pointer}.save-task-edits:disabled{opacity:.45;cursor:default}
+</style>
+
+<style scoped>
+.schedule-edit-actions{display:flex;justify-content:flex-end;margin-top:10px;padding-top:8px;border-top:1px solid var(--panel-border)}.schedule-edit-actions .save-task-edits{display:flex;align-items:center;justify-content:center;gap:5px;width:auto;min-height:30px;padding:0 10px;font:inherit;font-size:11px}.schedule-edit-actions .save-task-edits:not(:disabled):hover{color:#285d40;background:#d8efdf}.schedule-edit-actions .save-task-edits:focus-visible{outline:2px solid #fb9966;outline-offset:2px}
+</style>
+
+<style scoped>
+.assignment-status{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:3px 6px;border-radius:5px;color:#35627e;background:#e4f0f9;font-size:10px;font-weight:600;line-height:1.4}
+.assignment-status[data-status=running]{color:#8b522c;background:#fff0de}
+:global([data-theme='dark']) .assignment-status{color:#bbdff5;background:#304857}
+:global([data-theme='dark']) .assignment-status[data-status=running]{color:#f5d2a6;background:#58452e}
 </style>

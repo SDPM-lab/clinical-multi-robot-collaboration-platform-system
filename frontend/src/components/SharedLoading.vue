@@ -1,10 +1,12 @@
 <script setup>
-defineProps({ loading: Boolean, detail: { type: String, default: '準備資料中…' }, error: { type: String, default: '' }, errorTitle: { type: String, default: '載入失敗' } })
+import { t } from '@/i18n/index.js'
+
+defineProps({ loading: Boolean, detail: { type: String, default: '' }, error: { type: String, default: '' }, errorTitle: { type: String, default: '' } })
 </script>
 <template>
   <Transition name="shared-loading">
-    <div v-if="loading" class="scene-message" role="status" aria-live="polite"><span class="scene-spinner" aria-hidden="true"></span><strong>Loading...</strong><span>{{detail}}</span></div>
-    <div v-else-if="error" class="scene-message scene-message--error" role="alert"><strong>{{errorTitle}}</strong><span>{{error}}</span><slot name="error-action"/></div>
+    <div v-if="loading" class="scene-message" role="status" aria-live="polite"><span class="scene-spinner" aria-hidden="true"></span><strong>{{ t('common.loading') }}</strong><span>{{ detail || t('common.preparingData') }}</span></div>
+    <div v-else-if="error" class="scene-message scene-message--error" role="alert"><strong>{{ errorTitle || t('common.loadFailed') }}</strong><span>{{error}}</span><slot name="error-action"/></div>
   </Transition>
 </template>
 <style scoped>

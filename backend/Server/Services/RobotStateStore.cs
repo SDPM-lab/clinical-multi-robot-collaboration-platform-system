@@ -32,7 +32,19 @@ public class RobotStateStore
                 _ => "W03",
             };
             var robotType = index <= 2 ? "clean" : index <= 4 ? "medical" : "ward";
-            _registrations[rosName] = new(id, rosName, name, LevelName: "L1", RobotType: robotType);
+            var capabilities = robotType switch
+            {
+                "clean" => new[] { "waste_transport", "clothes_collection" },
+                "medical" => new[] { "specimen_delivery", "medication_delivery" },
+                _ => new[] { "medication_delivery", "ward_service" },
+            };
+            _registrations[rosName] = new(id, rosName, name,
+                LevelName: "L1",
+                RobotType: robotType,
+                Model: "agibot_g1",
+                Manufacturer: "Agibot",
+                DescriptionPackage: "agibot_g1_description",
+                Capabilities: capabilities);
             _robotNameMapping[rosName] = name;
             _knownRosNames[rosName] = true;
         }
@@ -41,7 +53,14 @@ public class RobotStateStore
     public void Update(string rosName, RobotDto dto)
     {
         dto.HasTelemetry = true;
-        if (_registrations.TryGetValue(rosName, out var profile)) dto.RobotType = profile.RobotType;
+        if (_registrations.TryGetValue(rosName, out var profile))
+        {
+            dto.RobotType = profile.RobotType;
+            dto.Model = profile.Model;
+            dto.Manufacturer = profile.Manufacturer;
+            dto.DescriptionPackage = profile.DescriptionPackage;
+            dto.Capabilities = profile.Capabilities ?? [];
+        }
         if (string.IsNullOrWhiteSpace(dto.LevelName) && _registrations.TryGetValue(rosName, out var registration))
             dto.LevelName = registration.LevelName;
         _robots.AddOrUpdate(rosName, dto, (_, _) => dto);
@@ -55,6 +74,10 @@ public class RobotStateStore
         return new RobotDto { Id = mapping.Id, RosName = rosName, Name = mapping.Name,
             Status = "離線", Signal = "未提供", HasTelemetry = false,
             RobotType = _registrations.TryGetValue(rosName, out var kind) ? kind.RobotType : "",
+            Model = _registrations.TryGetValue(rosName, out var model) ? model.Model : "",
+            Manufacturer = _registrations.TryGetValue(rosName, out var maker) ? maker.Manufacturer : "",
+            DescriptionPackage = _registrations.TryGetValue(rosName, out var description) ? description.DescriptionPackage : "",
+            Capabilities = _registrations.TryGetValue(rosName, out var capability) ? capability.Capabilities ?? [] : [],
             LevelName = _registrations.TryGetValue(rosName, out var registration) ? registration.LevelName : "" };
     }).OrderBy(robot => robot.Id, StringComparer.Ordinal).ToList();
 
@@ -89,7 +112,8 @@ public class RobotStateStore
         // F1 名冊目前固定七台，不能用確認端點意外新增第八台。
         if (!_registrations.TryGetValue(rosName, out var registration)) return false;
         _registrations[rosName] = new(GetMapping(rosName)?.Id ?? $"robot-{rosName}", rosName, displayName,
-            registration.LevelName, registration.RobotType);
+            registration.LevelName, registration.RobotType, registration.Model, registration.Manufacturer,
+            registration.DescriptionPackage, registration.Capabilities);
         _robotNameMapping[rosName] = displayName;
         _knownRosNames[rosName] = true;
         return true;
@@ -109,6 +133,9 @@ public class RobotDto
     public string RosName { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Model { get; set; } = string.Empty;
+    public string Manufacturer { get; set; } = string.Empty;
+    public string DescriptionPackage { get; set; } = string.Empty;
+    public string[] Capabilities { get; set; } = [];
     public string RobotType { get; set; } = string.Empty;
     public string Status { get; set; } = "待命";
     public int Battery { get; set; }

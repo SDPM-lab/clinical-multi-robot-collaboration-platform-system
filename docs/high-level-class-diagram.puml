@@ -1,0 +1,338 @@
+@startuml
+title 圖 6 高階類別圖\nHigh-Level Class Diagram（現有模型與 PPO 規劃）
+left to right direction
+skinparam backgroundColor White
+skinparam shadowing false
+skinparam defaultFontName "Microsoft JhengHei"
+skinparam defaultFontSize 12
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam ArrowColor #657181
+skinparam ClassBorderColor #8493A2
+hide empty members
+
+package "Web Management System / Vue 3" #FCEBDD {
+  class LoginView <<Vue component>>
+  class TaskDispatchView <<Vue component>>
+  class RobotFleetView <<Vue component>>
+  class ScheduleHistoryView <<Vue component>>
+}
+
+package "Server.Models / ASP.NET Core" #E8EAFB {
+  enum RobotCapability {
+    WasteTransport
+    ClothesCollection
+    MedicationDelivery
+    SpecimenDelivery
+    WardService
+  }
+  class RobotPosition {
+    +X : double
+    +Y : double
+    +Map : string
+  }
+  enum RobotStatus {
+    Idle
+    Busy
+    Charging
+    Error
+    Offline
+  }
+  class RobotTask {
+    +Id : string
+    +TaskCode : string
+    +TaskType : TaskType
+    +Source : string
+    +Destination : string
+    +Priority : TaskPriority
+    +RequiredCapabilities : List<RobotCapability>
+    +Status : RobotTaskStatus
+    +RequestedRobotId : string?
+    +AssignedRobot : string?
+    +ScheduledAt : DateTimeOffset?
+    +StartedAt : DateTimeOffset?
+    +FinishedAt : DateTimeOffset?
+    +Note : string?
+    +Dispatched : bool {internal set; JsonIgnore}
+    +CreatedAt : DateTime
+  }
+  enum RobotTaskStatus {
+    Pending
+    Assigned
+    Running
+    Completed
+    Failed
+    Cancelled
+  }
+  enum TaskPriority {
+    Low = 0
+    Normal = 1
+    High = 2
+    Emergency = 3
+  }
+  enum TaskType {
+    WasteTransport
+    ClothesCollection
+    MedicationDelivery
+    SpecimenDelivery
+    WardService
+  }
+  class UserAccount <<record>> {
+    +Id : string
+    +Email : string
+    +Name : string
+    +PasswordHash : string
+    +CreatedAt : DateTimeOffset
+    +AvatarUrl : string?
+  }
+  class UserProfile <<record>> {
+    +Id : string
+    +Email : string
+    +Name : string
+    +AvatarUrl : string?
+  }
+  RobotTask --> TaskType
+  RobotTask --> TaskPriority
+  RobotTask --> RobotTaskStatus
+  RobotTask --> "0..*" RobotCapability : RequiredCapabilities
+}
+
+package "Server.Services / Services.Tasks / Services.Auth" #E4F2EB {
+  interface ITaskService {
+    +GetTasksAsync()
+    +GetActiveTasksByRobotAsync()
+    +GetTaskByIdAsync(taskId)
+    +CreateTaskAsync(request)
+    +DeleteTaskAsync(taskId)
+    +UpdateTaskScheduleAsync(taskId, request)
+    +UpdateTaskPriorityAsync(taskId, request)
+    +UpdateTaskDispatchAsync(taskId, assigned, robotId)
+    +UpdateTaskStatusAsync(taskId, status, startedAt, finishedAt, robotId)
+  }
+  class TaskService {
+    ~DispatchDueTasksAsync(cancellationToken)
+  }
+  class TaskStore <<in-memory>> {
+    +GetAll()
+    +TryGet(id, out task)
+    +Add(task)
+    +Remove(id)
+    +NextTaskCode()
+  }
+  class TaskScheduleWorker <<BackgroundService>> {
+    #ExecuteAsync(stoppingToken)
+  }
+  class RosTaskClient {
+    +SendAsync(task)
+  }
+  class RosTaskStatusHandler {
+    +HandleAsync(message)
+    +HandleDispatchAsync(message)
+  }
+  class RosBridgeTestService <<BackgroundService>> {
+    +Connect(url)
+    +Disconnect()
+    #ExecuteAsync(stoppingToken)
+  }
+  class RobotStateStore <<in-memory>> {
+    +RosBridgeUrl : string
+    +ConnectionStatus : string
+    +FailMessage : string
+    +RetryCount : int
+    +Update(rosName, dto)
+    +GetAll()
+    +GetMapping(rosName)
+    +GetAllMappings()
+    +GetPendingRobots()
+    +ConfirmRobot(rosName, displayName)
+    +ClearRobots()
+  }
+  class RobotDto <<DTO>> {
+    +Id : string
+    +RosName : string
+    +Name : string
+    +Model : string
+    +Status : string
+    +Battery : int
+    +CurrentTask : string
+    +Location : string
+    +X : double
+    +Y : double
+    +Yaw : double
+    +LevelName : string
+    +Signal : string
+    +Uptime : string
+    +CompletedToday : int
+    +ConnectionIp : string
+    +Firmware : string
+    +Mode : int
+    +ModeText : string
+    +LastUpdate : DateTimeOffset
+    +CurrentTaskDetail : RobotTaskDetailDto
+  }
+  class RobotTaskDetailDto <<DTO>> {
+    +TaskNo : string
+    +Title : string
+    +Progress : int
+    +Step : string
+    +StartedAt : string
+    +Eta : string
+    +Payload : string
+  }
+  class AccountStore <<local JSON>> {
+    +FindByIdAsync(id)
+    +RegisterAsync(email, name, password)
+    +ValidateAsync(email, password)
+    +GetOrCreateDevelopmentAccountAsync()
+    +UpdateProfileAsync(id, name, avatarUrl)
+    {static} +Profile(account)
+  }
+  TaskService ..|> ITaskService
+  TaskService --> TaskStore
+  TaskService --> RosTaskClient
+  TaskStore o-- "0..*" RobotTask : stores
+  TaskScheduleWorker ..> TaskService : DispatchDueTasksAsync
+  RosTaskClient ..> RobotTask : sends via HTTP
+  RosBridgeTestService --> RobotStateStore : updates
+  RosBridgeTestService ..> RosTaskStatusHandler : resolves via scope
+  RosTaskStatusHandler --> ITaskService : updates dispatch / task status
+  RosTaskStatusHandler --> RobotStateStore : maps ROS names
+  RobotStateStore o-- "0..*" RobotDto : stores
+  RobotDto --> "1" RobotTaskDetailDto : CurrentTaskDetail
+  AccountStore ..> UserAccount : stores / validates
+  AccountStore ..> UserProfile : maps public profile
+}
+
+package "Server.Controllers" #FCEBDD {
+  class AuthController
+  class TaskController
+  class RobotController
+  class RobotInfoController
+  AuthController --> AccountStore
+  TaskController --> ITaskService
+  RobotController --> RobotStateStore
+  RobotController --> RosBridgeTestService
+  RobotController --> ITaskService
+  RobotInfoController --> RobotStateStore
+}
+LoginView ..> AuthController : HTTP REST API
+TaskDispatchView ..> TaskController : HTTP REST API / SSE
+ScheduleHistoryView ..> TaskController : HTTP REST API
+RobotFleetView ..> RobotController : HTTP REST API
+
+note bottom of RobotTask
+  RequestedRobotId 為偏好機器人；AssignedRobot 為確認分配結果。
+  Dispatched 為內部派送旗標，不輸出至 JSON。
+  模型本身未定義 updateStatus()，狀態更新由 TaskService 處理。
+end note
+note bottom of RobotDto
+  實際機器人即時資料使用 RobotDto（位於 Services）。
+  Status 為 string，未使用 Models.RobotStatus。
+  座標為 X / Y / Yaw，未引用 Models.RobotPosition。
+end note
+note bottom of TaskStore
+  任務目前僅保存在記憶體；帳號由 AccountStore 保存至 accounts.json。
+  PostgreSQL 為預定持久化方案。
+  PPO 訓練／評估與智慧排程保留原設計，屬於規劃內容。
+  TaskScheduleWorker 負責到期派送檢查，並非 PPO 排程器。
+end note
+note bottom of TaskController
+  AbortTask 目前直接更新後端任務狀態為 Cancelled，
+  尚未透過 RosTaskClient 傳送 ROS 取消請求。
+  圖中省略 Request DTO、結果 enum 與一般基礎設施類別。
+end note
+
+package "Intelligent Scheduling / PPO（規劃）" #E8EAFB {
+  class FeasibilityChecker <<planned>> {
+    +checkTaskRequirements()
+    +getFeasibleRobots()
+  }
+
+  class SchedulingService <<planned>> {
+    +requestScheduling()
+    +selectSchedulingMethod()
+    +getDispatchDecision()
+  }
+
+  class DispatchDecision <<planned>> {
+    -decisionId : String
+    -taskId : String
+    -assignedRobotId : String
+    -schedulingMethod : String
+    -decisionTime : DateTime
+  }
+
+  class DispatchService <<planned>> {
+    +dispatchTask()
+    +requestTaskCancellation()
+    +handleDispatchResult()
+  }
+  SchedulingService --> FeasibilityChecker : checks
+  FeasibilityChecker ..> RobotDto : evaluates robot state
+  FeasibilityChecker ..> RobotCapability : matches requirements
+  FeasibilityChecker ..> RobotTask : checks requirements
+  SchedulingService --> DispatchDecision : produces
+  DispatchDecision ..> RobotDto : selects by assignedRobotId
+  DispatchDecision ..> RobotTask : assigned for taskId
+  SchedulingService --> DispatchService : submits decision
+  DispatchService ..> RosTaskClient : planned ROS dispatch integration
+}
+TaskService ..> SchedulingService : planned scheduling request
+SchedulingService ..> ModelArtifact : loads PPO weights (planned)
+
+package "PPO Model Training & Evaluation" #E4F2EB {
+
+  class PPOTrainingService {
+    +trainModel()
+    +evaluateModel()
+    +saveModel()
+  }
+
+  class TrainingEnvironment {
+    +reset()
+    +step()
+    +calculateReward()
+  }
+
+  class WorkloadDataset {
+    -datasetId : String
+    -scenarioName : String
+    -robotConfiguration : String
+    -taskConfiguration : String
+  }
+
+  class ModelArtifact {
+    -modelId : String
+    -version : String
+    -filePath : String
+    -createdTime : DateTime
+  }
+
+  class SchedulingEvaluator {
+    +evaluatePPO()
+    +evaluateBaselines()
+    +compareResults()
+  }
+
+  class EvaluationResult {
+    -experimentId : String
+    -schedulingMethod : String
+    -completionRate : float
+    -averageWaitingTime : float
+    -totalReward : float
+  }
+
+  PPOTrainingService --> TrainingEnvironment : interacts with
+  TrainingEnvironment --> WorkloadDataset : uses
+  PPOTrainingService --> ModelArtifact : saves
+
+  SchedulingEvaluator --> WorkloadDataset : uses
+  SchedulingEvaluator --> EvaluationResult : generates
+  SchedulingEvaluator --> ModelArtifact : evaluates
+}
+
+note bottom of ModelArtifact
+  PPO 訓練與評估區塊保留原設計，尚未對應目前實作。
+  PPO 權重儲存於 Model Storage；PostgreSQL 可記錄版本與檔案路徑。
+end note
+@enduml
