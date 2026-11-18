@@ -10,6 +10,9 @@
     </plugin>
     <plugin filename="libgz-sim-scene-broadcaster-system.so" name="gz::sim::systems::SceneBroadcaster">
     </plugin>
+    <plugin filename="libgz-sim-sensors-system.so" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
     <plugin filename="libdoor.so" name="door">
     </plugin>
     <plugin filename="liblift.so" name="lift">
@@ -1249,16 +1252,16 @@
         </axis>
         <pose>0.6208791781150834 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="ward_a_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="main_entrance">
@@ -1430,16 +1433,16 @@
         </axis>
         <pose>0.6146243355212292 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="ward_b_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="lab_door">
@@ -1495,16 +1498,16 @@
         </axis>
         <pose>0.5879402349016967 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="lab_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="pharmacy_door">
@@ -1560,16 +1563,16 @@
         </axis>
         <pose>0.5884285441659257 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="pharmacy_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="ultrasound_door">
@@ -1625,16 +1628,16 @@
         </axis>
         <pose>0.6062178898254986 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="ultrasound_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="ecg_door">
@@ -1690,16 +1693,16 @@
         </axis>
         <pose>0.6122004932647573 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="ecg_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="therapy_room_door">
@@ -1755,16 +1758,16 @@
         </axis>
         <pose>0.6374572211289458 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="therapy_room_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="consult_1_door">
@@ -1820,16 +1823,16 @@
         </axis>
         <pose>0.6137099011688051 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="consult_1_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="consult_2_door">
@@ -1885,16 +1888,16 @@
         </axis>
         <pose>0.5946559020386981 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="consult_2_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="ward_c_door">
@@ -1950,16 +1953,16 @@
         </axis>
         <pose>0.6092881552528902 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="ward_c_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="Pantry_room">
@@ -2015,16 +2018,16 @@
         </axis>
         <pose>0.6325305384933504 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="Pantry_room" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="clothes_return_door">
@@ -2080,16 +2083,16 @@
         </axis>
         <pose>0.5022801110087083 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="clothes_return_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="charging_station_door">
@@ -2145,16 +2148,16 @@
         </axis>
         <pose>0.5890654681289857 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="charging_station_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="waste_return_door">
@@ -2210,16 +2213,16 @@
         </axis>
         <pose>0.5518509234998512 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="waste_return_door" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_men">
@@ -2275,16 +2278,16 @@
         </axis>
         <pose>0.590424749433085 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_men" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_women">
@@ -2340,16 +2343,16 @@
         </axis>
         <pose>0.42054572799640183 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_women" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_men_1">
@@ -2405,16 +2408,16 @@
         </axis>
         <pose>0.553505491663459 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_men_1" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_men_2">
@@ -2470,16 +2473,16 @@
         </axis>
         <pose>0.524731271628374 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_men_2" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_men_3">
@@ -2535,16 +2538,16 @@
         </axis>
         <pose>0.5418586923851577 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_men_3" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_men_4">
@@ -2600,16 +2603,16 @@
         </axis>
         <pose>0.5469042610079301 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_men_4" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_women_1">
@@ -2665,16 +2668,16 @@
         </axis>
         <pose>0.5799489608235189 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_women_1" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_women_2">
@@ -2730,16 +2733,16 @@
         </axis>
         <pose>0.5645416482573886 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_women_2" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_women_3">
@@ -2795,16 +2798,16 @@
         </axis>
         <pose>0.5469291638526474 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_women_3" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <model name="restroom_women_4">
@@ -2860,16 +2863,16 @@
         </axis>
         <pose>0.4747504229590897 0 0 0 0 0</pose>
       </joint>
-      <plugin name="register_component" filename="libregister_component.so">
-        <component name="Door">
-          <v_max_door>0.5</v_max_door>
-          <a_max_door>0.3</a_max_door>
-          <a_nom_door>0.15</a_nom_door>
-          <dx_min_door>0.01</dx_min_door>
-          <f_max_door>500.0</f_max_door>
-          <ros_interface>true</ros_interface>
-          <door name="restroom_women_4" type="SwingDoor" left_joint_name="empty_joint" right_joint_name="right_joint" />
-        </component>
+      <plugin
+        filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_joint</joint_name>
+        <initial_position>1.57</initial_position>
+        <p_gain>10.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.5</d_gain>
+        <cmd_max>1000</cmd_max>
+        <cmd_min>-1000</cmd_min>
       </plugin>
     </model>
     <include>

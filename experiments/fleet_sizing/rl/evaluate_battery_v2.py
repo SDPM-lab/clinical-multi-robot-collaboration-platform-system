@@ -630,12 +630,27 @@ def evaluate_model(
     *,
     model_path: Path,
     model_name: str,
+    validation_seeds: tuple[int, ...] | None = None,
 ) -> list[
     dict[
         str,
         float | int | str,
     ]
 ]:
+
+    seeds = (
+        VALIDATION_SEEDS
+        if validation_seeds is None
+        else tuple(
+            int(seed)
+            for seed in validation_seeds
+        )
+    )
+
+    if not seeds:
+        raise ValueError(
+            "validation_seeds cannot be empty"
+        )
 
     print()
     print(
@@ -654,8 +669,8 @@ def evaluate_model(
 
     print(
         "Seeds:",
-        f"{VALIDATION_SEEDS[0]}"
-        f"–{VALIDATION_SEEDS[-1]}",
+        f"{seeds[0]}"
+        f"–{seeds[-1]}",
     )
 
     print(
@@ -674,7 +689,7 @@ def evaluate_model(
     rows = []
 
     for seed in (
-        VALIDATION_SEEDS
+        seeds
     ):
 
         metrics = (

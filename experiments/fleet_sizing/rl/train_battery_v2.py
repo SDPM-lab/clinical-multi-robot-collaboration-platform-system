@@ -107,6 +107,7 @@ METADATA_DIR = (
 def make_training_env(
     *,
     reward_config: RewardConfig,
+    observation_approach_scale_s: float,
 ) -> HospitalSchedulingEnv:
 
     return (
@@ -134,6 +135,10 @@ def make_training_env(
             reward_config=(
                 reward_config
             ),
+
+            observation_approach_scale_s=(
+                observation_approach_scale_s
+            ),
         )
     )
 
@@ -148,6 +153,7 @@ def build_metadata(
     model_path: Path,
     model_seed: int,
     reward_config: RewardConfig,
+    observation_approach_scale_s: float,
 ) -> dict:
 
     return {
@@ -203,6 +209,9 @@ def build_metadata(
 
         "ppo_config":
         PPO_CONFIG,
+
+        "observation_approach_scale_s":
+        observation_approach_scale_s,
 
         "reward_config": {
             "approach_weight":
@@ -266,6 +275,7 @@ def train(
     checkpoint_frequency: int,
     model_seed: int,
     reward_config: RewardConfig,
+    observation_approach_scale_s: float,
 ) -> Path:
 
     if (
@@ -323,6 +333,10 @@ def train(
         make_training_env(
             reward_config=(
                 reward_config
+            ),
+
+            observation_approach_scale_s=(
+                observation_approach_scale_s
             ),
         )
     )
@@ -562,6 +576,10 @@ def train(
             reward_config=(
                 reward_config
             ),
+
+            observation_approach_scale_s=(
+                observation_approach_scale_s
+            ),
         )
     )
 
@@ -716,6 +734,43 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--approach-scale-s",
+        type=float,
+        default=(
+            DEFAULT_REWARD_CONFIG
+            .approach_scale_s
+        ),
+        help=(
+            "Normalization scale in seconds "
+            "for projected approach time."
+        ),
+    )
+
+    parser.add_argument(
+        "--observation-approach-scale-s",
+        type=float,
+        default=600.0,
+        help=(
+            "Normalization scale in seconds "
+            "for projected approach time "
+            "in the observation only."
+        ),
+    )
+
+    parser.add_argument(
+        "--waiting-scale-s",
+        type=float,
+        default=(
+            DEFAULT_REWARD_CONFIG
+            .waiting_scale_s
+        ),
+        help=(
+            "Normalization scale in seconds "
+            "for realized waiting time."
+        ),
+    )
+
+    parser.add_argument(
         "--checkpoint-frequency",
         type=int,
         default=(
@@ -767,6 +822,25 @@ def main():
             f"got {reward_weight_sum:.6f}"
         )
 
+    if args.approach_scale_s <= 0.0:
+        raise ValueError(
+            "approach-scale-s must be > 0"
+        )
+
+    if (
+        args.observation_approach_scale_s
+        <= 0.0
+    ):
+        raise ValueError(
+            "observation-approach-scale-s "
+            "must be > 0"
+        )
+
+    if args.waiting_scale_s <= 0.0:
+        raise ValueError(
+            "waiting-scale-s must be > 0"
+        )
+
     reward_config = RewardConfig(
         approach_weight=(
             args.approach_weight
@@ -782,6 +856,14 @@ def main():
 
         waiting_weight=(
             args.waiting_weight
+        ),
+
+        approach_scale_s=(
+            args.approach_scale_s
+        ),
+
+        waiting_scale_s=(
+            args.waiting_scale_s
         ),
     )
 
@@ -804,6 +886,10 @@ def main():
 
         reward_config=(
             reward_config
+        ),
+
+        observation_approach_scale_s=(
+            args.observation_approach_scale_s
         ),
     )
 

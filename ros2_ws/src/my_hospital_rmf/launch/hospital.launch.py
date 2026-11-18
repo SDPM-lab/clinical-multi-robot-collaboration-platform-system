@@ -8,7 +8,7 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node, LifecycleNode
 from ament_index_python.packages import get_package_prefix, get_package_share_directory
@@ -46,17 +46,35 @@ def generate_launch_description():
         "launch_gazebo", default_value="true",
         description="是否啟動 Gz Sim 模擬器"
     )
+
+    launch_gazebo_gui_arg = DeclareLaunchArgument(
+        "launch_gazebo_gui",
+        default_value="true",
+        description="是否啟動 Gazebo GUI；false 時使用 server-only 模式"
+    )
     launch_rviz_arg = DeclareLaunchArgument(
         "launch_rviz", default_value="true",
         description="是否啟動 RViz2"
     )
+
+    robots_arg = DeclareLaunchArgument(
+        "robots",
+        default_value="all",
+        description=(
+            "Number of enabled G1 robots to launch; "
+            "use 'all' for the full fleet"
+        ),
+    )
+
     use_sim_time = LaunchConfiguration("use_sim_time")
     server_uri   = LaunchConfiguration("server_uri")
     launch_gazebo = LaunchConfiguration("launch_gazebo")
+    launch_gazebo_gui = LaunchConfiguration("launch_gazebo_gui")
     launch_rviz   = LaunchConfiguration("launch_rviz")
+    robots        = LaunchConfiguration("robots")
 
     # ── Gz Sim（Gazebo Harmonic）────────────────────────────────
-    gz_sim = ExecuteProcess(
+    gz_sim_gui = ExecuteProcess(
         cmd=["gz", "sim", "-r", world_file, "--verbose"],
         additional_env={
             # Keep model paths inherited from the shell (including the source
@@ -67,9 +85,31 @@ def generate_launch_description():
             ]))
         },
         output="screen",
-        condition=IfCondition(launch_gazebo),
-        # Let the Gazebo Ruby wrapper stop its GUI and server children in order.
-        # ROS launch escalates only if graceful shutdown does not finish in time.
+        condition=IfCondition(
+            PythonExpression([
+                "'", launch_gazebo, "' == 'true' and '",
+                launch_gazebo_gui, "' == 'true'"
+            ])
+        ),
+        sigterm_timeout="10.0",
+        sigkill_timeout="5.0",
+    )
+
+    gz_sim_server = ExecuteProcess(
+        cmd=["gz", "sim", "-s", "-r", world_file, "--verbose"],
+        additional_env={
+            "GZ_SIM_RESOURCE_PATH": os.pathsep.join(filter(None, [
+                os.path.join(pkg, "models"),
+                os.environ.get("GZ_SIM_RESOURCE_PATH", ""),
+            ]))
+        },
+        output="screen",
+        condition=IfCondition(
+            PythonExpression([
+                "'", launch_gazebo, "' == 'true' and '",
+                launch_gazebo_gui, "' == 'false'"
+            ])
+        ),
         sigterm_timeout="10.0",
         sigkill_timeout="5.0",
     )
@@ -114,6 +154,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             "start_world": "false",
+            "robots": robots,
         }.items(),
         condition=IfCondition(launch_gazebo),
     )
@@ -301,11 +342,26 @@ def generate_launch_description():
 
     # ── Gazebo 關閉後清理 runtime logs ───────────────────────────
     # 不額外 pkill；避免和 gz sim 自己的 GUI → Server 關閉流程競爭。
-    gazebo_exit_cleanup = RegisterEventHandler(
+    gazebo_gui_exit_cleanup = RegisterEventHandler(
         OnProcessExit(
-            target_action=gz_sim,
+            target_action=gz_sim_gui,
             on_exit=[
-                ExecuteProcess(cmd=[cleanup_executable], output="screen"),
+                ExecuteProcess(
+                    cmd=[cleanup_executable],
+                    output="screen",
+                ),
+            ],
+        )
+    )
+
+    gazebo_server_exit_cleanup = RegisterEventHandler(
+        OnProcessExit(
+            target_action=gz_sim_server,
+            on_exit=[
+                ExecuteProcess(
+                    cmd=[cleanup_executable],
+                    output="screen",
+                ),
             ],
         )
     )
@@ -318,8 +374,11 @@ def generate_launch_description():
         use_sim_time_arg,
         server_uri_arg,
         launch_gazebo_arg,
+        launch_gazebo_gui_arg,
         launch_rviz_arg,
-        gz_sim,
+        robots_arg,
+        gz_sim_gui,
+        gz_sim_server,
         clock_bridge,
         lidar_bridge,
         g1_fleet_delayed,
@@ -344,5 +403,6 @@ def generate_launch_description():
         lifecycle_manager,
         rosbridge,
         # gz sim 完全退出後才清理 runtime logs
-        gazebo_exit_cleanup,
+        gazebo_gui_exit_cleanup,
+        gazebo_server_exit_cleanup,
     ])

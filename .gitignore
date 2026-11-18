@@ -120,3 +120,20 @@ experiments/fleet_sizing/results_rl/**/paired_bootstrap_results.csv
 /ros2_ws/batch_route_results.csv
 /ros2_ws/batch_route_summary.csv
 /ros2_ws/route_travel_times.csv
+
+# Keep final representative PPO models
+!experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/
+!experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip
+
+!experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k/
+!experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip
+
+# Allow only the two final representative PPO models
+!experiments/fleet_sizing/results_rl/models/
+experiments/fleet_sizing/results_rl/models/*
+
+!experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/
+!experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip
+
+!experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k/
+!experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip

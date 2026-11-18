@@ -265,13 +265,16 @@ class HospitalG1NavigationBridge(Node):
                 10,
             )
 
-            self.cmd_publishers[
-                robot_id
-            ] = self.create_publisher(
-                Twist,
-                cmd_topic,
-                10,
-            )
+            # robot1 is controlled by Nav2 MPPI during the PoC.
+            # Keep the legacy bridge control for robot2~7.
+            if robot_id != "hospital_robot_1":
+                self.cmd_publishers[
+                    robot_id
+                ] = self.create_publisher(
+                    Twist,
+                    cmd_topic,
+                    10,
+                )
 
             self.get_logger().info(
                 f"{robot_id}: "
@@ -505,9 +508,14 @@ class HospitalG1NavigationBridge(Node):
             angular
         )
 
-        self.cmd_publishers[
+        pub = self.cmd_publishers.get(
             robot_id
-        ].publish(msg)
+        )
+
+        if pub is None:
+            return
+
+        pub.publish(msg)
 
     def find_robot_conflict(
         self,
@@ -688,6 +696,169 @@ class HospitalG1NavigationBridge(Node):
             )
 
             return
+
+        # ----------------------------------------------------
+        # STATIONARY ROBOT WAIT
+        #
+        # 前方 robot 沒有正在導航時，
+        # 先短暫等待，避免只是暫時停頓就立刻繞行。
+        #
+        # 若持續阻擋約 1 秒，轉入既有 generic
+        # turn -> bypass -> recover 流程。
+        # ----------------------------------------------------
+
+        if robot.avoidance_state == "stationary_wait":
+
+            other = self.robots.get(
+                robot.stationary_robot_id
+            )
+
+            # 對方消失、沒有 pose，或已經開始移動：
+            # 回到 normal，下一個 control cycle
+            # 重新判斷交通狀況。
+            if (
+                other is None
+                or not other.received_odom
+                or other.navigating()
+            ):
+                robot.avoidance_state = "normal"
+                robot.stationary_robot_id = None
+                robot.stationary_wait_ticks = 0
+
+                self.stop_robot(
+                    robot.robot_id
+                )
+
+                return
+
+            (
+                other_x,
+                other_y,
+                _,
+            ) = other.map_pose()
+
+            other_distance = math.hypot(
+                other_x - x,
+                other_y - y,
+            )
+
+            # 已經不再阻擋
+            if other_distance >= ROBOT_RESUME_DISTANCE:
+                robot.avoidance_state = "normal"
+                robot.stationary_robot_id = None
+                robot.stationary_wait_ticks = 0
+
+                self.stop_robot(
+                    robot.robot_id
+                )
+
+                return
+
+            robot.stationary_wait_ticks += 1
+
+            # CONTROL_PERIOD = 0.1，
+            # 10 ticks 約等於 1 秒。
+            if robot.stationary_wait_ticks < 10:
+                self.stop_robot(
+                    robot.robot_id
+                )
+                return
+
+            # 確認對方持續靜止且仍在前方：
+            #
+            # 不使用 generic turn/bypass。
+            # 改用既有的 lane-based passing：
+            #
+            # head_on_turn
+            # -> head_on_shift
+            # -> head_on_parallel_turn
+            # -> head_on_parallel
+            # -> head_on_return_turn
+            # -> head_on_return
+            # -> recover
+            #
+            # 雖然 state 名稱叫 head_on，
+            # 這裡實際上是重用它的幾何錯車流程。
+
+            robot.head_on_robot_id = (
+                other.robot_id
+            )
+
+            # 優先使用 RMF segment 本身的方向，
+            # 不直接使用 robot 當下可能已有誤差的 yaw。
+            if (
+                robot.segment_anchor_x is not None
+                and
+                robot.segment_anchor_y is not None
+            ):
+                lane_dx = (
+                    float(target.x)
+                    - robot.segment_anchor_x
+                )
+
+                lane_dy = (
+                    float(target.y)
+                    - robot.segment_anchor_y
+                )
+
+                lane_length = math.hypot(
+                    lane_dx,
+                    lane_dy,
+                )
+
+                if lane_length > 1.0e-6:
+                    lane_yaw = math.atan2(
+                        lane_dy,
+                        lane_dx,
+                    )
+                else:
+                    lane_yaw = yaw
+
+                robot.head_on_lane_anchor_x = (
+                    robot.segment_anchor_x
+                )
+
+                robot.head_on_lane_anchor_y = (
+                    robot.segment_anchor_y
+                )
+
+            else:
+                lane_yaw = yaw
+
+                robot.head_on_lane_anchor_x = x
+                robot.head_on_lane_anchor_y = y
+
+            robot.head_on_original_yaw = lane_yaw
+
+            # 與既有 head-on 規則一致：
+            # 先往自己的右側偏移。
+            robot.avoidance_target_yaw = (
+                normalize_angle(
+                    lane_yaw
+                    - HEAD_ON_TURN_ANGLE
+                )
+            )
+
+            robot.stationary_robot_id = None
+            robot.stationary_wait_ticks = 0
+
+            robot.avoidance_state = (
+                "head_on_turn"
+            )
+
+            self.get_logger().warning(
+                f"[STATIONARY] {robot.robot_id} "
+                f"blocked by {other.robot_id} "
+                f"distance={other_distance:.2f}m "
+                f"-> lane-based pass"
+            )
+
+            self.stop_robot(
+                robot.robot_id
+            )
+
+            return
+
 
         # ----------------------------------------------------
         # HEAD-ON TURN
@@ -1456,6 +1627,39 @@ class HospitalG1NavigationBridge(Node):
             if conflict_robot is not None:
 
                 # ====================================================
+                # Case 0:
+                # 前方是靜止 robot
+                #
+                # 不使用 robot ID yield，
+                # 先進 stationary_wait。
+                # ====================================================
+
+                if not conflict_robot.navigating():
+                    robot.avoidance_state = (
+                        "stationary_wait"
+                    )
+
+                    robot.stationary_robot_id = (
+                        conflict_robot.robot_id
+                    )
+
+                    robot.stationary_wait_ticks = 0
+
+                    self.get_logger().warning(
+                        f"[STATIONARY] "
+                        f"{robot.robot_id} "
+                        f"blocked by "
+                        f"{conflict_robot.robot_id} "
+                        f"-> wait"
+                    )
+
+                    self.stop_robot(
+                        robot.robot_id
+                    )
+
+                    return
+
+                # ====================================================
                 # Case 1:
                 # 兩台正面相遇
                 #
@@ -1514,7 +1718,11 @@ class HospitalG1NavigationBridge(Node):
                 # Case 2:
                 # 不是正面相遇
                 #
-                # 維持原本 deterministic YIELD。
+                # 如果對方是靜止 robot，
+                # 目前正在移動的 robot 一律停車讓路。
+                #
+                # 如果雙方都正在導航，
+                # 才使用原本 deterministic YIELD。
                 # ====================================================
 
                 current_number = int(
@@ -1666,6 +1874,14 @@ class HospitalG1NavigationBridge(Node):
                 distance,
                 yaw,
                 is_last,
+                robot_x=x,
+                robot_y=y,
+                segment_anchor_x=(
+                    robot.segment_anchor_x
+                ),
+                segment_anchor_y=(
+                    robot.segment_anchor_y
+                ),
             )
         )
 

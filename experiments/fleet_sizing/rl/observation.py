@@ -357,6 +357,9 @@ class ObservationEncoder:
         layout: ObservationLayout = (
             DEFAULT_LAYOUT
         ),
+        approach_time_scale_s: float = (
+            APPROACH_TIME_SCALE_S
+        ),
     ) -> None:
 
         self.robot_ids = tuple(
@@ -364,6 +367,15 @@ class ObservationEncoder:
         )
 
         self.layout = layout
+
+        self.approach_time_scale_s = float(
+            approach_time_scale_s
+        )
+
+        if self.approach_time_scale_s <= 0.0:
+            raise ValueError(
+                "approach_time_scale_s must be > 0"
+            )
 
         if (
             len(
@@ -592,7 +604,7 @@ class ObservationEncoder:
                         evaluation
                         .projected_approach_time_s,
 
-                        APPROACH_TIME_SCALE_S,
+                        self.approach_time_scale_s,
                     )
                 )
 

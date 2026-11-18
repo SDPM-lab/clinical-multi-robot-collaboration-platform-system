@@ -37,9 +37,6 @@ def find_robot_conflict(
         if not other.received_odom:
             continue
 
-        if not other.navigating():
-            continue
-
         (
             other_x,
             other_y,

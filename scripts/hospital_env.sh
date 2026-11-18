@@ -9,7 +9,10 @@ source "$ROS_WS/install/setup.bash"
 export ROS_DOMAIN_ID=22
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
-export CYCLONEDDS_URI='<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery></Domain></CycloneDDS>'
+export CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery></Domain></CycloneDDS>'
+
+# Keep Gazebo Transport on the local machine.
+export GZ_IP=127.0.0.1
 
 export GZ_SIM_RESOURCE_PATH="$ROS_WS/src/my_hospital_rmf/models:$GZ_SIM_RESOURCE_PATH"
 

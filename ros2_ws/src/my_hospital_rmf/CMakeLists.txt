@@ -39,6 +39,9 @@ install(PROGRAMS scripts/hospital_robot_registry.py
 install(PROGRAMS scripts/hospital_g1_navigation_bridge.py
   DESTINATION lib/${PROJECT_NAME} RENAME hospital_g1_navigation_bridge)
 
+install(PROGRAMS scripts/record_nav2_alignment.py
+  DESTINATION lib/${PROJECT_NAME} RENAME record_nav2_alignment)
+
 install(
   DIRECTORY scripts/navigation
   DESTINATION lib/${PROJECT_NAME}
