@@ -7,6 +7,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import SharedLoading from '@/components/SharedLoading.vue'
+import { webglProfile } from '@/three/webglProfile.js'
 import { clinicOverviewModelUrl } from '@/data/clinicOverviewData.js'
 import { applyOverviewArchitecturalMaterials, enhanceOverviewModelSaturation } from '@/three/overviewArchitecturalMaterials.js'
 import { captureOverviewOriginalState, restoreOverviewOriginalState } from '@/three/overviewOriginalState.js'
@@ -18,6 +19,7 @@ import {
   modelLoadPercentage,
 } from '@/three/clinicFloorMapping.js'
 import { cloneDefaultOverviewModelPreset } from '@/three/clinicOverviewPresets.js'
+import { locale, t } from '@/i18n/index.js'
 
 const props = defineProps({
   activeFloor: { type: [String, Number], default: 'all' },
@@ -34,6 +36,18 @@ const host = ref(null)
 const hospitalMarker = ref(null)
 const loading = ref(true)
 const loadError = ref(false)
+const graphicsError = ref(false)
+const renderProfile = webglProfile()
+let disposed = false
+const failGraphics = error => {
+  if (disposed || graphicsError.value) return
+  graphicsError.value = true
+  loading.value = false
+  cancelAnimationFrame(frameId)
+  console.error('Overview WebGL rendering stopped:', error)
+}
+const onContextLost = event => { event.preventDefault(); failGraphics(new Error('WebGL context lost')) }
+const retryScene = () => { if (graphicsError.value) window.location.reload(); else loadModel() }
 const modelProgress = ref(0)
 const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')
 const resources = { geometries: new Set(), materials: new Set(), textures: new Set() }
@@ -465,7 +479,9 @@ const applyTheme = () => {
 }
 
 const animate = (time) => {
-  frameId = requestAnimationFrame(animate)
+  if (disposed || graphicsError.value) return
+  if (renderer?.getContext().isContextLost()) { failGraphics(new Error('WebGL context lost')); return }
+  try {
   if (cameraTween) {
     const progress = Math.min((time - cameraTween.startedAt) / cameraTween.duration, 1)
     const eased = easeOutQuint(progress)
@@ -487,6 +503,8 @@ const animate = (time) => {
   emitFloorAnchors()
   updateHospitalMarker()
   renderer?.render(scene, camera)
+  frameId = requestAnimationFrame(animate)
+  } catch (error) { failGraphics(error) }
 }
 
 const loadModel = () => {
@@ -496,7 +514,7 @@ const loadModel = () => {
   modelProgress.value = 0
   disposeModel()
   new GLTFLoader().load(clinicOverviewModelUrl, (gltf) => {
-    if (generation !== loadGeneration) {
+    if (generation !== loadGeneration || graphicsError.value) {
       disposeDetachedScene(gltf.scene)
       return
     }
@@ -530,7 +548,7 @@ const resize = () => {
   if (!host.value || !renderer || !camera) return
   const { width, height } = host.value.getBoundingClientRect()
   if (!width || !height) return
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, renderProfile.maxPixelRatio))
   renderer.setSize(width, height, false)
   camera.aspect = width / height
   camera.updateProjectionMatrix()
@@ -609,6 +627,7 @@ watch(() => props.activeFloor, () => {
   frameSelection(true)
 })
 watch(() => props.theme, applyTheme)
+watch(locale, () => renderer?.domElement?.setAttribute('aria-label', t('dashboard.sceneModel')))
 watch(() => props.modelPreset, applyModelLayout, { deep: true })
 watch(() => props.cameraPreset, (preset) => {
   if (preset && String(props.activeFloor) === 'all') applyCameraPreset(preset)
@@ -619,20 +638,22 @@ watch(() => props.interactionTarget, () => {
 })
 
 onMounted(() => {
+  try {
   scene = new THREE.Scene()
   const sceneBackground = new THREE.Color(getComputedStyle(host.value).getPropertyValue('--bg-map').trim() || '#E8EDF2')
   scene.background = sceneBackground
   camera = new THREE.PerspectiveCamera(31, 1, 0.05, 200)
   camera.position.set(22, 18, 26)
   camera.userData.target = new THREE.Vector3()
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
+  renderer = new THREE.WebGLRenderer({ antialias: renderProfile.antialias, alpha: true, powerPreference: renderProfile.powerPreference })
   renderer.setClearColor(sceneBackground, 0)
   renderer.setClearAlpha(0)
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.ACESFilmicToneMapping
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
-  renderer.domElement.setAttribute('aria-label', '三層診所 3D 模型')
+  renderer.domElement.setAttribute('aria-label', t('dashboard.sceneModel'))
+  renderer.domElement.addEventListener('webglcontextlost', onContextLost)
   renderer.domElement.addEventListener('pointerdown', onPointerDown)
   renderer.domElement.addEventListener('pointermove', onPointerMove)
   renderer.domElement.addEventListener('pointerup', onPointerUp)
@@ -663,13 +684,16 @@ onMounted(() => {
   resize()
   loadModel()
   frameId = requestAnimationFrame(animate)
+  } catch (error) { failGraphics(error) }
 })
 
 onBeforeUnmount(() => {
+  disposed = true
   loadGeneration += 1
   cancelAnimationFrame(frameId)
   resizeObserver?.disconnect()
   if (renderer?.domElement) {
+    renderer.domElement.removeEventListener('webglcontextlost', onContextLost)
     renderer.domElement.removeEventListener('pointerdown', onPointerDown)
     renderer.domElement.removeEventListener('pointermove', onPointerMove)
     renderer.domElement.removeEventListener('pointerup', onPointerUp)
@@ -718,12 +742,12 @@ defineExpose({
 
 <template>
   <section ref="host" class="clinic-overview-scene" :class="{ 'is-debug': modelDebug || cameraDebug, 'is-model-debug': modelDebug && interactionTarget === 'model' }">
-    <div ref="hospitalMarker" class="hospital-location-marker" aria-label="Hospital RMF 位置">
+    <div ref="hospitalMarker" class="hospital-location-marker" :aria-label="t('common.brandLocation')">
       <span class="hospital-location-marker__pin"><MapPin :size="24" :stroke-width="2" /></span>
       <strong>Hospital RMF</strong>
     </div>
-    <SharedLoading :loading="loading" :detail="`${modelProgress}%`" :error="loadError ? '請確認模型檔案後重新載入。' : ''" error-title="模型載入失敗">
-      <template #error-action><button class="clinic-model-retry" type="button" @click="loadModel">重新載入</button></template>
+    <SharedLoading :loading="loading && !graphicsError" :detail="`${modelProgress}%`" :error="graphicsError ? '3D 畫面暫時無法繪製，請重新載入頁面。若仍未恢復，請關閉其他 3D 分頁並重新啟動瀏覽器。' : loadError ? '請確認模型檔案後重新載入。' : ''" :error-title="graphicsError ? '3D 顯示中斷' : '模型載入失敗'">
+      <template #error-action><button class="clinic-model-retry" type="button" @click="retryScene">重新載入</button></template>
     </SharedLoading>
   </section>
 </template>

@@ -1,313 +1,892 @@
-openapi: '3.1.0'
+openapi: 3.1.0
 info:
   title: 人機協作平台 API
   version: '1.0'
+  description: |
+    以目前 ASP.NET Core Controllers 為準。
+    寫入請求需帶 X-CSRF-TOKEN；登入使用 HospitalRMF.Session Cookie。
+    C01、M01 等是前端顯示代碼，不會取代 API 機器人 ID。
 servers:
-  - url: http://localhost:5000/api/v1
+  - url: http://localhost:5100
+    description: 本機開發環境
+security:
+  - sessionCookie: []
 tags:
+  - name: 系統
+  - name: 帳號管理
   - name: 任務管理
-    description: 查詢或編輯任務資訊
+  - name: 機器人管理
   - name: 地點查詢
-    description: 提供地點資訊
-  - name: 機器人查詢
-    description: 提供機器人基本資訊
-
 paths:
-  /task:
-    post:
-      tags: ["任務管理"]
-      description: 新增一個任務給機器人
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [taskType, origin, destination, priority, scheduledAt]
-              properties:
-                taskType:
-                  type: string
-                  enum: [medicineDelivery, specimenDelivery, generalDelivery, wasteCollection]
-                origin:
-                  type: string
-                  description: Graph 0 起點 waypoint ID
-                destination:
-                  type: string
-                  description: Graph 0 目的地 waypoint ID
-                priority:
-                  type: string
-                  enum: [low, normal, high, emergency]
-                robotId:
-                  type: [string, 'null']
-                scheduledAt:
-                  type: string
-                  format: date-time
-                  description: 含時區，目前分鐘代表立即派送
-                note:
-                  type: [string, 'null']
+  /api.yml:
+    get:
+      tags: [系統]
+      security: []
+      summary: 取得本 API 的 OpenAPI YAML
       responses:
-        '201':
-          description: 已建立；回傳任務物件及 Location 標頭
+        '200':
+          description: OpenAPI YAML 文件
+          content:
+            application/yaml:
+              schema:
+                type: string
+
+  /api/health:
+    get:
+      tags: [系統]
+      security: []
+      summary: 健康檢查
+      responses:
+        '200':
+          description: 服務正常
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  taskCode:
+                  status:
                     type: string
-                    example: T0001
-                  id:
-                    type: string
-        '400':
-          description: 缺少必填資料、格式錯誤或時間早於目前分鐘
+                    const: healthy
+
+  /api/auth/csrf:
     get:
-      tags: ["任務管理"]
-      description: 取得所有任務紀錄
+      tags: [帳號管理]
+      security: []
+      summary: 取得寫入請求的防偽權杖
+      description: 回傳 token 並設定防偽 Cookie；後續寫入請求須同時保留 Cookie 並傳送 X-CSRF-TOKEN 標頭。
       responses:
         '200':
-          description: 查詢該範圍中的任務紀錄
+          description: 防偽權杖
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token]
+                properties:
+                  token:
+                    type: string
+
+  /api/auth/register:
+    post:
+      tags: [帳號管理]
+      security: []
+      summary: 註冊帳號並登入
+      description: 成功後設定 HttpOnly 登入 Cookie；登入後請重新取得 CSRF 權杖。
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterInput'
+      responses:
+        '201':
+          description: 帳號建立成功
+          headers:
+            Set-Cookie:
+              description: 設定 HospitalRMF.Session 登入 Cookie。
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: 電子郵件已註冊
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: email_exists
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /api/auth/login:
+    post:
+      tags: [帳號管理]
+      security: []
+      summary: 使用電子郵件與密碼登入
+      description: 成功後設定 HttpOnly 登入 Cookie；登入後請重新取得 CSRF 權杖。
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '200':
+          description: 登入成功
+          headers:
+            Set-Cookie:
+              description: 設定 HospitalRMF.Session 登入 Cookie。
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: 電子郵件或密碼錯誤
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: invalid_credentials
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /api/auth/dev-login:
+    post:
+      tags: [帳號管理]
+      security: []
+      summary: 開發環境快速登入
+      description: 僅 Development 環境且請求來源為 loopback IP 時可用；其他情況回 404。
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      responses:
+        '200':
+          description: 登入成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        '404':
+          description: 非本機來源或非 Development 環境
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /api/auth/me:
+    get:
+      tags: [帳號管理]
+      summary: 查詢目前登入者
+      responses:
+        '200':
+          description: 登入者資料，不含密碼
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/auth/logout:
+    post:
+      tags: [帳號管理]
+      summary: 清除登入 Cookie
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      responses:
+        '204':
+          description: 已登出
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/auth/profile:
+    patch:
+      tags: [帳號管理]
+      summary: 更新自己的顯示名稱與頭像
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileInput'
+      responses:
+        '200':
+          description: 更新後的登入者資料
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/task:
+    get:
+      tags: [任務管理]
+      summary: 取得所有任務
+      responses:
+        '200':
+          description: 任務清單
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Task"
-
-  /task/{task_id}:
-    get:
-      tags: ["任務管理"]
-      description: 取得該任務記錄
+                  $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [任務管理]
+      summary: 建立任務
+      description: 建立待處理任務；201 不代表已派工或開始執行。派工由排程服務處理。
       parameters:
-        - $ref: "#/components/parameters/TaskIdPath"
-      responses:
-        '200':
-          description: 取得成功
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        '404':
-          $ref: "#/components/responses/TaskNotFound"
-    delete:
-      tags: ["任務管理"]
-      description: 刪除該未處理的任務
-      parameters:
-        - $ref: "#/components/parameters/TaskIdPath"
-      responses:
-        '204':
-          description: 刪除成功
-        '403':
-          description: 任務已被處理無法刪除
-        '404':
-          $ref: "#/components/responses/TaskNotFound"
-  /task/{task_id}/schedule:
-    patch:
-      tags: ["任務管理"]
-      description: 修改尚未派送的待處理任務之預定時間
-      parameters:
-        - name: task_id
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CsrfToken'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [scheduledAt]
-              properties:
-                scheduledAt:
-                  type: string
-                  format: date-time
-                  description: 含時區且晚於現在的預定時間
+              $ref: '#/components/schemas/CreateTaskInput'
       responses:
-        '204':
-          description: 排程時間已更新
-        '400':
-          description: 缺少時間、格式錯誤或時間不晚於現在
-        '403':
-          description: 任務已處理或已派送
-        '404':
-          description: 查無任務
-
-  /task/{task_id}/abort:
-    patch:
-      tags: ["任務管理"]
-      parameters:
-        - $ref: "#/components/parameters/TaskIdPath"
-      description: 中斷該任務
-      responses:
-        '200':
-          description: 中斷成功
-        '404':
-          $ref: "#/components/responses/TaskNotFound"
-  /task/{task_id}/confirm:
-    get:
-      tags: ["任務管理"]
-      parameters:
-        - $ref: "#/components/parameters/TaskIdPath"
-      description: 查詢該任務是否被確認
-      responses:
-        '200':
-          description: 查詢成功
+        '201':
+          description: 任務建立成功；回傳任務及 Location 標頭。
+          headers:
+            Location:
+              description: 新任務的查詢網址。
+              schema:
+                type: string
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  confirmed:
-                    type: boolean
-        '404':
-          $ref: "#/components/responses/TaskNotFound"
-    patch:
-      tags: ["任務管理"]
-      parameters:
-        - $ref: "#/components/parameters/TaskIdPath"
-      description: 確認該任務
-      responses:
-        '200':
-          description: 確認成功
+                $ref: '#/components/schemas/Task'
         '400':
-          description: 任務尚未結束，無法確認
-        '404':
-          $ref: "#/components/responses/TaskNotFound"
-  /task/event/trace:
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '503':
+          description: 派送服務目前不可用
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/task/event/trace:
     get:
-      tags: ["任務管理"]
-      description: 追蹤所有任務的進度
+      tags: [任務管理]
+      summary: 以 Server-Sent Events 追蹤任務狀態
+      description: 每秒檢查狀態；狀態改變時才送出 data 事件，不傳送完整快照。
       responses:
         '200':
-          description: 正在追蹤任務進度
+          description: 任務狀態變化串流
           content:
             text/event-stream:
               schema:
                 type: string
-                description: |
-                  以 JSON 字串表示，提供當前所有任務的更新狀態</br>
-                  ```
-                    [
-                      {
-                        id: <task id>,
-                        old: <old status>,
-                        new: <new status>
-                      }
-                      ...
-                    ]
-                  ```
-  /place:
+              example: 'data: [{"id":"task-id","old":"pending","new":"assigned"}]'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/task/{task_id}:
+    parameters:
+      - $ref: '#/components/parameters/TaskIdPath'
     get:
-      tags: ["地點查詢"]
-      description: 取得所有地點的基本資訊
+      tags: [任務管理]
+      summary: 取得單一任務
       responses:
         '200':
-          description: 取得成功
+          description: 任務內容
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/TaskNotFound'
+    delete:
+      tags: [任務管理]
+      summary: 刪除尚未處理的任務
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      responses:
+        '204':
+          description: 任務已刪除
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: 任務已處理，不能刪除
+        '404':
+          $ref: '#/components/responses/TaskNotFound'
+
+  /api/v1/task/{task_id}/schedule:
+    patch:
+      tags: [任務管理]
+      summary: 修改任務預定時間
+      description: 成功時可能以新的替代任務取代原任務，因此回傳 201 與替代任務物件。
+      parameters:
+        - $ref: '#/components/parameters/TaskIdPath'
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskScheduleInput'
+      responses:
+        '201':
+          description: 排程更新成功，回傳替代任務
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: 任務已開始執行，或外部已提交的指派尚無法安全撤回，不能更改時間
+        '404':
+          $ref: '#/components/responses/TaskNotFound'
+        '503':
+          description: 外部分派服務目前不支援撤回舊指派
+
+  /api/v1/task/{task_id}/priority:
+    patch:
+      tags: [任務管理]
+      summary: 修改尚未派送任務的優先級
+      parameters:
+        - $ref: '#/components/parameters/TaskIdPath'
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskPriorityInput'
+      responses:
+        '204':
+          description: 優先級已更新
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: 任務已處理，不允許修改優先級
+        '404':
+          $ref: '#/components/responses/TaskNotFound'
+
+  /api/v1/task/{task_id}/abort:
+    patch:
+      tags: [任務管理]
+      summary: 取消尚未送出或指派的任務
+      parameters:
+        - $ref: '#/components/parameters/TaskIdPath'
+        - $ref: '#/components/parameters/CsrfToken'
+      responses:
+        '200':
+          description: 任務已取消，回應本文為空
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/TaskNotFound'
+        '409':
+          description: 任務已送出或已指派，不能取消
+
+  /api/v1/task/{task_id}/simulation/arrive:
+    post:
+      tags: [任務管理]
+      summary: 回報模擬路線抵達
+      description: 僅 Development 環境可用；正式環境回 404。
+      parameters:
+        - $ref: '#/components/parameters/TaskIdPath'
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulatedArrivalInput'
+      responses:
+        '204':
+          description: 模擬抵達完成
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: 非 Development 環境或任務不存在
+        '409':
+          description: 任務尚未抵達，或任務、機器人、起點、終點不相符
+
+  /api/robots:
+    get:
+      tags: [機器人管理]
+      summary: 取得機器人狀態及 ROS bridge 連線資訊
+      responses:
+        '200':
+          description: 機器人與 bridge 狀態
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RobotSnapshot'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/robots/connect:
+    post:
+      tags: [機器人管理]
+      summary: 連接 ROS bridge
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectRobotInput'
+      responses:
+        '200':
+          description: 連線要求已處理
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, url]
+                properties:
+                  success:
+                    type: boolean
+                  url:
+                    type: string
+        '400':
+          description: URL 不可為空
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/robots/disconnect:
+    post:
+      tags: [機器人管理]
+      summary: 中斷 ROS bridge
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      responses:
+        '200':
+          description: 已中斷連線
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success]
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/robots/confirm:
+    post:
+      tags: [機器人管理]
+      summary: 更新已註冊機器人的顯示名稱
+      description: 僅允許更新目前名冊內的七台機器人，不會新增名冊項目。
+      parameters:
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmRobotInput'
+      responses:
+        '200':
+          description: 機器人名稱已更新
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, rosName, displayName]
+                properties:
+                  success:
+                    type: boolean
+                  rosName:
+                    type: string
+                  displayName:
+                    type: string
+        '400':
+          description: rosName 空白或不在已註冊名冊內
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/robot:
+    get:
+      tags: [機器人管理]
+      summary: 取得機器人 ID 與名稱清單
+      responses:
+        '200':
+          description: 機器人清單
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Place"
-            
-  /robot:
+                  $ref: '#/components/schemas/Robot'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/place:
     get:
-      tags: ["機器人查詢"]
-      description: 取得所有機器人的基本資訊
+      tags: [地點查詢]
+      summary: 取得 PPO 位置清單
       responses:
         '200':
-          description: 取得成功
+          description: 依 PPO one-hot 順序回傳 16 個 waypoint；是否可作任務起訖點依任務類型設定。
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Robot"
+                  $ref: '#/components/schemas/Place'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: HospitalRMF.Session
+      description: HttpOnly 登入 Cookie；瀏覽器需允許傳送 credentials。
+  parameters:
+    CsrfToken:
+      name: X-CSRF-TOKEN
+      in: header
+      required: true
+      description: 先由 GET /api/auth/csrf 取得，登入後請重新取得。
+      schema:
+        type: string
+    TaskIdPath:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: 請求欄位、格式或 CSRF 驗證失敗
+    Unauthorized:
+      description: 未登入或登入已失效
+    RateLimited:
+      description: 註冊/登入速率限制，每來源 IP 每分鐘最多 10 次
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rate_limited
+    TaskNotFound:
+      description: 查無此任務
+      content:
+        text/plain:
+          schema:
+            type: string
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+    AuthUser:
+      type: object
+      required: [id, email, name]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        avatarUrl:
+          type: [string, 'null']
+    RegisterInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 40
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          format: password
+          minLength: 6
+          maxLength: 128
+          writeOnly: true
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          format: password
+          maxLength: 128
+          writeOnly: true
+        rememberMe:
+          type: boolean
+          default: false
+          description: true 時 Cookie 有效 14 天，否則 8 小時。
+    UpdateProfileInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 40
+        avatarUrl:
+          type: [string, 'null']
+          maxLength: 4200000
+          description: JPEG、PNG 或 WebP 的 Base64 data URL；解碼後上限 3 MiB，null 表示移除頭像。
+    TaskType:
+      type: string
+      enum: [waste_transport, clothes_collection, medication_delivery, specimen_delivery, ward_service]
+    TaskPriority:
+      type: string
+      enum: [low, normal, high, emergency]
+    TaskStatus:
+      type: string
+      enum: [pending, assigned, running, completed, failed, cancelled]
+    RobotCapability:
+      type: string
+      enum: [waste_transport, clothes_collection, medication_delivery, specimen_delivery, ward_service]
+    CreateTaskInput:
+      type: object
+      required: [taskType, source, destination, priority, scheduledAt]
+      properties:
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+        source:
+          type: string
+          description: PPO waypoint ID；起點依任務類型設定。
+        destination:
+          type: string
+          description: PPO waypoint ID；終點依任務類型設定。
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        robotId:
+          type: [string, 'null']
+          description: 指定偏好的機器人 ID；不表示已成功派工。
+        scheduledAt:
+          type: string
+          format: date-time
+        note:
+          type: [string, 'null']
+    UpdateTaskScheduleInput:
+      type: object
+      required: [scheduledAt]
+      properties:
+        scheduledAt:
+          type: string
+          format: date-time
+    UpdateTaskPriorityInput:
+      type: object
+      required: [priority]
+      properties:
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+    SimulatedArrivalInput:
+      type: object
+      required: [robotId, source, destination]
+      properties:
+        robotId:
+          type: string
+        source:
+          type: string
+        destination:
+          type: string
     Task:
       type: object
       properties:
         id:
           type: string
-          description: 任務的 ID
-        title:
+        taskCode:
           type: string
-          description: 任務標題
-        place:
-          $ref: "#/components/schemas/Place/properties/id"
-        items:
-          $ref: "#/components/schemas/TaskItems"
-        start:
-          type: ["string", "null"]
-          format: date-time
-          description: 任務開始工作日期時間
-        note:
-          type: ["string", "null"]
-          description: 任務備註內容
-        robot:
-          type: ["string", "null"]
-          description: 機器人 id
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+        source:
+          type: string
+        destination:
+          type: string
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        requiredCapabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/RobotCapability'
         status:
-          $ref: "#/components/schemas/TaskStatus"
-        end:
-          type: ["string", "null"]
+          $ref: '#/components/schemas/TaskStatus'
+        requestedRobotId:
+          type: [string, 'null']
+        assignedRobot:
+          type: [string, 'null']
+        isSimulated:
+          type: boolean
+        dispatched:
+          type: boolean
+        scheduledAt:
+          type: [string, 'null']
           format: date-time
-          description: 任務結束結束日期時間
-    TaskItems:
-      type: array
-      minItems: 1
-      maxItems: 3
-      items:
-        type: string
-      description: |
-        任務處理事項，目前提供以下選項
-        * 清物 = clean-object
-        * 清汙 = clean-stain
-        * 鍍膜殺菌 = coat-sterilize
-    TaskStatus:
-      type: string
-      enum: ["idle", "process", "complete", "abort", "timeout"]
-      description: |
-        任務的執行狀態
-        * 待處理 "idle"
-        * 進行中 "process"
-        * 完成 "complete"
-        * 中斷 "abort"
-        * 超時 "timeout"
-    
+        startedAt:
+          type: [string, 'null']
+          format: date-time
+        finishedAt:
+          type: [string, 'null']
+          format: date-time
+        note:
+          type: [string, 'null']
+        createdAt:
+          type: string
+          format: date-time
     Robot:
       type: object
+      description: API 使用後端機器人 ID；C01、M01 等為前端顯示代碼。
       properties:
         id:
           type: string
-          description: 機器人 id
         name:
           type: string
-          description: 機器人的名稱
-
     Place:
       type: object
+      required: [index, id, name, type]
       properties:
+        index:
+          type: integer
+          minimum: 0
+          maximum: 15
+          description: PPO LOCATIONS 的固定索引，不可重新排序。
         id:
           type: string
-          description: 工作地點 id
         name:
           type: string
-          description: 地點名稱
         type:
           type: string
-          description: 地點類型
-
-  parameters:
-    TaskIdPath:
-      in: path
-      name: task_id
-      required: true
-      schema:
-        type: string
-
-  responses:
-    TaskNotFound:
-      description: 查無此任務
+    RobotSnapshot:
+      type: object
+      required: [connection, robots, pendingRobots]
+      properties:
+        connection:
+          type: object
+          properties:
+            url:
+              type: string
+            status:
+              type: string
+            failMessage:
+              type: string
+            retryCount:
+              type: integer
+        robots:
+          type: array
+          items:
+            $ref: '#/components/schemas/RobotState'
+        pendingRobots:
+          type: array
+          items:
+            type: string
+    RobotState:
+      type: object
+      properties:
+        hasTelemetry:
+          type: boolean
+        id:
+          type: string
+        rosName:
+          type: string
+        name:
+          type: string
+        model:
+          type: string
+          example: agibot_g1
+        manufacturer:
+          type: string
+          example: Agibot
+        descriptionPackage:
+          type: string
+          example: agibot_g1_description
+        capabilities:
+          type: array
+          items:
+            type: string
+        robotType:
+          type: string
+          enum: [clean, medical, ward]
+          description: 執行名冊對照：robot 1–2 clean、3–5 medical、6–7 ward。
+        status:
+          type: string
+        battery:
+          type: integer
+        currentTask:
+          type: string
+        location:
+          type: string
+        x:
+          type: number
+        y:
+          type: number
+        yaw:
+          type: number
+        levelName:
+          type: string
+        signal:
+          type: string
+        uptime:
+          type: string
+        completedToday:
+          type: integer
+        connectionIp:
+          type: string
+        firmware:
+          type: string
+        mode:
+          type: integer
+        modeText:
+          type: string
+        lastUpdate:
+          type: string
+          format: date-time
+        currentTaskDetail:
+          $ref: '#/components/schemas/RobotTaskDetail'
+    RobotTaskDetail:
+      type: object
+      properties:
+        taskNo:
+          type: string
+        title:
+          type: string
+        progress:
+          type: integer
+        step:
+          type: string
+        startedAt:
+          type: string
+        eta:
+          type: string
+        payload:
+          type: string
+    ConnectRobotInput:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+    ConfirmRobotInput:
+      type: object
+      required: [rosName]
+      properties:
+        rosName:
+          type: string
+        displayName:
+          type: string

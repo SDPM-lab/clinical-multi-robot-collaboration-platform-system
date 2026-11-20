@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useCountUp } from '@/composables/useCountUp.js'
+import { t } from '@/i18n/index.js'
 const props = defineProps({ robots: { type: Array, default: null } })
 const known = computed(() => Array.isArray(props.robots) && props.robots.every(robot => ['connected', 'connecting', 'disconnected'].includes(robot.connectionState)))
 const connected = computed(() => known.value ? props.robots.filter(robot => robot.connectionState === 'connected').length : null)
@@ -8,10 +9,10 @@ const { displayed, restart } = useCountUp(() => connected.value, { duration: 500
 onMounted(restart)
 </script>
 <template>
-  <section class="connectivity-panel overview-tool-panel" aria-label="機器人連線">
+  <section class="connectivity-panel overview-tool-panel" :aria-label="t('robotStatus.connection')">
     <h2>機器人連線</h2>
-    <div class="connection-count" :aria-label="known ? `${connected} / ${robots.length}` : 'Unavailable'"><strong>{{ known ? displayed : '—' }}</strong><span v-if="robots">/ {{ robots.length }}</span></div>
-    <p aria-live="polite">{{ known ? 'robots connected' : 'Unavailable' }}</p>
+    <div class="connection-count" :aria-label="known ? `${connected} / ${robots.length}` : t('common.unavailable')"><strong>{{ known ? displayed : '—' }}</strong><span v-if="robots">/ {{ robots.length }}</span></div>
+    <p aria-live="polite">{{ known ? t('dashboard.robotsConnected', { count: connected }) : t('common.unavailable') }}</p>
   </section>
 </template>
 <style scoped>

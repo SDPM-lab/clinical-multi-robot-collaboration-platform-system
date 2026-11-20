@@ -1,150 +1,68 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
 import RobotFleetView from '@/views/RobotFleetView.vue'
-import { fleetStore } from '@/stores/demoFleetStore.js'
 import { setLocale } from '@/i18n/index.js'
 
+const api = vi.hoisted(() => ({ getRobotSnapshot: vi.fn(), getTaskRecords: vi.fn() }))
+vi.mock('@/services/taskApi.js', () => ({ taskApi: api }))
+
+const ids = ['robot-a', 'robot-b', ...Array.from({ length: 5 }, (_, index) => `robot-hospital_robot_${index + 3}`)]
+const snapshot = { robots: ids.map((id, index) => ({
+  id, levelName: 'L1', robotType: index < 2 ? 'clean' : index < 4 ? 'medical' : 'ward',
+  model: 'agibot_g1', manufacturer: 'Agibot', descriptionPackage: 'agibot_g1_description',
+  capabilities: index < 2 ? ['waste_transport', 'clothes_collection'] : index < 4
+    ? ['specimen_delivery', 'medication_delivery'] : ['medication_delivery', 'ward_service'],
+  status: '離線', hasTelemetry: false, battery: 0, location: '',
+})) }
 const wrappers = []
-function view() {
-  const wrapper = mount(RobotFleetView, { attachTo: document.body, global: { stubs: { RobotViewport: true } } })
+async function view() {
+  const wrapper = mount(RobotFleetView, { attachTo: document.body, global: { stubs: {
+    RobotViewport: { props: ['robotId', 'modelAssetKey'], template: '<div class="robot-viewport-stub" :data-model-asset-key="modelAssetKey" />' },
+  } } })
   wrappers.push(wrapper)
+  await flushPromises()
   return wrapper
 }
-beforeEach(() => setLocale('zh-TW'))
-afterEach(() => { wrappers.splice(0).forEach(wrapper => wrapper.unmount()); setLocale('zh-TW') })
+beforeEach(() => { setLocale('zh-TW'); api.getRobotSnapshot.mockResolvedValue(snapshot); api.getTaskRecords.mockResolvedValue([]) })
+afterEach(() => { wrappers.splice(0).forEach(wrapper => wrapper.unmount()); vi.clearAllMocks() })
 
-describe('Robot Status', () => {
-  it('shows a compact robot information card and updates it when switching robots', async () => {
-    const wrapper = view()
-    expect(wrapper.find('.battery-arc').exists()).toBe(true)
-    expect(wrapper.find('.thermal-visual').exists()).toBe(true)
-    expect(wrapper.find('.thermal-dial').exists()).toBe(true)
-    expect(wrapper.find('.energy p').exists()).toBe(false)
-    expect(wrapper.find('.thermal p').exists()).toBe(false)
-    expect(wrapper.findAll('.robot-list-item__avatar')).toHaveLength(7)
-    expect(wrapper.findAll('.robot-list-item__avatar').every(avatar => avatar.attributes('src').includes('agibot-a2d-transparent.png'))).toBe(true)
-    expect(wrapper.findComponent({ name: 'RobotViewport' }).exists()).toBe(true)
-    expect(wrapper.get('.robot-stage-status').text()).toContain('Robot 01')
-    expect(wrapper.get('.robot-info-card').text()).not.toContain('Robot 01')
-    expect(wrapper.get('.robot-info-card').text()).toContain('護理接待處')
-    expect(wrapper.get('.robot-info-card').text()).toContain('1F')
-    expect(wrapper.get('.robot-info-card').text()).toContain('未連線')
-    expect(wrapper.get('.robot-info-card').text()).toContain('序號')
-    expect(wrapper.get('.robot-info-card').text()).toContain('未提供')
-    expect(wrapper.get('.robot-info-card').text()).toContain('目前派遣任務代碼')
-    expect(wrapper.get('.robot-info-card').text()).toContain('T001')
-    expect(wrapper.get('.robot-info-card__state').text()).toBe('忙碌')
-    expect(wrapper.find('.robot-info-card__status').exists()).toBe(false)
-    expect(wrapper.get('.robot-info-card').text()).not.toContain('hospital_fleet')
-    expect(wrapper.findAll('.robot-list-item__battery').slice(0, 3).map(item => item.element.closest('button').style.getPropertyValue('--battery-color'))).toEqual(['#FB9966', '#FBE251', '#77746D'])
-    expect(wrapper.get('.robot-picker__identity').text()).not.toContain('R01')
-    expect(wrapper.get('.robot-picker__identity').text()).toContain('F1')
-    expect(wrapper.findAll('.robot-floor-filter button').map(button => button.text())).toEqual(['全部7', '1F3', '2F2', '3F2'])
-
-    await wrapper.findAll('.robot-picker button')[1].trigger('click')
-    expect(wrapper.get('.robot-stage-status').text()).toContain('Robot 02')
-    expect(wrapper.get('.robot-info-card').text()).toContain('門診 2 室')
-    expect(wrapper.get('.robot-info-card').text()).toContain('1F')
-    expect(wrapper.get('.robot-info-card').text()).toContain('T002')
-    await wrapper.findAll('.robot-picker button')[2].trigger('click')
-    expect(wrapper.get('.robot-stage-status').text()).toContain('Robot 03')
-    expect(wrapper.get('.thermal').classes()).toContain('is-critical')
-    await wrapper.findAll('.robot-floor-filter button')[2].trigger('click')
-    expect(wrapper.findAll('.robot-picker button')).toHaveLength(2)
-    expect(wrapper.get('.robot-stage-status').text()).toContain('Robot 04')
-    expect(wrapper.get('.robot-info-card').text()).toContain('2F')
-    expect(wrapper.get('.robot-info-card').text()).toContain('未提供')
-    expect(wrapper.get('.robot-info-card__state').text()).toBe('待命')
-    expect(wrapper.get('.robot-picker__identity').text()).toContain('F2')
-    await wrapper.findAll('.robot-floor-filter button')[3].trigger('click')
-    expect(wrapper.findAll('.robot-picker button')).toHaveLength(2)
-    expect(wrapper.get('.robot-picker__identity').text()).toContain('F3')
-  })
-
-  it('keeps task, communication, movement, and diagnostics off the information card', () => {
-    const before = JSON.stringify(fleetStore.state)
-    const wrapper = view()
-    for (const section of ['task', 'communication', 'movement', 'diagnostics']) {
-      expect(wrapper.find(`[data-section=${section}]`).exists()).toBe(false)
-    }
-    expect(wrapper.find('.task-accuracy-card').exists()).toBe(false)
-    expect(wrapper.find('.charging-route-plane').exists()).toBe(false)
-    expect(JSON.stringify(fleetStore.state)).toBe(before)
-  })
-
-  it('offers arms, head, and base views without a disassembly slider', async () => {
-    const wrapper = view()
-    const buttons = wrapper.findAll('.robot-info-card__structure button')
-    expect(buttons.map(button => button.text())).toEqual(['左手臂', '右手臂', '頭部', '底盤', '整機'])
-    expect(buttons[0].attributes('disabled')).toBeDefined()
-    wrapper.findComponent({ name: 'RobotViewport' }).vm.$emit('ready')
-    await wrapper.vm.$nextTick()
-    await buttons[0].trigger('click')
-    expect(buttons[0].attributes('aria-pressed')).toBe('true')
-    await buttons[1].trigger('click')
-    expect(buttons[1].attributes('aria-pressed')).toBe('true')
-    await buttons[2].trigger('click')
-    expect(buttons[2].attributes('aria-pressed')).toBe('true')
-    await buttons[2].trigger('click')
-    expect(buttons[4].attributes('aria-pressed')).toBe('true')
-    await buttons[3].trigger('click')
-    expect(buttons[3].attributes('aria-pressed')).toBe('true')
-    await buttons[4].trigger('click')
-    expect(buttons[4].attributes('aria-pressed')).toBe('true')
-    expect(wrapper.find('input[type=range]').exists()).toBe(false)
-  })
-
-  it('keeps panel labels in the selected language', async () => {
-    const wrapper = view()
-    expect(wrapper.get('.robot-info-card').text()).toContain('機器人資訊')
-    expect(wrapper.get('.robot-info-card').text()).toContain('機器人連線')
-    expect(wrapper.get('.energy').text()).toContain('電量')
-    setLocale('en')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.get('.robot-info-card').text()).toContain('Robot information')
-    expect(wrapper.get('.robot-info-card__state').text()).toBe('Busy')
-    expect(wrapper.get('.robot-info-card').text()).toContain('Current dispatched task ID')
-    expect(wrapper.get('.robot-info-card').text()).toContain('Disconnected')
-    expect(wrapper.get('.robot-info-card').text()).toContain('Current floor')
-    expect(wrapper.get('.robot-info-card').text()).toContain('Nurse Reception')
-    expect(wrapper.get('.robot-info-card__structure').text()).toContain('Head')
-    expect(wrapper.get('.energy').text()).toContain('Battery')
-  })
-
-  it('keeps search and robot operations available', async () => {
-    const wrapper = view()
-    const before = JSON.stringify(fleetStore.state)
-    expect(wrapper.findAll('.robot-list-item__remove')).toHaveLength(0)
-    await wrapper.get('.edit-robots').trigger('click')
-    expect(wrapper.get('.edit-robots').attributes('aria-pressed')).toBe('true')
-    expect(wrapper.findAll('.robot-list-item__remove')).toHaveLength(7)
-    await wrapper.findAll('.robot-list-item__remove')[0].trigger('click')
-    expect(wrapper.get('[role="alertdialog"]').text()).toContain('Robot 01')
-    await wrapper.get('[role="alertdialog"] button').trigger('click')
-    expect(JSON.stringify(fleetStore.state)).toBe(before)
-    await wrapper.get('.edit-robots').trigger('click')
-    expect(wrapper.findAll('.robot-list-item__remove')).toHaveLength(0)
-    await wrapper.get('.add-robot').trigger('click')
-    expect(wrapper.emitted('add-robot')).toHaveLength(1)
-    expect(wrapper.get('[role="dialog"]').text()).toContain('GLB 模型')
-    expect(wrapper.get('[role="dialog"]').text()).not.toContain('結構拆解')
-    expect(wrapper.get('.add-robot').attributes('aria-label')).toBe('新增機器人')
-    expect(wrapper.get('.add-robot').text()).toBe('')
-    expect(JSON.stringify(fleetStore.state)).toBe(before)
-    await wrapper.get('.robot-search input').setValue('R02')
-    expect(wrapper.findAll('.robot-picker button')).toHaveLength(1)
-    expect(wrapper.get('.robot-picker button').text()).toContain('Robot 02')
-  })
-
-  it('removes a demo robot after confirmation', async () => {
-    const added = fleetStore.addRobot({ id: 'R99', name: 'Robot 99', rosNamespace: '/robot_99', navGraphIndex: 0, chargingWaypoint: 'charging_station_1', battery: 80 })
-    expect(added.ok).toBe(true)
-    const wrapper = view()
-    await wrapper.get('.edit-robots').trigger('click')
-    await wrapper.findAll('.robot-list-item__remove').at(-1).trigger('click')
-    expect(wrapper.get('[role="alertdialog"]').text()).toContain('Robot 99')
-    await wrapper.get('[role="alertdialog"] .is-danger').trigger('click')
-    expect(fleetStore.robots.value.some((robot) => robot.id === 'R99')).toBe(false)
+describe('Robot Status backend alignment', () => {
+  it('shows the seven registered robots without redundant telemetry details or demo battery values', async () => {
+    const wrapper = await view()
     expect(wrapper.findAll('.robot-list-item')).toHaveLength(7)
+    expect(wrapper.get('.robot-viewport-stub').attributes('data-model-asset-key')).toBe('AGIBOT_A2D')
+    expect(wrapper.find('.robot-floor-filter').text()).toContain('1F7')
+    expect(wrapper.find('.robot-floor-filter').text()).not.toContain('2F')
+    expect(wrapper.findAll('.robot-list-item__battery strong').map(item => item.text())).toEqual(Array(7).fill('—'))
+    expect(wrapper.find('.battery-reading strong').text()).toBe('—')
+    expect(wrapper.find('.robot-info-card').text()).toContain('清潔型')
+    expect(wrapper.find('.robot-info-card').text()).toContain('Agibot Genie G1')
+    expect(wrapper.find('.robot-info-card').text()).toContain('agibot_g1_description')
+    expect(wrapper.find('.robot-info-card').text()).not.toContain('所需能力')
+    expect(wrapper.find('.robot-info-card .robot-info-card__structure').exists()).toBe(true)
+    expect(wrapper.find('.robot-telemetry-data').exists()).toBe(false)
+    expect(wrapper.get('.robot-info-card__connection').attributes('data-state')).toBe('disconnected')
+  })
+
+  it('uses telemetry battery and the backend task code when available', async () => {
+    api.getRobotSnapshot.mockResolvedValue({ robots: [{ ...snapshot.robots[0], status: '執行任務中', hasTelemetry: true, lastUpdate: new Date().toISOString(), battery: 82, location: 'nurse_station' }, ...snapshot.robots.slice(1)] })
+    api.getTaskRecords.mockResolvedValue([{ taskCode: 'T0001', assignedRobot: 'robot-a', status: 'running' }])
+    const wrapper = await view()
+    expect(wrapper.find('.robot-list-item__battery strong').text()).toBe('82%')
+    expect(wrapper.find('.robot-info-card').text()).toContain('T0001')
+    expect(wrapper.find('.robot-info-card').text()).toContain('已連線')
+    expect(wrapper.find('.robot-telemetry-data').exists()).toBe(false)
+  })
+
+  it('avoids reporting stale robot telemetry as connected', async () => {
+    api.getRobotSnapshot.mockResolvedValue({ robots: [{ ...snapshot.robots[0], status: '執行任務中', hasTelemetry: true, lastUpdate: new Date(Date.now() - 16_000).toISOString(), battery: 82 }, ...snapshot.robots.slice(1)] })
+    const wrapper = await view()
+    expect(wrapper.get('.robot-info-card__connection').attributes('data-state')).toBe('disconnected')
+  })
+
+  it('keeps the backend roster fixed in the status page', async () => {
+    const wrapper = await view()
+    expect(wrapper.find('.edit-robots').exists()).toBe(false)
+    expect(wrapper.find('.add-robot').exists()).toBe(false)
   })
 })

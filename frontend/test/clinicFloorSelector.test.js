@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
 import FloorSelector from '@/components/overview/FloorSelector.vue'
+import { setLocale } from '@/i18n/index.js'
 
 describe('clinic floor projected labels', () => {
   it('draws connectors to projected Three.js floor coordinates', async () => {
@@ -15,11 +17,25 @@ describe('clinic floor projected labels', () => {
       },
     })
     const activeLine = wrapper.get('g.is-active line')
+    expect(activeLine.attributes('x1')).toBe('282')
+    expect(activeLine.attributes('y1')).toBe('115')
     expect(activeLine.attributes('x2')).toBe('430')
     expect(activeLine.attributes('y2')).toBe('405')
 
     await wrapper.setProps({ anchors: { ...wrapper.props('anchors'), 2: { x: 510, y: 390, visible: true } } })
     expect(wrapper.get('g.is-active line').attributes('x2')).toBe('510')
+  })
+
+  it('localizes the all-building tab in English and Traditional Chinese', async () => {
+    const wrapper = mount(FloorSelector)
+    expect(wrapper.get('.all-floor').text()).toBe('全部全棟')
+    setLocale('en')
+    await nextTick()
+    expect(wrapper.get('.all-floor').text()).toBe('AllBuilding')
+    setLocale('zh-TW')
+    await nextTick()
+    expect(wrapper.get('.all-floor').text()).toBe('全部全棟')
+    wrapper.unmount()
   })
 })
 

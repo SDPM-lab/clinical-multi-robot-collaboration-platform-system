@@ -15,10 +15,11 @@ public class RobotController : ControllerBase
     private static readonly HashSet<string> HardwareOverrideStatuses = ["充電中", "緊急停止", "暫停"];
     private static string TaskTitle(TaskType taskType) => taskType switch
     {
-        TaskType.MedicineDelivery => "藥品配送",
+        TaskType.WasteTransport => "廢棄物運送",
+        TaskType.ClothesCollection => "衣物回收",
+        TaskType.MedicationDelivery => "藥品配送",
         TaskType.SpecimenDelivery => "檢體配送",
-        TaskType.GeneralDelivery => "一般物資配送",
-        TaskType.WasteCollection => "垃圾回收",
+        TaskType.WardService => "病房服務",
         _ => taskType.ToString(),
     };
 
@@ -45,11 +46,16 @@ public class RobotController : ControllerBase
 
             return new RobotDto
             {
+                HasTelemetry = r.HasTelemetry,
                 Id = r.Id,
                 RosName = r.RosName,
                 Name = r.Name,
                 Model = r.Model,
-                Status = "執行任務中",
+                Manufacturer = r.Manufacturer,
+                DescriptionPackage = r.DescriptionPackage,
+                Capabilities = r.Capabilities,
+                RobotType = r.RobotType,
+                Status = !r.HasTelemetry || r.Status == "離線" ? "離線" : task.Status == RobotTaskStatus.Assigned ? "已指派待執行" : "執行任務中",
                 Battery = r.Battery,
                 CurrentTask = $"執行任務: {TaskTitle(task.TaskType)}",
                 Location = r.Location,
@@ -63,11 +69,11 @@ public class RobotController : ControllerBase
                 ConnectionIp = r.ConnectionIp,
                 Firmware = r.Firmware,
                 Mode = r.Mode,
-                ModeText = "執行任務中",
+                ModeText = !r.HasTelemetry || r.Status == "離線" ? "離線" : task.Status == RobotTaskStatus.Assigned ? "已指派待執行" : "執行任務中",
                 LastUpdate = r.LastUpdate,
                 CurrentTaskDetail = new RobotTaskDetailDto
                 {
-                    TaskNo = task.Id,
+                    TaskNo = task.TaskCode,
                     Title = TaskTitle(task.TaskType),
                     Progress = r.CurrentTaskDetail.Progress > 0 ? r.CurrentTaskDetail.Progress : 0,
                     Step = r.CurrentTaskDetail.Step is not ("待命中" or "") ? r.CurrentTaskDetail.Step : "執行任務中",
@@ -116,7 +122,8 @@ public class RobotController : ControllerBase
             return BadRequest(new { error = "rosName 不可為空" });
 
         var displayName = string.IsNullOrWhiteSpace(request.DisplayName) ? request.RosName : request.DisplayName;
-        _store.ConfirmRobot(request.RosName, displayName);
+        if (!_store.ConfirmRobot(request.RosName, displayName))
+            return BadRequest(new { error = "目前只允許更新已註冊的七台機器人" });
         return new { success = true, rosName = request.RosName, displayName };
     }
 }

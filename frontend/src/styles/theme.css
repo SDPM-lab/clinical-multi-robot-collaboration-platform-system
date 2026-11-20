@@ -2,7 +2,7 @@
 :root {
   --control-backdrop: blur(3px);
   --info-light-background: rgba(255,255,255,.92);
-  --info-dark-background: rgba(35,38,36,.94);
+  --info-dark-background: #55423d;
   --info-background: var(--info-light-background);
   --info-border: 1px solid rgba(119,116,109,.18);
   --info-divider: rgba(119,116,109,.14);
@@ -93,6 +93,7 @@
   --theme-primary-active: var(--color-primary);
   --theme-primary-soft: rgba(var(--color-primary-rgb), .12);
   --theme-primary-border: rgba(var(--color-primary-rgb), .38);
+  --accent-foreground: #A64F2D;
   --accent-orange: var(--theme-primary);
   --robot-01: var(--color-primary);
   --robot-02: var(--color-secondary);
@@ -126,20 +127,44 @@
   --search-result-hover: rgba(var(--color-primary-rgb), .10);
   --message-background: rgba(255, 255, 255, 0.82);
   --message-border: rgba(70, 73, 70, 0.1);
+  --dispatch-control-background: color-mix(in srgb, var(--search-background) 80%, transparent);
+  --dispatch-control-border: var(--icon-button-border);
+  --dispatch-control-text: var(--text-primary);
+  --dispatch-control-label: var(--text-secondary);
+  --dispatch-control-disabled-background: #e6e7e8;
+  --dispatch-control-disabled-border: #d5d7d8;
+  --dispatch-control-disabled-text: #77746d;
+  --dispatch-tertiary-accent: var(--glass-divider);
+  --dispatch-popover-background: #f8faf9;
+  --dispatch-popover-hover-background: #ffe4d4;
+  --dispatch-popover-hover-text: #813c1c;
+  --dispatch-guidance-required: #8b583a;
+  --dispatch-guidance-time: #486c7e;
+  --dispatch-required-marker: #b43e35;
+  --dispatch-hint-surface: rgba(255,192,173,.24);
+  --dispatch-hint-outline: rgba(141,82,63,.24);
+  --dispatch-hint-foreground: #634238;
+  --task-detail-panel-background: linear-gradient(180deg,
+    color-mix(in srgb, var(--info-background) 91%, #ecd67e) 0%,
+    color-mix(in srgb, var(--info-background) 73%, #ead064) 55%,
+    color-mix(in srgb, var(--info-background) 57%, #e8c957) 100%);
+  --task-detail-panel-border: #eee3a9;
+  --task-detail-text: var(--text-primary);
+  --task-detail-muted: var(--text-muted);
+  --task-detail-chip-background: #e0efe3;
+  --task-detail-chip-text: #426d53;
 }
 
 [data-theme='dark'] {
   --info-background: var(--info-dark-background);
+  --info-border: 1px solid rgba(255,243,236,.10);
+  --info-divider: rgba(255,243,236,.09);
   color-scheme: dark;
-  --app-bg: #111311;
+  --app-bg: #382d29;
   --app-background: var(--app-bg);
-  --app-background-image:
-    radial-gradient(circle at 17% 9%, rgba(207, 117, 64, 0.075), transparent 31%),
-    radial-gradient(circle at 82% 19%, rgba(197, 138, 78, 0.045), transparent 29%),
-    radial-gradient(circle at 48% 91%, rgba(166, 91, 57, 0.035), transparent 35%),
-    var(--app-bg);
-  --app-surface: rgba(34, 37, 35, 0.76);
-  --app-border: rgba(255, 255, 255, 0.08);
+  --app-background-image: linear-gradient(145deg, #382d29 0%, #382d29 100%);
+  --app-surface: rgba(85, 66, 61, 0.76);
+  --app-border: rgba(255, 243, 236, 0.10);
   --circuit-line: rgba(var(--color-neutral-rgb), .14);
   --circuit-line-underlay: rgba(var(--color-neutral-rgb), .06);
   --circuit-node: rgba(var(--color-neutral-rgb), .24);
@@ -148,21 +173,21 @@
   --segmented-track: rgba(var(--color-neutral-rgb), .07);
   --segmented-border: var(--info-divider);
   --app-canvas: var(--app-background);
-  --app-canvas-rgb: 17, 19, 17;
-  --app-background-elevated: #1a1d1b;
+  --app-canvas-rgb: 56, 45, 41;
+  --app-background-elevated: #493833;
   --page-bg: var(--app-background);
   --navbar-bg: var(--app-background);
   --navbar-background: var(--app-background);
   --scene-bg: var(--app-background);
   --scene-background: var(--scene-bg);
-  --surface-1: #1a1d1b;
-  --surface-2: #202321;
-  --surface-3: #292c2a;
+  --surface-1: #493833;
+  --surface-2: #40312d;
+  --surface-3: #352925;
   --panel-background: var(--info-background);
   --panel-background-strong: var(--info-background);
-  --column-background: rgba(28, 31, 29, 0.86);
-  --card-background: rgba(35, 38, 36, 0.94);
-  --card-border: rgba(241, 233, 222, 0.075);
+  --column-background: rgba(73, 56, 51, 0.86);
+  --card-background: rgba(85, 66, 61, 0.94);
+  --card-border: rgba(255, 243, 236, 0.10);
   --panel-bg: var(--panel-background);
   --panel-bg-strong: var(--panel-background-strong);
   --panel-border: var(--info-divider);
@@ -175,7 +200,7 @@
   --radius-small: 3px;
   --radius-round: 999px;
   --tool-button-background: var(--info-background);
-  --tool-button-border: rgba(241, 233, 222, 0.10);
+  --tool-button-border: rgba(255, 243, 236, 0.12);
   --tool-button-shadow: var(--info-shadow);
   --popover-bg: var(--panel-background-strong);
   --glass-background: var(--panel-background);
@@ -186,13 +211,14 @@
   --text-secondary: var(--color-dark-text-secondary);
   --text-muted: var(--color-dark-text-muted);
   --text-disabled: var(--color-dark-text-disabled);
-  --accent-beige: rgba(var(--color-primary-rgb), .18);
-  --accent-wood: var(--color-primary);
-  --theme-primary: var(--color-primary);
-  --theme-primary-hover: var(--color-primary);
-  --theme-primary-active: var(--color-primary);
-  --theme-primary-soft: rgba(var(--color-primary-rgb), .12);
-  --theme-primary-border: rgba(var(--color-primary-rgb), .38);
+  --accent-beige: rgba(255,192,173,.16);
+  --accent-wood: #ffc0ad;
+  --theme-primary: #ffc0ad;
+  --theme-primary-hover: #ffd1c2;
+  --theme-primary-active: #f3aa96;
+  --theme-primary-soft: rgba(255,192,173,.14);
+  --theme-primary-border: rgba(255,192,173,.38);
+  --accent-foreground: #fff3ec;
   --accent-orange: var(--theme-primary);
   --robot-01: var(--color-primary);
   --robot-02: var(--color-secondary);
@@ -204,21 +230,21 @@
   --charging-station-bg: rgba(var(--color-charging-station-rgb), .12);
   --charging-station-border: rgba(var(--color-charging-station-rgb), .48);
   --focus-ring: rgba(var(--color-primary-rgb), .18);
-  --progress-track: rgba(255, 255, 255, 0.13);
-  --nav-hover: var(--color-primary);
-  --nav-active: var(--color-primary);
-  --wood-accent: var(--accent-wood);
-  --wood-accent-hover: var(--accent-orange);
-  --icon-color: var(--text-secondary);
-  --icon-button-background: rgba(31, 29, 26, 0.9);
-  --icon-button-border: var(--panel-border);
+  --progress-track: rgba(255,243,236,.14);
+  --nav-hover: var(--accent-foreground);
+  --nav-active: var(--accent-foreground);
+  --wood-accent: var(--accent-foreground);
+  --wood-accent-hover: var(--accent-foreground);
+  --icon-color: #FFF3EC;
+  --icon-button-background: rgba(73,56,51,.96);
+  --icon-button-border: rgba(255,243,236,.12);
   --icon-button-hover: var(--theme-primary-soft);
-  --navbar-border: rgba(255, 255, 255, 0.08);
+  --navbar-border: rgba(255,243,236,.10);
   --navbar-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
   --control-shadow: var(--info-shadow);
   --search-background: var(--info-background);
   --search-background-active: var(--info-background);
-  --search-border: var(--panel-border);
+  --search-border: rgba(255,243,236,.12);
   --search-border-active: var(--theme-primary-border);
   --search-focus-ring: var(--focus-ring);
   --dropdown-background: var(--info-background);
@@ -226,6 +252,29 @@
   --search-result-hover: rgba(var(--color-primary-rgb), .10);
   --message-background: var(--panel-background-strong);
   --message-border: var(--panel-border);
+  --dispatch-control-background: #342c29;
+  --dispatch-control-border: rgba(255,243,236,.14);
+  --dispatch-control-text: #fff3ec;
+  --dispatch-control-label: #ffc0ad;
+  --dispatch-control-disabled-background: #4a403d;
+  --dispatch-control-disabled-border: rgba(255,243,236,.12);
+  --dispatch-control-disabled-text: #c4b8b2;
+  --dispatch-tertiary-accent: var(--color-tertiary);
+  --dispatch-popover-background: #3f322f;
+  --dispatch-popover-hover-background: #ffc0ad;
+  --dispatch-popover-hover-text: #271c19;
+  --dispatch-guidance-required: #ffc0ad;
+  --dispatch-guidance-time: #d6c1b9;
+  --dispatch-required-marker: #ffc0ad;
+  --dispatch-hint-surface: rgba(85,66,61,.72);
+  --dispatch-hint-outline: rgba(255,192,173,.20);
+  --dispatch-hint-foreground: #fff3ec;
+  --task-detail-panel-background: linear-gradient(160deg, rgba(255,192,173,.06), #493833 76%);
+  --task-detail-panel-border: rgba(255,192,173,.18);
+  --task-detail-text: #fff3ec;
+  --task-detail-muted: #ffc0ad;
+  --task-detail-chip-background: #ffc0ad;
+  --task-detail-chip-text: #271c19;
 }
 
 [data-theme='dark'] .glass-panel,

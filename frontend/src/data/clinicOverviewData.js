@@ -18,7 +18,7 @@ export const completionByFloor = Object.freeze({
 
 export const taskProgressByRobot = Object.freeze({
   robot01: Object.freeze({
-    taskId: 'T001', robotId: 'Robot 01', robotState: 'busy', floor: 'Floor 1',
+    taskId: 'T001', robotId: 'C01', robotState: 'busy', floor: 'Floor 1',
     steps: Object.freeze([
       Object.freeze({ label: '藥局取件', location: '藥局', status: 'completed', statusLabel: '已完成', time: '09:30' }),
       Object.freeze({ label: '前往護理站', location: '一樓護理站', status: 'completed', statusLabel: '已完成', time: '09:38' }),
@@ -27,7 +27,7 @@ export const taskProgressByRobot = Object.freeze({
     ]),
   }),
   robot02: Object.freeze({
-    taskId: 'T014', robotId: 'Robot 02', robotState: 'charging', floor: 'Floor 2',
+    taskId: 'T014', robotId: 'C02', robotState: 'charging', floor: 'Floor 2',
     steps: Object.freeze([
       Object.freeze({ label: '領取檢體', location: '二樓檢驗室', status: 'completed', statusLabel: '已完成', time: '10:42' }),
       Object.freeze({ label: '電梯轉運', location: '中央電梯', status: 'completed', statusLabel: '已完成', time: '10:49' }),
@@ -36,7 +36,7 @@ export const taskProgressByRobot = Object.freeze({
     ]),
   }),
   robot03: Object.freeze({
-    taskId: 'T021', robotId: 'Robot 03', robotState: 'idle', floor: 'Floor 3',
+    taskId: 'T021', robotId: 'M01', robotState: 'idle', floor: 'Floor 3',
     steps: Object.freeze([
       Object.freeze({ label: '備品裝載', location: '中央庫房', status: 'completed', statusLabel: '已完成', time: '13:58' }),
       Object.freeze({ label: '前往病房', location: '三樓走廊', status: 'completed', statusLabel: '已完成', time: '14:10' }),
@@ -48,20 +48,20 @@ export const taskProgressByRobot = Object.freeze({
 
 const scheduleVariants = Object.freeze([
   Object.freeze([
-    Object.freeze({ time: '09:30', title: '藥品配送', assignee: 'Robot 01', state: 'active' }),
-    Object.freeze({ time: '11:00', title: '檢體運送', assignee: 'Robot 02', state: 'scheduled' }),
+    Object.freeze({ time: '09:30', title: '藥品配送', assignee: 'C01', state: 'active' }),
+    Object.freeze({ time: '11:00', title: '檢體運送', assignee: 'C02', state: 'scheduled' }),
     Object.freeze({ time: '14:20', title: '病房物資補充', assignee: '尚未指派', state: 'scheduled' }),
-    Object.freeze({ time: '16:00', title: 'Robot 03 充電', assignee: '充電站 A', state: 'scheduled' }),
+    Object.freeze({ time: '16:00', title: 'M01 充電', assignee: '充電站 A', state: 'scheduled' }),
   ]),
   Object.freeze([
-    Object.freeze({ time: '08:50', title: '門診文件配送', assignee: 'Robot 01', state: 'completed' }),
-    Object.freeze({ time: '10:40', title: '檢體收件', assignee: 'Robot 02', state: 'active' }),
-    Object.freeze({ time: '15:10', title: '護理站補給', assignee: 'Robot 03', state: 'scheduled' }),
+    Object.freeze({ time: '08:50', title: '門診文件配送', assignee: 'C01', state: 'completed' }),
+    Object.freeze({ time: '10:40', title: '檢體收件', assignee: 'C02', state: 'active' }),
+    Object.freeze({ time: '15:10', title: '護理站補給', assignee: 'M01', state: 'scheduled' }),
   ]),
   Object.freeze([
-    Object.freeze({ time: '09:10', title: '藥品盤點配送', assignee: 'Robot 01', state: 'completed' }),
-    Object.freeze({ time: '13:30', title: '檢驗報告運送', assignee: 'Robot 02', state: 'scheduled' }),
-    Object.freeze({ time: '16:20', title: '清潔用品補充', assignee: 'Robot 03', state: 'scheduled' }),
+    Object.freeze({ time: '09:10', title: '藥品盤點配送', assignee: 'C01', state: 'completed' }),
+    Object.freeze({ time: '13:30', title: '檢驗報告運送', assignee: 'C02', state: 'scheduled' }),
+    Object.freeze({ time: '16:20', title: '清潔用品補充', assignee: 'M01', state: 'scheduled' }),
   ]),
 ])
 

@@ -47,6 +47,8 @@ class HospitalTaskRequest(BaseModel):
 
     created_at: Optional[float] = None
 
+    scheduled_at: Optional[float] = None
+
     note: Optional[str] = None
 
 
@@ -106,6 +108,7 @@ class HospitalRosApiBridge(Node):
                 task.required_capabilities
             ),
             "created_at": task.created_at,
+            "scheduled_at": task.scheduled_at,
             "note": task.note,
         }
 

@@ -4,6 +4,7 @@ import { Check, ChevronDown, MapPin } from '@lucide/vue'
 import GlassPanel from './GlassPanel.vue'
 import { NAVIGATION_ASSETS } from '@/config/sceneAssets.js'
 import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
+import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 import { buildActiveRoutes, locationDetails } from '@/data/demoActiveRoutes.js'
 import { demoFleetStore } from '@/stores/demoFleetStore.js'
 
@@ -207,7 +208,7 @@ onBeforeUnmount(() => {
           @click="taskSelectOpen ? closeTaskSelect() : openTaskSelect()"
           @keydown="handleTaskSelectKeydown"
         >
-          <span>{{ selectedRoute?.taskId }} · Robot {{ selectedRoute?.robotId?.slice(1) }}</span>
+          <span>{{ selectedRoute?.taskId }} · {{ robotDisplayCode(selectedRoute?.robotId) }}</span>
           <ChevronDown :size="14" :class="{ 'is-open': taskSelectOpen }" />
         </button>
         <div
@@ -231,7 +232,7 @@ onBeforeUnmount(() => {
             @click="chooseTask(route.taskId)"
           >
             <i :style="{ backgroundColor: routeRobotColor(route.robotId) }" aria-hidden="true"></i>
-            <span>{{ route.taskId }} · Robot {{ route.robotId.slice(1) }}</span>
+            <span>{{ route.taskId }} · {{ robotDisplayCode(route.robotId) }}</span>
           </button>
         </div>
       </div>
@@ -240,7 +241,7 @@ onBeforeUnmount(() => {
     <p v-if="errorMessage" class="task-route-progress__error">{{ errorMessage }}</p>
     <template v-else-if="selectedRoute && selectedTask">
       <section class="task-route-progress__summary">
-        <strong>{{ selectedTask.title }}</strong><span>{{ selectedTask.origin }} → {{ selectedTask.destination }}</span>
+        <strong>{{ selectedTask.title }}</strong><span>{{ selectedTask.source }} → {{ selectedTask.destination }}</span>
       </section>
       <ol class="task-route-progress__stops task-progress-track">
         <span class="task-progress-line task-progress-line--base" aria-hidden="true"></span>

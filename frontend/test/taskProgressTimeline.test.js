@@ -6,6 +6,7 @@ import { taskProgressByRobot } from '@/data/clinicOverviewData.js'
 it('replaces the timeline only when the robot or task identity changes', async () => {
   const data = structuredClone(taskProgressByRobot)
   const wrapper = mount(TaskProgressTimeline, { props: { modelValue: 'robot01', progressByRobot: data } })
+  expect(wrapper.find('.progress-source-note').exists()).toBe(false)
   const first = wrapper.get('ol').element
   data.robot01.steps[0].time = '09:31'
   await wrapper.setProps({ progressByRobot: structuredClone(data) })

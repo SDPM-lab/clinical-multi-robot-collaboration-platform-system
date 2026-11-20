@@ -169,6 +169,9 @@ export class RmfNavigationLayer {
   }
 
   setRoutes(routes) {
+    const previousSimulationProgress = new Map([...this.robotControllers.values()]
+      .filter(controller => controller.simulationTaskId)
+      .map(controller => [controller.simulationTaskId, controller.getRouteState()?.progress || 0]))
     this.disposeVisualGroup(this.activeGroup); this.activeGroup.clear()
     this.disposeVisualGroup(this.completedGroup); this.completedGroup.clear()
     this.robotControllers.forEach((controller) => controller.dispose())
@@ -241,7 +244,11 @@ export class RmfNavigationLayer {
       }))
       revealObjects.forEach((object, index) => { object.userData.routeRevealOffset = index / Math.max(1, revealObjects.length - 1) })
       this.routeEntries.push({ route, points, total, activeRouteGroup, completedRouteGroup, arrowGroup, arrows, revealObjects, entranceAge: 0 })
-      if (this.showRobotModels) this.addRobotController(route.robotId, points, route.progress, colors.main)
+      if (this.showRobotModels) {
+        this.addRobotController(route.robotId, points, previousSimulationProgress.get(route.id) ?? route.progress, colors.main)
+        if (route.isSimulated && previousSimulationProgress.has(route.id))
+          this.robotControllers.get(route.robotId).simulationTaskId = route.id
+      }
     })
 
     if (this.showRobotModels) this.robots.forEach((robot) => {
@@ -250,6 +257,41 @@ export class RmfNavigationLayer {
       if (!waypoint) return
       this.addRobotController(robot.id, [pointOf(waypoint, 0)], 0, (robotRouteColors[robot.id] || robotRouteColors.R04).main)
     })
+    this.applyEmphasis()
+  }
+
+  setLiveRobots(robots, routes = []) {
+    this.robots = robots
+    const positioned = robots.filter(robot => robot.hasPose)
+    const ids = new Set(positioned.map(robot => robot.id))
+    for (const [id,controller] of this.robotControllers) {
+      if (!ids.has(id)) { controller.dispose(); this.robotControllers.delete(id) }
+    }
+    for (const robot of positioned) {
+      const point = rmfToThree({x:robot.x,y:robot.y})
+      const forward = rmfToThree({x:robot.x+Math.cos(robot.yaw),y:robot.y+Math.sin(robot.yaw)})
+      const position = new THREE.Vector3(point.x,point.y,point.z)
+      if (!this.robotControllers.has(robot.id)) this.addRobotController(robot.id,[position],0,(robotRouteColors[robot.id] || robotRouteColors.R04).main)
+      const controller = this.robotControllers.get(robot.id)
+      const simulation = robot.positionSource === 'preview'
+        ? routes.find(route => route.isSimulated && route.robotId === robot.id)
+        : null
+      const simulatedPoints = simulation?.vertexIds.map(id => this.vertices.get(id)).filter(Boolean).map(vertex => pointOf(vertex,0)) || []
+      if (simulatedPoints.length > 1) {
+        if (controller.simulationTaskId !== simulation.id) {
+          controller.setRoute(simulatedPoints,0)
+          controller.wrapper.position.copy(simulatedPoints[0]).setY(0)
+          controller.simulationTaskId = simulation.id
+        }
+        controller.offline = false
+        continue
+      }
+      controller.simulationTaskId = null
+      controller.setRoute([position],0)
+      controller.wrapper.position.copy(position)
+      controller.wrapper.rotation.y = Math.atan2(forward.x-point.x,forward.z-point.z)
+      controller.offline = robot.state === 'offline'
+    }
     this.applyEmphasis()
   }
 
@@ -295,6 +337,10 @@ export class RmfNavigationLayer {
     this.flowDistance += delta * routeVisualConfig.arrowFlowSpeed
     this.routeEntries.forEach((entry) => {
       const { points, arrows, arrowGroup, revealObjects } = entry
+      const controller = this.robotControllers.get(entry.route.robotId)
+      const simulatedArrived = entry.route.isSimulated && controller?.simulationTaskId === entry.route.id &&
+        (controller.getRouteState()?.progress ?? 0) >= 0.9999
+      if (simulatedArrived) arrowGroup.visible = false
       if (entry.entranceAge < 3.2) {
         entry.entranceAge = Math.min(3.2, entry.entranceAge + delta)
         const overall = entry.entranceAge / 3.2
@@ -314,7 +360,8 @@ export class RmfNavigationLayer {
         arrow.visible = this.arrowsVisible
       })
     })
-    this.robotControllers.forEach((controller) => controller.update(delta, this.camera, this.elapsed, this.doorController))
+    this.robotControllers.forEach((controller) => controller.update(delta, this.camera, this.elapsed,
+      controller.simulationTaskId ? null : this.doorController))
   }
 
   setSelectedRobot(id = null) { this.selectedRobotId = id; this.applyEmphasis() }

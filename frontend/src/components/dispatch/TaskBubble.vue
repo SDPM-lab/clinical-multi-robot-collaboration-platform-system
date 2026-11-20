@@ -1,4 +1,6 @@
 <script setup>
+import { robotDisplayCode } from '@/config/robotDisplayCode.js'
+
 defineProps({
   task: { type: Object, required: true },
   size: { type: Number, required: true },
@@ -32,11 +34,11 @@ defineEmits(['pointerdown', 'pointermove', 'pointerup', 'pointercancel'])
     <time v-if="labelMode === 'full'">{{ startTime }}</time>
     <span class="task-tooltip" role="tooltip">
       <b>{{ task.id }}　{{ task.title }}</b>
-      <span>{{ task.robotId ? `Robot ${task.robotId.slice(1)}` : '尚未指派' }}</span>
+      <span>{{ task.robotId ? robotDisplayCode(task.robotId) : '尚未指派' }}</span>
       <span>{{ priorityLabel }}優先級</span>
       <span>{{ startTime }} → {{ endTime }}</span>
       <span>預估 {{ Math.round(task.durationSeconds / 60) }} 分鐘</span>
-      <span>{{ task.origin }} → {{ task.destination }}</span>
+      <span>{{ task.source }} → {{ task.destination }}</span>
       <span>{{ task.status }}</span>
     </span>
   </button>

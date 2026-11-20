@@ -1,8 +1,27 @@
 import { afterEach,expect,it,vi } from 'vitest'
 import { nextTick } from 'vue'
-import { installGlobalTranslation,setLocale,t } from '@/i18n/index.js'
+import { installGlobalTranslation,setLocale,t,translateLocation } from '@/i18n/index.js'
+import en from '@/i18n/locales/en.js'
+import zhTW from '@/i18n/locales/zh-TW.js'
+
+const localeKeys = (messages, prefix = '') => Object.entries(messages)
+ .filter(([key]) => key !== 'legacy')
+ .flatMap(([key, value]) => {
+  const path = prefix ? `${prefix}.${key}` : key
+  return value && typeof value === 'object' ? localeKeys(value, path) : [path]
+ })
+ .sort()
 
 afterEach(()=>{setLocale('zh-TW');document.body.innerHTML=''})
+it('keeps keyed English and Chinese translations complete across the app',()=>{
+ expect(localeKeys(zhTW)).toEqual(localeKeys(en))
+})
+it('translates exact location names including apostrophes',()=>{
+ setLocale('zh-TW')
+ expect(translateLocation("Women's Restroom")).toBe('女廁')
+ setLocale('en')
+ expect(translateLocation("Women's Restroom")).toBe("Women's Restroom")
+})
 it('persists locale and translates known literal UI copy without changing identifiers',async()=>{
  const root=document.createElement('div')
  root.innerHTML='<h2>今日完成率</h2><input placeholder="搜尋任務、機器人或區域"><span>Robot R01</span><button>全部 3</button>'

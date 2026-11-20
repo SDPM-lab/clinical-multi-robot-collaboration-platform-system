@@ -29,7 +29,7 @@ describe('dispatch timeline interactions', () => {
           { id: 'R02', name: 'Robot 02', battery: 34, state: 'charging' },
           { id: 'R03', name: 'Robot 03', battery: 18, state: 'idle' },
         ],
-        tasks: [{ id: 'T001', robotId: 'R01', title: '藥品配送', origin: 'Pharmacy', destination: 'Nurse Reception', priority: 'high', status: 'executing', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720 }],
+        tasks: [{ id: 'T001', robotId: 'R01', title: '藥品配送', source: 'Pharmacy', destination: 'Nurse Reception', priority: 'high', status: 'executing', startTime: '09:30:00', endTime: '09:42:00', durationSeconds: 720 }],
       },
     })
     expect(wrapper.find('.timeline-grid').classes()).not.toContain('is-editing')

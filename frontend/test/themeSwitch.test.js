@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
+import { overviewThemeVars } from '@/styles/overviewTheme.js'
 import AppShellView from '@/views/AppShellView.vue'
 
 const createTestRouter = async () => {
@@ -21,7 +22,9 @@ const createTestRouter = async () => {
 describe('theme switching', () => {
   afterEach(() => {
     localStorage.removeItem('hospital-rmf-color-theme')
+    localStorage.removeItem('hospital-rmf-font-size')
     document.documentElement.dataset.theme = 'light'
+    document.documentElement.dataset.uiFontSize = 'small'
     window.history.replaceState({}, '', '/')
   })
 
@@ -50,7 +53,6 @@ describe('theme switching', () => {
         plugins: [router],
         stubs: {
           ClinicOverviewView: true,
-          OverviewSearch: true,
         },
       },
     })
@@ -60,6 +62,7 @@ describe('theme switching', () => {
     for (const expected of ['dark', 'light', 'dark', 'light']) {
       await toggle.trigger('click')
       expect(document.documentElement.dataset.theme).toBe(expected)
+      expect(wrapper.get('.overview-page').attributes('data-theme')).toBeUndefined()
       expect(wrapper.find('.theme-overlay').exists()).toBe(false)
       expect(wrapper.find('.dark-overlay').exists()).toBe(false)
     }
@@ -67,10 +70,16 @@ describe('theme switching', () => {
     wrapper.unmount()
   })
 
+  it('lets the active theme control global colors on Overview and Dispatch', () => {
+    for (const token of ['--info-background', '--text-primary', '--text-secondary', '--text-muted', '--overview-completion-background']) {
+      expect(overviewThemeVars).not.toHaveProperty(token)
+    }
+  })
+
   it('highlights the fullscreen control only while fullscreen is active', async () => {
     const router = await createTestRouter()
     const wrapper = mount(AppShellView, {
-      global: { plugins: [router], stubs: { ClinicOverviewView: true, OverviewSearch: true } },
+      global: { plugins: [router], stubs: { ClinicOverviewView: true } },
     })
     const button = wrapper.get('.fullscreen-action')
     expect(button.attributes('aria-pressed')).toBe('false')
@@ -96,7 +105,6 @@ describe('theme switching', () => {
         plugins: [router],
         stubs: {
           ClinicOverviewView: true,
-          OverviewSearch: true,
           TaskDispatchView: { template: '<div class="dispatch-view-stub" />' },
           RobotFleetView: { template: '<div class="robot-view-stub" />' },
           ScheduleHistoryView: { template: '<div class="schedule-history-view-stub" />' },
@@ -117,6 +125,31 @@ describe('theme switching', () => {
     await navButton('排程歷史').trigger('click')
     expect(wrapper.find('.schedule-history-view-stub').exists()).toBe(true)
 
+    wrapper.unmount()
+  })
+
+  it('opens the dispatch Schedule tab from Overview View all', async () => {
+    const router = await createTestRouter()
+    const wrapper = mount(AppShellView, {
+      global: {
+        plugins: [router],
+        stubs: {
+          ClinicOverviewView: {
+            emits: ['open-dispatch'],
+            template: `<button class="view-all" @click="$emit('open-dispatch', 'schedule')">View all</button>`,
+          },
+          TaskDispatchView: {
+            props: ['initialPanel'],
+            template: '<div class="dispatch-view-stub" :data-initial-panel="initialPanel" />',
+          },
+          HospitalScene: true,
+        },
+      },
+    })
+
+    await wrapper.get('.view-all').trigger('click')
+    expect(wrapper.get('.dispatch-view-stub').attributes('data-initial-panel')).toBe('schedule')
+    expect(wrapper.findAll('.overview-nav__link').find((button) => button.text() === '任務派遣').attributes('aria-current')).toBe('page')
     wrapper.unmount()
   })
 })

@@ -129,11 +129,11 @@ const beginDrag = (event, task) => {
   event.preventDefault()
   event.currentTarget.setPointerCapture(event.pointerId)
   const start = drafts.value[task.id] ?? timeToSeconds(task.startTime)
-  dragging.value = { task, originX: event.clientX, originalStart: start, previewStart: start, pointerId: event.pointerId }
+  dragging.value = { task, sourceX: event.clientX, originalStart: start, previewStart: start, pointerId: event.pointerId }
 }
 const dragTask = (event) => {
   if (!dragging.value || event.pointerId !== dragging.value.pointerId) return
-  const deltaSeconds = ((event.clientX - dragging.value.originX) / timelineWidth.value) * WORKDAY_DURATION
+  const deltaSeconds = ((event.clientX - dragging.value.sourceX) / timelineWidth.value) * WORKDAY_DURATION
   dragging.value.previewStart = snapTaskStart(dragging.value.originalStart + deltaSeconds, dragging.value.task.durationSeconds, dragSnapSeconds.value)
 }
 const endDrag = () => {
@@ -146,10 +146,10 @@ const endDrag = () => {
 }
 const beginPan = (event) => {
   if (event.target.closest('.task-bubble')) return
-  panning.value = { pointerId: event.pointerId, originX: event.clientX, scrollLeft: viewport.value.scrollLeft }
+  panning.value = { pointerId: event.pointerId, sourceX: event.clientX, scrollLeft: viewport.value.scrollLeft }
   event.currentTarget.setPointerCapture(event.pointerId)
 }
-const panTimeline = (event) => { if (panning.value?.pointerId === event.pointerId) viewport.value.scrollLeft = panning.value.scrollLeft - (event.clientX - panning.value.originX) }
+const panTimeline = (event) => { if (panning.value?.pointerId === event.pointerId) viewport.value.scrollLeft = panning.value.scrollLeft - (event.clientX - panning.value.sourceX) }
 const endPan = () => { panning.value = null }
 const requestDate = (nextDate) => {
   if (nextDate === props.date) { centerOn(nextDate === todayIso ? nowSeconds : 11 * 3600); return }
@@ -209,7 +209,7 @@ onBeforeUnmount(() => { resizeObserver?.disconnect(); viewport.value?.removeEven
       </div>
     </div>
     <div v-if="warning" class="timeline-warning" role="alert">{{ warning.message }}</div>
-    <article v-if="selectedTask && !isScheduleEditing" class="task-detail-popover"><button type="button" aria-label="關閉" @click="selectedTask=null">×</button><strong>{{ selectedTask.id }} · {{ selectedTask.title }}</strong><span>{{ selectedTask.startTime }}–{{ selectedTask.endTime }}</span><span>{{ selectedTask.origin }} → {{ selectedTask.destination }}</span><span>{{ priorityLabels[normalizedPriority(selectedTask)] }}優先級 · {{ selectedTask.status }}</span></article>
+    <article v-if="selectedTask && !isScheduleEditing" class="task-detail-popover"><button type="button" aria-label="關閉" @click="selectedTask=null">×</button><strong>{{ selectedTask.id }} · {{ selectedTask.title }}</strong><span>{{ selectedTask.startTime }}–{{ selectedTask.endTime }}</span><span>{{ selectedTask.source }} → {{ selectedTask.destination }}</span><span>{{ priorityLabels[normalizedPriority(selectedTask)] }}優先級 · {{ selectedTask.status }}</span></article>
     <div v-if="dateDialogOpen" class="unsaved-dialog-backdrop"><article class="unsaved-dialog" role="dialog" aria-modal="true"><strong>目前有尚未儲存的排程變更</strong><div><button type="button" class="discard-button" @click="discardAndSwitchDate">放棄變更</button><button type="button" @click="dateDialogOpen=false">繼續編輯</button></div></article></div>
   </section>
 </template>

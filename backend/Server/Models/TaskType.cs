@@ -1,9 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace Server.Models;
 
+[JsonConverter(typeof(TaskTypeJsonConverter))]
 public enum TaskType
 {
-    MedicineDelivery,
+    WasteTransport,
+    ClothesCollection,
+    MedicationDelivery,
     SpecimenDelivery,
-    GeneralDelivery,
-    WasteCollection
+    WardService
 }
