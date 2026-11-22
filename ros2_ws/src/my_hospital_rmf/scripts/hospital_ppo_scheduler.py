@@ -1938,6 +1938,37 @@ class HospitalPpoScheduler(Node):
             )
         )
 
+        # ----------------------------------------------------
+        # Runtime RMF availability filter
+        #
+        # Training/baseline experiments allow assigning a new
+        # task to a busy robot so that it can be queued.
+        #
+        # The current real RMF integration dispatches each
+        # assignment immediately as a robot_task_request.
+        # Therefore a robot that is already busy must not be
+        # selected again until its current task is completed.
+        #
+        # Offline robots are also explicitly excluded here.
+        # ----------------------------------------------------
+
+        if not self.scheduling_only:
+            for index, robot in enumerate(robots):
+                runtime_status = (
+                    str(robot.status)
+                    .strip()
+                    .lower()
+                )
+
+                if runtime_status in (
+                    "busy",
+                    "offline",
+                    "error",
+                    "charging",
+                    "returning_to_charge",
+                ):
+                    mask[index] = False
+
         if observation.shape != (98,):
             raise RuntimeError(
                 "Unexpected PPO observation "
