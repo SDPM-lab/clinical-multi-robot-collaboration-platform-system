@@ -183,7 +183,6 @@ class HospitalRosApiBridge(Node):
                         float(
                             robot.battery_percent
                         )
-                        * 100.0
                     )
                 ),
 
