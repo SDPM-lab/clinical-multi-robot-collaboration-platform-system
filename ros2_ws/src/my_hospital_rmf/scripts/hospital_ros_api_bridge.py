@@ -155,17 +155,17 @@ class HospitalRosApiBridge(Node):
                 mode_text = "充電中"
                 current_task = "充電中"
 
+            elif task_id:
+                status = "執行任務中"
+                mode_text = "執行任務中"
+                current_task = (
+                    f"任務中: {task_id}"
+                )
+
             elif mode == 2:
-                if task_id:
-                    status = "執行任務中"
-                    mode_text = "執行任務中"
-                    current_task = (
-                        f"任務中: {task_id}"
-                    )
-                else:
-                    status = "移動中"
-                    mode_text = "移動中"
-                    current_task = "移動中"
+                status = "移動中"
+                mode_text = "移動中"
+                current_task = "移動中"
 
             else:
                 status = "待命"
