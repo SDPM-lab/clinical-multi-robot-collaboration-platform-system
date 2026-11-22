@@ -373,6 +373,19 @@ def launch_setup(context):
         "fleet_instances.yaml",
     )
 
+    # ========================================================
+    # Shared global map
+    #
+    # All robots use the same hospital occupancy map.
+    # Only ONE map_server is required for the whole fleet.
+    # ========================================================
+
+    map_yaml_path = os.path.join(
+        pkg,
+        "maps",
+        "L1_nav2_live.yaml",
+    )
+
     with open(
         nav2_template_path,
         "r",
@@ -410,6 +423,34 @@ def launch_setup(context):
 
     use_spawn_initial_pose = (
         use_spawn_initial_pose_arg
+        in (
+            "true",
+            "1",
+            "yes",
+            "on",
+        )
+    )
+
+    # ========================================================
+    # Shared map_server mode
+    #
+    # true:
+    #   Start one global /map_server for the whole fleet.
+    #
+    # false:
+    #   Assume another launch already provides /map.
+    # ========================================================
+
+    start_map_server_arg = (
+        LaunchConfiguration(
+            "start_map_server"
+        ).perform(context)
+        .strip()
+        .lower()
+    )
+
+    start_map_server = (
+        start_map_server_arg
         in (
             "true",
             "1",
@@ -466,6 +507,47 @@ def launch_setup(context):
             )
 
     actions = []
+
+    # ========================================================
+    # One shared global map_server
+    # ========================================================
+
+    if start_map_server:
+
+        shared_map_server = Node(
+            package="nav2_map_server",
+            executable="map_server",
+            name="map_server",
+            output="screen",
+            parameters=[
+                {
+                    "use_sim_time": True,
+                    "yaml_filename": map_yaml_path,
+                }
+            ],
+        )
+
+        shared_map_lifecycle_manager = Node(
+            package="nav2_lifecycle_manager",
+            executable="lifecycle_manager",
+            name="lifecycle_manager_map_server",
+            output="screen",
+            parameters=[
+                {
+                    "use_sim_time": True,
+                    "autostart": True,
+                    "bond_timeout": 0.0,
+                    "node_names": [
+                        "map_server",
+                    ],
+                }
+            ],
+        )
+
+        actions.extend([
+            shared_map_server,
+            shared_map_lifecycle_manager,
+        ])
 
     robot_index = 0
 
@@ -564,6 +646,15 @@ def generate_launch_description():
         ),
     )
 
+    start_map_server_arg = DeclareLaunchArgument(
+        "start_map_server",
+        default_value="true",
+        description=(
+            "Start one shared global map_server. "
+            "Set false when another launch already provides /map."
+        ),
+    )
+
     use_spawn_initial_pose_arg = DeclareLaunchArgument(
         "use_spawn_initial_pose",
         default_value="true",
@@ -581,6 +672,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         robots_arg,
+        start_map_server_arg,
         use_spawn_initial_pose_arg,
         setup,
     ])

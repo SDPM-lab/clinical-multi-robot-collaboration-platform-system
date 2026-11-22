@@ -6,6 +6,12 @@ import yaml
 
 import rclpy
 from rclpy.node import Node
+from rclpy.action import ActionClient
+
+from nav2_msgs.action import NavigateThroughPoses
+from geometry_msgs.msg import PoseStamped
+
+from tf2_ros import Buffer, TransformListener
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -150,6 +156,35 @@ class HospitalG1NavigationBridge(Node):
         self.scan_subscriptions = {}
 
         # ----------------------------------------------------
+        # Nav2 action clients
+        #
+        # Each robot has its own NavigateThroughPoses server:
+        #
+        # /hospital_robot_X/navigate_through_poses
+        # ----------------------------------------------------
+
+        self.nav_clients = {}
+        self.nav_goal_handles = {}
+
+        # ----------------------------------------------------
+        # TF
+        #
+        # Nav2 operates in the map frame. RMF RobotState must
+        # therefore report the same map-frame robot pose.
+        # ----------------------------------------------------
+
+        self.tf_buffer = Buffer()
+
+        self.tf_listener = TransformListener(
+            self.tf_buffer,
+            self,
+        )
+
+        # Last RMF request signature per robot.
+        # Used to ignore duplicate PathRequest messages.
+        self.last_path_signatures = {}
+
+        # ----------------------------------------------------
         # RMF state output
         # ----------------------------------------------------
 
@@ -265,16 +300,24 @@ class HospitalG1NavigationBridge(Node):
                 10,
             )
 
-            # robot1 is controlled by Nav2 MPPI during the PoC.
-            # Keep the legacy bridge control for robot2~7.
-            if robot_id != "hospital_robot_1":
-                self.cmd_publishers[
-                    robot_id
-                ] = self.create_publisher(
-                    Twist,
-                    cmd_topic,
-                    10,
-                )
+            # ------------------------------------------------
+            # Nav2 owns base motion for every robot.
+            #
+            # The RMF bridge must NOT publish cmd_vel directly,
+            # otherwise it would compete with Nav2's controller.
+            # ------------------------------------------------
+
+            self.nav_clients[
+                robot_id
+            ] = ActionClient(
+                self,
+                NavigateThroughPoses,
+                f"/{robot_id}/navigate_through_poses",
+            )
+
+            self.nav_goal_handles[
+                robot_id
+            ] = None
 
             self.get_logger().info(
                 f"{robot_id}: "
@@ -407,6 +450,270 @@ class HospitalG1NavigationBridge(Node):
                 f"{robot.right_clearance:.2f}m"
             )
 
+    def cancel_nav2_goal(
+        self,
+        robot_id,
+    ):
+        """Cancel the currently active Nav2 goal for one robot."""
+
+        goal_handle = self.nav_goal_handles.get(
+            robot_id
+        )
+
+        if goal_handle is None:
+            return
+
+        self.get_logger().info(
+            f"{robot_id}: "
+            "cancelling current Nav2 goal"
+        )
+
+        future = (
+            goal_handle.cancel_goal_async()
+        )
+
+        future.add_done_callback(
+            lambda f, rid=robot_id:
+                self.nav_cancel_done_callback(
+                    rid,
+                    f,
+                )
+        )
+
+
+    def nav_cancel_done_callback(
+        self,
+        robot_id,
+        future,
+    ):
+        try:
+            response = future.result()
+
+            cancel_count = len(
+                response.goals_canceling
+            )
+
+            self.get_logger().info(
+                f"{robot_id}: "
+                f"Nav2 cancel response "
+                f"goals_canceling={cancel_count}"
+            )
+
+        except Exception as exc:
+            self.get_logger().error(
+                f"{robot_id}: "
+                f"Nav2 cancel failed: {exc}"
+            )
+
+        self.nav_goal_handles[
+            robot_id
+        ] = None
+
+
+    def send_nav2_path(
+        self,
+        robot,
+    ):
+        """Send the current RMF path to this robot's Nav2."""
+
+        client = self.nav_clients.get(
+            robot.robot_id
+        )
+
+        if client is None:
+            self.get_logger().error(
+                f"{robot.robot_id}: "
+                "Nav2 action client not found"
+            )
+            return
+
+        if not robot.path:
+            return
+
+        if not client.server_is_ready():
+            self.get_logger().warning(
+                f"{robot.robot_id}: "
+                "NavigateThroughPoses server is not ready"
+            )
+            return
+
+        goal = NavigateThroughPoses.Goal()
+
+        goal.poses = []
+
+        for point in robot.path:
+
+            pose = PoseStamped()
+
+            pose.header.frame_id = "map"
+            pose.header.stamp = (
+                self.get_clock()
+                .now()
+                .to_msg()
+            )
+
+            pose.pose.position.x = float(
+                point.x
+            )
+
+            pose.pose.position.y = float(
+                point.y
+            )
+
+            yaw = float(
+                point.yaw
+            )
+
+            pose.pose.orientation.z = (
+                math.sin(yaw / 2.0)
+            )
+
+            pose.pose.orientation.w = (
+                math.cos(yaw / 2.0)
+            )
+
+            goal.poses.append(
+                pose
+            )
+
+        self.get_logger().info(
+            f"{robot.robot_id}: "
+            f"sending {len(goal.poses)} poses "
+            "to Nav2"
+        )
+
+        future = client.send_goal_async(
+            goal
+        )
+
+        future.add_done_callback(
+            lambda f, rid=robot.robot_id:
+                self.nav_goal_response_callback(
+                    rid,
+                    f,
+                )
+        )
+
+
+    def nav_goal_response_callback(
+        self,
+        robot_id,
+        future,
+    ):
+        robot = self.robots.get(
+            robot_id
+        )
+
+        if robot is None:
+            return
+
+        try:
+            goal_handle = future.result()
+        except Exception as exc:
+            self.get_logger().error(
+                f"{robot_id}: "
+                f"failed sending Nav2 goal: {exc}"
+            )
+            return
+
+        if not goal_handle.accepted:
+            self.get_logger().error(
+                f"{robot_id}: "
+                "Nav2 goal rejected"
+            )
+            return
+
+        self.nav_goal_handles[
+            robot_id
+        ] = goal_handle
+
+        self.get_logger().info(
+            f"{robot_id}: "
+            "Nav2 goal accepted"
+        )
+
+        result_future = (
+            goal_handle.get_result_async()
+        )
+
+        result_future.add_done_callback(
+            lambda f, rid=robot_id:
+                self.nav_result_callback(
+                    rid,
+                    f,
+                )
+        )
+
+
+    def nav_result_callback(
+        self,
+        robot_id,
+        future,
+    ):
+        robot = self.robots.get(
+            robot_id
+        )
+
+        if robot is None:
+            return
+
+        self.nav_goal_handles[
+            robot_id
+        ] = None
+
+        try:
+            wrapped_result = future.result()
+        except Exception as exc:
+            self.get_logger().error(
+                f"{robot_id}: "
+                f"Nav2 result failed: {exc}"
+            )
+            return
+
+        status = wrapped_result.status
+        result = wrapped_result.result
+
+        if (
+            status == 4
+            and result.error_code == 0
+        ):
+            completed_task = (
+                robot.task_id
+            )
+
+            robot.current_target_index = (
+                len(robot.path)
+            )
+
+            robot.path = []
+
+            self.get_logger().info(
+                f"{robot_id} completed path "
+                f"task_id={completed_task} "
+                "through Nav2"
+            )
+
+            return
+
+        # Nav2 has reached a terminal state, even if it failed
+        # or was cancelled. Do not leave RobotState stuck in
+        # MODE_MOVING forever.
+        robot.current_target_index = (
+            len(robot.path)
+        )
+
+        robot.path = []
+
+        self.get_logger().error(
+            f"{robot_id}: "
+            f"Nav2 navigation failed "
+            f"status={status}, "
+            f"error_code={result.error_code}, "
+            f"error_msg={result.error_msg}; "
+            "runtime path cleared"
+        )
+
+
     def path_request_callback(
         self,
         msg,
@@ -443,10 +750,71 @@ class HospitalG1NavigationBridge(Node):
                 )
                 return
 
+        # ----------------------------------------------------
+        # Ignore duplicate RMF PathRequest messages.
+        #
+        # RMF may publish the same request more than once.
+        # Re-sending the same Nav2 goal would unnecessarily
+        # cancel and restart navigation.
+        # ----------------------------------------------------
+
+        path_signature = (
+            msg.task_id,
+            tuple(
+                (
+                    round(float(point.x), 4),
+                    round(float(point.y), 4),
+                    round(float(point.yaw), 4),
+                    point.level_name,
+                    int(point.index),
+                )
+                for point in msg.path
+            ),
+        )
+
+        previous_signature = (
+            self.last_path_signatures.get(
+                msg.robot_name
+            )
+        )
+
+        if previous_signature == path_signature:
+            self.get_logger().info(
+                f"{msg.robot_name}: "
+                "duplicate PathRequest ignored"
+            )
+            return
+
+        self.last_path_signatures[
+            msg.robot_name
+        ] = path_signature
+
+        # ----------------------------------------------------
+        # A genuinely new RMF PathRequest supersedes the
+        # previous Nav2 navigation goal.
+        # ----------------------------------------------------
+
+        self.cancel_nav2_goal(
+            msg.robot_name
+        )
+
         robot.receive_path(
             msg.task_id,
             msg.path,
         )
+
+        # ----------------------------------------------------
+        # Empty path:
+        #   cancel current Nav2 navigation and remain idle.
+        #
+        # Non-empty path:
+        #   delegate the complete RMF path to Nav2.
+        # ----------------------------------------------------
+
+        if len(msg.path) > 0:
+            self.send_nav2_path(
+                robot
+            )
 
         self.get_logger().info(
             f"{msg.robot_name} received "
@@ -467,10 +835,15 @@ class HospitalG1NavigationBridge(Node):
                 f"index={p.index}"
             )
 
-        # 空 path = 停止
+        # Empty path = navigation cancelled / stopped.
         if len(msg.path) == 0:
-            self.stop_robot(
-                msg.robot_name
+
+            robot.current_target_index = 0
+            robot.path = []
+
+            self.get_logger().info(
+                f"{msg.robot_name}: "
+                "empty PathRequest -> navigation stopped"
             )
 
     # ========================================================
@@ -1929,11 +2302,53 @@ class HospitalG1NavigationBridge(Node):
         robot,
         now_msg,
     ):
-        (
-            map_x,
-            map_y,
-            map_yaw,
-        ) = robot.map_pose()
+        # Nav2 uses TF map -> base_link as its authoritative
+        # map-frame pose. RMF must use the same pose, otherwise
+        # RMF may consider the robot lost even when Nav2 has
+        # successfully reached its goal.
+        try:
+            transform = self.tf_buffer.lookup_transform(
+                "map",
+                f"{robot.robot_id}/base_link",
+                rclpy.time.Time(),
+            )
+
+            translation = (
+                transform.transform.translation
+            )
+
+            rotation = (
+                transform.transform.rotation
+            )
+
+            map_x = float(
+                translation.x
+            )
+
+            map_y = float(
+                translation.y
+            )
+
+            map_yaw = math.atan2(
+                2.0 * (
+                    rotation.w * rotation.z
+                    + rotation.x * rotation.y
+                ),
+                1.0 - 2.0 * (
+                    rotation.y * rotation.y
+                    + rotation.z * rotation.z
+                ),
+            )
+
+        except Exception:
+            # Keep the previous spawn+odom / ground-truth
+            # calculation as a safe fallback if TF is
+            # temporarily unavailable.
+            (
+                map_x,
+                map_y,
+                map_yaw,
+            ) = robot.map_pose()
 
         msg = RobotState()
 
@@ -2019,9 +2434,9 @@ class HospitalG1NavigationBridge(Node):
             if not robot.received_odom:
                 continue
 
-            self.control_robot(
-                robot
-            )
+            # Navigation commands are handled by Nav2.
+            # This bridge only translates RMF paths and
+            # publishes RobotState.
 
             state = self.make_state(
                 robot,

@@ -95,6 +95,7 @@ from travel_time import TravelTimeModel
 
 from rl.observation import (
     BATTERY_LAYOUT,
+    LOCATIONS,
     ObservationEncoder,
 )
 
@@ -582,10 +583,24 @@ class HospitalPpoScheduler(Node):
                 "Nav graph has no named waypoints"
             )
 
-        waypoint = min(
+        canonical_waypoints = [
             self.nav_graph
-            .waypoints_by_name
-            .values(),
+            .waypoints_by_name[name]
+            for name in LOCATIONS
+            if name in (
+                self.nav_graph
+                .waypoints_by_name
+            )
+        ]
+
+        if not canonical_waypoints:
+            raise RuntimeError(
+                "No PPO canonical locations "
+                "exist in nav graph"
+            )
+
+        waypoint = min(
+            canonical_waypoints,
             key=lambda item: math.hypot(
                 float(x) - item.x,
                 float(y) - item.y,
@@ -639,9 +654,6 @@ class HospitalPpoScheduler(Node):
         #
         # Real /fleet_states data always overwrites these values
         # when it becomes available.
-
-        if not self.scheduling_only:
-            return
 
         if not self.nav_graph.waypoints_by_name:
             raise RuntimeError(
@@ -699,7 +711,11 @@ class HospitalPpoScheduler(Node):
                 "yaw": 0.0,
                 "level_name": "L1",
                 "task_id": None,
-                "status": "idle",
+                "status": (
+                    "idle"
+                    if self.scheduling_only
+                    else "offline"
+                ),
                 "battery_soc": 1.0,
             }
 
@@ -708,8 +724,14 @@ class HospitalPpoScheduler(Node):
             )
 
         if added:
+            mode_label = (
+                "SCHEDULING_ONLY_DEMO_FLEET"
+                if self.scheduling_only
+                else "OFFLINE_FLEET_PLACEHOLDERS"
+            )
+
             self.get_logger().info(
-                "[SCHEDULING_ONLY_DEMO_FLEET] "
+                f"[{mode_label}] "
                 "initialized="
                 + ",".join(added)
             )
