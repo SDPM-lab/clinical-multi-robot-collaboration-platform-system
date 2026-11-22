@@ -20,7 +20,11 @@ def generate_launch_description():
     pkg = get_package_share_directory("my_hospital_rmf")
     world_file = os.path.join(pkg, "maps", "L1.world")
     nav_graph  = os.path.join(pkg, "nav_graphs", "0.yaml")
-    map_yaml   = os.path.join(pkg, "maps", "L1.yaml")
+    map_yaml   = os.path.join(
+        pkg,
+        "maps",
+        "L1_nav2_live.yaml",
+    )
     fleet_cfg  = os.path.join(pkg, "config", "fleet_config.yaml")
     rviz_cfg   = os.path.join(pkg, "rviz", "hospital.rviz")
     cleanup_executable = os.path.join(
@@ -34,8 +38,14 @@ def generate_launch_description():
         "hospital_g1_fleet.launch.py",
     )
 
+    g1_nav2_fleet_launch = os.path.join(
+        pkg,
+        "launch",
+        "g1_nav2_fleet.launch.py",
+    )
+
     use_sim_time_arg = DeclareLaunchArgument(
-        "use_sim_time", default_value="false",
+        "use_sim_time", default_value="true",
         description="跟 Gazebo 一起用時設 true，單跑真實機器人設 false"
     )
     server_uri_arg = DeclareLaunchArgument(
@@ -72,6 +82,20 @@ def generate_launch_description():
     launch_gazebo_gui = LaunchConfiguration("launch_gazebo_gui")
     launch_rviz   = LaunchConfiguration("launch_rviz")
     robots        = LaunchConfiguration("robots")
+
+    # hospital.launch.py interprets robots as a COUNT:
+    #   1 -> robot 1
+    #   2 -> robots 1,2
+    #   3 -> robots 1,2,3
+    #
+    # g1_nav2_fleet.launch.py instead interprets numeric values
+    # as explicit robot IDs, so convert the count here.
+    nav2_robots = PythonExpression([
+        "'all' if '", robots, "' == 'all' else "
+        "','.join(str(i) for i in range(1, int('",
+        robots,
+        "') + 1))"
+    ])
 
     # ── Gz Sim（Gazebo Harmonic）────────────────────────────────
     gz_sim_gui = ExecuteProcess(
@@ -153,7 +177,10 @@ def generate_launch_description():
             g1_fleet_launch
         ),
         launch_arguments={
-            "start_world": "false",
+            # Use the same Gazebo startup path that is already
+            # proven to work when hospital_g1_fleet.launch.py
+            # is launched manually.
+            "start_world": "true",
             "robots": robots,
         }.items(),
         condition=IfCondition(launch_gazebo),
@@ -164,6 +191,37 @@ def generate_launch_description():
         period=5.0,
         actions=[
             g1_fleet,
+        ],
+    )
+
+    # ── G1 Nav2 Fleet ───────────────────────────────────────────
+    #
+    # hospital.launch.py already owns the shared /map_server,
+    # therefore Nav2 must not start another map server.
+    #
+    # Delay Nav2 until Gazebo and G1 controllers are available.
+    g1_nav2_fleet = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            g1_nav2_fleet_launch
+        ),
+        launch_arguments={
+            "robots": nav2_robots,
+            "start_map_server": "false",
+            "use_spawn_initial_pose": "true",
+        }.items(),
+        condition=IfCondition(
+            launch_gazebo
+        ),
+    )
+
+    g1_nav2_fleet_delayed = TimerAction(
+        # G1 fleet starts at t=5s, then its controllers are
+        # brought up sequentially:
+        # R1 JSB -> R1 Diff -> R2 JSB -> R2 Diff.
+        # Wait until that chain has completed before Nav2 starts.
+        period=80.0,
+        actions=[
+            g1_nav2_fleet,
         ],
     )
 
@@ -285,13 +343,68 @@ def generate_launch_description():
 
     # ── G1 真實導航橋 ────────────────────────────────────────────
     # RMF /robot_path_requests
-    #   -> G1 /cmd_vel
-    # G1 odometry
+    #   -> Nav2 NavigateThroughPoses
+    #   -> G1 motion
+    # TF map -> base_link
     #   -> RMF /robot_state
     g1_navigation_bridge = Node(
         package="my_hospital_rmf",
         executable="hospital_g1_navigation_bridge",
         name="hospital_g1_navigation_bridge",
+        output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+        }],
+    )
+
+    # ── PPO Scheduler ───────────────────────────────────────────
+    #
+    # The PPO runtime dependencies (sb3_contrib,
+    # stable_baselines3, etc.) live in the project .venv_rl.
+    # Run the source scheduler explicitly with that interpreter
+    # instead of the system Python used by ros2 Node executables.
+    project_root = os.path.dirname(
+        os.path.dirname(
+            os.path.dirname(
+                get_package_prefix(
+                    "my_hospital_rmf"
+                )
+            )
+        )
+    )
+
+    ppo_python = os.path.join(
+        project_root,
+        ".venv_rl",
+        "bin",
+        "python",
+    )
+
+    ppo_script = os.path.join(
+        project_root,
+        "ros2_ws",
+        "src",
+        "my_hospital_rmf",
+        "scripts",
+        "hospital_ppo_scheduler.py",
+    )
+
+    ppo_scheduler = ExecuteProcess(
+        cmd=[
+            ppo_python,
+            ppo_script,
+        ],
+        output="screen",
+        additional_env={
+            "HOSPITAL_SCHEDULING_ONLY": "",
+        },
+    )
+
+    # ── ROS API Bridge ──────────────────────────────────────────
+    ros_api_bridge = Node(
+        package="my_hospital_rmf",
+        executable="hospital_ros_api_bridge",
+        name="hospital_ros_api_bridge",
         output="screen",
         parameters=[{
             "use_sim_time": use_sim_time,
@@ -366,6 +479,66 @@ def generate_launch_description():
         )
     )
 
+    # ============================================================
+    # Phased full-system startup
+    #
+    # Phase 1:
+    #   t=5s   Gazebo + G1 fleet + ros2_control
+    #
+    # Phase 2:
+    #   t=70s  shared map
+    #   t=80s  Nav2 fleet
+    #
+    # Phase 3:
+    #   t=115s RMF core
+    #
+    # Phase 4:
+    #   t=125s RMF fleet integration / doors / navigation bridge
+    #
+    # Phase 5:
+    #   t=135s PPO / API / WebSocket / RViz
+    # ============================================================
+
+    map_phase = TimerAction(
+        period=70.0,
+        actions=[
+            map_server,
+            lifecycle_manager,
+        ],
+    )
+
+    rmf_core_phase = TimerAction(
+        period=115.0,
+        actions=[
+            traffic_schedule,
+            traffic_blockade,
+            task_dispatcher,
+        ],
+    )
+
+    rmf_integration_phase = TimerAction(
+        period=125.0,
+        actions=[
+            fleet_manager,
+            hospital_fleet_adapter_sim,
+            hospital_fleet_adapter_real,
+            door_supervisor,
+            fake_door,
+            g1_navigation_bridge,
+        ],
+    )
+
+    application_phase = TimerAction(
+        period=135.0,
+        actions=[
+            ppo_scheduler,
+            ros_api_bridge,
+            ws_adapter,
+            rosbridge,
+            rviz2,
+        ],
+    )
+
     # ── 啟動順序說明 ──────────────────────────────────────────────
     # LaunchDescription 裡的項目會依序「登記」，但節點是並行啟動的，
     # 不會等前一個完全 ready 才啟動下一個。
@@ -377,32 +550,20 @@ def generate_launch_description():
         launch_gazebo_gui_arg,
         launch_rviz_arg,
         robots_arg,
-        gz_sim_gui,
-        gz_sim_server,
-        clock_bridge,
-        lidar_bridge,
+
+        # Phase 1
         g1_fleet_delayed,
-        rviz2,
-        # RMF 核心
-        # RMF 核心
-        traffic_schedule,
-        traffic_blockade,
-        task_dispatcher,
-        # state_aggregator,
-        fleet_manager,
-        hospital_fleet_adapter_sim,
-        hospital_fleet_adapter_real,
-        # Door infrastructure
-        door_supervisor,
-        fake_door,
-        # 自定義節點
-        g1_navigation_bridge,
-        ws_adapter,
-        # 地圖
-        map_server,
-        lifecycle_manager,
-        rosbridge,
-        # gz sim 完全退出後才清理 runtime logs
-        gazebo_gui_exit_cleanup,
-        gazebo_server_exit_cleanup,
+
+        # Phase 2
+        map_phase,
+        g1_nav2_fleet_delayed,
+
+        # Phase 3
+        rmf_core_phase,
+
+        # Phase 4
+        rmf_integration_phase,
+
+        # Phase 5
+        application_phase,
     ])

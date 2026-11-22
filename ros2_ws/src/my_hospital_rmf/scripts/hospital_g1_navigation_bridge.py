@@ -2340,15 +2340,20 @@ class HospitalG1NavigationBridge(Node):
                 ),
             )
 
-        except Exception:
-            # Keep the previous spawn+odom / ground-truth
-            # calculation as a safe fallback if TF is
-            # temporarily unavailable.
-            (
-                map_x,
-                map_y,
-                map_yaw,
-            ) = robot.map_pose()
+        except Exception as exc:
+            # RMF RobotState must always be expressed in the
+            # Nav2/RMF map frame. The Gazebo ground-truth pose
+            # (/model/<robot>/pose) is not guaranteed to use the
+            # same frame, so publishing it as a fallback can make
+            # RMF believe the robot is far away from the graph.
+            #
+            # Wait until map -> base_link is available instead.
+            self.get_logger().debug(
+                f"{robot.robot_id}: "
+                "RMF state skipped; map TF not ready: "
+                f"{exc}"
+            )
+            return None
 
         msg = RobotState()
 
@@ -2442,6 +2447,9 @@ class HospitalG1NavigationBridge(Node):
                 robot,
                 now_msg,
             )
+
+            if state is None:
+                continue
 
             self.state_pub.publish(
                 state
