@@ -10,6 +10,7 @@ public class RosBridgeTestService : BackgroundService
 {
     private readonly ILogger<RosBridgeTestService> _logger;
     private readonly bool _acceptLegacyRmfDispatchReports;
+    private readonly bool _autoConnect;
     private readonly RobotStateStore _store;
     private readonly IServiceScopeFactory _scopeFactory;
     private string _rosBridgeUrl;
@@ -63,9 +64,11 @@ public class RosBridgeTestService : BackgroundService
         _scopeFactory = scopeFactory;
         _logger = logger;
         _acceptLegacyRmfDispatchReports = config.GetValue<bool>("TaskDispatch:AcceptLegacyRmfDispatchReports");
+        _autoConnect = config.GetValue<bool>("RosBridge:AutoConnect");
         _store = store;
         _rosBridgeUrl = config.GetValue<string>("RosBridge:Url") ?? "ws://localhost:9090";
         _store.RosBridgeUrl = _rosBridgeUrl;
+        _shouldConnect = _autoConnect;
     }
 
     public void Connect(string url)
@@ -111,7 +114,10 @@ public class RosBridgeTestService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("RosBridge 服務已啟動，等待使用者連線...");
+        if (_autoConnect)
+            _logger.LogInformation("RosBridge 服務已啟動，將自動連線至 {Url}", _rosBridgeUrl);
+        else
+            _logger.LogInformation("RosBridge 服務已啟動，等待使用者連線...");
 
         while (!stoppingToken.IsCancellationRequested)
         {
