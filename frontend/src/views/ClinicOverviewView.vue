@@ -12,7 +12,7 @@ import FloorRobotStatusPanel from '@/components/overview/FloorRobotStatusPanel.v
 import { createFloorRobotStatus, normalizeFloor, robotIds } from '@/data/overviewStatusData.js'
 import TaskProgressTimeline from '@/components/overview/TaskProgressTimeline.vue'
 import { dashboardSnapshot } from '@/data/dashboardSnapshot.js'
-import { dashboardBatteryHistory } from '@/data/dashboardBatteryHistory.js'
+import { dashboardBatteryHistory, hourlyObservedBatteryHistory } from '@/data/dashboardBatteryHistory.js'
 import { taskApi } from '@/services/taskApi.js'
 import { NAVIGATION_ASSETS } from '@/config/sceneAssets.js'
 import { locale, t } from '@/i18n/index.js'
@@ -69,10 +69,10 @@ const floorRobotStatus = computed(() => createFloorRobotStatus((liveData.value?.
   activeTaskId: liveData.value?.tasks.find(task => task.robotId === robot.id && task.status === 'executing')?.id,
 })), liveData.value?.tasks || []))
 const rollingHistory = useOverviewBatteryHistory(floorRobotStatus)
-const observedBatteryHistory = computed(() => Object.fromEntries(['floor1','floor2','floor3'].map(floor => {
-  const samples = [...new Set(Object.values(rollingHistory[floor]).flatMap(points => points.map(point => point.timestamp)))].sort((a,b)=>a-b).slice(-5)
-  return [floor, samples.map(timestamp => ({ time: new Date(timestamp).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}), batteries: Object.fromEntries(robotIds.map(id => [id, rollingHistory[floor][id]?.filter(point=>point.timestamp<=timestamp).at(-1)?.value ?? null])) }))]
-})))
+const observedBatteryHistory = ref({})
+watch(rollingHistory, history => {
+  observedBatteryHistory.value = hourlyObservedBatteryHistory(history, robotIds, observedBatteryHistory.value)
+}, { immediate: true })
 const batteryHistory = computed(() => dashboardBatteryHistory(liveData.value?.robots || [], observedBatteryHistory.value))
 const connectionRobots = computed(() => liveData.value ? liveData.value.robots.map(robot => ({ ...robot, connectionState: robot.hasTelemetry && robot.state !== 'offline' ? 'connected' : 'disconnected' })) : null)
 const floorAnchors = ref({})
@@ -190,7 +190,7 @@ onBeforeUnmount(() => { clearInterval(pollTimer); clearTimeout(modelSaveTimer); 
       </div>
       <div class="overview-bottom-main overview-tool-panel">
       <Transition name="bottom-panel-switch" mode="out-in">
-        <BuildingTrendPanel v-if="bottomPanelMode === 'building-trend'" key="building-trend" :history="batteryHistory" :source="batteryHistory.simulated ? (locale === 'en' ? 'Simulated battery history · F1' : '模擬電量歷史 · F1') : (locale === 'en' ? 'Since opening this page' : '本次開啟頁面後的回報')" />
+        <BuildingTrendPanel v-if="bottomPanelMode === 'building-trend'" key="building-trend" :history="batteryHistory" :source="batteryHistory.simulated ? (locale === 'en' ? 'Simulated' : '模擬') : (locale === 'en' ? 'Since opening this page' : '本次開啟頁面後的回報')" />
         <FloorRobotStatusPanel v-else :key="selectedFloorId" :floor="selectedFloorId" :history="[]" :rolling-history="rollingHistory[selectedFloorId]" :robots="floorRobotStatus[selectedFloorId]" />
       </Transition>
       </div>

@@ -31,9 +31,13 @@ defineProps({ loading: Boolean, detail: { type: String, default: '' }, error: { 
   border-radius: var(--info-radius);
 }
 
+.scene-message strong {
+  font-size: 13px;
+}
+
 .scene-message span:last-child {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   text-align: center;
 }

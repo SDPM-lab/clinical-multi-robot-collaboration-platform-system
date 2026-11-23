@@ -17,6 +17,8 @@ import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
 import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 import { defaultDispatchModelPreset, readDispatchCameraPreset, readDispatchModelPreset, storeDispatchCameraPreset, storeDispatchModelPreset, validDispatchCameraPreset, validDispatchModelPreset } from '@/config/dispatchViewPreset.js'
 import { t, translateLocation } from '@/i18n/index.js'
+import SharedLoading from '@/components/SharedLoading.vue'
+import { readModelResponse } from './readModelResponse.js'
 
 const props = defineProps({
   robots: { type: Array, required: true }, robotId: String, source: String, destination: String,
@@ -27,6 +29,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['select-location', 'visual-top-change'])
 const host = ref(null), loading = ref(true), error = ref(''), graph = ref(null), mapping = ref(null), markers = ref([])
+const modelProgress = ref(0)
 const activeFloor = ref(1), floorPickerOpen = ref(false), floorPicker = ref(null), graphError = ref('')
 function onFloorPickerOutside(event) {
   if (!floorPicker.value?.contains(event.target)) floorPickerOpen.value = false
@@ -297,7 +300,7 @@ onMounted(async () => {
     })
     const response = await fetch(SCENE_ASSETS.dispatchFloor, { signal: abort.signal, cache: 'no-cache' })
     if (!response.ok) throw new Error(`模型載入失敗 (${response.status})`)
-    const glbBuffer = await response.arrayBuffer()
+    const glbBuffer = await readModelResponse(response, (progress) => { if (!disposed) modelProgress.value = progress })
     const gltf = await new GLTFLoader().parseAsync(glbBuffer, '')
     modelScenes = gltf.scenes
     if (disposed) { modelScenes.forEach(disposeObject); resources.forEach((resource) => resource.dispose()); resources.clear(); return }
@@ -369,7 +372,8 @@ onBeforeUnmount(() => {
       <button v-for="marker in markers" v-show="marker.visible && !loading" :key="marker.name" type="button" class="dispatch-station" :class="{ 'is-source': marker.source, 'is-destination': marker.destination }" :style="{ left: `${marker.x}px`, top: `${marker.y}px` }" :data-waypoint="marker.name" :aria-label="t('map.selectLocation', { name: translateLocation(marker.label) })" :title="translateLocation(marker.label)" @click="choose(marker.name)"><svg v-if="marker.source || marker.destination" class="station-pin" viewBox="0 0 32 44" aria-hidden="true"><path d="M16 1C7.7 1 1 7.7 1 16c0 11.2 15 27 15 27s15-15.8 15-27C31 7.7 24.3 1 16 1Z"/><circle cx="16" cy="16" r="6"/></svg><span v-else class="station-dot"></span><span v-if="marker.source || marker.destination" class="station-label">{{ marker.source ? t('dispatchForm.source') : t('dispatchForm.destination') }} · {{ translateLocation(marker.label) }}</span></button>
       <div v-for="robot in robotMarkers" v-show="robot.visible" :key="robot.id" class="dispatch-robot" :style="{ left: `${robot.x}px`, top: `${robot.y}px`, '--robot-color': robot.color }" :title="robot.displayCode"><i>⌃</i><span>{{ robot.displayCode }}</span></div>
     </div>
-    <div v-if="loading || error" class="dispatch-map-message" :role="error ? 'alert' : 'status'">{{ error || '正在載入 F1 模型…' }}</div>
+    <SharedLoading :loading="loading" :detail="modelProgress === null ? t('map.loadingModel') : `${modelProgress}%`" />
+    <div v-if="error" class="dispatch-map-message" role="alert">{{ error }}</div>
     <p v-if="graphError" class="dispatch-map-error" role="alert">{{ graphError }}</p>
     <aside v-if="debugEnabled" class="dispatch-debug-panel" :aria-label="t('dispatchDebug.title')">
       <header><strong>{{ t('dispatchDebug.title') }}</strong><small>{{ debugStatus }}</small></header>

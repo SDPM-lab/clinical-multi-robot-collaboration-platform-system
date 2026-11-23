@@ -1,5 +1,8 @@
 import { afterEach,expect,it,vi } from 'vitest'
-import { nextTick } from 'vue'
+import { createSSRApp, nextTick } from 'vue'
+import { renderToString } from '@vue/server-renderer'
+import DispatchMapScene from '@/components/dispatch/DispatchMapScene.vue'
+import RobotViewport from '@/components/robot-status/RobotViewport.vue'
 import { installGlobalTranslation,setLocale,t,translateLocation } from '@/i18n/index.js'
 import en from '@/i18n/locales/en.js'
 import zhTW from '@/i18n/locales/zh-TW.js'
@@ -47,4 +50,19 @@ it('restores the saved English locale when the i18n module initializes again',as
  expect(fresh.locale.value).toBe('en')
  expect(fresh.t('history.title')).toBe('Schedule History')
  fresh.setLocale('zh-TW')
+})
+it('renders the shared dispatch model loader in both languages',async()=>{
+ const render=()=>renderToString(createSSRApp(DispatchMapScene,{robots:[]}))
+ setLocale('en')
+ const english=await render()
+ expect(english).toContain('scene-spinner')
+ expect(english).toContain('Loading…')
+ expect(english).toContain('0%')
+ setLocale('zh-TW')
+ expect(await render()).toContain('scene-spinner')
+ expect(t('map.loadingModel')).toBe('正在載入 F1 模型…')
+})
+it('shows the shared loading indicator in the robot viewport',async()=>{
+ const html=await renderToString(createSSRApp(RobotViewport))
+ expect(html).toContain('scene-spinner')
 })

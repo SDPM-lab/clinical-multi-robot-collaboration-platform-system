@@ -1,7 +1,8 @@
 <script setup>
+import MediSyncBrand from '@/components/MediSyncBrand.vue'
 import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Eye, EyeOff, HeartPulse, LoaderCircle, ArrowRight, Languages } from '@lucide/vue'
+import { Eye, EyeOff, LoaderCircle, ArrowRight, Languages } from '@lucide/vue'
 import { authStore } from '@/stores/authStore.js'
 import { locale, setLocale, t } from '@/i18n/index.js'
 
@@ -61,7 +62,7 @@ const submitDevelopmentLogin = async () => {
     <div class="auth-decoration" aria-hidden="true"><span v-for="n in 6" :key="n" class="auth-cube"><i></i><b></b></span></div>
     <button class="auth-language" type="button" :aria-label="t('user.language')" @click="setLocale(locale === 'en' ? 'zh-TW' : 'en')"><Languages :size="16" />{{ locale === 'en' ? '繁體中文' : 'English' }}</button>
     <section class="auth-card" aria-labelledby="auth-title">
-      <div class="auth-brand"><span class="auth-mark"><HeartPulse :size="25" :stroke-width="1.7" /></span><strong>Hospital RMF</strong></div>
+      <div class="auth-brand"><MediSyncBrand /></div>
       <h1 id="auth-title">{{ t(registering ? 'auth.registerTitle' : 'auth.loginTitle') }}</h1>
       <p class="auth-subtitle">{{ t(registering ? 'auth.registerSubtitle' : 'auth.loginSubtitle') }}</p>
       <div class="auth-tabs" role="group" :aria-label="t('auth.mode')">
@@ -101,7 +102,7 @@ const submitDevelopmentLogin = async () => {
 .login-view{position:relative;box-sizing:border-box;display:flex;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:76px 20px 30px;background:radial-gradient(ellipse at 12% 12%,#e3ecec88,transparent 46%),radial-gradient(ellipse at 85% 83%,#ffe5c95e,transparent 38%),#f4f6f5;color:#343a37}
 .auth-language{z-index:2;position:absolute;top:25px;right:30px;display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid #ffffffcc;border-radius:10px;background:#ffffff8c;color:#65716c;font:inherit;font-size:12px;cursor:pointer}
 .auth-card{position:relative;z-index:1;box-sizing:border-box;width:min(440px,100%);padding:35px 38px 29px;background:#ffffffcf;border:1px solid #fff;border-radius:24px;box-shadow:0 20px 65px #3240380d,0 2px 8px #32403804;backdrop-filter:blur(18px)}
-.auth-brand{display:flex;align-items:center;gap:11px;margin-bottom:25px}.auth-mark{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#fff0e6;color:#f28c54}.auth-brand strong{color:#dc8351;font-size:15px;letter-spacing:.055em;font-weight:650}
+.auth-brand{display:flex;margin-bottom:25px;--medisync-size:1.875rem}
 h1{margin:0 0 8px;font-size:28px;line-height:1.3;letter-spacing:-.7px}.auth-subtitle{margin:0 0 25px;font-size:13px;line-height:1.7;color:#7b837e}
 .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:25px;background:#eef0ee;border-radius:11px}.auth-tabs button{min-height:37px;border:0;border-radius:8px;background:transparent;color:#818881;font:inherit;font-size:13px;cursor:pointer}.auth-tabs button[aria-pressed=true]{background:#fff;color:#b76132;box-shadow:0 2px 8px #36423a0b}
 .auth-dev-login{width:100%;min-height:38px;margin:-12px 0 16px;border:1px dashed #e2a47e;border-radius:9px;background:#fff8f2;color:#a9582f;font:inherit;font-size:12px;font-weight:600;cursor:pointer}.auth-dev-login:disabled{opacity:.55;cursor:wait}

@@ -27,6 +27,33 @@ beforeEach(() => { setLocale('zh-TW'); api.getRobotSnapshot.mockResolvedValue(sn
 afterEach(() => { wrappers.splice(0).forEach(wrapper => wrapper.unmount()); vi.clearAllMocks() })
 
 describe('Robot Status backend alignment', () => {
+  it('shows the shared loading indicator until robot data arrives', async () => {
+    let resolveSnapshot
+    api.getRobotSnapshot.mockReturnValue(new Promise(resolve => { resolveSnapshot = resolve }))
+    const wrapper = mount(RobotFleetView, { global: { stubs: {
+      RobotViewport: { template: '<div />' },
+    } } })
+    wrappers.push(wrapper)
+    expect(wrapper.get('.robot-hmi--empty').attributes('aria-busy')).toBe('true')
+    expect(wrapper.find('.scene-spinner').exists()).toBe(true)
+    resolveSnapshot(snapshot)
+    await flushPromises()
+    expect(wrapper.find('.robot-hmi--empty').exists()).toBe(false)
+    expect(wrapper.findAll('.robot-list-item')).toHaveLength(7)
+  })
+
+  it('shows an error with retry, then stops loading after an empty result', async () => {
+    api.getRobotSnapshot.mockRejectedValueOnce(new Error('Connection failed'))
+    const wrapper = await view()
+    expect(wrapper.get('[role="alert"]').text()).toContain('Connection failed')
+    api.getRobotSnapshot.mockResolvedValueOnce({ robots: [] })
+    await wrapper.get('[role="alert"] button').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+    expect(wrapper.find('.scene-spinner').exists()).toBe(false)
+    expect(wrapper.get('.robot-empty-message').text()).toBe('找不到符合的機器人')
+  })
+
   it('shows the seven registered robots without redundant telemetry details or demo battery values', async () => {
     const wrapper = await view()
     expect(wrapper.findAll('.robot-list-item')).toHaveLength(7)

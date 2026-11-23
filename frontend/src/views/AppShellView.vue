@@ -1,6 +1,7 @@
 <script setup>
+import MediSyncBrand from '@/components/MediSyncBrand.vue'
 import { overviewThemeVars } from '@/styles/overviewTheme.js'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, defineComponent, h, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   Maximize,
@@ -14,12 +15,9 @@ import {
   Languages,
   X,
 } from '@lucide/vue'
-import ClinicOverviewView from '@/views/ClinicOverviewView.vue'
 import NotificationCenter from '@/components/NotificationCenter.vue'
-import HospitalScene from '@/components/scene/HospitalScene.vue'
-import TaskDispatchView from '@/views/TaskDispatchView.vue'
-import RobotFleetView from '@/views/RobotFleetView.vue'
-import ScheduleHistoryView from '@/views/ScheduleHistoryView.vue'
+import SharedLoading from '@/components/SharedLoading.vue'
+import BackendReconnectOverlay from '@/components/BackendReconnectOverlay.vue'
 import { SCENE_ASSETS } from '@/config/sceneAssets.js'
 import { demoFleetStore } from '@/stores/demoFleetStore.js'
 import { overviewDemoData } from '@/data/overviewDemoData.js'
@@ -27,6 +25,23 @@ import { rosConnectionStore } from '@/stores/rosConnectionStore.js'
 import { authStore } from '@/stores/authStore.js'
 import { notificationStore } from '@/stores/notificationStore.js'
 import { locale, setLocale, t } from '@/i18n/index.js'
+
+const viewLoading = defineComponent({ inheritAttrs: false, render: () => h(SharedLoading, { loading: true }) })
+const viewError = defineComponent({ inheritAttrs: false, render: () => h(SharedLoading, { error: t('common.pageLoadError') }) })
+const asyncView = loader => defineAsyncComponent({
+  loader,
+  loadingComponent: viewLoading,
+  errorComponent: viewError,
+  onError(error, _retry, fail) {
+    console.error('Failed to load view:', error)
+    fail()
+  },
+})
+const ClinicOverviewView = asyncView(() => import('@/views/ClinicOverviewView.vue'))
+const HospitalScene = asyncView(() => import('@/components/scene/HospitalScene.vue'))
+const TaskDispatchView = asyncView(() => import('@/views/TaskDispatchView.vue'))
+const RobotFleetView = asyncView(() => import('@/views/RobotFleetView.vue'))
+const ScheduleHistoryView = asyncView(() => import('@/views/ScheduleHistoryView.vue'))
 
 const THEME_STORAGE_KEY = 'hospital-rmf-color-theme'
 const FONT_SIZE_STORAGE_KEY = 'hospital-rmf-font-size'
@@ -228,6 +243,7 @@ onBeforeUnmount(() => {
     :style="['overview', 'dispatch'].includes(activeSection) ? overviewThemeVars : undefined"
     :aria-label="t('common.appShell')"
   >
+    <BackendReconnectOverlay />
     <ScheduleHistoryView v-if="activeSection === 'history'" />
     <TaskDispatchView v-else-if="activeSection === 'dispatch'" :initial-panel="dispatchInitialPanel" />
     <RobotFleetView v-else-if="activeSection === 'robots'" />
@@ -246,7 +262,7 @@ onBeforeUnmount(() => {
     />
     <div class="overview-overlay">
       <header class="overview-navbar top-navbar" :class="{'history-navbar':activeSection==='history'}">
-        <button type="button" class="brand" :aria-label="t('common.returnHome')" @click="selectSection('overview')">Hospital RMF</button>
+        <button type="button" class="brand" :aria-label="t('common.returnHome')" @click="selectSection('overview')"><MediSyncBrand /></button>
         <nav class="overview-nav" :aria-label="t('common.navigation')">
           <button
             v-for="item in navItems"
@@ -413,6 +429,7 @@ onBeforeUnmount(() => {
 }
 
 .brand {
+  --medisync-size: 1.25rem;
   cursor: pointer;
   font-family: inherit;
   flex: 0 0 auto;
@@ -435,6 +452,7 @@ onBeforeUnmount(() => {
 }
 
 :global([data-theme='dark']) .brand {
+  --medisync-ink: #f4f1ed;
   background: transparent;
   border-color: transparent;
 }
@@ -652,7 +670,7 @@ onBeforeUnmount(() => {
 
   .overview-nav::-webkit-scrollbar { display: none; }
 
-  .brand { padding: 8px 0; font-size: 13px; }
+  .brand { padding: 8px 0; --medisync-size: 1rem; }
 
   .overview-actions { justify-content: flex-end; }
 

@@ -8,6 +8,7 @@ import { AgibotArmAssembly } from '@/three/robot/AgibotArmAssembly.js'
 import { DEFAULT_ROBOT_ASSET, loadRobotAsset } from '@/three/robot/robotModelAssets.js'
 import { defaultRobotModelPreset, readRobotCameraPreset, readRobotModelPreset, storeRobotCameraPreset, storeRobotModelPreset, validRobotCameraPreset, validRobotModelPreset } from '@/config/robotViewportPreset.js'
 import { t } from '@/i18n/index.js'
+import SharedLoading from '@/components/SharedLoading.vue'
 
 const params = new URLSearchParams(window.location.search)
 const robotDebugEnabled = params.get('robotDebug') === '1'
@@ -370,9 +371,9 @@ defineExpose({ focusArm, focusZone, showWholeRobot, resetView })
 
 <template>
   <div ref="host" class="robot-viewport" :aria-label="t('robotStatus.modelView')">
-    <div v-if="loading" class="viewport-message" role="status">{{ t('robotStatus.loading') }}</div>
-    <div v-else-if="error" class="viewport-message" role="alert">{{ t(props.modelAssetKey === DEFAULT_ROBOT_ASSET ? 'robotStatus.loadError' : 'robotStatus.customLoadError') }}<button type="button" @click="start">{{ t('robotStatus.retry') }}</button></div>
-    <div v-else class="viewport-controls">
+    <SharedLoading :loading="loading" />
+    <div v-if="!loading && error" class="viewport-message" role="alert">{{ t(props.modelAssetKey === DEFAULT_ROBOT_ASSET ? 'robotStatus.loadError' : 'robotStatus.customLoadError') }}<button type="button" @click="start">{{ t('robotStatus.retry') }}</button></div>
+    <div v-else-if="!loading" class="viewport-controls">
       <button type="button" class="viewport-reset" :aria-label="t('robotStatus.resetView')" :title="t('robotStatus.resetView')" @click="showWholeRobot"><RotateCcw :size="17" aria-hidden="true"/></button>
     </div>
     <details v-if="debugEnabled && !loading && !error" class="robot-debug-panel" open>

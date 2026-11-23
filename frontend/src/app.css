@@ -18,11 +18,11 @@
 }
 
 html[data-ui-font-size='medium'] {
-  --ui-font-scale:1.08;
+  --ui-font-scale:1.12;
 }
 
 html[data-ui-font-size='large'] {
-  --ui-font-scale:1.16;
+  --ui-font-scale:1.24;
 }
 
 body {

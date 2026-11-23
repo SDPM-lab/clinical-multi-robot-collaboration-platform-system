@@ -2,6 +2,7 @@
   --history-line: var(--panel-border);
   --history-surface: var(--panel-bg-strong);
   --history-soft: color-mix(in srgb, var(--history-surface) 94%, var(--text-primary));
+  --history-metric-height: calc(46px + 42px * var(--ui-font-scale));
   position: absolute;
   inset: 78px 24px 20px;
   z-index: 3;
@@ -16,7 +17,7 @@
 }
 .history-main-column, .history-side-column {
   display: grid;
-  grid-template-rows: 82px minmax(0, 1fr);
+  grid-template-rows: var(--history-metric-height) minmax(0, 1fr);
   gap: 14px;
   min-width: 0;
   min-height: 0;
