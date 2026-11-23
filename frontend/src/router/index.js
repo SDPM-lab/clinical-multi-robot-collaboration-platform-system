@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import AppShellView from '@/views/AppShellView.vue'
-import LoginView from '@/views/LoginView.vue'
 import { authStore } from '@/stores/authStore.js'
 
 const router = createRouter({
@@ -10,12 +8,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'overview',
-      component: AppShellView,
+      component: () => import('@/views/AppShellView.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
+      component: () => import('@/views/LoginView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

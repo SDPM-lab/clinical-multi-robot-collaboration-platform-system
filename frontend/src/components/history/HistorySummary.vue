@@ -58,7 +58,7 @@ const comparisonLabel=computed(()=>t(`metrics.${({daily:'vsDay',weekly:'vsWeek',
 </template>
 
 <style scoped>
-.history-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:82px;gap:12px;min-width:0;flex:none}
+.history-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:var(--history-metric-height, 88px);gap:12px;min-width:0;flex:none}
 @media(max-width:900px){.history-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:580px){.history-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>

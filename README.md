@@ -1,4 +1,4 @@
-# Clinical Multi-Robot Collaboration Platform System
+# MediSync
 
 醫療院所多機器人協作平台，讓護理人員可以透過網頁派遣機器人執行清潔、消毒、鍍膜殺菌等任務，底層由 Open-RMF 負責路徑規劃與機器人排程。
 

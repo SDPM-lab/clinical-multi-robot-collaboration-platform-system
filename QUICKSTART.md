@@ -41,6 +41,16 @@ cd ~/clinical-multi-robot-collaboration-platform-system/frontend
 npm run dev -- --port 5174
 ```
 
+也可以直接執行 `npm run dev`：預設從 5173 開始，若該埠已被使用會嘗試下一個埠，請以終端顯示的 Local 網址為準。
+
+### 手動停止前端 Vite
+
+```bash
+bash ~/clinical-multi-robot-collaboration-platform-system/scripts/stop-frontend-vite.sh
+```
+
+此腳本會停止目前帳號啟動的本專案 Vite（包括背景程序）。Vite 結束後會釋放其佔用的埠；腳本不會自動執行，也不會停止其他 Node 程序。
+
 ## 前端網址
 
 ```text

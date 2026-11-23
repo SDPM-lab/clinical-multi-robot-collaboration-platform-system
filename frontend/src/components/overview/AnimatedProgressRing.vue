@@ -83,7 +83,7 @@ watch(() => props.animationKey, restart)
   left: 0;
   width: 100%;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
   text-align: center;
 }
