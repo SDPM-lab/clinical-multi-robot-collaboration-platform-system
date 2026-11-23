@@ -1,6 +1,12 @@
 export const ROBOT_CAMERA_PRESET_KEY = 'hospital-rmf-robot-camera-v1'
 export const ROBOT_MODEL_PRESET_KEY = 'hospital-rmf-robot-model-v1'
 
+export const defaultRobotCameraPreset = () => ({
+  position: { x: 3.093, y: 1.018, z: .588 },
+  target: { x: .02, y: .648, z: .019 },
+  fov: 35,
+  aspect: 1.0703911870503597,
+})
 export const defaultRobotModelPreset = () => ({ position: { x: 0, y: 0, z: 0 }, rotationY: 0, scale: 1 })
 
 const finiteVector = value => value && ['x', 'y', 'z'].every(key => Number.isFinite(Number(value[key])))

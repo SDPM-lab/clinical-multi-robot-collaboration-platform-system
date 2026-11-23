@@ -1,4 +1,6 @@
 export default {
+  orientation: { title: '請更換裝置', description: '本系統僅支援橫向畫面，請改用橫向平板或筆電。' },
+  robotModelLabel: '型號',
   dashboard: { overview: '診所營運總覽', sceneModel: '三層診所 3D 模型', buildingCompletion: '全棟完成率', floorSelection: '診所樓層選擇', todaySchedule: '今日排程', todayTaskList: '當日任務列表', floor: '{number} 樓', hourlyBatteryTrend: '{number} 樓每小時電量趨勢', robotBatteryTrend: '{number} 樓機器人電量趨勢', robotsConnected: '{count} 台機器人已連線', networkStates: { online: '連線正常', offline: '未連線', unknown: '未提供' }, pending: '派工準備中', dispatching: '派工中', assigned: '已指派', currentLocation: '機器人目前位置', source: '來源點', destination: '終點', via: '途經', noActiveTask: '目前沒有執行中的任務', noRobotData: '尚無機器人資料', noRoute: '此任務沒有可顯示的路線', dataLoading: '正在取得後端資料…', dataUpdated: '資料來源更新於 {time}', dataStale: '資料更新失敗，畫面可能不是最新狀態。', progressSourceNote: '位置依最近地點估算；路線為參考資訊。' },
   floorSelector: { building: '全棟' },
   backendConnection: { reconnecting: '重新連線中…', description: '後端暫時無法使用，正在嘗試重新連線。' },

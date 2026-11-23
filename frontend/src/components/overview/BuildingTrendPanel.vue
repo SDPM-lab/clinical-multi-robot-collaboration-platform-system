@@ -69,5 +69,6 @@ const charts = computed(() => ['floor1','floor2','floor3'].map((floorId, floorIn
 @media(prefers-reduced-motion:reduce){.robot-bar,.floor-chart,.chart-axes{animation:none}}
 @media(max-width:1200px){.building-trend-heading{align-items:flex-start;flex-direction:column}.chart-legend{justify-content:flex-start;padding:0}}
 @media(max-width:1100px){.building-trend-panel{grid-template-columns:minmax(0,1fr);grid-template-rows:auto repeat(3,150px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(var(--overview-accent-rgb),.35) transparent}.floor-chart{border-left:0;border-top:1px solid var(--overview-divider);padding-top:6px}}
+@media(min-width:701px) and (max-width:1100px) and (orientation:landscape){.building-trend-panel{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr);overflow:hidden}.floor-chart{border-top:0;border-left:1px solid var(--overview-divider);padding-top:0}.floor-chart:nth-of-type(1){border-left:0}}
 h2{display:flex;align-items:center;gap:7px}h2 svg{flex:none;color:var(--theme-primary)}
 </style>

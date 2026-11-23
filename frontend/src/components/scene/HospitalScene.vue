@@ -305,6 +305,7 @@ const updateRendererSize = () => {
   const aspect = width / height
 
   camera.aspect = aspect
+  if (!isOverview) camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(42 / 2)) * Math.max(1, (1366 / 768) / aspect)))
   camera.updateProjectionMatrix()
 
   renderer.setSize(width, height, false)
