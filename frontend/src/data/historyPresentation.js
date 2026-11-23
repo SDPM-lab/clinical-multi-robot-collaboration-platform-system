@@ -21,7 +21,7 @@ const taskNames = {
  '充電':'charging','前往充電':'charging','返回充電站':'charging',
 }
 export const taskColorMap = Object.freeze(Object.fromEntries(Object.entries(taskNames).map(([name,key])=>[name,palettes[key]])))
-// The theme orange is resolved from the same token used by Hospital RMF Overview.
+// The theme orange is resolved from the same token used by MediSync Overview.
 export const historyStatusColors=Object.freeze({
  all:'var(--theme-primary)',
  completed:'#679A7B',

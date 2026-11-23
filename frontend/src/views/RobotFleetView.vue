@@ -12,6 +12,7 @@ import { robotSeriesColors } from '@/config/visualTokens.js'
 import BatteryGauge from '@/components/robot-status/BatteryGauge.vue'
 import TemperatureGauge from '@/components/robot-status/TemperatureGauge.vue'
 import RobotViewport from '@/components/robot-status/RobotViewport.vue'
+import SharedLoading from '@/components/SharedLoading.vue'
 import '@/styles/robotHmi.css'
 import agibotG1Image from '../../../ros2_ws/src/robot_descriptions/humanoid/Agibot/.images/agibot_g1.png'
 
@@ -19,13 +20,16 @@ const agibotImage = agibotG1Image
 const telemetryStaleAfterMs = 15_000
 
 const actionNotice = ref('')
+const initialLoading = ref(true)
 const robots = ref([])
 const now = ref(Date.now())
 const selectedId = ref(null)
 const search = ref(''), selectedFloor = ref('all'), stageReady = ref(false), structureAvailable = ref(true), selectedZone = ref(null), viewport = ref(null)
-let refreshTimer, clockTimer
+let refreshTimer, clockTimer, refreshPending = false
 const stateForStatus = { '待命':'idle', '待命中':'idle', '在線':'idle', '忙碌':'busy', '已指派待執行':'assigned', '執行任務中':'busy', '充電中':'charging', '緊急停止':'error', '暫停':'paused', '離線':'offline' }
 async function refreshRobots() {
+  if (refreshPending) return
+  refreshPending = true
   try {
     const [snapshotResult, recordsResult] = await Promise.allSettled([taskApi.getRobotSnapshot(), taskApi.getTaskRecords()])
     if (snapshotResult.status === 'rejected') throw snapshotResult.reason
@@ -44,7 +48,12 @@ async function refreshRobots() {
     })
     actionNotice.value = recordsResult.status === 'rejected' ? recordsResult.reason.message : ''
     if (!selectedId.value || !robots.value.some(entry => entry.id === selectedId.value)) selectedId.value = robots.value[0]?.id
-  } catch (error) { actionNotice.value = error.message }
+  } catch (error) { actionNotice.value = error?.message || t('common.loadFailed') }
+  finally { initialLoading.value = false; refreshPending = false }
+}
+function retryRobots() {
+  initialLoading.value = true
+  refreshRobots()
 }
 onMounted(() => {
   refreshRobots()
@@ -166,5 +175,14 @@ function showWholeRobot() {
       </section>
     </aside>
   </section>
-  <section v-else class="robot-hmi"><p role="status">{{ actionNotice || t('robotStatus.loading') }}</p></section>
+  <section v-else class="robot-hmi robot-hmi--empty" :aria-label="t('nav.robots')" :aria-busy="initialLoading">
+    <SharedLoading :loading="initialLoading" :error="actionNotice" :error-title="t('common.loadFailed')">
+      <template #error-action><button type="button" @click="retryRobots">{{ t('common.retry') }}</button></template>
+    </SharedLoading>
+    <p v-if="!initialLoading && !actionNotice" class="robot-empty-message" role="status">{{ t('robotStatus.noRobots') }}</p>
+  </section>
 </template>
+
+<style scoped>
+.robot-empty-message{position:absolute;top:50%;left:50%;margin:0;color:var(--text-secondary);text-align:center;transform:translate(-50%,-50%)}
+</style>

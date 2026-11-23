@@ -6,15 +6,30 @@
       try {
         document.documentElement.dataset.theme =
           localStorage.getItem('hospital-rmf-color-theme') === 'dark' ? 'dark' : 'light'
+        document.documentElement.lang = localStorage.getItem('hospital-rmf-locale') === 'en' ? 'en' : 'zh-TW'
       } catch {
         document.documentElement.dataset.theme = 'light'
+        document.documentElement.lang = 'zh-TW'
       }
     </script>
+    <style>
+      .startup-loading { position: fixed; inset: 0; z-index: 9999; display: grid; place-content: center; justify-items: center; gap: 12px; background: #eceeed; color: #333; font: 14px sans-serif; }
+      [data-theme="dark"] .startup-loading { background: #382d29; color: #fff3ec; }
+      .startup-spinner { width: 28px; height: 28px; border: 3px solid #c9c9c9; border-top-color: #b7755f; border-radius: 50%; animation: startup-spin .8s linear infinite; }
+      .startup-loading [lang="en"], html[lang="en"] .startup-loading [lang="zh-TW"] { display: none; }
+      html[lang="en"] .startup-loading [lang="en"] { display: inline; }
+      @keyframes startup-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .startup-spinner { animation-duration: 1.8s; } }
+    </style>
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <title>MediSync</title>
   </head>
   <body>
+    <div id="startup-loading" class="startup-loading" role="status" aria-live="polite">
+      <span class="startup-spinner" aria-hidden="true"></span>
+      <span lang="zh-TW">載入中…</span><span lang="en">Loading…</span>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

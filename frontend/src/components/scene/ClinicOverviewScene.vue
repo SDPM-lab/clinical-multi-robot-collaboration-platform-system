@@ -744,7 +744,7 @@ defineExpose({
   <section ref="host" class="clinic-overview-scene" :class="{ 'is-debug': modelDebug || cameraDebug, 'is-model-debug': modelDebug && interactionTarget === 'model' }">
     <div ref="hospitalMarker" class="hospital-location-marker" :aria-label="t('common.brandLocation')">
       <span class="hospital-location-marker__pin"><MapPin :size="24" :stroke-width="2" /></span>
-      <strong>Hospital RMF</strong>
+      <strong>MediSync</strong>
     </div>
     <SharedLoading :loading="loading && !graphicsError" :detail="`${modelProgress}%`" :error="graphicsError ? '3D 畫面暫時無法繪製，請重新載入頁面。若仍未恢復，請關閉其他 3D 分頁並重新啟動瀏覽器。' : loadError ? '請確認模型檔案後重新載入。' : ''" :error-title="graphicsError ? '3D 顯示中斷' : '模型載入失敗'">
       <template #error-action><button class="clinic-model-retry" type="button" @click="retryScene">重新載入</button></template>
