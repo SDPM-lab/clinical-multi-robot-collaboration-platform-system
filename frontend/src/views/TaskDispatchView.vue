@@ -311,4 +311,14 @@ onBeforeUnmount(() => window.clearTimeout(notificationTimer))
 @media(max-height:660px){#dispatch-create-panel :deep(.task-form-grid){row-gap:7px}#dispatch-create-panel :deep(.form-scroll){padding-block:0}}
 .task-dispatch-page .dispatch-panel-tabs button[aria-selected=true]{background:color-mix(in srgb,var(--theme-primary) 10%,transparent)}
 .task-dispatch-page .dispatch-map-help{border-color:var(--dispatch-hint-outline);background:var(--dispatch-hint-surface);color:var(--dispatch-hint-foreground)}
+@media (max-width:1099px) and (orientation:landscape){
+  .task-dispatch-page{inset:64px 0 0;height:auto;padding-top:0;overflow:hidden}
+  .dispatch-workspace{grid-template-columns:minmax(300px,34%) minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:calc(100% - 30px);min-height:0;padding:4px 12px 12px}
+  .dispatch-side-panel{grid-column:1;grid-row:1;width:100%;height:min(540px,100%);min-height:0;margin:0}
+  .dispatch-map{grid-column:2;grid-row:1;height:100%}
+  .dispatch-map-help{position:absolute;grid-column:auto;grid-row:auto;right:20px;bottom:12px;max-width:min(440px,calc(66% - 40px));margin:0}
+  #dispatch-create-panel :deep(.task-form-grid){grid-template-columns:repeat(2,minmax(0,1fr));row-gap:8px}
+  #dispatch-create-panel :deep(.form-scroll){overflow-y:auto;overscroll-behavior:contain}
+  #dispatch-create-panel :deep(.notes-field textarea){min-height:60px;height:60px}
+}
 </style>

@@ -2,8 +2,8 @@ export const OVERVIEW_CAMERA_PRESET_STORAGE_KEY = 'overview-camera-preset-v9'
 export const OVERVIEW_MODEL_PRESET_STORAGE_KEY = 'overview-model-preset-v4'
 
 export const DEFAULT_OVERVIEW_CAMERA_PRESET = Object.freeze({
-  position: Object.freeze({ x: 17.3507, y: 9.1058, z: 29.7501 }),
-  target: Object.freeze({ x: -1.0448, y: 5.883, z: 2.8285 }),
+  position: Object.freeze({ x: 28.068, y: 15.9581, z: 52.631 }),
+  target: Object.freeze({ x: -0.6117, y: 6.0941, z: 2.5053 }),
 })
 
 export const DEFAULT_OVERVIEW_MODEL_PRESET = Object.freeze({

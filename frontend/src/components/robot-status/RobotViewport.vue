@@ -6,7 +6,7 @@ import { clone as cloneScene } from 'three/addons/utils/SkeletonUtils.js'
 import { RotateCcw } from '@lucide/vue'
 import { AgibotArmAssembly } from '@/three/robot/AgibotArmAssembly.js'
 import { DEFAULT_ROBOT_ASSET, loadRobotAsset } from '@/three/robot/robotModelAssets.js'
-import { defaultRobotModelPreset, readRobotCameraPreset, readRobotModelPreset, storeRobotCameraPreset, storeRobotModelPreset, validRobotCameraPreset, validRobotModelPreset } from '@/config/robotViewportPreset.js'
+import { defaultRobotCameraPreset, defaultRobotModelPreset, readRobotCameraPreset, readRobotModelPreset, storeRobotCameraPreset, storeRobotModelPreset, validRobotCameraPreset, validRobotModelPreset } from '@/config/robotViewportPreset.js'
 import { t } from '@/i18n/index.js'
 import SharedLoading from '@/components/SharedLoading.vue'
 
@@ -22,7 +22,7 @@ const loading = ref(true)
 const error = ref('')
 const debugStatus = ref('')
 const cameraPreset = reactive({ position: { x: 0, y: 0, z: 0 }, target: { x: 0, y: 0, z: 0 }, fov: 35, aspect: 1 })
-const modelPreset = reactive(readRobotModelPreset() || defaultRobotModelPreset())
+const modelPreset = reactive((debugEnabled && readRobotModelPreset()) || defaultRobotModelPreset())
 let renderer, scene, camera, controls, observer, assembly, model, frame
 let disposed = false
 let loadToken = 0
@@ -158,8 +158,10 @@ function fitFactoryView() {
 
 function resetView() {
   fitFactoryView()
-  const saved = readRobotCameraPreset()
-  if (saved && props.modelAssetKey === DEFAULT_ROBOT_ASSET) applyCameraPreset(saved, assembly.assembledBounds)
+  if (props.modelAssetKey === DEFAULT_ROBOT_ASSET) {
+    const preset = (debugEnabled && readRobotCameraPreset()) || defaultRobotCameraPreset()
+    applyCameraPreset(preset, assembly.assembledBounds)
+  }
   captureCamera()
 }
 

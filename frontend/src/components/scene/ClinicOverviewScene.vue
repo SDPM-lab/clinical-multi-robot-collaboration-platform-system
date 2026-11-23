@@ -551,6 +551,7 @@ const resize = () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, renderProfile.maxPixelRatio))
   renderer.setSize(width, height, false)
   camera.aspect = width / height
+  camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(31 / 2)) * Math.max(1, (1366 / 768) / camera.aspect)))
   camera.updateProjectionMatrix()
   if (modelRoot) {
     if (String(props.activeFloor) === 'all') applyCameraPreset(props.cameraPreset)

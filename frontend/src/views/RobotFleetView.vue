@@ -161,7 +161,7 @@ function showWholeRobot() {
           <div><dt>{{ t('robotStatus.location') }}</dt><dd>{{ robot.currentLocation ? translateLocation(robot.currentLocation) : t('robotStatus.noLocation') }}</dd></div>
           <div><dt>{{ t('robotStatus.connection') }}</dt><dd class="robot-info-card__connection" :data-state="connectionState"><span class="robot-info-card__connection-icon"><component :is="connectionIcon" :size="15" aria-hidden="true"/></span>{{ t(`robotStatus.connectionStates.${connectionState}`) }}</dd></div>
           <div v-if="robot.manufacturer"><dt>{{ t('robotStatus.manufacturer') }}</dt><dd>{{ robot.manufacturer }}</dd></div>
-          <div><dt>{{ t('legacy.型號') }}</dt><dd>{{ robotModelLabel }}<small v-if="robot.descriptionPackage">{{ robot.descriptionPackage }}</small></dd></div>
+          <div><dt>{{ t('robotModelLabel') }}</dt><dd>{{ robotModelLabel }}<small v-if="robot.descriptionPackage">{{ robot.descriptionPackage }}</small></dd></div>
           <div><dt>{{ t('robotStatus.type') }}</dt><dd>{{ t(`robotStatus.types.${robotType}`) }}</dd></div>
           <div><dt>{{ t('robotStatus.activeTaskId') }}</dt><dd>{{ robot.activeTaskId || t('robotStatus.noValue') }}</dd></div>
         </dl>

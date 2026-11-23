@@ -95,9 +95,9 @@ watch(taskProgressByRobot, progress => {
   initializedRobotSelection = true
 })
 
-const modelPreset = reactive(readOverviewModelPreset() || cloneDefaultOverviewModelPreset())
+const modelPreset = reactive((debugEnabled && readOverviewModelPreset()) || cloneDefaultOverviewModelPreset())
 const initialModelPreset = JSON.parse(JSON.stringify(modelPreset))
-const cameraPreset = reactive(readOverviewCameraPreset() || cloneDefaultOverviewCameraPreset())
+const cameraPreset = reactive((debugEnabled && readOverviewCameraPreset()) || cloneDefaultOverviewCameraPreset())
 const copyStatus = ref('')
 let modelSaveTimer
 let copyStatusTimer
@@ -219,8 +219,10 @@ onBeforeUnmount(() => { clearInterval(pollTimer); clearTimeout(modelSaveTimer); 
 .overview-debug-panel{position:absolute;z-index:30;top:76px;left:360px;display:grid;width:348px;gap:10px;padding:13px;color:var(--overview-text);background:var(--info-background);border:var(--info-border);border-radius:var(--info-radius);box-shadow:var(--info-shadow);backdrop-filter:var(--info-backdrop)}.overview-debug-panel header{display:flex;justify-content:space-between;font-size:13px}.overview-debug-panel header span{color:var(--overview-orange);font-size:11px}.debug-target-switch{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;background:rgba(91,98,94,.08);border-radius:6px}.debug-target-switch button{height:28px;background:transparent;border:0;border-radius:4px;cursor:pointer}.debug-target-switch button.active{background:#fff;box-shadow:0 2px 7px rgba(20,24,28,.08)}fieldset{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0;padding:7px;border:1px solid var(--overview-border);border-radius:6px}legend{padding:0 5px;color:var(--overview-muted);font-size:10px}.overview-debug-panel label{display:grid;gap:3px;color:var(--overview-muted);font-size:9px}.overview-debug-panel input{width:100%;height:29px;padding:0 6px;color:var(--overview-text);font-size:11px;background:rgba(255,255,255,.7);border:1px solid var(--overview-border);border-radius:4px}.scale-input{grid-template-columns:50px 1fr;align-items:center}.overview-debug-panel>p{margin:0;color:var(--overview-muted);font-size:10px}.overview-debug-panel footer{display:flex;gap:5px}.overview-debug-panel footer button{flex:1;min-height:29px;padding:4px;color:var(--overview-text);font-size:10px;background:rgba(255,255,255,.7);border:1px solid var(--overview-border);border-radius:4px;cursor:pointer}
 .bottom-status-panel{--panel-delay:520ms;isolation:isolate;display:grid;grid-template-columns:minmax(150px,20%) minmax(0,1fr);gap:12px;overflow:visible}.bottom-status-panel[data-mode="floor-realtime"]{grid-template-columns:minmax(0,1fr)}.overview-connectivity{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:12px;min-height:0}.overview-bottom-main{min-width:0;min-height:0;overflow:hidden}.bottom-status-panel>*{position:relative;z-index:1}.bottom-panel-switch-enter-active,.bottom-panel-switch-leave-active{transition:opacity 150ms ease,transform 150ms ease}.bottom-panel-switch-enter-from,.bottom-panel-switch-leave-to{opacity:0;transform:translateY(4px)}
 @media(prefers-reduced-motion:reduce){.completion-border-shell::before,.completion-header i{animation:none}.completion-border-shell::before{--completion-border-angle:110deg}}
+@media(min-width:761px) and (max-width:1200px){.clinic-overview-dashboard{--overview-rail-width:260px}.completion-panel{scale:.85}}
 /* Short screens scroll the dashboard instead of overlapping the completion panel. */
 @media(max-height:660px){.clinic-overview-dashboard{overflow-y:auto}.clinic-robot-status{top:444px;bottom:auto;height:240px}.right-information-stack{bottom:auto;height:584px}}
+@media(min-width:761px) and (max-width:1100px) and (max-height:660px) and (orientation:landscape){.clinic-overview-dashboard{overflow:hidden}.clinic-robot-status{top:auto;bottom:12px;height:170px}.right-information-stack{bottom:12px;height:auto}}
 @media(max-width:760px){
   .clinic-overview-dashboard{display:flex;flex-direction:column;overflow-y:auto;padding:0 16px 16px}
   .clinic-robot-status{position:relative;inset:auto;order:2;flex:0 0 auto;height:auto;margin-top:444px;grid-template-columns:minmax(0,1fr);min-height:660px}

@@ -57,8 +57,8 @@ describe('clinic overview presets', () => {
       scale: 0.8951884436412747,
     })
     expect(cloneDefaultOverviewCameraPreset()).toEqual({
-      position: { x: 17.3507, y: 9.1058, z: 29.7501 },
-      target: { x: -1.0448, y: 5.883, z: 2.8285 },
+      position: { x: 28.068, y: 15.9581, z: 52.631 },
+      target: { x: -0.6117, y: 6.0941, z: 2.5053 },
     })
     localStorage.setItem('overviewModelPreset', JSON.stringify(modelPreset))
     localStorage.setItem('overviewCameraPreset', JSON.stringify(cameraPreset))

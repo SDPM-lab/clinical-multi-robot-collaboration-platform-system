@@ -155,12 +155,39 @@ html[data-theme=dark] .overview-page .robot-info-card__structure button[aria-pre
 .robot-sidebar-actions .add-robot:hover{background:var(--theme-primary-soft);box-shadow:0 0 0 3px color-mix(in srgb,var(--theme-primary) 16%,transparent)}
 .robot-hmi:has(.add-status-backdrop){z-index:1000}
 @media(min-width:1101px) and (min-height:800px){.robot-inspector{margin-top:clamp(36px,calc(80dvh - 640px),72px)}}
+@media(min-width:1101px) and (min-height:700px) and (max-height:799px){.robot-inspector{margin-top:30px}}
 .robot-info-card__structure button{cursor:pointer;transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,box-shadow 180ms ease,transform 180ms ease}
 .robot-info-card__structure button:not(:disabled):hover{color:var(--text-primary);background:color-mix(in srgb,var(--theme-primary) 13%,var(--info-background));border-color:color-mix(in srgb,var(--theme-primary) 65%,transparent);box-shadow:0 4px 10px color-mix(in srgb,var(--theme-primary) 18%,transparent);transform:translateY(-2px)}
 .robot-info-card__structure button[aria-pressed=true]:not(:disabled):hover{background:color-mix(in srgb,var(--theme-primary) 24%,var(--info-background));border-color:var(--theme-primary)}
 .robot-info-card__structure button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:2px}
 .robot-info-card__structure button:disabled{cursor:default}
 @media(prefers-reduced-motion:reduce){.robot-info-card__structure button{transition:none}.robot-info-card__structure button:not(:disabled):hover{transform:none}}
+.robot-inspector{overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:1100px){.robot-inspector{min-height:0;max-height:none;overflow:visible}.robot-inspector-content{max-height:none}}
+@media (max-width:1100px) and (orientation:landscape){
+	.robot-hmi{grid-template-columns:minmax(170px,19%) minmax(0,1fr) minmax(260px,29%);grid-template-rows:minmax(0,1fr);gap:12px;padding:12px;overflow:hidden}
+	.robot-control-panel{grid-column:1;grid-row:1}
+	.robot-digital-twin-stage{grid-column:2;grid-row:1}
+	.robot-inspector{grid-column:3;grid-row:1;min-height:0;max-height:none;margin-top:30px;overflow-y:auto}
+	.robot-picker .robot-list-item{grid-template-columns:38px minmax(0,1fr) 24px;min-height:76px;padding:8px;gap:7px}
+	.robot-list-item__avatar{width:38px;height:52px}
+	.robot-side-metrics .hmi-gauge{padding:10px;aspect-ratio:1}
+	.robot-side-metrics .battery-arc{width:min(80px,80%)}
+	.thermal-dial{width:min(84px,85%)}
+	.robot-info-card{padding:14px}
+	.robot-info-card__facts{gap:12px 12px;margin-top:12px;padding-top:10px}
+	.robot-info-card__structure{margin-top:10px;padding-top:10px}
+}
+@media (max-width:1100px) and (max-height:660px) and (orientation:landscape){
+	.robot-inspector{margin-top:20px}
+	.robot-side-metrics .hmi-gauge{height:100px;aspect-ratio:auto;padding:7px}
+	.robot-side-metrics .battery-arc{width:62px}
+	.thermal-dial{width:66px}
+	.robot-info-card{padding:10px}
+	.robot-info-card__facts{gap:6px 10px;margin-top:8px;padding-top:8px}
+	.robot-info-card__structure{margin-top:8px;padding-top:8px}
+	.robot-info-card__structure button,.robot-info-card__structure button:last-child{min-height:27px}
+}
 .robot-list-entry{position:relative;flex:none;min-width:0}
 .robot-picker .robot-list-item__remove{position:absolute;z-index:1;top:6px;right:6px;display:grid;width:20px;height:20px;place-items:center;padding:0;color:#858b88;background:transparent;border:0;cursor:pointer;transition:color 160ms ease,transform 160ms ease}
 .robot-picker .robot-list-item__remove:hover{color:#4f5753;transform:scale(1.4)}

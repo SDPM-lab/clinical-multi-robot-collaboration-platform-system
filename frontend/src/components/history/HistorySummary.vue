@@ -61,4 +61,5 @@ const comparisonLabel=computed(()=>t(`metrics.${({daily:'vsDay',weekly:'vsWeek',
 .history-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:var(--history-metric-height, 88px);gap:12px;min-width:0;flex:none}
 @media(max-width:900px){.history-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:580px){.history-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:701px) and (max-width:900px) and (orientation:landscape){.history-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}}
 </style>

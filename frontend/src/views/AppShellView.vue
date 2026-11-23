@@ -662,8 +662,9 @@ onBeforeUnmount(() => {
     justify-content: flex-start;
     justify-self: stretch;
     width: 100%;
+    min-width: 0;
     gap: 12px;
-    margin: 0 10px;
+    margin: 0;
     overflow-x: auto;
     scrollbar-width: none;
   }
