@@ -40,7 +40,8 @@ public sealed class HttpTaskDispatcher(
             priority = (int)task.Priority,
             required_capabilities = task.RequiredCapabilities.Select(ToSnakeCase).ToList(),
             created_at = new DateTimeOffset(task.CreatedAt).ToUnixTimeMilliseconds() / 1000.0,
-            scheduled_at = task.ScheduledAt?.ToUnixTimeMilliseconds() / 1000.0
+            scheduled_at = task.ScheduledAt?.ToUnixTimeMilliseconds() / 1000.0,
+            note = task.Note
         };
 
         var json = JsonSerializer.Serialize(payload);

@@ -122,6 +122,27 @@ public class RosTaskStatusTests
         Assert.Null(task.AssignedRobot);
     }
 
+    [Theory]
+    [InlineData(3, RobotTaskStatus.Assigned, "robot-a")]
+    [InlineData(4, RobotTaskStatus.Failed, null)]
+    public async Task PpoAssignmentUpdatesDispatchedTask(int status, RobotTaskStatus expected, string? expectedRobot)
+    {
+        using var provider = CreateProvider();
+        using var scope = provider.CreateScope();
+        var tasks = scope.ServiceProvider.GetRequiredService<ITaskService>();
+        var task = await tasks.CreateTaskAsync(new() { ScheduledAt = DateTimeOffset.UtcNow.AddHours(1) });
+        task.Dispatched = true;
+        using var bridge = new RosBridgeTestService(NullLogger<RosBridgeTestService>.Instance,
+            new ConfigurationBuilder().Build(), provider.GetRequiredService<RobotStateStore>(), provider.GetRequiredService<IServiceScopeFactory>());
+        var assignment = JsonSerializer.Serialize(new { task_id = task.Id, status,
+            assignment = new { is_assigned = status == 3, expected_robot_name = "hospital_robot_1" } });
+
+        await bridge.ProcessMessageAsync(JsonSerializer.Serialize(new { op = "publish", topic = "/hospital_ppo_assignment", msg = new { data = assignment } }));
+
+        Assert.Equal(expected, task.Status);
+        Assert.Equal(expectedRobot, task.AssignedRobot);
+    }
+
     private static string Summary(string id, int state, DateTimeOffset start, DateTimeOffset finish)
         => JsonSerializer.Serialize(new { op = "publish", topic = "/task_summaries", msg = new {
             task_id = id, state, robot_name = "hospital_robot_1",

@@ -20,6 +20,7 @@ from experiments.fleet_sizing.rl.action_mask import (
 )
 
 from experiments.fleet_sizing.rl.observation import (
+    APPROACH_TIME_SCALE_S,
     BATTERY_LAYOUT,
     DEFAULT_LAYOUT,
     ObservationEncoder,
@@ -121,6 +122,9 @@ class HospitalSchedulingEnv(
         reward_config: RewardConfig = (
             DEFAULT_REWARD_CONFIG
         ),
+        observation_approach_scale_s: float = (
+            APPROACH_TIME_SCALE_S
+        ),
         episode_seeds: tuple[int, ...] | None = None,
         enable_battery_model: bool = False,
     ) -> None:
@@ -181,6 +185,19 @@ class HospitalSchedulingEnv(
         self.reward_config = (
             reward_config
         )
+
+        self.observation_approach_scale_s = float(
+            observation_approach_scale_s
+        )
+
+        if (
+            self.observation_approach_scale_s
+            <= 0.0
+        ):
+            raise ValueError(
+                "observation_approach_scale_s "
+                "must be > 0"
+            )
 
         self.enable_battery_model = bool(
             enable_battery_model
@@ -363,6 +380,9 @@ class HospitalSchedulingEnv(
                 ),
                 layout=(
                     self.observation_layout
+                ),
+                approach_time_scale_s=(
+                    self.observation_approach_scale_s
                 ),
             )
         )

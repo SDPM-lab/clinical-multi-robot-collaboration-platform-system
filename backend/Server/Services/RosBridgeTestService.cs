@@ -10,6 +10,7 @@ public class RosBridgeTestService : BackgroundService
 {
     private readonly ILogger<RosBridgeTestService> _logger;
     private readonly bool _acceptLegacyRmfDispatchReports;
+    private readonly bool _autoConnect;
     private readonly RobotStateStore _store;
     private readonly IServiceScopeFactory _scopeFactory;
     private string _rosBridgeUrl;
@@ -63,9 +64,11 @@ public class RosBridgeTestService : BackgroundService
         _scopeFactory = scopeFactory;
         _logger = logger;
         _acceptLegacyRmfDispatchReports = config.GetValue<bool>("TaskDispatch:AcceptLegacyRmfDispatchReports");
+        _autoConnect = config.GetValue<bool>("RosBridge:AutoConnect");
         _store = store;
         _rosBridgeUrl = config.GetValue<string>("RosBridge:Url") ?? "ws://localhost:9090";
         _store.RosBridgeUrl = _rosBridgeUrl;
+        _shouldConnect = _autoConnect;
     }
 
     public void Connect(string url)
@@ -111,7 +114,10 @@ public class RosBridgeTestService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("RosBridge 服務已啟動，等待使用者連線...");
+        if (_autoConnect)
+            _logger.LogInformation("RosBridge 服務已啟動，將自動連線至 {Url}", _rosBridgeUrl);
+        else
+            _logger.LogInformation("RosBridge 服務已啟動，等待使用者連線...");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -204,6 +210,19 @@ public class RosBridgeTestService : BackgroundService
 
         var taskSubscription = JsonSerializer.Serialize(new { op = "subscribe", topic = "/task_summaries", type = "rmf_task_msgs/msg/TaskSummary" });
         await ws.SendAsync(Encoding.UTF8.GetBytes(taskSubscription), WebSocketMessageType.Text, true, ct);
+
+        var ppoAssignmentSubscription = JsonSerializer.Serialize(new
+        {
+            op = "subscribe",
+            topic = "/hospital_ppo_assignment",
+            type = "std_msgs/msg/String",
+        });
+        await ws.SendAsync(
+            Encoding.UTF8.GetBytes(ppoAssignmentSubscription),
+            WebSocketMessageType.Text,
+            true,
+            ct);
+
         if (_acceptLegacyRmfDispatchReports)
         {
             var dispatchSubscription = JsonSerializer.Serialize(new { op = "subscribe", topic = "/dispatch_states", type = "rmf_task_msgs/msg/DispatchStates" });
@@ -261,6 +280,38 @@ public class RosBridgeTestService : BackgroundService
                     await scope.ServiceProvider.GetRequiredService<RosTaskStatusHandler>().HandleDispatchAsync(root.GetProperty("msg"));
                 return;
             }
+
+            if (topic == "/hospital_ppo_assignment")
+            {
+                var assignmentMsg =
+                    root.GetProperty("msg");
+
+                if (!assignmentMsg.TryGetProperty(
+                        "data",
+                        out var data) ||
+                    data.ValueKind != JsonValueKind.String)
+                    return;
+
+                var raw = data.GetString();
+
+                if (string.IsNullOrWhiteSpace(raw))
+                    return;
+
+                using var assignmentDocument =
+                    JsonDocument.Parse(raw);
+
+                using var scope =
+                    _scopeFactory.CreateScope();
+
+                await scope.ServiceProvider
+                    .GetRequiredService<RosTaskStatusHandler>()
+                    .HandleDispatchAsync(
+                        assignmentDocument.RootElement
+                    );
+
+                return;
+            }
+
             if (topic != "/fleet_states") return;
 
             var now = DateTimeOffset.Now;

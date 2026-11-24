@@ -47,6 +47,8 @@ class HospitalTaskRequest(BaseModel):
 
     created_at: Optional[float] = None
 
+    scheduled_at: Optional[float] = None
+
     note: Optional[str] = None
 
 
@@ -106,6 +108,7 @@ class HospitalRosApiBridge(Node):
                 task.required_capabilities
             ),
             "created_at": task.created_at,
+            "scheduled_at": task.scheduled_at,
             "note": task.note,
         }
 
@@ -147,17 +150,17 @@ class HospitalRosApiBridge(Node):
                 str(robot.task_id).strip()
             )
 
-            if task_id:
+            if mode == 1:
+                status = "充電中"
+                mode_text = "充電中"
+                current_task = "充電中"
+
+            elif task_id:
                 status = "執行任務中"
                 mode_text = "執行任務中"
                 current_task = (
                     f"任務中: {task_id}"
                 )
-
-            elif mode == 1:
-                status = "充電中"
-                mode_text = "充電中"
-                current_task = "充電中"
 
             elif mode == 2:
                 status = "移動中"
@@ -180,7 +183,6 @@ class HospitalRosApiBridge(Node):
                         float(
                             robot.battery_percent
                         )
-                        * 100.0
                     )
                 ),
 

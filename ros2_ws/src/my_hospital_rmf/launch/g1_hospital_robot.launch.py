@@ -5,10 +5,17 @@ import yaml
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction, TimerAction
+from launch.actions import (
+    DeclareLaunchArgument,
+    OpaqueFunction,
+    TimerAction,
+    RegisterEventHandler,
+)
+from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node
 
 from ros_gz_sim.actions import GzServer
+from launch.actions import ExecuteProcess
 from ros_gz_bridge.actions import RosGzBridge
 
 from robot_common_launch import get_ros2_control_robot_description
@@ -21,7 +28,7 @@ def make_controller_yaml(instance_name):
     config = {
         f"/{instance_name}/controller_manager": {
             "ros__parameters": {
-                "update_rate": 100,
+                "update_rate": 30,
                 "joint_state_broadcaster": {
                     "type": "joint_state_broadcaster/JointStateBroadcaster"
                 },
@@ -33,7 +40,7 @@ def make_controller_yaml(instance_name):
 
         f"/{instance_name}/diff_drive_controller": {
             "ros__parameters": {
-                "update_rate": 50,
+                "update_rate": 15,
 
                 "left_wheel_names": ["left_wheel_joint"],
                 "right_wheel_names": ["right_wheel_joint"],
@@ -47,7 +54,7 @@ def make_controller_yaml(instance_name):
                 "angular.z.has_velocity_limits": True,
                 "angular.z.max_velocity": 5.0,
 
-                "enable_odom_tf": False,
+                "enable_odom_tf": True,
 
                 # 多機器人時避免 frame 意義混淆
                 "odom_frame_id": "odom",
@@ -119,12 +126,13 @@ def patch_robot_description(
         if gazebo.attrib.get("reference") != "scan":
             continue
 
-        for sensor in gazebo.findall("sensor"):
+        for sensor in list(gazebo.findall("sensor")):
             if sensor.attrib.get("type") != "gpu_lidar":
                 continue
 
             found_lidar = True
 
+            # Keep scan updates frequent enough for AMCL and local obstacle clearing.
             topic = sensor.find("topic")
             if topic is None:
                 topic = ET.SubElement(
@@ -143,6 +151,39 @@ def patch_robot_description(
 
             frame.text = f"{instance_name}/scan"
 
+            update_rate = sensor.find("update_rate")
+
+            if update_rate is None:
+                update_rate = ET.SubElement(
+                    sensor,
+                    "update_rate",
+                )
+
+            update_rate.text = "10"
+
+            # Reduce horizontal LiDAR rays:
+            # 180 -> 90 for Gazebo performance testing.
+            samples = sensor.find(
+                "./lidar/scan/horizontal/samples"
+            )
+
+            if samples is None:
+                raise RuntimeError(
+                    "找不到 gpu_lidar horizontal samples"
+                )
+
+            samples.text = "90"
+
+            always_on = sensor.find("always_on")
+
+            if always_on is None:
+                always_on = ET.SubElement(
+                    sensor,
+                    "always_on",
+                )
+
+            always_on.text = "true"
+
     if not found_lidar:
         raise RuntimeError(
             "找不到 AgiBot G1 gpu_lidar sensor"
@@ -158,6 +199,13 @@ def launch_setup(context, *args, **kwargs):
 
     instance_name = context.launch_configurations["instance_name"]
     robot_type = context.launch_configurations["robot_type"].lower()
+
+    start_controllers = (
+        context.launch_configurations["start_controllers"]
+        .strip()
+        .lower()
+        in ("true", "1", "yes", "on")
+    )
 
     x = context.launch_configurations["x"]
     y = context.launch_configurations["y"]
@@ -236,6 +284,15 @@ def launch_setup(context, *args, **kwargs):
 
     if start_world:
 
+        models_path = os.path.join(
+            get_package_share_directory("my_hospital_rmf"),
+            "models",
+        )
+        os.environ["GZ_SIM_RESOURCE_PATH"] = os.pathsep.join(filter(None, [
+            models_path,
+            os.environ.get("GZ_SIM_RESOURCE_PATH", ""),
+        ]))
+
         world_path = os.path.join(
 
 
@@ -250,12 +307,16 @@ def launch_setup(context, *args, **kwargs):
 
         )
 
-        gz_server = GzServer(
-            world_sdf_file=world_path,
-            world_sdf_string="",
-            container_name="ros_gz_container",
-            create_own_container=True,
-            use_composition=True,
+        gz_server = ExecuteProcess(
+            cmd=[
+                "gz",
+                "sim",
+                "-s",
+                "-r",
+                world_path,
+                "--verbose",
+            ],
+            output="screen",
         )
 
         gz_bridge_config = os.path.join(
@@ -267,9 +328,8 @@ def launch_setup(context, *args, **kwargs):
         gz_bridge = RosGzBridge(
             bridge_name="ros_gz_bridge",
             config_file=gz_bridge_config,
-            container_name="ros_gz_container",
             create_own_container=False,
-            use_composition=True,
+            use_composition=False,
         )
 
         nodes.extend([
@@ -410,12 +470,12 @@ def launch_setup(context, *args, **kwargs):
 
     joint_controller_delay = (
         12.0
-        + controller_slot * 7.0
+        + controller_slot * 30.0
     )
 
     diff_controller_delay = (
         16.0
-        + controller_slot * 7.0
+        + controller_slot * 30.0
     )
 
     self_spawn_delay = (
@@ -437,21 +497,26 @@ def launch_setup(context, *args, **kwargs):
             period=self_spawn_delay,
             actions=[spawn_robot],
         ),
-
-        TimerAction(
-            period=joint_controller_delay,
-            actions=[
-                joint_state_broadcaster,
-            ],
-        ),
-
-        TimerAction(
-            period=diff_controller_delay,
-            actions=[
-                diff_drive_controller,
-            ],
-        ),
     ])
+
+    if start_controllers:
+        nodes.extend([
+            TimerAction(
+                period=joint_controller_delay,
+                actions=[
+                    joint_state_broadcaster,
+                ],
+            ),
+
+            RegisterEventHandler(
+                OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[
+                        diff_drive_controller,
+                    ],
+                )
+            ),
+        ])
 
     return nodes
 
@@ -459,6 +524,15 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
 
     return LaunchDescription([
+
+        DeclareLaunchArgument(
+            "start_controllers",
+            default_value="true",
+            description=(
+                "Whether this robot starts its own "
+                "ros2_control spawners."
+            ),
+        ),
 
         DeclareLaunchArgument(
             "instance_name",

@@ -159,6 +159,12 @@
 
 ## 9. 任務派工服務 / Fleet sizing 模型
 
+Development 預設以 `ws://localhost:9091` 連接 ROS WebSocket adapter，並透過 `POST http://localhost:5050/api/hospital/tasks` 送出派工。可用 `RosBridge__Url` 與 `TaskDispatch__Endpoint` 覆寫連線位址。若要使用後端內建模擬，可設 `TaskDispatch__DevelopmentSimulation__Enabled=true`。
+
+- 派工請求包含 `task_id`、`task_type`、`source`、`destination`、`priority`、`required_capabilities`、`created_at`、`scheduled_at` 與 `note`。HTTP 成功代表 bridge 已接受請求。
+- PPO 透過 `/hospital_ppo_assignment` 回傳 JSON。指派成功回傳 `task_id`、`status: 3` 與 `assignment: { "is_assigned": true, "expected_robot_name": "<ROS 機器人名稱>" }`，分配失敗回傳 `task_id` 與 `status: 4`。
+- 前端繼續使用既有的任務 API 與 `GET /api/robots`。任務狀態由後端根據 ROS 回報更新，即時車隊遙測來自 `/fleet_states`。
+
 - [ ] 任務建立與派工狀態分開驗證：建立任務成功不等於模型已選定機器人。
 - [ ] 未設定 `TaskDispatch:Endpoint` 時，到期任務不會假裝派送成功；狀態及 UI 顯示符合目前服務規則。
 - [ ] 設定正式派工 endpoint 後，確認 payload 的任務 ID、類型、起終點、優先級、能力需求及建立時間符合模型契約。
