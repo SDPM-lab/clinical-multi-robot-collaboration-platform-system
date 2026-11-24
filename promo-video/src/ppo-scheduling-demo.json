@@ -1,0 +1,88 @@
+{
+  "taskCode": "T0002",
+  "taskId": "film-task-t0002",
+  "taskType": "medication_delivery",
+  "source": "pharmacy",
+  "destination": "ward_a_2",
+  "priority": "high",
+  "scheduledAt": "2026-11-21T07:05:00.000Z",
+  "states": [
+    "pending",
+    "assigned",
+    "executing"
+  ],
+  "eligible": [
+    "M01",
+    "M02"
+  ],
+  "robotId": "M01",
+  "illustrative": true,
+  "robots": [
+    {
+      "id": "C01",
+      "type": "clean",
+      "status": "idle",
+      "battery": 72,
+      "eligible": false,
+      "capabilityMatch": false
+    },
+    {
+      "id": "C02",
+      "type": "clean",
+      "status": "idle",
+      "battery": 59,
+      "eligible": false,
+      "capabilityMatch": false
+    },
+    {
+      "id": "M01",
+      "type": "medical",
+      "status": "idle",
+      "battery": 86,
+      "eligible": true,
+      "capabilityMatch": true
+    },
+    {
+      "id": "M02",
+      "type": "medical",
+      "status": "idle",
+      "battery": 72,
+      "eligible": true,
+      "capabilityMatch": true
+    },
+    {
+      "id": "W01",
+      "type": "ward",
+      "status": "charging",
+      "battery": 51,
+      "eligible": false,
+      "capabilityMatch": true
+    },
+    {
+      "id": "W02",
+      "type": "ward",
+      "status": "charging",
+      "battery": 64,
+      "eligible": false,
+      "capabilityMatch": true
+    },
+    {
+      "id": "W03",
+      "type": "ward",
+      "status": "charging",
+      "battery": 69,
+      "eligible": false,
+      "capabilityMatch": true
+    }
+  ],
+  "observationSize": 98,
+  "actionMask": [
+    false,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false
+  ]
+}

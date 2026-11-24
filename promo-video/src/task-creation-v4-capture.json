@@ -1,0 +1,229 @@
+{
+  "points": {
+    "type": {
+      "x": 232,
+      "y": 232,
+      "box": {
+        "x": 39,
+        "y": 215.59375,
+        "width": 386,
+        "height": 32
+      }
+    },
+    "medicine": {
+      "x": 232,
+      "y": 271,
+      "box": {
+        "x": 45,
+        "y": 257.59375,
+        "width": 374,
+        "height": 27
+      }
+    },
+    "pharmacy": {
+      "x": 1338,
+      "y": 576,
+      "box": {
+        "x": 1317.171875,
+        "y": 549.859375,
+        "width": 42,
+        "height": 52
+      }
+    },
+    "ward": {
+      "x": 710,
+      "y": 168,
+      "box": {
+        "x": 696.703125,
+        "y": 154.78125,
+        "width": 26,
+        "height": 26
+      }
+    },
+    "high": {
+      "x": 280,
+      "y": 514,
+      "box": {
+        "x": 232,
+        "y": 499.59375,
+        "width": 96.5,
+        "height": 28
+      }
+    },
+    "create": {
+      "x": 384,
+      "y": 691,
+      "box": {
+        "x": 340.046875,
+        "y": 675.59375,
+        "width": 86.953125,
+        "height": 30
+      }
+    },
+    "toast": {
+      "x": 1417,
+      "y": 100,
+      "box": {
+        "x": 1261.453125,
+        "y": 78,
+        "width": 310.546875,
+        "height": 43
+      }
+    },
+    "bell": {
+      "x": 1386,
+      "y": 31,
+      "box": {
+        "x": 1366,
+        "y": 11,
+        "width": 40,
+        "height": 40
+      }
+    },
+    "schedule": {
+      "x": 332,
+      "y": 127,
+      "box": {
+        "x": 234.5,
+        "y": 108,
+        "width": 195.5,
+        "height": 37
+      }
+    },
+    "task": {
+      "x": 257,
+      "y": 388,
+      "box": {
+        "x": 87,
+        "y": 359.890625,
+        "width": 340,
+        "height": 56.890625
+      }
+    },
+    "edit": {
+      "x": 412,
+      "y": 253,
+      "box": {
+        "x": 399,
+        "y": 240,
+        "width": 26,
+        "height": 26
+      }
+    },
+    "rows": [
+      {
+        "x": 37,
+        "y": 273,
+        "width": 390,
+        "height": 80.890625
+      },
+      {
+        "x": 37,
+        "y": 359.890625,
+        "width": 390,
+        "height": 56.890625
+      },
+      {
+        "x": 37,
+        "y": 422.78125,
+        "width": 390,
+        "height": 56.890625
+      },
+      {
+        "x": 37,
+        "y": 485.671875,
+        "width": 390,
+        "height": 80.890625
+      },
+      {
+        "x": 37,
+        "y": 572.5625,
+        "width": 390,
+        "height": 80.890625
+      },
+      {
+        "x": 37,
+        "y": 659.453125,
+        "width": 390,
+        "height": 80.890625
+      }
+    ],
+    "taskCode": {
+      "x": 99,
+      "y": 366.890625,
+      "width": 318,
+      "height": 11
+    },
+    "time": {
+      "x": 158,
+      "y": 483,
+      "box": {
+        "x": 100,
+        "y": 469.78125,
+        "width": 115,
+        "height": 27
+      }
+    },
+    "save": {
+      "x": 341,
+      "y": 572,
+      "box": {
+        "x": 287.75,
+        "y": 556.78125,
+        "width": 106.25,
+        "height": 30
+      }
+    },
+    "confirm": {
+      "x": 957,
+      "y": 517,
+      "box": {
+        "x": 903.953125,
+        "y": 495.6875,
+        "width": 107.046875,
+        "height": 42
+      }
+    }
+  },
+  "events": [
+    {
+      "event": "create-request",
+      "payload": {
+        "taskType": "medication_delivery",
+        "source": "pharmacy",
+        "destination": "ward_a_2",
+        "priority": "high",
+        "robotId": null,
+        "scheduledAt": "2026-11-21T06:20:00.000Z",
+        "note": null
+      }
+    },
+    {
+      "event": "create-success",
+      "id": "film-task-t0002"
+    },
+    {
+      "event": "schedule-success",
+      "id": "film-task-t0002",
+      "scheduledAt": "2026-11-21T07:05:00.000Z"
+    }
+  ],
+  "task": {
+    "taskType": "medication_delivery",
+    "source": "pharmacy",
+    "destination": "ward_a_2",
+    "priority": "high",
+    "robotId": null,
+    "scheduledAt": "2026-11-21T07:05:00.000Z",
+    "note": null,
+    "id": "film-task-t0002",
+    "taskCode": "T0002",
+    "status": "pending",
+    "createdAt": "2026-11-21T11:10:00+08:00",
+    "assignedRobot": null
+  },
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  }
+}
