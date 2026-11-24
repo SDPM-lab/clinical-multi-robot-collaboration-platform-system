@@ -23,6 +23,9 @@ const sourcePickerOpen = ref(false)
 const destinationPickerOpen = ref(false)
 const sourcePicker = ref(null)
 const destinationPicker = ref(null)
+const locationMenu = ref(null)
+const locationMenuStyle = ref({})
+const openLocationField = computed(() => sourcePickerOpen.value ? 'source' : destinationPickerOpen.value ? 'destination' : null)
 const localDate = (now) => `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
 const localTime = (now) => `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
 const nextStart = () => new Date(Date.now() + 60_000)
@@ -63,12 +66,24 @@ const positionFloatingMenu = (anchor, menu, preferredWidth) => {
 const updateFloatingMenus = () => {
   if (datePickerOpen.value) calendarMenuStyle.value = positionFloatingMenu(dateTrigger.value, calendarMenu.value, 280)
   if (timePickerOpen.value) timeMenuStyle.value = positionFloatingMenu(timeEntry.value, timeMenu.value, 152)
+  const field = openLocationField.value
+  const trigger = (field === 'source' ? sourcePicker.value : destinationPicker.value)?.querySelector('button')
+  if (field && trigger) {
+    const rect = trigger.getBoundingClientRect()
+    locationMenuStyle.value = {
+      top: `${rect.bottom + 4}px`,
+      left: `${rect.left}px`,
+      width: `${rect.width}px`,
+      maxHeight: `${Math.max(0, Math.min(180, window.innerHeight - rect.bottom - 12))}px`,
+    }
+  }
 }
 const parseTimeText = (value) => {
   const text = value.trim().replace(/^(\d{2})(\d{2})$/, '$1:$2')
   const match = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(text)
   return match ? `${match[1].padStart(2,'0')}:${match[2]}:00` : null
 }
+watch(openLocationField, async field => { if (field) { await nextTick(); updateFloatingMenus() } })
 const normalizeTimeText = () => {
   const time = parseTimeText(timeText.value)
   if (time) timeText.value = time.slice(0,5)
@@ -99,8 +114,10 @@ const onOutsidePointer = (event) => {
   if (!taskTypePicker.value?.contains(event.target)) taskTypeOpen.value = false
   if (!datePicker.value?.contains(event.target) && !calendarMenu.value?.contains(event.target)) datePickerOpen.value = false
   if (!timeEntry.value?.contains(event.target) && !timeMenu.value?.contains(event.target)) timePickerOpen.value = false
-  if (!sourcePicker.value?.contains(event.target)) sourcePickerOpen.value = false
-  if (!destinationPicker.value?.contains(event.target)) destinationPickerOpen.value = false
+  if (!locationMenu.value?.contains(event.target)) {
+    if (!sourcePicker.value?.contains(event.target)) sourcePickerOpen.value = false
+    if (!destinationPicker.value?.contains(event.target)) destinationPickerOpen.value = false
+  }
 }
 onMounted(() => {
   document.addEventListener('pointerdown', onOutsidePointer)
@@ -209,8 +226,8 @@ const submit = async () => {
         <div ref="taskTypePicker" class="field task-type-picker full-width" @keydown.esc.stop="taskTypeOpen=false"><span>{{ t('dispatchForm.type') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="task-type-trigger" :aria-label="t('dispatchForm.type')" :aria-expanded="taskTypeOpen" aria-haspopup="listbox" @click="taskTypeOpen=!taskTypeOpen"><span>{{ translateTask(form.type) }}</span><ChevronDown :size="14" /></button><div v-if="taskTypeOpen" class="task-type-options" role="listbox" :aria-label="t('dispatchForm.type')"><button v-for="type in taskTypes" :key="type" type="button" role="option" :aria-selected="form.type===type" @click="form.type=type;taskTypeOpen=false">{{ translateTask(type) }}</button></div></div>
 
         <div class="dispatch-location-fields">
-          <div ref="sourcePicker" class="field dispatch-location-picker" @keydown.esc.stop="sourcePickerOpen=false"><span>{{ t('dispatchForm.source') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="location-trigger" :class="{ 'is-fixed': allowedSources.length === 1 }" :disabled="allowedSources.length === 1" :aria-label="t('dispatchForm.source')" :aria-expanded="sourcePickerOpen" aria-haspopup="listbox" @click="sourcePickerOpen=!sourcePickerOpen;destinationPickerOpen=false"><span>{{ translateLocation(dispatchWaypointLabels[sourceValue] || sourceValue) }}</span><Ban v-if="allowedSources.length === 1" :size="15" aria-hidden="true" /><ChevronDown v-else :size="15" /></button><div v-if="sourcePickerOpen && allowedSources.length > 1" class="location-options" role="listbox" :aria-label="t('dispatchForm.source')"><button v-for="location in allowedSources" :key="location" type="button" role="option" :aria-selected="sourceValue===location" @click="selectLocation('source', location)">{{ translateLocation(dispatchWaypointLabels[location] || location) }}</button></div></div>
-          <div ref="destinationPicker" class="field dispatch-location-picker" @keydown.esc.stop="destinationPickerOpen=false"><span>{{ t('dispatchForm.destination') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="location-trigger" :class="{ 'is-fixed': allowedDestinations.length === 1 }" :disabled="allowedDestinations.length === 1" :aria-label="t('dispatchForm.destination')" :aria-expanded="destinationPickerOpen" aria-haspopup="listbox" @click="destinationPickerOpen=!destinationPickerOpen;sourcePickerOpen=false"><span>{{ translateLocation(dispatchWaypointLabels[destinationValue] || destinationValue) }}</span><Ban v-if="allowedDestinations.length === 1" :size="15" aria-hidden="true" /><ChevronDown v-else :size="15" /></button><div v-if="destinationPickerOpen && allowedDestinations.length > 1" class="location-options" role="listbox" :aria-label="t('dispatchForm.destination')"><button v-for="location in allowedDestinations" :key="location" type="button" role="option" :aria-selected="destinationValue===location" @click="selectLocation('destination', location)">{{ translateLocation(dispatchWaypointLabels[location] || location) }}</button></div></div>
+          <div ref="sourcePicker" class="field dispatch-location-picker" @keydown.esc.stop="sourcePickerOpen=false"><span>{{ t('dispatchForm.source') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="location-trigger" :class="{ 'is-fixed': allowedSources.length === 1 }" :disabled="allowedSources.length === 1" :aria-label="t('dispatchForm.source')" :aria-expanded="sourcePickerOpen" aria-haspopup="listbox" @click="sourcePickerOpen=!sourcePickerOpen;destinationPickerOpen=false"><span>{{ translateLocation(dispatchWaypointLabels[sourceValue] || sourceValue) }}</span><Ban v-if="allowedSources.length === 1" :size="15" aria-hidden="true" /><ChevronDown v-else :size="15" /></button></div>
+          <div ref="destinationPicker" class="field dispatch-location-picker" @keydown.esc.stop="destinationPickerOpen=false"><span>{{ t('dispatchForm.destination') }} <span class="required-marker" aria-hidden="true">＊</span></span><button type="button" class="location-trigger" :class="{ 'is-fixed': allowedDestinations.length === 1 }" :disabled="allowedDestinations.length === 1" :aria-label="t('dispatchForm.destination')" :aria-expanded="destinationPickerOpen" aria-haspopup="listbox" @click="destinationPickerOpen=!destinationPickerOpen;sourcePickerOpen=false"><span>{{ translateLocation(dispatchWaypointLabels[destinationValue] || destinationValue) }}</span><Ban v-if="allowedDestinations.length === 1" :size="15" aria-hidden="true" /><ChevronDown v-else :size="15" /></button></div>
         </div>
 
         <div ref="datePicker" class="field dispatch-date-picker" @keydown.esc.stop="datePickerOpen=false"><span>{{ t('dispatchForm.date') }} <span class="required-marker" aria-hidden="true">＊</span></span><button ref="dateTrigger" class="date-trigger" type="button" :aria-label="t('dispatchForm.date')" :aria-expanded="datePickerOpen" aria-haspopup="dialog" @click="toggleCalendar"><span>{{ form.date.replaceAll('-',' / ') }}</span><CalendarDays :size="14" /></button></div>
@@ -227,6 +244,16 @@ const submit = async () => {
       </div>
       </fieldset>
       <Teleport to="body">
+        <div v-if="openLocationField" ref="locationMenu" class="location-options" role="listbox"
+          :aria-label="t(`dispatchForm.${openLocationField}`)" :style="locationMenuStyle"
+          @keydown.esc.stop="sourcePickerOpen=false;destinationPickerOpen=false">
+          <button v-for="location in openLocationField === 'source' ? allowedSources : allowedDestinations"
+            :key="location" type="button" role="option"
+            :aria-selected="(openLocationField === 'source' ? sourceValue : destinationValue) === location"
+            @click="selectLocation(openLocationField, location)">
+            {{ translateLocation(dispatchWaypointLabels[location] || location) }}
+          </button>
+        </div>
         <div v-if="datePickerOpen" ref="calendarMenu" class="dispatch-calendar is-floating" role="dialog" :aria-label="t('dispatchForm.date')" :style="calendarMenuStyle" @keydown.esc.stop="datePickerOpen=false">
           <div class="calendar-heading"><button type="button" :disabled="submitting" :aria-label="t('dispatch.previousMonth')" @click="shiftMonth(-1)"><ChevronLeft :size="16" /></button><strong>{{ calendarHeading }}</strong><button type="button" :disabled="submitting" :aria-label="t('dispatch.nextMonth')" @click="shiftMonth(1)"><ChevronRight :size="16" /></button></div>
           <div class="calendar-grid"><span v-for="(day,index) in weekdays" :key="index" class="calendar-weekday">{{ day }}</span><button v-for="day in calendarDays" :key="day.value" type="button" :disabled="submitting" :data-date="day.value" :class="{outside:day.outside,today:day.today}" :aria-label="day.value" :aria-pressed="form.date===day.value" @click="selectDate(day.value)">{{ day.day }}</button></div>
@@ -259,11 +286,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding-bot
 .task-type-picker{position:relative}.task-type-trigger{display:flex;align-items:center;justify-content:space-between;gap:4px;width:100%;height:31px;min-width:0;padding:0 8px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:7px;font:inherit;font-size:10px;text-align:left;cursor:pointer}.task-type-trigger span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.task-type-trigger svg{flex:none}.task-type-options{position:absolute;z-index:30;top:100%;left:0;right:0;display:grid;gap:2px;max-height:205px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:color-mix(in srgb,var(--panel-bg-strong) 92%,transparent);border:1px solid var(--panel-border);border-radius:9px;box-shadow:0 10px 22px #34433825;backdrop-filter:blur(18px)}.task-type-options button{min-height:27px;padding:5px 7px;color:inherit;background:transparent;border:0;border-radius:6px;font:inherit;font-size:10px;text-align:left;cursor:pointer}.task-type-options button:hover,.task-type-options button[aria-selected=true]{background:color-mix(in srgb,#fb9966 15%,transparent)}.task-type-trigger:focus-visible,.task-type-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}.notes-field textarea{min-height:70px;padding:8px 9px;resize:vertical}.task-panel footer{background:transparent!important;border-top:0;box-shadow:none}
 .task-type-options{background:#f8faf9}:global([data-theme='dark']) .task-type-options{background:#303735}
 .field{font-size:13px}.field input,.field textarea,.task-type-trigger{font-size:12.5px}.task-type-options button,.robot-options button{font-size:12px}.priority-control legend{font-size:12.5px}.priority-control button{font-size:12px}.task-panel footer button{font-size:12px}
-.dispatch-location-picker{position:relative}.location-trigger{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%;height:34px;min-width:0;padding:0 9px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:8px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.location-trigger svg{flex:none}.location-options{position:absolute;z-index:35;top:100%;left:0;right:0;display:grid;gap:3px;max-height:210px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:#f8faf9;border:1px solid var(--panel-border);border-radius:10px;box-shadow:0 10px 22px #34433825}.location-options button{min-height:30px;padding:5px 8px;color:inherit;background:transparent;border:0;border-radius:7px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger:focus-visible,.location-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}:global([data-theme='dark']) .location-options{background:#303735}
+.dispatch-location-picker{position:relative}.location-trigger{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%;height:34px;min-width:0;padding:0 9px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:8px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.location-trigger svg{flex:none}.location-options{position:fixed;z-index:1100;box-sizing:border-box;display:grid;gap:3px;max-height:210px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:var(--dispatch-popover-background);border:1px solid var(--dispatch-control-border);border-radius:10px;box-shadow:0 10px 22px #34433825}.location-options button{min-height:30px;padding:5px 8px;color:inherit;background:transparent;border:0;border-radius:7px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger:focus-visible,.location-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}:global([data-theme='dark']) .location-options{background:#303735}
 .location-options button:hover,.location-options button[aria-selected=true]{background:color-mix(in srgb,#fb9966 15%,transparent)}
-/* Keep the choices in the form's scroll area. Safari clips absolutely positioned
-   menus inside the scrollable dispatch panel. */
-.location-options{position:static;z-index:auto;max-height:180px;min-width:0;margin-top:4px}
 .priority-control button.active{background:color-mix(in srgb,var(--priority-color) 20%,var(--panel-bg-strong));box-shadow:none}
 .priority-control button:hover{background:color-mix(in srgb,var(--priority-color) 18%,var(--panel-bg-strong))}
 .task-panel{height:auto;grid-template-rows:auto auto}
@@ -340,7 +364,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   cursor:not-allowed;
 }
 .task-panel .location-trigger.is-fixed:disabled svg{color:var(--dispatch-control-disabled-text)}
-.dispatch-location-fields{display:grid;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;min-width:0}
+.dispatch-location-fields{display:grid;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:7px 10px;min-width:0}
 .task-panel :is(.task-type-options,.location-options,.dispatch-calendar){
   color:var(--dispatch-control-text);
   background:var(--dispatch-popover-background);
@@ -371,5 +395,5 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .time-scroll-column{position:relative;display:grid;gap:2px;max-height:132px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
 .time-scroll-column button{min-height:26px;padding:2px;border:0;border-radius:5px;background:transparent;color:inherit;font:inherit;font-size:13px;cursor:pointer}
 .time-scroll-column button:hover{background:var(--dispatch-popover-hover-background)}
-.time-scroll-column button[aria-selected=true]{color:#fff;background:#2864ac}
+.time-scroll-column button[aria-selected=true]{color:var(--dispatch-popover-hover-text);background:var(--theme-primary)}
 </style>

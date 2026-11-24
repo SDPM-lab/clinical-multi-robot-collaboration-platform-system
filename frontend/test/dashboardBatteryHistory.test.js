@@ -1,19 +1,17 @@
 import { expect, it } from 'vitest'
-import { dashboardBatteryHistory, hourlyObservedBatteryHistory } from '@/data/dashboardBatteryHistory.js'
+import { hourlyObservedBatteryHistory, readObservedBatteryHistory, saveObservedBatteryHistory } from '@/data/dashboardBatteryHistory.js'
 
-it('shows seven registered F1 robots in aligned simulated history', () => {
-  const robots = ['C01','C02','M01','M02','W01','W02','W03'].map(displayCode => ({ displayCode, floorId: 'floor1' })).reverse()
-  const history = dashboardBatteryHistory(robots, { floor1: [] })
-  expect(history.simulated).toBe(true)
-  expect(history.floor1).toHaveLength(5)
-  expect(Object.keys(history.floor1[0].batteries).sort()).toEqual(['C01','C02','M01','M02','W01','W02','W03'])
-  expect(history.floor1[0].batteries.C01).toBe(86)
-  expect(history.floor2).toEqual([])
+it('shows no readings until real telemetry exists', () => {
+  expect(hourlyObservedBatteryHistory({}, ['C01'])).toEqual({ floor1: [], floor2: [], floor3: [] })
 })
 
-it('uses observed battery readings when telemetry history exists', () => {
-  const row = { time: '12:01', batteries: { C01: 51 } }
-  expect(dashboardBatteryHistory([{ displayCode: 'C01', floorId: 'floor1' }], { floor1: [row] })).toMatchObject({ simulated: false, floor1: [row] })
+it('keeps recorded values after a reload and an empty disconnected snapshot', () => {
+  const timestamp = new Date(2026, 10, 20, 12, 1).getTime()
+  const history = hourlyObservedBatteryHistory({ floor1: { C01: [{ timestamp, value: 51 }] } }, ['C01'])
+  saveObservedBatteryHistory(history)
+  const saved = readObservedBatteryHistory()
+  expect(hourlyObservedBatteryHistory({}, ['C01'], saved)).toEqual(history)
+  localStorage.clear()
 })
 
 it('groups readings by local hour and retains each robot’s latest actual reading time', () => {
@@ -26,7 +24,7 @@ it('groups readings by local hour and retains each robot’s latest actual readi
   }, ['C01', 'C02'])
   expect(history.floor1).toEqual([
     { hourStart: at(13, 0), time: '13:00', batteries: { C01: 79, C02: 65 }, observedTimes: { C01: '13:41', C02: '13:20' }, observedTimestamps: { C01: at(13, 41), C02: at(13, 20) } },
-    { hourStart: at(14, 0), time: '14:00', batteries: { C01: 78, C02: 65 }, observedTimes: { C01: '14:03', C02: '13:20' }, observedTimestamps: { C01: at(14, 3), C02: at(13, 20) } },
+    { hourStart: at(14, 0), time: '14:00', batteries: { C01: 78, C02: null }, observedTimes: { C01: '14:03', C02: null }, observedTimestamps: { C01: at(14, 3), C02: -Infinity } },
   ])
   expect(history.floor2).toEqual([])
   const later = hourlyObservedBatteryHistory({

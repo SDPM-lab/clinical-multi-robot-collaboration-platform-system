@@ -12,7 +12,7 @@ import FloorRobotStatusPanel from '@/components/overview/FloorRobotStatusPanel.v
 import { createFloorRobotStatus, normalizeFloor, robotIds } from '@/data/overviewStatusData.js'
 import TaskProgressTimeline from '@/components/overview/TaskProgressTimeline.vue'
 import { dashboardSnapshot } from '@/data/dashboardSnapshot.js'
-import { dashboardBatteryHistory, hourlyObservedBatteryHistory } from '@/data/dashboardBatteryHistory.js'
+import { hourlyObservedBatteryHistory, readObservedBatteryHistory, saveObservedBatteryHistory } from '@/data/dashboardBatteryHistory.js'
 import { taskApi } from '@/services/taskApi.js'
 import { NAVIGATION_ASSETS } from '@/config/sceneAssets.js'
 import { locale, t } from '@/i18n/index.js'
@@ -69,15 +69,17 @@ onMounted(async () => {
 const bottomPanelMode = computed(() => activeFloor.value === 'all' ? 'building-trend' : 'floor-realtime')
 const selectedFloorId = computed(() => normalizeFloor(activeFloor.value))
 const floorRobotStatus = computed(() => createFloorRobotStatus((liveData.value?.robots || []).map(robot => ({ ...robot,
+  battery: robotSnapshot.value?.connection?.status === 'connected' && robot.hasTelemetry && robot.state !== 'offline'
+    ? robot.battery : null,
   updatedAt: robot.hasTelemetry ? robot.lastUpdate : null,
   activeTaskId: liveData.value?.tasks.find(task => task.robotId === robot.id && task.status === 'executing')?.id,
 })), liveData.value?.tasks || []))
 const rollingHistory = useOverviewBatteryHistory(floorRobotStatus)
-const observedBatteryHistory = ref({})
+const observedBatteryHistory = ref(readObservedBatteryHistory())
 watch(rollingHistory, history => {
   observedBatteryHistory.value = hourlyObservedBatteryHistory(history, robotIds, observedBatteryHistory.value)
+  saveObservedBatteryHistory(observedBatteryHistory.value)
 }, { immediate: true })
-const batteryHistory = computed(() => dashboardBatteryHistory(liveData.value?.robots || [], observedBatteryHistory.value))
 const networkStatus = computed(() => robotSnapshot.value?.connection?.status)
 const connectionRobots = computed(() => robotSnapshot.value?.robots?.map(robot => ({
   connectionState: robot.hasTelemetry && robot.status !== '離線' ? 'connected' : 'disconnected',
@@ -197,7 +199,7 @@ onBeforeUnmount(() => { clearInterval(pollTimer); clearTimeout(modelSaveTimer); 
       </div>
       <div class="overview-bottom-main overview-tool-panel">
       <Transition name="bottom-panel-switch" mode="out-in">
-        <BuildingTrendPanel v-if="bottomPanelMode === 'building-trend'" key="building-trend" :history="batteryHistory" :source="batteryHistory.simulated ? (locale === 'en' ? 'Simulated' : '模擬') : (locale === 'en' ? 'Since opening this page' : '本次開啟頁面後的回報')" />
+        <BuildingTrendPanel v-if="bottomPanelMode === 'building-trend'" key="building-trend" :history="observedBatteryHistory" />
         <FloorRobotStatusPanel v-else :key="selectedFloorId" :floor="selectedFloorId" :history="[]" :rolling-history="rollingHistory[selectedFloorId]" :robots="floorRobotStatus[selectedFloorId]" />
       </Transition>
       </div>

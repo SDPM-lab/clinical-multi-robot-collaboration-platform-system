@@ -6,12 +6,13 @@ export function useOverviewBatteryHistory(status) {
   watch(status, floors => {
     for (const [floor, robots] of Object.entries(floors)) {
       for (const robot of Object.values(robots)) {
-        if (!Number.isFinite(robot.battery)) continue
+        const timestamp = Date.parse(robot.updatedAt)
+        if (!Number.isFinite(robot.battery) || !Number.isFinite(timestamp)) continue
         const points = history[floor][robot.robotId] ||= []
         const last = points.at(-1)
         const value = Math.max(0, Math.min(100, robot.battery))
         if (last?.value === value && last?.updatedAt === robot.updatedAt) continue
-        points.push({ value, updatedAt: robot.updatedAt, timestamp: Number.isFinite(Date.parse(robot.updatedAt)) ? Date.parse(robot.updatedAt) : Date.now(), status: robot.status, task: robot.currentTask, taskId: robot.taskId, time: robot.updatedAt ? robot.updatedAt.slice(11, 16) : new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) })
+        points.push({ value, updatedAt: robot.updatedAt, timestamp, status: robot.status, task: robot.currentTask, taskId: robot.taskId, time: robot.updatedAt.slice(11, 16) })
         if (points.length > 30) points.splice(0, points.length - 30)
       }
     }
