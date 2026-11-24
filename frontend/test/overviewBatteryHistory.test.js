@@ -6,19 +6,23 @@ import BuildingTrendPanel from '@/components/overview/BuildingTrendPanel.vue'
 import { robotIds } from '@/data/overviewStatusData.js'
 it('bounds telemetry, isolates floors, deduplicates unrelated updates, and stops on scope disposal', async () => {
   const scope = effectScope()
-  const status = ref({ floor1: { R01: { robotId: 'R01', battery: 82, updatedAt: 't0' } } })
+  const at = seconds => new Date(Date.UTC(2026, 10, 25, 0, 0, seconds)).toISOString()
+  const status = ref({ floor1: { R01: { robotId: 'R01', battery: 82, updatedAt: at(0) } } })
   const history = scope.run(() => useOverviewBatteryHistory(status))
   for (let i = 1; i < 36; i++) {
-    status.value.floor1.R01.updatedAt = `t${i}`
+    status.value.floor1.R01.updatedAt = at(i)
     await nextTick()
   }
   expect(history.floor1.R01).toHaveLength(30)
   status.value.floor1.R01.currentTask = 'changed'
   await nextTick()
   expect(history.floor1.R01).toHaveLength(30)
-  status.value = { floor2: { R01: { robotId: 'R01', battery: 71, updatedAt: 't36' } } }
+  status.value = { floor2: { R01: { robotId: 'R01', battery: 71, updatedAt: at(36) } } }
   await nextTick()
   expect(history.floor2.R01[0].value).toBe(71)
+  status.value.floor2.R02 = { robotId: 'R02', battery: 99, updatedAt: null }
+  await nextTick()
+  expect(history.floor2.R02).toBeUndefined()
   expect(history.floor1.R01.at(-1).value).toBe(82)
   scope.stop()
   status.value.floor2.R01.battery = 60

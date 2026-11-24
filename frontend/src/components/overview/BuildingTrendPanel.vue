@@ -3,7 +3,7 @@ import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
 import { computed, useId, ref, shallowRef, onMounted, onBeforeUnmount } from 'vue'
 import { robotIds } from '@/data/overviewStatusData.js'
 import { t } from '@/i18n/index.js'
-const props = defineProps({ history: { type: Object, required: true }, source: { type: String, default: '展示資料' } })
+const props = defineProps({ history: { type: Object, required: true } })
 const root = ref(null)
 const plotSize = shallowRef({ width: 300, height: 180 })
 const baseline = computed(() => plotSize.value.height - 32)
@@ -40,7 +40,7 @@ const charts = computed(() => ['floor1','floor2','floor3'].map((floorId, floorIn
 </script>
 <template>
   <div ref="root" class="building-trend-panel" :style="{'--plot-baseline':`${baseline}px`}">
-    <header class="building-trend-heading"><div><h2>全棟電量趨勢</h2><small>{{ source }}</small></div>
+    <header class="building-trend-heading"><div><h2>全棟電量趨勢</h2><small>{{ t('dashboard.observedBatteryHistory') }}</small></div>
       <div class="chart-legend" aria-label="機器人圖例"><span v-for="(id,i) in robotIds" :key="id"><i :style="{background:colors[i]}"></i>{{ id }}</span></div>
     </header>
     <section v-for="chart in charts" :key="chart.floorId" class="floor-chart" :style="{'--floor-index':chart.floorIndex}">
