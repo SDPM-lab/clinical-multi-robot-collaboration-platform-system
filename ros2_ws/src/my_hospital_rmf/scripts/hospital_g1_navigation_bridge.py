@@ -6,6 +6,12 @@ import yaml
 
 import rclpy
 from rclpy.node import Node
+from rclpy.action import ActionClient
+
+from nav2_msgs.action import NavigateThroughPoses
+from geometry_msgs.msg import PoseStamped
+
+from tf2_ros import Buffer, TransformListener
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -21,6 +27,74 @@ from rmf_fleet_msgs.msg import (
     PathRequest,
 )
 
+from navigation.utils import (
+    clamp,
+    normalize_angle,
+)
+
+from navigation.robot_runtime import RobotRuntime
+
+from navigation.traffic_avoidance import (
+    find_robot_conflict,
+    is_head_on_conflict,
+)
+
+from navigation.obstacle_avoidance import (
+    analyze_lidar_scan,
+    compute_turn_command,
+    can_recover_from_bypass,
+    compute_bypass_command,
+    compute_recover_command,
+    should_trigger_obstacle_avoidance,
+    choose_avoidance_direction,
+)
+
+from navigation.path_follower import (
+    compute_normal_tracking_command,
+    compute_final_goal_command,
+)
+
+from navigation.config import (
+    CONTROL_PERIOD,
+    ARRIVE_DISTANCE,
+    GOAL_APPROACH_DISTANCE,
+    GOAL_APPROACH_MAX_SPEED,
+    GOAL_EMERGENCY_STOP_DISTANCE,
+    FINAL_YAW_TOLERANCE,
+    ROTATE_FIRST_THRESHOLD,
+    LINEAR_KP,
+    ANGULAR_KP,
+    MAX_LINEAR_SPEED,
+    MAX_ANGULAR_SPEED,
+    MIN_LINEAR_SPEED,
+    OBSTACLE_SLOW_DISTANCE,
+    OBSTACLE_STOP_DISTANCE,
+    AVOID_TURN_ANGLE,
+    AVOID_TURN_TOLERANCE,
+    AVOID_FORWARD_DISTANCE,
+    AVOID_LINEAR_SPEED,
+    AVOID_EXTRA_TURN_ANGLE,
+    SIDE_SAFE_DISTANCE,
+    SIDE_CORRECTION_KP,
+    SIDE_MAX_ANGULAR_SPEED,
+    RECOVER_MIN_SIDE_CLEARANCE,
+    BYPASS_PATH_KP,
+    BYPASS_PATH_MAX_ANGULAR_SPEED,
+    ROBOT_CONFLICT_DISTANCE,
+    ROBOT_RESUME_DISTANCE,
+    ROBOT_CONFLICT_ANGLE,
+    HEAD_ON_MIN_OPPOSITE_ANGLE,
+    HEAD_ON_TURN_ANGLE,
+    HEAD_ON_FORWARD_DISTANCE,
+    HEAD_ON_SHIFT_DISTANCE,
+    HEAD_ON_WALL_MIN_DISTANCE,
+    HEAD_ON_BEHIND_MARGIN,
+    HEAD_ON_LANE_TOLERANCE,
+    HEAD_ON_CLEAR_DISTANCE,
+    HEAD_ON_LINEAR_SPEED,
+    HEAD_ON_MAX_ANGULAR_SPEED,
+)
+
 
 # ============================================================
 # RMF / Hospital settings
@@ -30,355 +104,6 @@ FLEET_NAME = "hospital_fleet"
 MAP_NAME = "L1"
 
 BATTERY_PERCENT = 99.0
-
-# 10 Hz navigation + state update
-CONTROL_PERIOD = 0.1
-
-
-# ============================================================
-# Simple waypoint follower settings
-# ============================================================
-
-# 距離 waypoint 小於這個值視為到達
-ARRIVE_DISTANCE = 0.25
-
-# 接近最後 waypoint 時進入低速靠近模式，
-# 避免普通 TURN/BYPASS 在終點附近把 robot 帶走。
-GOAL_APPROACH_DISTANCE = 0.75
-
-# 最後靠近 waypoint 的最大速度
-GOAL_APPROACH_MAX_SPEED = 0.12
-GOAL_EMERGENCY_STOP_DISTANCE = 0.30
-
-# 最後一個 waypoint 的朝向誤差
-FINAL_YAW_TOLERANCE = 0.12
-
-# 朝向誤差超過這個值時，先原地旋轉
-ROTATE_FIRST_THRESHOLD = 0.30
-
-# 比例控制(距離目標還多遠，就決定要給多大的前進速度)
-LINEAR_KP = 0.7
-ANGULAR_KP = 1.5
-
-# 最大直線速度
-MAX_LINEAR_SPEED = 0.7
-
-# 最大角速度
-MAX_ANGULAR_SPEED = 0.8
-
-# 最小前進速度
-MIN_LINEAR_SPEED = 0.06
-
-
-# ============================================================
-# LiDAR obstacle avoidance settings
-# ============================================================
-
-# 小於此距離開始減速
-OBSTACLE_SLOW_DISTANCE = 0.8
-
-# 小於此距離觸發避障
-OBSTACLE_STOP_DISTANCE = 0.55
-
-AVOID_TURN_ANGLE = math.radians(60.0)
-AVOID_TURN_TOLERANCE = math.radians(8.0)
-AVOID_FORWARD_DISTANCE = 1.2
-AVOID_LINEAR_SPEED = 0.30
-AVOID_EXTRA_TURN_ANGLE = math.radians(30.0)
-
-# bypass 時與左右障礙物保持安全距離
-SIDE_SAFE_DISTANCE = 0.45
-
-# 側邊修正的角速度比例
-SIDE_CORRECTION_KP = 2.0
-
-# 側邊修正最大角速度，避免修正太劇烈
-SIDE_MAX_ANGULAR_SPEED = 0.50
-
-RECOVER_MIN_SIDE_CLEARANCE = 0.30
-
-# bypass 時，安全後逐漸朝原本 waypoint 拉回
-BYPASS_PATH_KP = 0.5
-
-# 回原路線修正不能蓋過避障本身
-BYPASS_PATH_MAX_ANGULAR_SPEED = 0.20
-
-# ============================================================
-# Robot-to-robot right-of-way
-# ============================================================
-
-# 多近時認為兩台 robot 可能發生局部衝突
-ROBOT_CONFLICT_DISTANCE = 1.80
-
-# 對方離開多遠後，讓行中的 robot 才恢復
-ROBOT_RESUME_DISTANCE = 2.00
-
-# 只判斷前方 ±60 度內的其他 robot
-ROBOT_CONFLICT_ANGLE = math.radians(60.0)
-
-
-# ============================================================
-# Head-on reciprocal avoidance
-# ============================================================
-
-# 兩台朝向差超過 150 度，視為接近正面相遇
-HEAD_ON_MIN_OPPOSITE_ANGLE = math.radians(150.0)
-
-# 正面相遇時，兩台都往自己的右邊偏 25 度
-HEAD_ON_TURN_ANGLE = math.radians(35.0)
-
-# 小幅側移，不需要像一般障礙繞 1.2m
-HEAD_ON_FORWARD_DISTANCE = 1.00
-
-# 三段式 head-on：
-# 先右斜移，再轉回原方向平行錯車
-HEAD_ON_SHIFT_DISTANCE = 0.55
-
-# 右側離牆太近時，不再繼續往右斜移
-HEAD_ON_WALL_MIN_DISTANCE = 0.45
-
-# 對方必須確實進入自己後方，才算完成錯車
-HEAD_ON_BEHIND_MARGIN = 0.20
-
-# 回到原本 lane 時允許的橫向誤差
-HEAD_ON_LANE_TOLERANCE = 0.10
-
-# 彼此距離拉開到這個程度，就開始回原 waypoint
-HEAD_ON_CLEAR_DISTANCE = 1.40
-
-# 正面會車速度
-HEAD_ON_LINEAR_SPEED = 0.18
-
-# 維持右偏方向的角速度上限
-HEAD_ON_MAX_ANGULAR_SPEED = 0.30
-
-
-# ============================================================
-# Utility functions
-# ============================================================
-
-def clamp(value, low, high):
-    return max(low, min(high, value))
-
-
-def normalize_angle(angle):
-    while angle > math.pi:
-        angle -= 2.0 * math.pi
-
-    while angle < -math.pi:
-        angle += 2.0 * math.pi
-
-    return angle
-
-
-def quaternion_to_yaw(q):
-    siny_cosp = 2.0 * (
-        q.w * q.z
-        + q.x * q.y
-    )
-
-    cosy_cosp = 1.0 - 2.0 * (
-        q.y * q.y
-        + q.z * q.z
-    )
-
-    return math.atan2(
-        siny_cosp,
-        cosy_cosp,
-    )
-
-
-# ============================================================
-# Per-robot runtime state
-# ============================================================
-
-class RobotRuntime:
-
-    def __init__(
-        self,
-        robot_id,
-        robot_type,
-        spawn_x,
-        spawn_y,
-        spawn_yaw,
-    ):
-        self.robot_id = robot_id
-        self.robot_type = robot_type
-
-        # G1 出生時在醫院 map 的座標
-        self.spawn_x = float(spawn_x)
-        self.spawn_y = float(spawn_y)
-        self.spawn_yaw = float(spawn_yaw)
-
-        # diff_drive_controller odometry
-        self.odom_x = 0.0
-        self.odom_y = 0.0
-        self.odom_yaw = 0.0
-
-        self.received_odom = False
-
-        # Gazebo ground-truth pose
-        self.gt_x = 0.0
-        self.gt_y = 0.0
-        self.gt_yaw = 0.0
-        self.received_ground_truth = False
-
-        # LiDAR obstacle clearance
-        self.received_scan = False
-
-        self.front_clearance = math.inf
-        self.left_clearance = math.inf
-        self.right_clearance = math.inf
-
-        # LiDAR debug information
-        self.front_raw_min = math.inf
-        self.front_close_count = 0
-        self.front_beam_count = 0
-
-        self.avoidance_state = "normal"
-        self.avoidance_turn_direction = 0
-        self.avoidance_target_yaw = 0.0
-        self.avoidance_start_x = 0.0
-        self.avoidance_start_y = 0.0
-
-        # Robot-to-robot yielding
-        self.yield_to_robot_id = None
-
-        # 正面會車時正在避讓的另一台 robot
-        self.head_on_robot_id = None
-
-        # 正面會車開始前原本的行進方向
-        # SHIFT 完成後會轉回此方向進行平行錯車
-        self.head_on_original_yaw = 0.0
-
-        # 正面會車開始時所在的原始 lane 基準點
-        self.head_on_lane_anchor_x = 0.0
-        self.head_on_lane_anchor_y = 0.0
-
-        # 避免 20 Hz LiDAR log 洗版
-        self.last_scan_log_time = -1.0e9
-
-        # 最新 RMF PathRequest
-        self.task_id = ""
-        self.path = []
-        self.current_target_index = 0
-
-        self.seq = 0
-
-        # 避免 completion log 重複
-        self.was_navigating = False
-
-    def update_odom(self, msg):
-        self.odom_x = float(
-            msg.pose.pose.position.x
-        )
-
-        self.odom_y = float(
-            msg.pose.pose.position.y
-        )
-
-        self.odom_yaw = quaternion_to_yaw(
-            msg.pose.pose.orientation
-        )
-
-        self.received_odom = True
-
-    def update_ground_truth(self, msg):
-        self.gt_x = float(
-            msg.position.x
-        )
-
-        self.gt_y = float(
-            msg.position.y
-        )
-
-        self.gt_yaw = quaternion_to_yaw(
-            msg.orientation
-        )
-
-        self.received_ground_truth = True
-
-    def map_pose(self):
-        """
-        取得目前在醫院 / RMF map 中的 pose。
-
-        優先使用 Gazebo ground-truth pose。
-        若尚未收到 ground truth，才 fallback 到
-        spawn + diff_drive_controller odometry。
-        """
-
-        if self.received_ground_truth:
-            return (
-                self.gt_x,
-                self.gt_y,
-                self.gt_yaw,
-            )
-
-        c = math.cos(
-            self.spawn_yaw
-        )
-
-        s = math.sin(
-            self.spawn_yaw
-        )
-
-        map_x = (
-            self.spawn_x
-            + c * self.odom_x
-            - s * self.odom_y
-        )
-
-        map_y = (
-            self.spawn_y
-            + s * self.odom_x
-            + c * self.odom_y
-        )
-
-        map_yaw = normalize_angle(
-            self.spawn_yaw
-            + self.odom_yaw
-        )
-
-        return (
-            map_x,
-            map_y,
-            map_yaw,
-        )
-
-    def receive_path(
-        self,
-        task_id,
-        path,
-    ):
-        self.task_id = task_id
-        self.path = list(path)
-        self.current_target_index = 0
-
-        # 新 PathRequest 進來時重置避障狀態
-        self.avoidance_state = "normal"
-        self.avoidance_turn_direction = 0
-        self.avoidance_target_yaw = 0.0
-        self.avoidance_start_x = 0.0
-        self.avoidance_start_y = 0.0
-
-        # Robot-to-robot yielding
-        self.yield_to_robot_id = None
-
-        self.head_on_robot_id = None
-
-    def navigating(self):
-        return (
-            self.current_target_index
-            < len(self.path)
-        )
-
-    def remaining_path(self):
-        if not self.navigating():
-            return []
-
-        return self.path[
-            self.current_target_index:
-        ]
 
 
 # ============================================================
@@ -429,6 +154,35 @@ class HospitalG1NavigationBridge(Node):
         self.robots = {}
         self.cmd_publishers = {}
         self.scan_subscriptions = {}
+
+        # ----------------------------------------------------
+        # Nav2 action clients
+        #
+        # Each robot has its own NavigateThroughPoses server:
+        #
+        # /hospital_robot_X/navigate_through_poses
+        # ----------------------------------------------------
+
+        self.nav_clients = {}
+        self.nav_goal_handles = {}
+
+        # ----------------------------------------------------
+        # TF
+        #
+        # Nav2 operates in the map frame. RMF RobotState must
+        # therefore report the same map-frame robot pose.
+        # ----------------------------------------------------
+
+        self.tf_buffer = Buffer()
+
+        self.tf_listener = TransformListener(
+            self.tf_buffer,
+            self,
+        )
+
+        # Last RMF request signature per robot.
+        # Used to ignore duplicate PathRequest messages.
+        self.last_path_signatures = {}
 
         # ----------------------------------------------------
         # RMF state output
@@ -546,13 +300,24 @@ class HospitalG1NavigationBridge(Node):
                 10,
             )
 
-            self.cmd_publishers[
+            # ------------------------------------------------
+            # Nav2 owns base motion for every robot.
+            #
+            # The RMF bridge must NOT publish cmd_vel directly,
+            # otherwise it would compete with Nav2's controller.
+            # ------------------------------------------------
+
+            self.nav_clients[
                 robot_id
-            ] = self.create_publisher(
-                Twist,
-                cmd_topic,
-                10,
+            ] = ActionClient(
+                self,
+                NavigateThroughPoses,
+                f"/{robot_id}/navigate_through_poses",
             )
+
+            self.nav_goal_handles[
+                robot_id
+            ] = None
 
             self.get_logger().info(
                 f"{robot_id}: "
@@ -625,128 +390,32 @@ class HospitalG1NavigationBridge(Node):
         if robot is None:
             return
 
-        # --------------------------------------------------
-        # LiDAR sectors
-        #
-        #            FRONT
-        #          -20 ~ +20 deg
-        #
-        # RIGHT                  LEFT
-        # -80 ~ -25 deg     +25 ~ +80 deg
-        # --------------------------------------------------
+        scan = analyze_lidar_scan(
+            msg
+        )
 
-        front_values = []
-        left_values = []
-        right_values = []
-
-        front_limit = math.radians(10.0)
-
-        side_inner = math.radians(25.0)
-        side_outer = math.radians(80.0)
-
-        for index, value in enumerate(
-            msg.ranges
-        ):
-            distance = float(value)
-
-            if not math.isfinite(
-                distance
-            ):
-                continue
-
-            if (
-                distance < msg.range_min
-                or
-                distance > msg.range_max
-            ):
-                continue
-
-            angle = (
-                float(msg.angle_min)
-                + index
-                * float(msg.angle_increment)
-            )
-
-            # Front
-            if abs(angle) <= front_limit:
-                front_values.append(
-                    distance
-                )
-
-            # Left
-            elif (
-                side_inner
-                <= angle
-                <= side_outer
-            ):
-                left_values.append(
-                    distance
-                )
-
-            # Right
-            elif (
-                -side_outer
-                <= angle
-                <= -side_inner
-            ):
-                right_values.append(
-                    distance
-                )
-
-        # LiDAR debug statistics
-        robot.front_beam_count = len(
-            front_values
+        robot.front_beam_count = (
+            scan["front_beam_count"]
         )
 
         robot.front_raw_min = (
-            min(front_values)
-            if front_values
-            else math.inf
+            scan["front_raw_min"]
         )
 
-        robot.front_close_count = sum(
-            1
-            for value in front_values
-            if value <= OBSTACLE_STOP_DISTANCE
+        robot.front_close_count = (
+            scan["front_close_count"]
         )
 
-        # Front clearance 使用 robust percentile，
-        # 避免單一異常 LiDAR beam 直接觸發整套避障。
-        #
-        # 取排序後約 25th percentile：
-        # 真正障礙物通常會同時佔據多條 beam，
-        # 單點異常值則會被忽略。
-        if front_values:
-            sorted_front = sorted(
-                front_values
-            )
-
-            front_index = int(
-                0.25
-                * (
-                    len(sorted_front)
-                    - 1
-                )
-            )
-
-            robot.front_clearance = (
-                sorted_front[
-                    front_index
-                ]
-            )
-        else:
-            robot.front_clearance = math.inf
+        robot.front_clearance = (
+            scan["front_clearance"]
+        )
 
         robot.left_clearance = (
-            min(left_values)
-            if left_values
-            else math.inf
+            scan["left_clearance"]
         )
 
         robot.right_clearance = (
-            min(right_values)
-            if right_values
-            else math.inf
+            scan["right_clearance"]
         )
 
         robot.received_scan = True
@@ -780,6 +449,270 @@ class HospitalG1NavigationBridge(Node):
                 f"right="
                 f"{robot.right_clearance:.2f}m"
             )
+
+    def cancel_nav2_goal(
+        self,
+        robot_id,
+    ):
+        """Cancel the currently active Nav2 goal for one robot."""
+
+        goal_handle = self.nav_goal_handles.get(
+            robot_id
+        )
+
+        if goal_handle is None:
+            return
+
+        self.get_logger().info(
+            f"{robot_id}: "
+            "cancelling current Nav2 goal"
+        )
+
+        future = (
+            goal_handle.cancel_goal_async()
+        )
+
+        future.add_done_callback(
+            lambda f, rid=robot_id:
+                self.nav_cancel_done_callback(
+                    rid,
+                    f,
+                )
+        )
+
+
+    def nav_cancel_done_callback(
+        self,
+        robot_id,
+        future,
+    ):
+        try:
+            response = future.result()
+
+            cancel_count = len(
+                response.goals_canceling
+            )
+
+            self.get_logger().info(
+                f"{robot_id}: "
+                f"Nav2 cancel response "
+                f"goals_canceling={cancel_count}"
+            )
+
+        except Exception as exc:
+            self.get_logger().error(
+                f"{robot_id}: "
+                f"Nav2 cancel failed: {exc}"
+            )
+
+        self.nav_goal_handles[
+            robot_id
+        ] = None
+
+
+    def send_nav2_path(
+        self,
+        robot,
+    ):
+        """Send the current RMF path to this robot's Nav2."""
+
+        client = self.nav_clients.get(
+            robot.robot_id
+        )
+
+        if client is None:
+            self.get_logger().error(
+                f"{robot.robot_id}: "
+                "Nav2 action client not found"
+            )
+            return
+
+        if not robot.path:
+            return
+
+        if not client.server_is_ready():
+            self.get_logger().warning(
+                f"{robot.robot_id}: "
+                "NavigateThroughPoses server is not ready"
+            )
+            return
+
+        goal = NavigateThroughPoses.Goal()
+
+        goal.poses = []
+
+        for point in robot.path:
+
+            pose = PoseStamped()
+
+            pose.header.frame_id = "map"
+            pose.header.stamp = (
+                self.get_clock()
+                .now()
+                .to_msg()
+            )
+
+            pose.pose.position.x = float(
+                point.x
+            )
+
+            pose.pose.position.y = float(
+                point.y
+            )
+
+            yaw = float(
+                point.yaw
+            )
+
+            pose.pose.orientation.z = (
+                math.sin(yaw / 2.0)
+            )
+
+            pose.pose.orientation.w = (
+                math.cos(yaw / 2.0)
+            )
+
+            goal.poses.append(
+                pose
+            )
+
+        self.get_logger().info(
+            f"{robot.robot_id}: "
+            f"sending {len(goal.poses)} poses "
+            "to Nav2"
+        )
+
+        future = client.send_goal_async(
+            goal
+        )
+
+        future.add_done_callback(
+            lambda f, rid=robot.robot_id:
+                self.nav_goal_response_callback(
+                    rid,
+                    f,
+                )
+        )
+
+
+    def nav_goal_response_callback(
+        self,
+        robot_id,
+        future,
+    ):
+        robot = self.robots.get(
+            robot_id
+        )
+
+        if robot is None:
+            return
+
+        try:
+            goal_handle = future.result()
+        except Exception as exc:
+            self.get_logger().error(
+                f"{robot_id}: "
+                f"failed sending Nav2 goal: {exc}"
+            )
+            return
+
+        if not goal_handle.accepted:
+            self.get_logger().error(
+                f"{robot_id}: "
+                "Nav2 goal rejected"
+            )
+            return
+
+        self.nav_goal_handles[
+            robot_id
+        ] = goal_handle
+
+        self.get_logger().info(
+            f"{robot_id}: "
+            "Nav2 goal accepted"
+        )
+
+        result_future = (
+            goal_handle.get_result_async()
+        )
+
+        result_future.add_done_callback(
+            lambda f, rid=robot_id:
+                self.nav_result_callback(
+                    rid,
+                    f,
+                )
+        )
+
+
+    def nav_result_callback(
+        self,
+        robot_id,
+        future,
+    ):
+        robot = self.robots.get(
+            robot_id
+        )
+
+        if robot is None:
+            return
+
+        self.nav_goal_handles[
+            robot_id
+        ] = None
+
+        try:
+            wrapped_result = future.result()
+        except Exception as exc:
+            self.get_logger().error(
+                f"{robot_id}: "
+                f"Nav2 result failed: {exc}"
+            )
+            return
+
+        status = wrapped_result.status
+        result = wrapped_result.result
+
+        if (
+            status == 4
+            and result.error_code == 0
+        ):
+            completed_task = (
+                robot.task_id
+            )
+
+            robot.current_target_index = (
+                len(robot.path)
+            )
+
+            robot.path = []
+
+            self.get_logger().info(
+                f"{robot_id} completed path "
+                f"task_id={completed_task} "
+                "through Nav2"
+            )
+
+            return
+
+        # Nav2 has reached a terminal state, even if it failed
+        # or was cancelled. Do not leave RobotState stuck in
+        # MODE_MOVING forever.
+        robot.current_target_index = (
+            len(robot.path)
+        )
+
+        robot.path = []
+
+        self.get_logger().error(
+            f"{robot_id}: "
+            f"Nav2 navigation failed "
+            f"status={status}, "
+            f"error_code={result.error_code}, "
+            f"error_msg={result.error_msg}; "
+            "runtime path cleared"
+        )
+
 
     def path_request_callback(
         self,
@@ -817,10 +750,71 @@ class HospitalG1NavigationBridge(Node):
                 )
                 return
 
+        # ----------------------------------------------------
+        # Ignore duplicate RMF PathRequest messages.
+        #
+        # RMF may publish the same request more than once.
+        # Re-sending the same Nav2 goal would unnecessarily
+        # cancel and restart navigation.
+        # ----------------------------------------------------
+
+        path_signature = (
+            msg.task_id,
+            tuple(
+                (
+                    round(float(point.x), 4),
+                    round(float(point.y), 4),
+                    round(float(point.yaw), 4),
+                    point.level_name,
+                    int(point.index),
+                )
+                for point in msg.path
+            ),
+        )
+
+        previous_signature = (
+            self.last_path_signatures.get(
+                msg.robot_name
+            )
+        )
+
+        if previous_signature == path_signature:
+            self.get_logger().info(
+                f"{msg.robot_name}: "
+                "duplicate PathRequest ignored"
+            )
+            return
+
+        self.last_path_signatures[
+            msg.robot_name
+        ] = path_signature
+
+        # ----------------------------------------------------
+        # A genuinely new RMF PathRequest supersedes the
+        # previous Nav2 navigation goal.
+        # ----------------------------------------------------
+
+        self.cancel_nav2_goal(
+            msg.robot_name
+        )
+
         robot.receive_path(
             msg.task_id,
             msg.path,
         )
+
+        # ----------------------------------------------------
+        # Empty path:
+        #   cancel current Nav2 navigation and remain idle.
+        #
+        # Non-empty path:
+        #   delegate the complete RMF path to Nav2.
+        # ----------------------------------------------------
+
+        if len(msg.path) > 0:
+            self.send_nav2_path(
+                robot
+            )
 
         self.get_logger().info(
             f"{msg.robot_name} received "
@@ -841,10 +835,15 @@ class HospitalG1NavigationBridge(Node):
                 f"index={p.index}"
             )
 
-        # 空 path = 停止
+        # Empty path = navigation cancelled / stopped.
         if len(msg.path) == 0:
-            self.stop_robot(
-                msg.robot_name
+
+            robot.current_target_index = 0
+            robot.path = []
+
+            self.get_logger().info(
+                f"{msg.robot_name}: "
+                "empty PathRequest -> navigation stopped"
             )
 
     # ========================================================
@@ -882,9 +881,14 @@ class HospitalG1NavigationBridge(Node):
             angular
         )
 
-        self.cmd_publishers[
+        pub = self.cmd_publishers.get(
             robot_id
-        ].publish(msg)
+        )
+
+        if pub is None:
+            return
+
+        pub.publish(msg)
 
     def find_robot_conflict(
         self,
@@ -893,69 +897,13 @@ class HospitalG1NavigationBridge(Node):
         y,
         yaw,
     ):
-        """
-        找出目前 robot 前方一定距離內，
-        是否有另一台「正在導航」的 robot。
-
-        回傳：
-            other_robot
-        或：
-            None
-        """
-
-        closest_robot = None
-        closest_distance = math.inf
-
-        for other in self.robots.values():
-
-            # 不跟自己比較
-            if other.robot_id == robot.robot_id:
-                continue
-
-            # 對方還沒有 odom
-            if not other.received_odom:
-                continue
-
-            # 只有兩台都正在移動時才使用讓行規則
-            # 靜止 robot 還是當一般障礙物處理
-            if not other.navigating():
-                continue
-
-            (
-                other_x,
-                other_y,
-                _,
-            ) = other.map_pose()
-
-            dx = other_x - x
-            dy = other_y - y
-
-            distance = math.hypot(
-                dx,
-                dy,
-            )
-
-            if distance > ROBOT_CONFLICT_DISTANCE:
-                continue
-
-            direction_to_other = math.atan2(
-                dy,
-                dx,
-            )
-
-            angle_error = normalize_angle(
-                direction_to_other - yaw
-            )
-
-            # 只處理前方 ±60 度內的 robot
-            if abs(angle_error) > ROBOT_CONFLICT_ANGLE:
-                continue
-
-            if distance < closest_distance:
-                closest_distance = distance
-                closest_robot = other
-
-        return closest_robot
+        return find_robot_conflict(
+            self.robots,
+            robot,
+            x,
+            y,
+            yaw,
+        )
 
     def is_head_on_conflict(
         self,
@@ -965,62 +913,13 @@ class HospitalG1NavigationBridge(Node):
         y,
         yaw,
     ):
-        """
-        判斷兩台正在移動的 robot 是否接近正面相遇。
-        """
-
-        if other is None:
-            return False
-
-        if not other.received_odom:
-            return False
-
-        if not other.navigating():
-            return False
-
-        (
-            other_x,
-            other_y,
-            other_yaw,
-        ) = other.map_pose()
-
-        # --------------------------------------------
-        # 1. 兩台朝向是否幾乎相反
-        # --------------------------------------------
-
-        heading_difference = abs(
-            normalize_angle(
-                other_yaw - yaw
-            )
+        return is_head_on_conflict(
+            robot,
+            other,
+            x,
+            y,
+            yaw,
         )
-
-        if (
-            heading_difference
-            < HEAD_ON_MIN_OPPOSITE_ANGLE
-        ):
-            return False
-
-        # --------------------------------------------
-        # 2. 我是不是也位於對方前方
-        # --------------------------------------------
-
-        direction_other_to_me = math.atan2(
-            y - other_y,
-            x - other_x,
-        )
-
-        other_front_error = normalize_angle(
-            direction_other_to_me
-            - other_yaw
-        )
-
-        if (
-            abs(other_front_error)
-            > ROBOT_CONFLICT_ANGLE
-        ):
-            return False
-
-        return True
 
     def control_robot(
         self,
@@ -1170,6 +1069,169 @@ class HospitalG1NavigationBridge(Node):
             )
 
             return
+
+        # ----------------------------------------------------
+        # STATIONARY ROBOT WAIT
+        #
+        # 前方 robot 沒有正在導航時，
+        # 先短暫等待，避免只是暫時停頓就立刻繞行。
+        #
+        # 若持續阻擋約 1 秒，轉入既有 generic
+        # turn -> bypass -> recover 流程。
+        # ----------------------------------------------------
+
+        if robot.avoidance_state == "stationary_wait":
+
+            other = self.robots.get(
+                robot.stationary_robot_id
+            )
+
+            # 對方消失、沒有 pose，或已經開始移動：
+            # 回到 normal，下一個 control cycle
+            # 重新判斷交通狀況。
+            if (
+                other is None
+                or not other.received_odom
+                or other.navigating()
+            ):
+                robot.avoidance_state = "normal"
+                robot.stationary_robot_id = None
+                robot.stationary_wait_ticks = 0
+
+                self.stop_robot(
+                    robot.robot_id
+                )
+
+                return
+
+            (
+                other_x,
+                other_y,
+                _,
+            ) = other.map_pose()
+
+            other_distance = math.hypot(
+                other_x - x,
+                other_y - y,
+            )
+
+            # 已經不再阻擋
+            if other_distance >= ROBOT_RESUME_DISTANCE:
+                robot.avoidance_state = "normal"
+                robot.stationary_robot_id = None
+                robot.stationary_wait_ticks = 0
+
+                self.stop_robot(
+                    robot.robot_id
+                )
+
+                return
+
+            robot.stationary_wait_ticks += 1
+
+            # CONTROL_PERIOD = 0.1，
+            # 10 ticks 約等於 1 秒。
+            if robot.stationary_wait_ticks < 10:
+                self.stop_robot(
+                    robot.robot_id
+                )
+                return
+
+            # 確認對方持續靜止且仍在前方：
+            #
+            # 不使用 generic turn/bypass。
+            # 改用既有的 lane-based passing：
+            #
+            # head_on_turn
+            # -> head_on_shift
+            # -> head_on_parallel_turn
+            # -> head_on_parallel
+            # -> head_on_return_turn
+            # -> head_on_return
+            # -> recover
+            #
+            # 雖然 state 名稱叫 head_on，
+            # 這裡實際上是重用它的幾何錯車流程。
+
+            robot.head_on_robot_id = (
+                other.robot_id
+            )
+
+            # 優先使用 RMF segment 本身的方向，
+            # 不直接使用 robot 當下可能已有誤差的 yaw。
+            if (
+                robot.segment_anchor_x is not None
+                and
+                robot.segment_anchor_y is not None
+            ):
+                lane_dx = (
+                    float(target.x)
+                    - robot.segment_anchor_x
+                )
+
+                lane_dy = (
+                    float(target.y)
+                    - robot.segment_anchor_y
+                )
+
+                lane_length = math.hypot(
+                    lane_dx,
+                    lane_dy,
+                )
+
+                if lane_length > 1.0e-6:
+                    lane_yaw = math.atan2(
+                        lane_dy,
+                        lane_dx,
+                    )
+                else:
+                    lane_yaw = yaw
+
+                robot.head_on_lane_anchor_x = (
+                    robot.segment_anchor_x
+                )
+
+                robot.head_on_lane_anchor_y = (
+                    robot.segment_anchor_y
+                )
+
+            else:
+                lane_yaw = yaw
+
+                robot.head_on_lane_anchor_x = x
+                robot.head_on_lane_anchor_y = y
+
+            robot.head_on_original_yaw = lane_yaw
+
+            # 與既有 head-on 規則一致：
+            # 先往自己的右側偏移。
+            robot.avoidance_target_yaw = (
+                normalize_angle(
+                    lane_yaw
+                    - HEAD_ON_TURN_ANGLE
+                )
+            )
+
+            robot.stationary_robot_id = None
+            robot.stationary_wait_ticks = 0
+
+            robot.avoidance_state = (
+                "head_on_turn"
+            )
+
+            self.get_logger().warning(
+                f"[STATIONARY] {robot.robot_id} "
+                f"blocked by {other.robot_id} "
+                f"distance={other_distance:.2f}m "
+                f"-> lane-based pass"
+            )
+
+            self.stop_robot(
+                robot.robot_id
+            )
+
+            return
+
 
         # ----------------------------------------------------
         # HEAD-ON TURN
@@ -1741,16 +1803,15 @@ class HospitalG1NavigationBridge(Node):
 
         if robot.avoidance_state == "turn":
 
-            turn_error = normalize_angle(
-                robot.avoidance_target_yaw
-                - yaw
+            turn_reached, angular = (
+                compute_turn_command(
+                    yaw,
+                    robot.avoidance_target_yaw,
+                )
             )
 
             # 已轉到避障方向
-            if (
-                abs(turn_error)
-                <= AVOID_TURN_TOLERANCE
-            ):
+            if turn_reached:
                 robot.avoidance_state = (
                     "bypass"
                 )
@@ -1765,13 +1826,6 @@ class HospitalG1NavigationBridge(Node):
                 )
 
                 return
-
-            angular = clamp(
-                ANGULAR_KP
-                * turn_error,
-                -MAX_ANGULAR_SPEED,
-                MAX_ANGULAR_SPEED,
-            )
 
             self.command_robot(
                 robot.robot_id,
@@ -1839,23 +1893,13 @@ class HospitalG1NavigationBridge(Node):
             # 確認真的已經繞過障礙，才開始 recover
             # ------------------------------------------------
 
-            side_clearance = math.inf
-
-            # 如果原本是往左繞，障礙物通常會留在右側
-            if robot.avoidance_turn_direction > 0:
-                side_clearance = robot.right_clearance
-
-            # 如果原本是往右繞，障礙物通常會留在左側
-            elif robot.avoidance_turn_direction < 0:
-                side_clearance = robot.left_clearance
-
-
-            can_recover = (
-                bypass_distance >= AVOID_FORWARD_DISTANCE
-                and robot.front_clearance > OBSTACLE_SLOW_DISTANCE
-                and side_clearance > RECOVER_MIN_SIDE_CLEARANCE
+            (
+                can_recover,
+                side_clearance,
+            ) = can_recover_from_bypass(
+                robot,
+                bypass_distance,
             )
-
 
             if can_recover:
 
@@ -1880,89 +1924,15 @@ class HospitalG1NavigationBridge(Node):
             # 同時在安全時逐漸朝原本 waypoint 拉回
             # ------------------------------------------------
 
-            bypass_linear = AVOID_LINEAR_SPEED
-            bypass_angular = 0.0
-
-            if robot.received_scan:
-
-                left = robot.left_clearance
-                right = robot.right_clearance
-
-                side_too_close = (
-                    left < SIDE_SAFE_DISTANCE
-                    or right < SIDE_SAFE_DISTANCE
-                )
-
-                # ------------------------------------------------
-                # 1. 側邊太近：安全優先
-                # ------------------------------------------------
-
-                if side_too_close:
-
-                    # 側邊太近時減速
-                    bypass_linear = 0.15
-
-                    # 左邊比較近 -> 往右修
-                    if left <= right:
-
-                        correction = (
-                            SIDE_SAFE_DISTANCE - left
-                        )
-
-                        bypass_angular = clamp(
-                            -SIDE_CORRECTION_KP
-                            * correction,
-                            -SIDE_MAX_ANGULAR_SPEED,
-                            SIDE_MAX_ANGULAR_SPEED,
-                        )
-
-                    # 右邊比較近 -> 往左修
-                    else:
-
-                        correction = (
-                            SIDE_SAFE_DISTANCE - right
-                        )
-
-                        bypass_angular = clamp(
-                            SIDE_CORRECTION_KP
-                            * correction,
-                            -SIDE_MAX_ANGULAR_SPEED,
-                            SIDE_MAX_ANGULAR_SPEED,
-                        )
-
-                # ------------------------------------------------
-                # 2. 左右都安全：
-                #    開始朝原本 waypoint 的方向拉回
-                # ------------------------------------------------
-
-                else:
-
-                    waypoint_yaw = math.atan2(
-                        dy,
-                        dx,
-                    )
-
-                    waypoint_error = normalize_angle(
-                        waypoint_yaw - yaw
-                    )
-
-                    path_correction = clamp(
-                        BYPASS_PATH_KP
-                        * waypoint_error,
-                        -BYPASS_PATH_MAX_ANGULAR_SPEED,
-                        BYPASS_PATH_MAX_ANGULAR_SPEED,
-                    )
-
-                    bypass_angular += path_correction
-
-
-            # 最後再限制一次角速度
-            bypass_angular = clamp(
+            (
+                bypass_linear,
                 bypass_angular,
-                -SIDE_MAX_ANGULAR_SPEED,
-                SIDE_MAX_ANGULAR_SPEED,
+            ) = compute_bypass_command(
+                robot,
+                dx,
+                dy,
+                yaw,
             )
-
 
             self.command_robot(
                 robot.robot_id,
@@ -1978,23 +1948,17 @@ class HospitalG1NavigationBridge(Node):
 
         if robot.avoidance_state == "recover":
 
-            recover_yaw = math.atan2(
-                dy,
+            (
+                recovered,
+                angular,
+            ) = compute_recover_command(
                 dx,
-            )
-
-            recover_error = (
-                normalize_angle(
-                    recover_yaw
-                    - yaw
-                )
+                dy,
+                yaw,
             )
 
             # 已重新面向原本 waypoint
-            if (
-                abs(recover_error)
-                <= ROTATE_FIRST_THRESHOLD
-            ):
+            if recovered:
                 robot.avoidance_state = (
                     "normal"
                 )
@@ -2011,13 +1975,6 @@ class HospitalG1NavigationBridge(Node):
                 )
 
                 return
-
-            angular = clamp(
-                ANGULAR_KP
-                * recover_error,
-                -MAX_ANGULAR_SPEED,
-                MAX_ANGULAR_SPEED,
-            )
 
             self.command_robot(
                 robot.robot_id,
@@ -2041,6 +1998,39 @@ class HospitalG1NavigationBridge(Node):
             )
 
             if conflict_robot is not None:
+
+                # ====================================================
+                # Case 0:
+                # 前方是靜止 robot
+                #
+                # 不使用 robot ID yield，
+                # 先進 stationary_wait。
+                # ====================================================
+
+                if not conflict_robot.navigating():
+                    robot.avoidance_state = (
+                        "stationary_wait"
+                    )
+
+                    robot.stationary_robot_id = (
+                        conflict_robot.robot_id
+                    )
+
+                    robot.stationary_wait_ticks = 0
+
+                    self.get_logger().warning(
+                        f"[STATIONARY] "
+                        f"{robot.robot_id} "
+                        f"blocked by "
+                        f"{conflict_robot.robot_id} "
+                        f"-> wait"
+                    )
+
+                    self.stop_robot(
+                        robot.robot_id
+                    )
+
+                    return
 
                 # ====================================================
                 # Case 1:
@@ -2101,7 +2091,11 @@ class HospitalG1NavigationBridge(Node):
                 # Case 2:
                 # 不是正面相遇
                 #
-                # 維持原本 deterministic YIELD。
+                # 如果對方是靜止 robot，
+                # 目前正在移動的 robot 一律停車讓路。
+                #
+                # 如果雙方都正在導航，
+                # 才使用原本 deterministic YIELD。
                 # ====================================================
 
                 current_number = int(
@@ -2139,120 +2133,73 @@ class HospitalG1NavigationBridge(Node):
 
                     return
         # ----------------------------------------------------
-        # Final waypoint reached:
-        # align final yaw before declaring completion
+        # Final waypoint reached
         # ----------------------------------------------------
 
-        if (
-            is_last
-            and
-            distance <= ARRIVE_DISTANCE
-        ):
-            target_yaw = float(
-                target.yaw
-            )
+        final_result = compute_final_goal_command(
+            target,
+            distance,
+            yaw,
+            is_last,
+        )
 
-            if math.isfinite(
-                target_yaw
-            ):
-                final_yaw_error = (
-                    normalize_angle(
-                        target_yaw
-                        - yaw
-                    )
+        if final_result is not None:
+            (
+                final_status,
+                final_linear,
+                final_angular,
+            ) = final_result
+
+            if final_status == "rotate":
+                self.command_robot(
+                    robot.robot_id,
+                    final_linear,
+                    final_angular,
+                )
+                return
+
+            if final_status == "complete":
+                self.stop_robot(
+                    robot.robot_id
                 )
 
-                if (
-                    abs(final_yaw_error)
-                    > FINAL_YAW_TOLERANCE
-                ):
-                    angular = clamp(
-                        ANGULAR_KP
-                        * final_yaw_error,
-                        -MAX_ANGULAR_SPEED,
-                        MAX_ANGULAR_SPEED,
-                    )
+                completed_task = (
+                    robot.task_id
+                )
 
-                    self.command_robot(
-                        robot.robot_id,
-                        0.0,
-                        angular,
-                    )
+                robot.current_target_index = (
+                    len(robot.path)
+                )
 
-                    return
+                robot.path = []
 
-            # Position + final orientation both reached
-            self.stop_robot(
-                robot.robot_id
-            )
+                self.get_logger().info(
+                    f"{robot.robot_id} "
+                    f"completed path "
+                    f"task_id={completed_task}"
+                )
 
-            completed_task = (
-                robot.task_id
-            )
-
-            robot.current_target_index = (
-                len(robot.path)
-            )
-
-            robot.path = []
-
-            self.get_logger().info(
-                f"{robot.robot_id} "
-                f"completed path "
-                f"task_id={completed_task}"
-            )
-
-            return
+                return
 
         # ----------------------------------------------------
         # NORMAL -> obstacle detected
         # ----------------------------------------------------
 
-        near_final_goal = (
-            is_last
-            and
-            distance <= GOAL_APPROACH_DISTANCE
-        )
-
-        goal_emergency_obstacle = (
-            near_final_goal
-            and
-            robot.received_scan
-            and
-            robot.front_clearance
-            <= GOAL_EMERGENCY_STOP_DISTANCE
-        )
-
-        if (
-            robot.avoidance_state == "normal"
-            and
-            robot.received_scan
-            and
-            robot.front_clearance
-            <= OBSTACLE_STOP_DISTANCE
-            and
-            (
-                not near_final_goal
-                or goal_emergency_obstacle
-            )
+        if should_trigger_obstacle_avoidance(
+            robot,
+            distance,
+            is_last,
         ):
 
             robot.avoidance_start_x = x
             robot.avoidance_start_y = y
 
-            # 哪邊比較空就往哪邊走
-            if (
-                robot.left_clearance
-                >= robot.right_clearance
-            ):
-                robot.avoidance_turn_direction = 1
-
-                direction_name = "LEFT"
-
-            else:
-                robot.avoidance_turn_direction = -1
-
-                direction_name = "RIGHT"
+            (
+                robot.avoidance_turn_direction,
+                direction_name,
+            ) = choose_avoidance_direction(
+                robot
+            )
 
             robot.avoidance_target_yaw = (
                 normalize_angle(
@@ -2292,92 +2239,24 @@ class HospitalG1NavigationBridge(Node):
         # Normal waypoint tracking
         # ----------------------------------------------------
 
-        desired_yaw = math.atan2(
-            dy,
-            dx,
-        )
-
-        heading_error = (
-            normalize_angle(
-                desired_yaw
-                - yaw
-            )
-        )
-
-        angular = clamp(
-            ANGULAR_KP
-            * heading_error,
-            -MAX_ANGULAR_SPEED,
-            MAX_ANGULAR_SPEED,
-        )
-
-        # 若還沒朝向 waypoint，先原地轉
-        if (
-            abs(heading_error)
-            > ROTATE_FIRST_THRESHOLD
-        ):
-            self.command_robot(
-                robot.robot_id,
-                0.0,
-                angular,
-            )
-
-            return
-
-        linear_limit = (
-            MAX_LINEAR_SPEED
-        )
-
-        # 支援 RMF Location 的 approach speed limit
-        if (
-            target.obey_approach_speed_limit
-            and
-            target.approach_speed_limit > 0.0
-        ):
-            linear_limit = min(
-                linear_limit,
-                float(
-                    target.approach_speed_limit
+        linear, angular = (
+            compute_normal_tracking_command(
+                target,
+                dx,
+                dy,
+                distance,
+                yaw,
+                is_last,
+                robot_x=x,
+                robot_y=y,
+                segment_anchor_x=(
+                    robot.segment_anchor_x
+                ),
+                segment_anchor_y=(
+                    robot.segment_anchor_y
                 ),
             )
-
-        linear = min(
-            linear_limit,
-            LINEAR_KP * distance,
         )
-
-        # 最後 waypoint 附近改成低速靠近，
-        # 不再高速衝過目標後回頭修正。
-        if (
-            is_last
-            and
-            distance <= GOAL_APPROACH_DISTANCE
-        ):
-            linear = min(
-                linear,
-                GOAL_APPROACH_MAX_SPEED,
-            )
-
-        if (
-            distance > ARRIVE_DISTANCE
-            and
-            linear < MIN_LINEAR_SPEED
-        ):
-            linear = min(
-                MIN_LINEAR_SPEED,
-                linear_limit,
-            )
-
-        # heading error 越大，前進速度稍微降低
-        heading_scale = max(
-            0.25,
-            1.0
-            - abs(heading_error)
-            / ROTATE_FIRST_THRESHOLD,
-        )
-
-        linear *= heading_scale
-
 
         # ----------------------------------------------------
         # LiDAR front obstacle handling
@@ -2423,11 +2302,58 @@ class HospitalG1NavigationBridge(Node):
         robot,
         now_msg,
     ):
-        (
-            map_x,
-            map_y,
-            map_yaw,
-        ) = robot.map_pose()
+        # Nav2 uses TF map -> base_link as its authoritative
+        # map-frame pose. RMF must use the same pose, otherwise
+        # RMF may consider the robot lost even when Nav2 has
+        # successfully reached its goal.
+        try:
+            transform = self.tf_buffer.lookup_transform(
+                "map",
+                f"{robot.robot_id}/base_link",
+                rclpy.time.Time(),
+            )
+
+            translation = (
+                transform.transform.translation
+            )
+
+            rotation = (
+                transform.transform.rotation
+            )
+
+            map_x = float(
+                translation.x
+            )
+
+            map_y = float(
+                translation.y
+            )
+
+            map_yaw = math.atan2(
+                2.0 * (
+                    rotation.w * rotation.z
+                    + rotation.x * rotation.y
+                ),
+                1.0 - 2.0 * (
+                    rotation.y * rotation.y
+                    + rotation.z * rotation.z
+                ),
+            )
+
+        except Exception as exc:
+            # RMF RobotState must always be expressed in the
+            # Nav2/RMF map frame. The Gazebo ground-truth pose
+            # (/model/<robot>/pose) is not guaranteed to use the
+            # same frame, so publishing it as a fallback can make
+            # RMF believe the robot is far away from the graph.
+            #
+            # Wait until map -> base_link is available instead.
+            self.get_logger().debug(
+                f"{robot.robot_id}: "
+                "RMF state skipped; map TF not ready: "
+                f"{exc}"
+            )
+            return None
 
         msg = RobotState()
 
@@ -2513,14 +2439,17 @@ class HospitalG1NavigationBridge(Node):
             if not robot.received_odom:
                 continue
 
-            self.control_robot(
-                robot
-            )
+            # Navigation commands are handled by Nav2.
+            # This bridge only translates RMF paths and
+            # publishes RobotState.
 
             state = self.make_state(
                 robot,
                 now_msg,
             )
+
+            if state is None:
+                continue
 
             self.state_pub.publish(
                 state

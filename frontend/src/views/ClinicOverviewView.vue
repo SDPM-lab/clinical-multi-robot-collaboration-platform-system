@@ -25,7 +25,7 @@ import {
   storeOverviewModelPreset,
 } from '@/three/clinicOverviewPresets.js'
 
-const props = defineProps({ data: { type: Object, required: true }, theme: { type: String, default: 'light' }, networkStatus: { type: String, default: null } })
+defineProps({ theme: { type: String, default: 'light' } })
 defineEmits(['open-dispatch'])
 const params = new URLSearchParams(window.location.search)
 const cameraDebugEnabled = params.get('cameraDebug') === '1'
@@ -34,6 +34,7 @@ const debugEnabled = cameraDebugEnabled || modelDebugEnabled
 const sceneRef = ref(null)
 const activeFloor = ref('all')
 const liveData = ref(null)
+const robotSnapshot = ref(null)
 const loadError = ref('')
 const lastDataRefresh = ref(null)
 const refreshingData = ref(false)
@@ -43,8 +44,11 @@ const refresh = async () => {
   if (refreshingData.value) return
   refreshingData.value = true
   try {
-    const [snapshot, records] = await Promise.all([taskApi.getRobotSnapshot(), taskApi.getTaskRecords()])
-    liveData.value = dashboardSnapshot(snapshot, records, graph)
+    const [snapshot, records] = await Promise.allSettled([taskApi.getRobotSnapshot(), taskApi.getTaskRecords()])
+    robotSnapshot.value = snapshot.status === 'fulfilled' ? snapshot.value : null
+    if (snapshot.status === 'rejected') throw snapshot.reason
+    if (records.status === 'rejected') throw records.reason
+    liveData.value = dashboardSnapshot(snapshot.value, records.value, graph)
     lastDataRefresh.value = new Date()
     loadError.value = ''
   } catch (error) { loadError.value = error.message || '資料讀取失敗' }
@@ -74,7 +78,10 @@ watch(rollingHistory, history => {
   observedBatteryHistory.value = hourlyObservedBatteryHistory(history, robotIds, observedBatteryHistory.value)
 }, { immediate: true })
 const batteryHistory = computed(() => dashboardBatteryHistory(liveData.value?.robots || [], observedBatteryHistory.value))
-const connectionRobots = computed(() => liveData.value ? liveData.value.robots.map(robot => ({ ...robot, connectionState: robot.hasTelemetry && robot.state !== 'offline' ? 'connected' : 'disconnected' })) : null)
+const networkStatus = computed(() => robotSnapshot.value?.connection?.status)
+const connectionRobots = computed(() => robotSnapshot.value?.robots?.map(robot => ({
+  connectionState: robot.hasTelemetry && robot.status !== '離線' ? 'connected' : 'disconnected',
+})) ?? null)
 const floorAnchors = ref({})
 const interactionTarget = ref(modelDebugEnabled && !cameraDebugEnabled ? 'model' : 'camera')
 const selectedCompletion = computed(() => activeFloor.value === 'all' ? ['floor1','floor2','floor3'].map((id,index) => ({ id, label: t('dashboard.floor', { number: index + 1 }), percentage: index === 0 ? liveData.value?.completion.percentage : null })) : ({ label: t('dashboard.floor', { number: activeFloor.value }), ...(String(activeFloor.value) === '1' ? liveData.value?.completion : {completed:0,total:0,percentage:null}) }))

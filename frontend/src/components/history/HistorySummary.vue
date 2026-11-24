@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { Ban, CircleCheck, ClipboardList, TriangleAlert } from '@lucide/vue'
+import { Ban, CircleCheck, ClipboardList, Clock3 } from '@lucide/vue'
 import { historyStatusColors, summarizeHistory } from '@/data/historyPresentation.js'
 import { t } from '@/i18n/index.js'
 import HistoryMetric from './HistoryMetric.vue'
@@ -19,7 +19,7 @@ const metrics=Object.freeze([
   {key:'total',filter:'all',icon:ClipboardList},
   {key:'completed',filter:'completed',icon:CircleCheck},
   {key:'cancelled',filter:'cancelled',icon:Ban},
-  {key:'failed',filter:'failed',icon:TriangleAlert},
+  {key:'delayed',filter:'delayed',icon:Clock3},
 ])
 const seriesFor = metric => {
   const anchor = props.rangeStart ? new Date(`${props.rangeStart}T00:00:00`) : new Date(props.events[0]?.start || Date.now())

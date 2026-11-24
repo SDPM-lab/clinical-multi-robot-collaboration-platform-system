@@ -302,8 +302,8 @@ onBeforeUnmount(() => window.clearTimeout(notificationTimer))
 #dispatch-create-panel :deep(.form-scroll){min-height:0;overflow-y:hidden;overscroll-behavior:none;padding-block:3px}
 #dispatch-create-panel :deep(.task-form-grid){align-items:start;column-gap:10px;row-gap:18px}
 #dispatch-create-panel :deep(.task-form-grid .field>span:first-child),#dispatch-create-panel :deep(.task-form-grid .field>label),#dispatch-create-panel :deep(.priority-control legend){min-height:18px;line-height:18px}
-#dispatch-create-panel :deep(.task-type-trigger),#dispatch-create-panel :deep(.location-trigger),#dispatch-create-panel :deep(.date-trigger),#dispatch-create-panel :deep(.dispatch-time-entry){height:32px}
-#dispatch-create-panel :deep(.task-type-trigger),#dispatch-create-panel :deep(.location-trigger),#dispatch-create-panel :deep(.date-trigger),#dispatch-create-panel :deep(.dispatch-time-entry input){font-size:12px}
+#dispatch-create-panel :deep(.task-type-trigger),#dispatch-create-panel :deep(.location-trigger),#dispatch-create-panel :deep(.date-trigger),#dispatch-create-panel :deep(#dispatch-start-time){height:32px}
+#dispatch-create-panel :deep(.task-type-trigger),#dispatch-create-panel :deep(.location-trigger),#dispatch-create-panel :deep(.date-trigger),#dispatch-create-panel :deep(#dispatch-start-time){font-size:12px}
 #dispatch-create-panel :deep(.priority-control button){height:28px}
 #dispatch-create-panel :deep(.notes-field textarea){min-height:clamp(84px,11vh,104px);height:clamp(84px,11vh,104px);line-height:1.55;resize:none}
 @container (max-width:430px){#dispatch-create-panel :deep(.task-form-grid){grid-template-columns:minmax(0,1fr)}}

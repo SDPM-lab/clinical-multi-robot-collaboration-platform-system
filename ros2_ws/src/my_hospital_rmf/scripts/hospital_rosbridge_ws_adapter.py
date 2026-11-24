@@ -136,7 +136,7 @@ class FleetStateWsAdapter(Node):
 
     def fleet_state_to_rosbridge_json(self, msg: FleetState):
         """將 ROS2 FleetState 訊息轉成符合 rosbridge 協議的 JSON 字典。
-        電量從 0~1 轉為 0~100 百分比格式。"""
+        電量維持 RobotState 的 0~100 百分比格式。"""
         robots = []
 
         for robot in msg.robots:
@@ -148,7 +148,7 @@ class FleetStateWsAdapter(Node):
                     "mode": int(robot.mode.mode),
                     "mode_request_id": int(robot.mode.mode_request_id),
                 },
-                "battery_percent": float(robot.battery_percent) * 100.0,
+                "battery_percent": float(robot.battery_percent),
                 "location": {
                     "t": {
                         "sec": int(robot.location.t.sec),

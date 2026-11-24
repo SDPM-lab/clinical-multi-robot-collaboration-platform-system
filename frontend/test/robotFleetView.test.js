@@ -81,6 +81,21 @@ describe('Robot Status backend alignment', () => {
     expect(wrapper.find('.robot-telemetry-data').exists()).toBe(false)
   })
 
+  it('shows the ROS task ID when there is no matching backend task record', async () => {
+    api.getRobotSnapshot.mockResolvedValue({ robots: [{ ...snapshot.robots[0], status: '執行任務中',
+      hasTelemetry: true, lastUpdate: new Date().toISOString(), battery: 99,
+      currentTaskDetail: { taskNo: 'ros-task-123' } }, ...snapshot.robots.slice(1)] })
+    const wrapper = await view()
+    expect(wrapper.find('.robot-info-card').text()).toContain('ros-task-123')
+  })
+
+  it('does not show an unavailable or offline ROS task ID', async () => {
+    api.getRobotSnapshot.mockResolvedValue({ robots: [{ ...snapshot.robots[0], status: '離線',
+      hasTelemetry: true, currentTaskDetail: { taskNo: 'stale-task' } }, ...snapshot.robots.slice(1)] })
+    const wrapper = await view()
+    expect(wrapper.find('.robot-info-card').text()).not.toContain('stale-task')
+  })
+
   it('avoids reporting stale robot telemetry as connected', async () => {
     api.getRobotSnapshot.mockResolvedValue({ robots: [{ ...snapshot.robots[0], status: '執行任務中', hasTelemetry: true, lastUpdate: new Date(Date.now() - 16_000).toISOString(), battery: 82 }, ...snapshot.robots.slice(1)] })
     const wrapper = await view()

@@ -23,25 +23,24 @@ const sourcePickerOpen = ref(false)
 const destinationPickerOpen = ref(false)
 const sourcePicker = ref(null)
 const destinationPicker = ref(null)
-const timePickerOpen = ref(false)
-const timePicker = ref(null)
-const selectedTimeParts = new Set()
 const localDate = (now) => `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
 const localTime = (now) => `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
-const nextStart = () => new Date(Date.now() + 5 * 60 * 1000)
-const timeText = ref(localTime(nextStart()))
+const nextStart = () => new Date(Date.now() + 60_000)
+const initialStart = nextStart()
+const timeText = ref(localTime(initialStart))
+const timePickerOpen = ref(false)
+const timeEntry = ref(null)
+const timeMenu = ref(null)
+const timeMenuStyle = ref({})
+const hours = Array.from({ length: 24 }, (_, index) => String(index).padStart(2, '0'))
+const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
 const validationError = ref('')
 const errorSummary = ref(null)
-const hours = Array.from({length:24},(_,i)=>String(i).padStart(2,'0'))
-const minutes = Array.from({length:60},(_,i)=>String(i).padStart(2,'0'))
 const datePickerOpen = ref(false)
 const datePicker = ref(null)
 const dateTrigger = ref(null)
 const calendarMenu = ref(null)
 const calendarMenuStyle = ref({})
-const timeEntry = ref(null)
-const timeMenu = ref(null)
-const timeMenuStyle = ref({})
 const calendarMonth = ref(new Date())
 const positionFloatingMenu = (anchor, menu, preferredWidth) => {
   if (!anchor || !menu) return {}
@@ -63,25 +62,34 @@ const positionFloatingMenu = (anchor, menu, preferredWidth) => {
 }
 const updateFloatingMenus = () => {
   if (datePickerOpen.value) calendarMenuStyle.value = positionFloatingMenu(dateTrigger.value, calendarMenu.value, 280)
-  if (timePickerOpen.value) timeMenuStyle.value = positionFloatingMenu(timeEntry.value, timeMenu.value)
+  if (timePickerOpen.value) timeMenuStyle.value = positionFloatingMenu(timeEntry.value, timeMenu.value, 152)
 }
 const parseTimeText = (value) => {
-  const match = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(value.trim())
+  const text = value.trim().replace(/^(\d{2})(\d{2})$/, '$1:$2')
+  const match = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(text)
   return match ? `${match[1].padStart(2,'0')}:${match[2]}:00` : null
 }
 const normalizeTimeText = () => {
   const time = parseTimeText(timeText.value)
   if (time) timeText.value = time.slice(0,5)
 }
-const chooseTimePart = (index,value) => {
-  const parts = (parseTimeText(timeText.value) || '00:00:00').split(':')
+const selectedTime = computed(() => parseTimeText(timeText.value)?.slice(0, 5) || '')
+const chooseTimePart = (index, value) => {
+  const parts = (selectedTime.value || localTime(nextStart())).split(':')
   parts[index] = value
-  timeText.value = `${parts[0]}:${parts[1]}`
-  selectedTimeParts.add(index)
-  if (selectedTimeParts.size === 2) {
-    selectedTimeParts.clear()
-    timePickerOpen.value = false
-  }
+  timeText.value = parts.join(':')
+}
+const toggleTimePicker = async () => {
+  timePickerOpen.value = !timePickerOpen.value
+  if (!timePickerOpen.value) return
+  datePickerOpen.value = false
+  if (!selectedTime.value) timeText.value = localTime(nextStart())
+  await nextTick()
+  updateFloatingMenus()
+  timeMenu.value?.querySelectorAll('[aria-selected="true"]').forEach(option => {
+    const column = option.parentElement
+    column.scrollTop = option.offsetTop - (column.clientHeight - option.offsetHeight) / 2
+  })
 }
 const selectLocation = (field, value) => {
   if (field === 'source') { sourceValue.value = value; sourcePickerOpen.value = false }
@@ -90,7 +98,7 @@ const selectLocation = (field, value) => {
 const onOutsidePointer = (event) => {
   if (!taskTypePicker.value?.contains(event.target)) taskTypeOpen.value = false
   if (!datePicker.value?.contains(event.target) && !calendarMenu.value?.contains(event.target)) datePickerOpen.value = false
-  if (!timePicker.value?.contains(event.target) && !timeMenu.value?.contains(event.target)) timePickerOpen.value = false
+  if (!timeEntry.value?.contains(event.target) && !timeMenu.value?.contains(event.target)) timePickerOpen.value = false
   if (!sourcePicker.value?.contains(event.target)) sourcePickerOpen.value = false
   if (!destinationPicker.value?.contains(event.target)) destinationPickerOpen.value = false
 }
@@ -105,12 +113,12 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', updateFloatingMenus)
 })
 
-const makeDefaults = () => ({
+const makeDefaults = (start) => ({
   type: '藥品配送',
-  date: props.date === localDate(new Date()) ? localDate(nextStart()) : props.date,
+  date: props.date === localDate(new Date()) ? localDate(start) : props.date,
   priority: 'normal', note: '',
 })
-const form = reactive(makeDefaults())
+const form = reactive(makeDefaults(initialStart))
 const sourceValue = computed({ get: () => props.source, set: (value) => emit('update:source', value) })
 const destinationValue = computed({ get: () => props.destination, set: (value) => emit('update:destination', value) })
 const allowedLocations = computed(() => TASK_LOCATION_IDS[TASK_TYPE_BY_LABEL[form.type]])
@@ -128,15 +136,6 @@ watch(() => props.locations, () => {
 })
 
 watch(() => props.date, (value) => { form.date = value })
-watch(timePickerOpen, async (open) => {
-  if (!open) return
-  await nextTick()
-  timePicker.value?.querySelectorAll('[aria-selected="true"]').forEach(option => {
-    option.parentElement.scrollTop = option.offsetTop - 54
-  })
-  updateFloatingMenus()
-})
-
 const calendarHeading = computed(()=>new Intl.DateTimeFormat(localeTag.value,{year:'numeric',month:'long'}).format(calendarMonth.value))
 const weekdays = computed(()=>Array.from({length:7},(_,i)=>new Intl.DateTimeFormat(localeTag.value,{weekday:'short'}).format(new Date(2026,0,4+i))))
 const calendarDays = computed(()=>{
@@ -152,11 +151,6 @@ const toggleCalendar = () => {
   datePickerOpen.value = !datePickerOpen.value
   if (datePickerOpen.value) timePickerOpen.value = false
 }
-const toggleTimePicker = () => {
-  timePickerOpen.value = !timePickerOpen.value
-  selectedTimeParts.clear()
-  if (timePickerOpen.value) datePickerOpen.value = false
-}
 const shiftMonth = (offset) => { calendarMonth.value = new Date(calendarMonth.value.getFullYear(),calendarMonth.value.getMonth()+offset,1) }
 const selectDate = (value) => { form.date = value; datePickerOpen.value = false }
 watch(datePickerOpen, async (open) => {
@@ -166,8 +160,8 @@ watch(datePickerOpen, async (open) => {
 })
 
 const reset = () => {
-  Object.assign(form, makeDefaults())
   const now = nextStart()
+  Object.assign(form, makeDefaults(now))
   validationError.value = ''
   sourceValue.value = 'pharmacy'
   destinationValue.value = 'ward_a_2'
@@ -175,8 +169,8 @@ const reset = () => {
   destinationPickerOpen.value = false
   form.date = localDate(now)
   timeText.value = localTime(now)
-  taskTypeOpen.value = false
   timePickerOpen.value = false
+  taskTypeOpen.value = false
   datePickerOpen.value = false
 }
 defineExpose({ reset })
@@ -220,7 +214,13 @@ const submit = async () => {
         </div>
 
         <div ref="datePicker" class="field dispatch-date-picker" @keydown.esc.stop="datePickerOpen=false"><span>{{ t('dispatchForm.date') }} <span class="required-marker" aria-hidden="true">＊</span></span><button ref="dateTrigger" class="date-trigger" type="button" :aria-label="t('dispatchForm.date')" :aria-expanded="datePickerOpen" aria-haspopup="dialog" @click="toggleCalendar"><span>{{ form.date.replaceAll('-',' / ') }}</span><CalendarDays :size="14" /></button></div>
-        <div ref="timePicker" class="field dispatch-time-picker" @keydown.esc.stop="timePickerOpen=false"><label for="dispatch-start-time">{{ t('dispatchForm.start') }} <span class="required-marker" aria-hidden="true">＊</span></label><div ref="timeEntry" class="dispatch-time-entry"><input id="dispatch-start-time" v-model.trim="timeText" type="text" inputmode="text" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" placeholder="09:30" required @blur="normalizeTimeText"><button type="button" :aria-label="t('dispatchForm.chooseTime')" :aria-expanded="timePickerOpen" aria-haspopup="listbox" @click="toggleTimePicker"><Clock3 :size="14" /></button></div></div>
+        <div class="field">
+          <label for="dispatch-start-time">{{ t('dispatchForm.start') }} <span class="required-marker" aria-hidden="true">＊</span></label>
+          <div ref="timeEntry" class="dispatch-time-entry" @keydown.esc.stop="timePickerOpen=false">
+            <input id="dispatch-start-time" v-model.trim="timeText" type="text" inputmode="numeric" maxlength="5" placeholder="HH:MM" required @blur="normalizeTimeText">
+            <button type="button" :aria-label="t('dispatchForm.chooseTime')" :aria-expanded="timePickerOpen" aria-haspopup="dialog" @click="toggleTimePicker"><Clock3 :size="14" /></button>
+          </div>
+        </div>
 
         <fieldset class="priority-control full-width"><legend>{{ t('dispatchForm.priority') }} <span class="required-marker" aria-hidden="true">＊</span></legend><div><button v-for="priority in priorities" :key="priority.value" type="button" :data-priority="priority.value" :style="{ '--priority-color': taskPriorityColor(priority.value) }" :class="{ active: form.priority === priority.value }" :aria-pressed="form.priority === priority.value" @click="form.priority=priority.value">{{ t(`priority.${priority.value}`) }}</button></div></fieldset>
         <label class="field notes-field"><span>{{ t('dispatchForm.note') }}</span><textarea v-model.trim="form.note" rows="4" :placeholder="t('dispatchForm.notePlaceholder')"></textarea></label>
@@ -231,10 +231,14 @@ const submit = async () => {
           <div class="calendar-heading"><button type="button" :disabled="submitting" :aria-label="t('dispatch.previousMonth')" @click="shiftMonth(-1)"><ChevronLeft :size="16" /></button><strong>{{ calendarHeading }}</strong><button type="button" :disabled="submitting" :aria-label="t('dispatch.nextMonth')" @click="shiftMonth(1)"><ChevronRight :size="16" /></button></div>
           <div class="calendar-grid"><span v-for="(day,index) in weekdays" :key="index" class="calendar-weekday">{{ day }}</span><button v-for="day in calendarDays" :key="day.value" type="button" :disabled="submitting" :data-date="day.value" :class="{outside:day.outside,today:day.today}" :aria-label="day.value" :aria-pressed="form.date===day.value" @click="selectDate(day.value)">{{ day.day }}</button></div>
         </div>
-        <div v-if="timePickerOpen" ref="timeMenu" class="dispatch-time-options is-floating" :style="timeMenuStyle" @keydown.esc.stop="timePickerOpen=false">
-          <div class="time-scroll-column" role="listbox" :aria-label="t('dispatch.hours')"><button v-for="hour in hours" :key="hour" type="button" role="option" :disabled="submitting" :aria-selected="parseTimeText(timeText)?.slice(0,2)===hour" @click="chooseTimePart(0,hour)">{{ hour }}</button></div>
-          <span aria-hidden="true" class="time-separator">:</span>
-          <div class="time-scroll-column" role="listbox" :aria-label="t('dispatch.minutes')"><button v-for="minute in minutes" :key="minute" type="button" role="option" :disabled="submitting" :aria-selected="parseTimeText(timeText)?.slice(3,5)===minute" @click="chooseTimePart(1,minute)">{{ minute }}</button></div>
+        <div v-if="timePickerOpen" ref="timeMenu" class="dispatch-time-options" role="dialog" :aria-label="t('dispatchForm.chooseTime')" :style="timeMenuStyle" @keydown.esc.stop="timePickerOpen=false">
+          <div class="time-scroll-column" role="listbox" :aria-label="t('dispatch.hours')">
+            <button v-for="hour in hours" :key="hour" type="button" role="option" :disabled="submitting" :aria-selected="selectedTime.slice(0, 2) === hour" @click="chooseTimePart(0, hour)">{{ hour }}</button>
+          </div>
+          <span aria-hidden="true">:</span>
+          <div class="time-scroll-column" role="listbox" :aria-label="t('dispatch.minutes')">
+            <button v-for="minute in minutes" :key="minute" type="button" role="option" :disabled="submitting" :aria-selected="selectedTime.slice(3, 5) === minute" @click="chooseTimePart(1, minute)">{{ minute }}</button>
+          </div>
         </div>
       </Teleport>
       <footer><button type="button" :disabled="submitting" @click="reset">{{ t('dispatchUx.reset') }}</button><button type="submit" class="create-button" :disabled="submitting">{{ t(submitting ? 'dispatchUx.creating' : 'dispatchForm.create') }}</button></footer>
@@ -252,9 +256,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding-bot
 .task-panel{padding:10px 12px 0}header{padding-bottom:6px}header>div{gap:2px}header strong{font-size:16px}.form-scroll{padding:8px 2px}.task-form-grid{gap:7px 10px}.field{gap:3px;font-size:11px}.field input,.field select{height:31px}.map-selection{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:7px}.map-selection>div{margin:0;flex:1}.map-selection button{padding:5px 3px}.priority-control legend{margin-bottom:3px}.priority-control button{height:25px}.notes-toggle{padding:2px 0}.field textarea{min-height:45px}footer{margin:0 -12px;padding:7px 12px}footer button{height:30px}
 .task-panel{background:rgba(247,249,250,.46);border-color:rgba(255,255,255,.62);border-radius:15px;box-shadow:0 18px 52px #34433820;backdrop-filter:blur(24px) saturate(115%);-webkit-backdrop-filter:blur(24px) saturate(115%)}:global([data-theme='dark']) .task-panel{background:rgba(34,42,47,.52);border-color:rgba(255,255,255,.16)}.task-panel footer{background:rgba(255,255,255,.2);border-radius:0 0 15px 15px}:global([data-theme='dark']) .task-panel footer{background:rgba(19,25,29,.22)}
 .task-form-grid{column-gap:6px}.field input[type=date],.field input[type=time]{padding-inline:5px;font-size:10px}.task-panel footer{gap:5px}.task-panel footer button{min-width:57px;padding-inline:8px}
-.task-type-picker,.dispatch-time-picker{position:relative}.task-type-trigger{display:flex;align-items:center;justify-content:space-between;gap:4px;width:100%;height:31px;min-width:0;padding:0 8px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:7px;font:inherit;font-size:10px;text-align:left;cursor:pointer}.task-type-trigger span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.task-type-trigger svg{flex:none}.task-type-options,.dispatch-time-options{position:absolute;z-index:30;top:100%;left:0;right:0;display:grid;gap:2px;max-height:205px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:color-mix(in srgb,var(--panel-bg-strong) 92%,transparent);border:1px solid var(--panel-border);border-radius:9px;box-shadow:0 10px 22px #34433825;backdrop-filter:blur(18px)}.task-type-options button,.dispatch-time-options button{min-height:27px;padding:5px 7px;color:inherit;background:transparent;border:0;border-radius:6px;font:inherit;font-size:10px;text-align:left;cursor:pointer}.task-type-options button:hover,.task-type-options button[aria-selected=true],.dispatch-time-options button:hover,.dispatch-time-options button[aria-selected=true]{background:color-mix(in srgb,#fb9966 15%,transparent)}.task-type-trigger:focus-visible,.task-type-options button:focus-visible,.dispatch-time-entry button:focus-visible,.dispatch-time-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}.dispatch-time-picker>label{color:var(--text-secondary)}.dispatch-time-entry{display:flex;align-items:center;height:31px;background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:7px}.dispatch-time-entry:focus-within{border-color:var(--search-border-active);box-shadow:0 0 0 3px var(--search-focus-ring)}.dispatch-time-entry input{flex:1;width:100%;height:100%;min-width:0;padding:0 5px;border:0;background:transparent;box-shadow:none!important;font-size:10px}.dispatch-time-entry button{display:grid;place-items:center;flex:none;width:27px;height:27px;padding:0;color:var(--text-secondary);background:transparent;border:0;border-radius:6px;cursor:pointer}.dispatch-time-options{max-height:165px}.notes-field textarea{min-height:70px;padding:8px 9px;resize:vertical}.task-panel footer{background:transparent!important;border-top:0;box-shadow:none}
-.task-type-options,.dispatch-time-options{background:#f8faf9}:global([data-theme='dark']) .task-type-options,:global([data-theme='dark']) .dispatch-time-options{background:#303735}
-.field{font-size:13px}.field input,.field textarea,.task-type-trigger,.dispatch-time-entry input{font-size:12.5px}.task-type-options button,.robot-options button,.dispatch-time-options button{font-size:12px}.priority-control legend{font-size:12.5px}.priority-control button{font-size:12px}.task-panel footer button{font-size:12px}
+.task-type-picker{position:relative}.task-type-trigger{display:flex;align-items:center;justify-content:space-between;gap:4px;width:100%;height:31px;min-width:0;padding:0 8px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:7px;font:inherit;font-size:10px;text-align:left;cursor:pointer}.task-type-trigger span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.task-type-trigger svg{flex:none}.task-type-options{position:absolute;z-index:30;top:100%;left:0;right:0;display:grid;gap:2px;max-height:205px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:color-mix(in srgb,var(--panel-bg-strong) 92%,transparent);border:1px solid var(--panel-border);border-radius:9px;box-shadow:0 10px 22px #34433825;backdrop-filter:blur(18px)}.task-type-options button{min-height:27px;padding:5px 7px;color:inherit;background:transparent;border:0;border-radius:6px;font:inherit;font-size:10px;text-align:left;cursor:pointer}.task-type-options button:hover,.task-type-options button[aria-selected=true]{background:color-mix(in srgb,#fb9966 15%,transparent)}.task-type-trigger:focus-visible,.task-type-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}.notes-field textarea{min-height:70px;padding:8px 9px;resize:vertical}.task-panel footer{background:transparent!important;border-top:0;box-shadow:none}
+.task-type-options{background:#f8faf9}:global([data-theme='dark']) .task-type-options{background:#303735}
+.field{font-size:13px}.field input,.field textarea,.task-type-trigger{font-size:12.5px}.task-type-options button,.robot-options button{font-size:12px}.priority-control legend{font-size:12.5px}.priority-control button{font-size:12px}.task-panel footer button{font-size:12px}
 .dispatch-location-picker{position:relative}.location-trigger{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%;height:34px;min-width:0;padding:0 9px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:8px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.location-trigger svg{flex:none}.location-options{position:absolute;z-index:35;top:100%;left:0;right:0;display:grid;gap:3px;max-height:210px;margin-top:4px;padding:5px;overflow:auto;color:var(--text-primary);background:#f8faf9;border:1px solid var(--panel-border);border-radius:10px;box-shadow:0 10px 22px #34433825}.location-options button{min-height:30px;padding:5px 8px;color:inherit;background:transparent;border:0;border-radius:7px;font:inherit;font-size:12px;text-align:left;cursor:pointer}.location-trigger:focus-visible,.location-options button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:1px}:global([data-theme='dark']) .location-options{background:#303735}
 .location-options button:hover,.location-options button[aria-selected=true]{background:color-mix(in srgb,#fb9966 15%,transparent)}
 /* Keep the choices in the form's scroll area. Safari clips absolutely positioned
@@ -272,7 +276,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding-bot
 .required-capabilities>div span{color:#426d53;background:#e0efe3}
 .task-form-grid .field>span:first-child,.task-form-grid .field>label,.priority-control legend,.required-capabilities>span{font-weight:600;letter-spacing:.01em}
 .task-form-grid .field>span:first-child,.task-form-grid .field>label,.priority-control legend{color:var(--text-secondary)}
-.task-type-trigger,.location-trigger,.dispatch-time-entry input,.field input,.field textarea{font-weight:400}
+.task-type-trigger,.location-trigger,.field input,.field textarea{font-weight:400}
 .location-trigger.is-fixed:disabled{color:var(--text-secondary);background:color-mix(in srgb,var(--text-muted) 10%,var(--search-background));border-color:var(--panel-border);opacity:1;cursor:not-allowed}.location-trigger.is-fixed:disabled svg{color:var(--text-muted)}
 .priority-control button.active{font-weight:600}
 .priority-control button[data-priority=high].active{color:#783519;background:#f5c39f}
@@ -294,8 +298,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding-bot
 <style scoped>
 .dispatch-date-picker{position:relative}.date-trigger{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;height:31px;padding:0 8px;color:var(--text-primary);background:color-mix(in srgb,var(--search-background) 80%,transparent);border:1px solid var(--icon-button-border);border-radius:7px;font:inherit;font-size:12.5px;cursor:pointer}
 .dispatch-calendar{position:absolute;z-index:40;top:100%;left:0;width:260px;max-width:calc(100vw - 72px);box-sizing:border-box;margin-top:5px;padding:12px;color:var(--text-primary);background:var(--panel-bg-strong,#fff);border:1px solid var(--panel-border);border-radius:12px;box-shadow:0 10px 28px #34433825}.calendar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.calendar-heading strong{font-size:13px}.dispatch-calendar button{color:inherit;background:transparent;border:0;border-radius:6px;font:inherit;cursor:pointer}.calendar-heading button{display:grid;place-items:center;width:28px;height:28px}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}.calendar-weekday{padding:5px 0;color:var(--text-muted);font-size:10px}.calendar-grid button{height:28px;font-size:12px}.calendar-grid button.outside{color:var(--text-muted);opacity:.55}.calendar-grid button.today{font-weight:700;color:#ba5424}.dispatch-calendar button:hover{background:#ffe4d4;color:#813c1c}.calendar-grid button[aria-pressed=true]{background:#fb9966;color:#462918;opacity:1}.date-trigger:focus-visible,.dispatch-calendar button:focus-visible{outline:2px solid #fb9966;outline-offset:1px}
-.dispatch-time-options{grid-template-columns:1fr 10px 1fr;align-items:start;max-height:none;overflow:hidden;border:0;background:var(--panel-bg-strong,#fff)}.time-scroll-column{position:relative;display:grid;gap:3px;max-height:150px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#fb9966 transparent}.dispatch-time-options button{text-align:center}.dispatch-time-options button:hover,.dispatch-time-options button[aria-selected=true]{background:#ffe4d4;color:#813c1c}.time-separator{padding-top:6px;text-align:center}
-.dispatch-calendar.is-floating,.dispatch-time-options.is-floating{position:fixed;z-index:1100;top:auto;right:auto;bottom:auto;left:auto;margin:0;max-width:calc(100vw - 16px);overflow:auto}
+.dispatch-calendar.is-floating{position:fixed;z-index:1100;top:auto;right:auto;bottom:auto;left:auto;margin:0;max-width:calc(100vw - 16px);overflow:auto}
 .form-guidance{margin-bottom:4px}
 </style>
 
@@ -321,12 +324,12 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 <style scoped>
 .task-panel{color:var(--text-primary)}
-.task-panel :is(.task-type-trigger,.location-trigger,.date-trigger,.dispatch-time-entry,.field input,.field textarea){
+.task-panel :is(.task-type-trigger,.location-trigger,.date-trigger,.field input,.field textarea){
   color:var(--dispatch-control-text);
   background:var(--dispatch-control-background);
   border-color:var(--dispatch-control-border);
 }
-.task-panel :is(.field>span:first-child,.field>label,.priority-control legend,.dispatch-time-entry button){
+.task-panel :is(.field>span:first-child,.field>label,.priority-control legend){
   color:var(--dispatch-control-label);
 }
 .task-panel .location-trigger.is-fixed:disabled{
@@ -338,16 +341,12 @@ button:disabled{opacity:.55;cursor:not-allowed}
 }
 .task-panel .location-trigger.is-fixed:disabled svg{color:var(--dispatch-control-disabled-text)}
 .dispatch-location-fields{display:grid;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;min-width:0}
-.task-panel .dispatch-time-entry input{
-  background:transparent;
-  border-color:transparent;
-}
-.task-panel :is(.task-type-options,.location-options,.dispatch-calendar,.dispatch-time-options){
+.task-panel :is(.task-type-options,.location-options,.dispatch-calendar){
   color:var(--dispatch-control-text);
   background:var(--dispatch-popover-background);
   border-color:var(--dispatch-control-border);
 }
-.task-panel :is(.task-type-options button:hover,.task-type-options button[aria-selected=true],.location-options button:hover,.location-options button[aria-selected=true],.dispatch-time-options button:hover,.dispatch-time-options button[aria-selected=true],.dispatch-calendar button:hover){
+.task-panel :is(.task-type-options button:hover,.task-type-options button[aria-selected=true],.location-options button:hover,.location-options button[aria-selected=true],.dispatch-calendar button:hover){
   color:var(--dispatch-popover-hover-text);
   background:var(--dispatch-popover-hover-background);
 }
@@ -361,4 +360,16 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .task-panel footer .create-button{color:var(--dispatch-popover-hover-text)!important;background:var(--theme-primary)!important;box-shadow:none}
 .task-panel footer .create-button:hover{background:var(--theme-primary-hover)!important;box-shadow:0 6px 16px color-mix(in srgb,var(--theme-primary) 30%,transparent)}
 @media(prefers-reduced-motion:reduce){.task-panel footer button{transition:none}}
+</style>
+
+<style scoped>
+.dispatch-time-entry{position:relative}
+.dispatch-time-entry input{width:100%;box-sizing:border-box;padding-inline-end:32px}
+.dispatch-time-entry button{position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:25px;height:25px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--dispatch-control-label);cursor:pointer}
+.dispatch-time-options{position:fixed;z-index:1100;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) 10px minmax(0,1fr);align-items:start;gap:4px;width:152px;padding:5px;overflow:auto;border:1px solid var(--dispatch-control-border);border-radius:9px;background:var(--dispatch-popover-background);color:var(--dispatch-control-text);box-shadow:0 10px 22px #34433825}
+.dispatch-time-options > span{text-align:center;padding-top:6px}
+.time-scroll-column{position:relative;display:grid;gap:2px;max-height:132px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.time-scroll-column button{min-height:26px;padding:2px;border:0;border-radius:5px;background:transparent;color:inherit;font:inherit;font-size:13px;cursor:pointer}
+.time-scroll-column button:hover{background:var(--dispatch-popover-hover-background)}
+.time-scroll-column button[aria-selected=true]{color:#fff;background:#2864ac}
 </style>

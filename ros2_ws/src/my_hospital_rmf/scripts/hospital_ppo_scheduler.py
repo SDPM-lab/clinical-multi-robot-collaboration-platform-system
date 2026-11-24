@@ -95,6 +95,7 @@ from travel_time import TravelTimeModel
 
 from rl.observation import (
     BATTERY_LAYOUT,
+    LOCATIONS,
     ObservationEncoder,
 )
 
@@ -119,6 +120,8 @@ except ImportError as exc:
 
 TASK_TOPIC = "/hospital_task_request"
 FLEET_TOPIC = "/fleet_states"
+
+PPO_ASSIGNMENT_TOPIC = "/hospital_ppo_assignment"
 
 RMF_TASK_API_TOPIC = "/task_api_requests"
 RMF_FLEET_NAME = "hospital_fleet"
@@ -223,6 +226,10 @@ VALID_TASK_TYPES = {
 # Scheduler Node
 # ============================================================
 
+class WaitForAvailableRobot(Exception):
+    """A compatible robot is temporarily unavailable."""
+
+
 class HospitalPpoScheduler(Node):
 
     def __init__(self) -> None:
@@ -284,6 +291,22 @@ class HospitalPpoScheduler(Node):
             == "1"
         )
 
+        # Scheduling-only mode:
+        # PPO makes the assignment and publishes the result to Backend,
+        # but does not dispatch the task to RMF/navigation.
+        self.scheduling_only = (
+            os.environ.get(
+                "HOSPITAL_SCHEDULING_ONLY",
+                "0",
+            )
+            == "1"
+        )
+
+        self.get_logger().info(
+            "Scheduling-only mode: "
+            f"{self.scheduling_only}"
+        )
+
         self.test_low_battery_robots = set()
 
         # Latest physical FleetState snapshot.
@@ -296,6 +319,13 @@ class HospitalPpoScheduler(Node):
         self.tasks_by_id: Dict[
             str,
             TaskState,
+        ] = {}
+
+        # Tasks received from Backend but not yet due.
+        # Key = Backend hospital task_id
+        self.pending_scheduled_tasks: Dict[
+            str,
+            dict,
         ] = {}
 
         # Currently executing Hospital Task.
@@ -356,6 +386,11 @@ class HospitalPpoScheduler(Node):
             self._charging_tick,
         )
 
+        self.scheduled_task_timer = self.create_timer(
+            1.0,
+            self._scheduled_task_tick,
+        )
+
         rmf_task_qos = QoSProfile(
             depth=100
         )
@@ -373,6 +408,14 @@ class HospitalPpoScheduler(Node):
                 ApiRequest,
                 RMF_TASK_API_TOPIC,
                 rmf_task_qos,
+            )
+        )
+
+        self.assignment_publisher = (
+            self.create_publisher(
+                String,
+                PPO_ASSIGNMENT_TOPIC,
+                10,
             )
         )
 
@@ -544,10 +587,24 @@ class HospitalPpoScheduler(Node):
                 "Nav graph has no named waypoints"
             )
 
-        waypoint = min(
+        canonical_waypoints = [
             self.nav_graph
-            .waypoints_by_name
-            .values(),
+            .waypoints_by_name[name]
+            for name in LOCATIONS
+            if name in (
+                self.nav_graph
+                .waypoints_by_name
+            )
+        ]
+
+        if not canonical_waypoints:
+            raise RuntimeError(
+                "No PPO canonical locations "
+                "exist in nav graph"
+            )
+
+        waypoint = min(
+            canonical_waypoints,
             key=lambda item: math.hypot(
                 float(x) - item.x,
                 float(y) - item.y,
@@ -590,9 +647,105 @@ class HospitalPpoScheduler(Node):
         )
 
 
+    def _ensure_scheduling_only_robot_data(
+        self,
+    ) -> None:
+        # Scheduling-only fallback.
+        #
+        # When Gazebo / RMF is not running, provide deterministic
+        # robot snapshots so the original 98-D PPO observation and
+        # 7-D action mask can still be constructed.
+        #
+        # Real /fleet_states data always overwrites these values
+        # when it becomes available.
+
+        if not self.nav_graph.waypoints_by_name:
+            raise RuntimeError(
+                "Nav graph has no named waypoints"
+            )
+
+        fallback_waypoint = next(
+            iter(
+                self.nav_graph
+                .waypoints_by_name
+                .values()
+            )
+        )
+
+        demo_locations = {
+            "C01": "charging_station_2",
+            "C02": "nurse_station",
+            "M01": "pharmacy",
+            "M02": "lab",
+            "W01": "ward_a_2",
+            "W02": "ward_b_2",
+            "W03": "consult_1_2",
+        }
+
+        added = []
+
+        for logical_id in LOGICAL_ROBOT_IDS:
+
+            if logical_id in self.latest_robot_data:
+                continue
+
+            waypoint_name = demo_locations[
+                logical_id
+            ]
+
+            waypoint = (
+                self.nav_graph
+                .waypoints_by_name
+                .get(
+                    waypoint_name,
+                    fallback_waypoint,
+                )
+            )
+
+            self.latest_robot_data[
+                logical_id
+            ] = {
+                "rmf_name": (
+                    LOGICAL_TO_RMF[
+                        logical_id
+                    ]
+                ),
+                "x": float(waypoint.x),
+                "y": float(waypoint.y),
+                "yaw": 0.0,
+                "level_name": "L1",
+                "task_id": None,
+                "status": (
+                    "idle"
+                    if self.scheduling_only
+                    else "offline"
+                ),
+                "battery_soc": 1.0,
+            }
+
+            added.append(
+                logical_id
+            )
+
+        if added:
+            mode_label = (
+                "SCHEDULING_ONLY_DEMO_FLEET"
+                if self.scheduling_only
+                else "OFFLINE_FLEET_PLACEHOLDERS"
+            )
+
+            self.get_logger().info(
+                f"[{mode_label}] "
+                "initialized="
+                + ",".join(added)
+            )
+
+
     def _build_robot_states(
         self,
     ) -> List[RobotState]:
+
+        self._ensure_scheduling_only_robot_data()
 
         missing = [
             robot_id
@@ -876,6 +1029,52 @@ class HospitalPpoScheduler(Node):
         )
 
         return request_id
+
+
+    def _publish_assignment_result(
+        self,
+        *,
+        task_id: str,
+        assigned: bool,
+        rmf_robot_name: str | None = None,
+    ) -> None:
+
+        payload = {
+            "task_id": task_id,
+            "status": 3 if assigned else 4,
+        }
+
+        if assigned:
+            if not rmf_robot_name:
+                raise ValueError(
+                    "rmf_robot_name is required "
+                    "for successful assignment"
+                )
+
+            payload["assignment"] = {
+                "is_assigned": True,
+                "expected_robot_name": (
+                    rmf_robot_name
+                ),
+            }
+
+        msg = String()
+
+        msg.data = json.dumps(
+            payload,
+            separators=(",", ":"),
+        )
+
+        self.assignment_publisher.publish(
+            msg
+        )
+
+        self.get_logger().info(
+            "[PPO_ASSIGNMENT_PUBLISHED] "
+            f"task={task_id}, "
+            f"assigned={assigned}, "
+            f"robot={rmf_robot_name}"
+        )
 
 
     # ========================================================
@@ -1440,33 +1639,55 @@ class HospitalPpoScheduler(Node):
         )
 
 
-    def _task_callback(
-        self,
-        msg: String,
-    ) -> None:
+    def _scheduled_task_tick(self) -> None:
+        now = time.time()
+        due_tasks = sorted(
+            (
+                (task_id, payload)
+                for task_id, payload in self.pending_scheduled_tasks.items()
+                if payload["scheduled_at"] <= now
+            ),
+            key=lambda entry: entry[1]["scheduled_at"],
+        )
+        for task_id, payload in due_tasks:
+            try:
+                self._schedule_task(payload)
+            except WaitForAvailableRobot:
+                continue
+            except Exception as exc:
+                self.get_logger().error(
+                    f"Scheduled PPO task failed: task={task_id}, "
+                    f"{type(exc).__name__}: {exc}"
+                )
+                self._publish_assignment_result(task_id=task_id, assigned=False)
+            self.pending_scheduled_tasks.pop(task_id)
 
+    def _task_callback(self, msg: String) -> None:
+        payload = None
         try:
-
-            payload = json.loads(
-                msg.data
+            payload = json.loads(msg.data)
+            task_id = str(payload["task_id"])
+            if task_id in self.pending_scheduled_tasks or task_id in self.tasks_by_id:
+                return
+            scheduled_at = payload.get("scheduled_at")
+            if scheduled_at is None:
+                scheduled_at = time.time()
+            payload["scheduled_at"] = float(scheduled_at)
+            if not np.isfinite(payload["scheduled_at"]):
+                raise ValueError("scheduled_at must be finite")
+            self.pending_scheduled_tasks[task_id] = payload
+            self.get_logger().info(
+                f"[SCHEDULED_TASK_WAITING] task={task_id}, "
+                f"scheduled_at={payload['scheduled_at']:.3f}"
             )
-
-            self._schedule_task(
-                payload
-            )
-
         except Exception as exc:
+            self.get_logger().error(f"PPO scheduling failed: {type(exc).__name__}: {exc}")
+            if isinstance(payload, dict) and payload.get("task_id"):
+                self._publish_assignment_result(
+                    task_id=str(payload["task_id"]), assigned=False
+                )
 
-            self.get_logger().error(
-                "PPO scheduling failed: "
-                f"{type(exc).__name__}: "
-                f"{exc}"
-            )
-
-    def _schedule_task(
-        self,
-        payload: dict,
-    ) -> None:
+    def _schedule_task(self, payload: dict) -> None:
 
         task_id = str(
             payload["task_id"]
@@ -1523,11 +1744,26 @@ class HospitalPpoScheduler(Node):
             )
         )
 
-        arrival_time_s = (
-            float(created_at)
-            if created_at is not None
-            else current_time_s
+        scheduled_at = (
+            payload.get(
+                "scheduled_at"
+            )
         )
+
+        if scheduled_at is not None:
+            arrival_time_s = float(
+                scheduled_at
+            )
+
+        elif created_at is not None:
+            arrival_time_s = float(
+                created_at
+            )
+
+        else:
+            arrival_time_s = (
+                current_time_s
+            )
 
         task = TaskState(
             task_id=task_id,
@@ -1558,49 +1794,6 @@ class HospitalPpoScheduler(Node):
             self._build_robot_states()
         )
 
-        self.get_logger().info(
-            "[PPO_STATE_BEGIN]"
-        )
-
-        for robot in robots:
-            self.get_logger().info(
-                "[PPO_STATE] "
-                f"robot={robot.robot_id}, "
-                f"current_location={robot.current_location}, "
-                f"current_task_id={robot.current_task_id}, "
-                f"current_task_destination="
-                f"{robot.current_task_destination}, "
-                f"queue={list(robot.queued_task_ids)}, "
-                f"future_location={robot.future_location}, "
-                f"status={robot.status}, "
-                f"battery_soc={robot.battery_soc:.3f}"
-            )
-
-        self.get_logger().info(
-            "[PPO_STATE_END]"
-        )
-
-        observation = (
-            self.observation_encoder
-            .encode(
-                task=task,
-
-                robots=robots,
-
-                tasks_by_id=(
-                    self.tasks_by_id
-                ),
-
-                current_time_s=(
-                    current_time_s
-                ),
-
-                travel_time_fn=(
-                    self._travel_time
-                ),
-            )
-        )
-
         mask = (
             self.mask_builder
             .build(
@@ -1624,11 +1817,31 @@ class HospitalPpoScheduler(Node):
             )
         )
 
-        if observation.shape != (98,):
-            raise RuntimeError(
-                "Unexpected PPO observation "
-                f"shape: {observation.shape}"
-            )
+        # ----------------------------------------------------
+        # Runtime RMF availability filter
+        #
+        # Training/baseline experiments allow assigning a new
+        # task to a busy robot so that it can be queued.
+        #
+        # The current real RMF integration dispatches each
+        # assignment immediately as a robot_task_request.
+        # Therefore a robot that is already busy must not be
+        # selected again until its current task is completed.
+        #
+        # Offline robots are also explicitly excluded here.
+        # ----------------------------------------------------
+
+        temporarily_unavailable = ("busy", "charging", "returning_to_charge")
+        if not self.scheduling_only:
+            for index, robot in enumerate(robots):
+                runtime_status = (
+                    str(robot.status)
+                    .strip()
+                    .lower()
+                )
+
+                if runtime_status in (*temporarily_unavailable, "offline", "error"):
+                    mask[index] = False
 
         if mask.shape != (7,):
             raise RuntimeError(
@@ -1639,10 +1852,66 @@ class HospitalPpoScheduler(Node):
         if not bool(
             np.any(mask)
         ):
+            if not self.scheduling_only and any(
+                task.task_type in robot.capabilities
+                and str(robot.status).strip().lower() in temporarily_unavailable
+                for robot in robots
+            ):
+                self.tasks_by_id.pop(task_id)
+                raise WaitForAvailableRobot()
             raise RuntimeError(
                 "No feasible robot available "
                 f"for task {task_id}"
             )
+
+        observation = (
+            self.observation_encoder
+            .encode(
+                task=task,
+
+                robots=robots,
+
+                tasks_by_id=(
+                    self.tasks_by_id
+                ),
+
+                current_time_s=(
+                    current_time_s
+                ),
+
+                travel_time_fn=(
+                    self._travel_time
+                ),
+            )
+        )
+
+        if observation.shape != (98,):
+            raise RuntimeError(
+                "Unexpected PPO observation "
+                f"shape: {observation.shape}"
+            )
+
+        self.get_logger().info(
+            "[PPO_STATE_BEGIN]"
+        )
+
+        for robot in robots:
+            self.get_logger().info(
+                "[PPO_STATE] "
+                f"robot={robot.robot_id}, "
+                f"current_location={robot.current_location}, "
+                f"current_task_id={robot.current_task_id}, "
+                f"current_task_destination="
+                f"{robot.current_task_destination}, "
+                f"queue={list(robot.queued_task_ids)}, "
+                f"future_location={robot.future_location}, "
+                f"status={robot.status}, "
+                f"battery_soc={robot.battery_soc:.3f}"
+            )
+
+        self.get_logger().info(
+            "[PPO_STATE_END]"
+        )
 
         action, _ = (
             self.model.predict(
@@ -1739,6 +2008,37 @@ class HospitalPpoScheduler(Node):
             current_time_s
         )
 
+        # In scheduling-only mode, stop after PPO assignment.
+        # Backend receives /hospital_ppo_assignment and can update
+        # assignedRobot/status without involving RMF/navigation.
+        if self.scheduling_only:
+
+            task.status = "assigned"
+
+            # Keep the assignment as scheduler-side workload so
+            # subsequent PPO decisions can see that this robot
+            # already has pending work, even though RMF execution
+            # is disabled.
+            self.queued_task_ids[
+                logical_robot_id
+            ].append(
+                task_id
+            )
+
+            self._publish_assignment_result(
+                task_id=task_id,
+                assigned=True,
+                rmf_robot_name=rmf_robot_name,
+            )
+
+            self.get_logger().info(
+                "[SCHEDULING_ONLY_ASSIGNED] "
+                f"task={task_id}, "
+                f"robot={rmf_robot_name}"
+            )
+
+            return
+
         running_task_id = (
             self.running_task_ids[
                 logical_robot_id
@@ -1778,6 +2078,12 @@ class HospitalPpoScheduler(Node):
                 f"queue="
                 f"{self.queued_task_ids[logical_robot_id]}"
             )
+
+        self._publish_assignment_result(
+            task_id=task_id,
+            assigned=True,
+            rmf_robot_name=rmf_robot_name,
+        )
 
 
 def main() -> None:

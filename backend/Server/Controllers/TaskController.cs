@@ -91,7 +91,11 @@ public class TaskController : ControllerBase
         }
         catch (InvalidOperationException)
         {
-            return StatusCode(503, "外部派工服務尚未支援撤回舊指派，原任務已保留，暫時無法重新排程。");
+            return StatusCode(503, new
+            {
+                code = "reschedule_dispatch_cancellation_unsupported",
+                detail = "外部派工服務尚未支援撤回舊指派，原任務已保留，暫時無法重新排程。",
+            });
         }
         catch (ArgumentException ex)
         {

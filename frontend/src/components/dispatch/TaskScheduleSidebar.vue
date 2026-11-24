@@ -53,6 +53,12 @@ watch(() => props.editing, () => {
 })
 const draftTimes = reactive({})
 watch(() => props.tasks.map((task) => `${task.id}:${task.startTime}`).join('|'), () => { for (const task of props.tasks) draftTimes[task.id] = task.startTime.slice(0, 5) }, { immediate: true })
+const now = ref(Date.now())
+let clock
+onMounted(() => { clock = window.setInterval(() => { now.value = Date.now() }, 1000) })
+onBeforeUnmount(() => window.clearInterval(clock))
+const awaitingDispatch = task => String(task.status).toLowerCase() === 'pending'
+  && Date.parse(task.scheduledAt) <= now.value
 const canEditTask = task => ['pending', 'assigned'].includes(String(task.status).toLowerCase()) && !task.startedAt
 const canDeleteTask = task => String(task.status).toLowerCase() === 'pending'
 const canSaveEdits = task => canEditTask(task) && validTime(draftTimes[task.id]) &&
@@ -101,6 +107,7 @@ const taskTitle = (task) => `${robotName(task.robotId)} · ${translateTask(task.
             <button v-if="editing && canDeleteTask(task)" class="schedule-delete" type="button" :aria-label="`${t('dispatch.deleteTask')} ${task.taskCode || task.id}`" :title="t('dispatch.deleteTask')" @click="emit('request-delete', task)"><X :size="13" /></button>
             <div class="schedule-card-top"><span>{{ task.taskCode || task.id }} · {{ robotName(assignedRobotId(task)) }}</span></div>
             <span v-if="['assigned','running'].includes(String(task.status).toLowerCase())" class="assignment-status" :data-status="String(task.status).toLowerCase()">{{ t(String(task.status).toLowerCase() === 'assigned' ? 'dispatchUx.assignedWaiting' : 'status.running') }}</span>
+            <span v-else-if="awaitingDispatch(task)" class="assignment-status" data-status="delayed">{{ t('dispatchUx.delayedWaiting') }}</span>
             <h3>{{ translateTask(task.title) }}</h3>
             <p>{{ translateLocation(task.source) }} → {{ translateLocation(task.destination) }}</p>
             <div v-if="editing && canEditTask(task)" class="schedule-inline-edit"><label><span>{{ t('dispatch.startTime') }}</span><div class="schedule-time-picker" @keydown.esc.stop="openTimePicker=null" @focusout="!$event.currentTarget.contains($event.relatedTarget) && (openTimePicker=null)"><div class="schedule-time-entry"><input v-model="draftTimes[task.id]" type="text" inputmode="numeric" placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id}`" @click="openPicker(task.id,$event)" @keydown.down.prevent="openPicker(task.id,$event)"><button class="schedule-time-toggle" type="button" :aria-label="`${t('dispatchForm.chooseTime')} ${task.taskCode || task.id}`" :aria-expanded="openTimePicker===task.id" @click="openTimePicker===task.id ? openTimePicker=null : openPicker(task.id,$event)"><Clock3 :size="14" /></button></div><div v-if="openTimePicker===task.id" class="schedule-time-options" :class="{ 'opens-above': pickerAbove }"><div class="schedule-time-column" role="listbox" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id} HH`"><button v-for="hour in hours" :key="hour" type="button" role="option" :aria-selected="draftTimes[task.id]?.slice(0,2)===hour" @click="chooseTimePart(task.id,0,hour)">{{ hour }}</button></div><span class="time-colon" aria-hidden="true">:</span><div class="schedule-time-column" role="listbox" :aria-label="`${t('dispatch.startTime')} ${task.taskCode || task.id} mm`"><button v-for="minute in minutes" :key="minute" type="button" role="option" :aria-selected="draftTimes[task.id]?.slice(3,5)===minute" @click="chooseTimePart(task.id,1,minute)">{{ minute }}</button></div></div></div></label></div>
@@ -149,7 +156,7 @@ const taskTitle = (task) => `${robotName(task.robotId)} · ${translateTask(task.
 
 <style scoped>
 .assignment-status{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:3px 6px;border-radius:5px;color:#35627e;background:#e4f0f9;font-size:10px;font-weight:600;line-height:1.4}
-.assignment-status[data-status=running]{color:#8b522c;background:#fff0de}
+.assignment-status[data-status=running],.assignment-status[data-status=delayed]{color:#8b522c;background:#fff0de}
 :global([data-theme='dark']) .assignment-status{color:#bbdff5;background:#304857}
-:global([data-theme='dark']) .assignment-status[data-status=running]{color:#f5d2a6;background:#58452e}
+:global([data-theme='dark']) .assignment-status:is([data-status=running],[data-status=delayed]){color:#f5d2a6;background:#58452e}
 </style>

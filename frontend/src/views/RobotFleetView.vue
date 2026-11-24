@@ -37,13 +37,15 @@ async function refreshRobots() {
     const records = recordsResult.status === 'fulfilled' ? recordsResult.value : []
     robots.value = snapshot.robots.map(entry => {
       const active = records.find(task => task.assignedRobot === entry.id && ['assigned', 'running'].includes(task.status))
+      const rosTaskId = entry.hasTelemetry && entry.status !== '離線' && entry.currentTaskDetail?.taskNo !== '—'
+        ? entry.currentTaskDetail?.taskNo : null
       return { ...entry, name: robotDisplayCode(entry.id), floorId: normalizeFloor(entry.levelName),
         state: stateForStatus[entry.status] || 'unknown', battery: entry.hasTelemetry ? entry.battery : null,
         currentLocation: entry.hasTelemetry ? entry.location : null,
         updatedAt: entry.lastUpdate || null,
         model: entry.model || 'agibot_g1', manufacturer: entry.manufacturer || 'Agibot',
         descriptionPackage: entry.descriptionPackage || 'agibot_g1_description',
-        connectionState: entry.hasTelemetry && entry.status !== '離線' ? 'connected' : 'disconnected', activeTaskId: active?.taskCode || null,
+        connectionState: entry.hasTelemetry && entry.status !== '離線' ? 'connected' : 'disconnected', activeTaskId: active?.taskCode || rosTaskId || null,
         motorTemperature: null, modelAssetKey: entry.modelAssetKey || DEFAULT_ROBOT_ASSET }
     })
     actionNotice.value = recordsResult.status === 'rejected' ? recordsResult.reason.message : ''

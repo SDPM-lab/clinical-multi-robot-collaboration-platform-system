@@ -59,7 +59,7 @@ public class TaskServiceTests
     [InlineData(TaskType.ClothesCollection, "robot-a")]
     [InlineData(TaskType.MedicationDelivery, "robot-hospital_robot_3")]
     [InlineData(TaskType.SpecimenDelivery, "robot-hospital_robot_3")]
-    [InlineData(TaskType.WardService, "robot-hospital_robot_6")]
+    [InlineData(TaskType.WardService, "robot-hospital_robot_5")]
     public async Task SimulationUsesCompatibleRobotProfile(TaskType type, string expectedRobot)
     {
         var service = CreateService();
@@ -150,6 +150,27 @@ public class TaskServiceTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateTaskScheduleAsync(task.Id,
             new() { ScheduledAt = DateTimeOffset.UtcNow.AddHours(2) }));
         Assert.Equal(DeleteTaskResult.Forbidden, await service.DeleteTaskAsync(task.Id));
+    }
+
+    [Fact]
+    public async Task DispatcherSendsPpoBridgeTaskFields()
+    {
+        var factory = new RecordingHttpClientFactory();
+        var dispatcher = new HttpTaskDispatcher(factory, DispatchConfiguration(), NullLogger<HttpTaskDispatcher>.Instance);
+        var task = new RobotTask { Id = "task-1", TaskType = TaskType.MedicationDelivery,
+            Source = "pharmacy", Destination = "ward_a_2", Priority = TaskPriority.Normal,
+            RequiredCapabilities = [RobotCapability.MedicationDelivery], Note = "handoff" };
+
+        await dispatcher.SendAsync(task);
+
+        using var payload = System.Text.Json.JsonDocument.Parse(factory.LastBody!);
+        Assert.Equal("task-1", payload.RootElement.GetProperty("task_id").GetString());
+        Assert.Equal("medication_delivery", payload.RootElement.GetProperty("task_type").GetString());
+        Assert.Equal("pharmacy", payload.RootElement.GetProperty("source").GetString());
+        Assert.Equal("ward_a_2", payload.RootElement.GetProperty("destination").GetString());
+        Assert.Equal((int)TaskPriority.Normal, payload.RootElement.GetProperty("priority").GetInt32());
+        Assert.Equal("medication_delivery", payload.RootElement.GetProperty("required_capabilities")[0].GetString());
+        Assert.Equal("handoff", payload.RootElement.GetProperty("note").GetString());
     }
 
     [Fact]
@@ -344,14 +365,16 @@ public class TaskServiceTests
     private sealed class RecordingHttpClientFactory : HttpMessageHandler, IHttpClientFactory
     {
         public int Requests { get; private set; }
+        public string? LastBody { get; private set; }
         public System.Net.HttpStatusCode ResponseStatus { get; init; } = System.Net.HttpStatusCode.OK;
         public bool ThrowOnSend { get; init; }
         public HttpClient CreateClient(string name) => new(this, disposeHandler: false);
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Requests++;
             if (ThrowOnSend) throw new HttpRequestException("Response unavailable");
-            return Task.FromResult(new HttpResponseMessage(ResponseStatus) { Content = new StringContent("{}") });
+            LastBody = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
+            return new HttpResponseMessage(ResponseStatus) { Content = new StringContent("{}") };
         }
     }
 

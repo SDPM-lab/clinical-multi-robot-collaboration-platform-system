@@ -7,9 +7,7 @@ import {
   Maximize,
   Minimize,
   Moon,
-  RadioTower,
   Sun,
-  Unplug,
   LogOut,
   UserRoundPen,
   Languages,
@@ -19,9 +17,6 @@ import NotificationCenter from '@/components/NotificationCenter.vue'
 import SharedLoading from '@/components/SharedLoading.vue'
 import BackendReconnectOverlay from '@/components/BackendReconnectOverlay.vue'
 import { SCENE_ASSETS } from '@/config/sceneAssets.js'
-import { demoFleetStore } from '@/stores/demoFleetStore.js'
-import { overviewDemoData } from '@/data/overviewDemoData.js'
-import { rosConnectionStore } from '@/stores/rosConnectionStore.js'
 import { authStore } from '@/stores/authStore.js'
 import { notificationStore } from '@/stores/notificationStore.js'
 import { locale, setLocale, t } from '@/i18n/index.js'
@@ -147,11 +142,6 @@ const currentTheme = computed(() => darkMode.value ? 'dark' : 'light')
 const themeToggleLabel = computed(() => (
   darkMode.value ? t('common.lightMode') : t('common.darkMode')
 ))
-const rosStatus = computed(() => ({
-  ...rosConnectionStore.status.value,
-  label: t(`rosConnection.${rosConnectionStore.state.value}`),
-}))
-const rosStatusIcon = computed(() => rosConnectionStore.state.value === 'disconnected' ? Unplug : RadioTower)
 const searchParams = new URLSearchParams(window.location.search)
 const activeSection = ref(
   searchParams.get('robotDebug') === '1'
@@ -163,17 +153,6 @@ const activeSection = ref(
     : 'overview',
 )
 const dispatchInitialPanel = ref('create')
-const sharedOverviewData = computed(() => ({
-  ...overviewDemoData,
-  robots: demoFleetStore.robots.value,
-  taskList: demoFleetStore.tasks.value,
-  fleet: {
-    online: demoFleetStore.robots.value.filter((robot) => robot.state !== 'offline').length,
-    total: demoFleetStore.robots.value.length,
-    activeTasks: demoFleetStore.tasks.value.filter((task) => task.status === 'executing').length,
-    charging: demoFleetStore.robots.value.filter((robot) => robot.state === 'charging').length,
-  },
-}))
 const navItems = Object.freeze([
   { id: 'overview' },
   { id: 'dispatch' },
@@ -256,7 +235,6 @@ onBeforeUnmount(() => {
 
     <ClinicOverviewView
       v-if="activeSection === 'overview'"
-      :data="sharedOverviewData"
       :theme="currentTheme"
       @open-dispatch="panel => selectSection('dispatch', panel)"
     />
@@ -276,17 +254,6 @@ onBeforeUnmount(() => {
         </nav>
         <div class="overview-actions">
           <NotificationCenter />
-          <button
-            type="button"
-            class="overview-action ros-connection-action"
-            :class="`is-${rosConnectionStore.state.value}`"
-            :title="rosStatus.label"
-            :aria-label="rosStatus.label"
-            :data-tooltip="rosStatus.label"
-          >
-            <component :is="rosStatusIcon" :size="17" :stroke-width="1.8" />
-            <span class="ros-status-dot" :style="{ backgroundColor: rosConnectionStore.state.value === 'disconnected' ? 'var(--theme-primary)' : rosStatus.color }"></span>
-          </button>
           <button
             type="button"
             class="overview-action theme-toggle"
@@ -588,15 +555,6 @@ onBeforeUnmount(() => {
   transform: rotate(180deg) scale(1.08);
 }
 
-.ros-status-dot { position:absolute; right:4px; bottom:4px; width:6px; height:6px; border:1px solid var(--icon-button-background); border-radius:50%; }
-.ros-connection-action.is-connected { color:#42a66b; }
-.ros-connection-action.is-connecting { color:var(--semantic-warning); }
-.ros-connection-action.is-disconnected { color:var(--theme-primary); }
-.ros-connection-action.is-connecting .ros-status-dot { animation:ros-connection-breathe 1.8s ease-in-out infinite; }
-.ros-connection-action::after { position:absolute; top:calc(100% + 9px); right:-5px; z-index:30; padding:6px 9px; color:var(--text-primary); font-size:.7rem; line-height:1; white-space:nowrap; background:var(--dropdown-background); border:1px solid var(--glass-border); border-radius:7px; box-shadow:var(--navbar-shadow); opacity:0; pointer-events:none; content:attr(data-tooltip); transform:translateY(-3px); transition:opacity 160ms ease,transform 160ms ease; }
-.ros-connection-action:hover::after,.ros-connection-action:focus-visible::after { opacity:1; transform:translateY(0); }
-@keyframes ros-connection-breathe { 50% { opacity:.42; transform:scale(.78); } }
-
 .theme-toggle::after {
   position: absolute;
   top: calc(100% + 9px);
@@ -715,7 +673,6 @@ onBeforeUnmount(() => {
   .theme-icon-leave-active {
     transition-duration: 0.01ms;
   }
-  .ros-connection-action.is-connecting .ros-status-dot { animation:none; }
   .glass-switch,.glass-switch span { transition:none; }
 }
 .overview-page:is(.app-shell--overview,.app-shell--dispatch){

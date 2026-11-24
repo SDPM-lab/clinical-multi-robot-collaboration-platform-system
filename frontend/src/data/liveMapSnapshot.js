@@ -18,6 +18,12 @@ export function adaptLiveMapSnapshot(snapshot, records) {
   return {robots,tasks,connection:snapshot.connection}
 }
 
+const robotDrawerRank = { busy: 0, assigned: 1 }
+
+export function orderLiveMapRobots(robots) {
+  return [...robots].sort((a, b) => (robotDrawerRank[a.state] ?? 2) - (robotDrawerRank[b.state] ?? 2))
+}
+
 // Traffic Editor supplies the graph; this is a reference route, not an execution trace.
 export function buildLiveMapRoutes(data,tasks) {
   const waypointByName = new Map(data.namedWaypoints.map(point => [point.name,point]))

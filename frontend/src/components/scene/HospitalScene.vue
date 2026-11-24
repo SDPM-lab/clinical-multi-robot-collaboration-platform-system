@@ -1,6 +1,7 @@
 <script setup>
 import { visualTokens, colorHex } from '@/config/visualTokens.js'
 import SharedLoading from '@/components/SharedLoading.vue'
+import { dispatchWaypointLabels } from '@/config/dispatchDestinations.js'
 import { locale, t, translateTask, translateLocation } from '@/i18n/index.js'
 import { computed, nextTick, onActivated, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
@@ -43,7 +44,7 @@ import { MapAlignmentDebug } from '@/three/navigation/MapAlignmentDebug.js'
 import { getRobotCameraPose } from '@/three/navigation/realtimeRobotCamera.js'
 import { demoFleetStore } from '@/stores/demoFleetStore.js'
 import { taskApi } from '@/services/taskApi.js'
-import { adaptLiveMapSnapshot, buildLiveMapRoutes, buildLiveMapLocationDetails, withPreviewPositions, placeSimulatedRobotsAtRouteStart } from '@/data/liveMapSnapshot.js'
+import { adaptLiveMapSnapshot, orderLiveMapRobots, buildLiveMapRoutes, buildLiveMapLocationDetails, withPreviewPositions, placeSimulatedRobotsAtRouteStart } from '@/data/liveMapSnapshot.js'
 import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
 import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 import { rmfToThree } from '@/config/rmfMapTransform.js'
@@ -205,7 +206,7 @@ const robotDrawerCounts = computed(() => ({
   idle: floorRobots.value.filter((robot) => robot.state === 'idle').length,
 }))
 const filteredDrawerRobots = computed(() => robotDrawerFilter.value === 'all'
-  ? floorRobots.value
+  ? orderLiveMapRobots(floorRobots.value)
   : floorRobots.value.filter((robot) => robot.state === robotDrawerFilter.value))
 const selectedRobotTheme = computed(() => getRobotVisualTheme(activeRobotId.value))
 const robotInfoCardStyle = computed(() => ({
@@ -728,7 +729,7 @@ const previewQueuedTask = (task) => {
 const robotDisplayState = (robot) => {
   if (robot?.state === 'offline' && mapStore.tasks.value.some(task => task.robotId === robot.id && task.isSimulated && task.status === 'executing'))
     return t('liveMap.simulatedMovement')
-  return ({ assigned:'已指派待執行', paused:'暫停', unknown:'未提供', busy: '忙碌', charging: '充電中', idle: '待命', error: '異常', offline: '離線' }[robot?.state] || '未提供')
+  return t(`robotStatus.states.${robot?.state || 'unknown'}`)
 }
 const applyPriorityFilter = () => {
   navigationLayer?.setPriorityFilter(selectedPriorities.value, isolatePriorities.value)
@@ -1144,8 +1145,12 @@ const syncLiveMap = () => {
   const routes = buildLiveMapRoutes(navigationData.value,floorTasks.value)
   const signature = JSON.stringify(routes.map(route=>[route.id,route.robotId,route.priority,route.vertexIds]))
   if (signature !== liveNavigationSignature) { navigationLayer.setRoutes(routes); liveNavigationSignature=signature }
-  const displayRobots = placeSimulatedRobotsAtRouteStart(
-    withPreviewPositions(floorRobots.value,navigationData.value,previewPlacements),routes,navigationData.value)
+  const simulatedRobotIds = new Set(routes.filter(route => route.isSimulated).map(route => route.robotId))
+  const displayRobots = simulatedRobotIds.size
+    ? placeSimulatedRobotsAtRouteStart(
+      withPreviewPositions(floorRobots.value.filter(robot => robot.hasPose || simulatedRobotIds.has(robot.id)),
+        navigationData.value, previewPlacements), routes, navigationData.value)
+    : floorRobots.value
   navigationLayer.setLiveRobots(displayRobots,routes)
   navigationLayer.setSelectedRobot(selectedRobotId.value)
   navigationLayer.setFollowingRobot(followRobotId.value)
@@ -1309,7 +1314,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div v-else-if="activeMapTool === 'robots'" class="map-robot-list">
-          <div class="robot-segmented-filter" aria-label="機器人狀態篩選">
+          <div class="robot-segmented-filter" :aria-label="t('liveMap.robotStateFilter')">
             <button
               v-for="filter in [{ id: 'all', label: t('common.all') }, { id: 'busy', label: t('robotStatus.states.busy') }, { id: 'idle', label: t('robotStatus.states.idle') }]"
               :key="filter.id"
@@ -1336,20 +1341,20 @@ onBeforeUnmount(() => {
             </span>
             <strong class="robot-list-battery">{{ robot.battery == null ? '—' : `${robot.battery}%` }}</strong>
           </button>
-          <p v-if="!filteredDrawerRobots.length" class="empty-task">此篩選目前沒有機器人</p>
+          <p v-if="!filteredDrawerRobots.length" class="empty-task">{{ t('liveMap.noRobotsForFilter') }}</p>
           <section v-if="unlocatedRobots.length" class="unlocated-robot-list"><p>{{ t('liveMap.unknownFloor',{count:unlocatedRobots.length}) }}</p><div v-for="robot in unlocatedRobots" :key="robot.id">{{robotDisplayCode(robot.id)}}</div></section>
           <section v-if="selectedRobotId" class="selected-robot-tasks">
-            <p class="drawer-section-label">目前執行</p>
+            <p class="drawer-section-label">{{ t('liveMap.currentRobotTask') }}</p>
             <article v-if="selectedActiveTask" class="robot-task-card is-active" :style="{ '--robot-color': robotCssColor(selectedRobotId) }">
-              <strong>{{ selectedActiveTask.taskCode || selectedActiveTask.id }}　{{ selectedActiveTask.title }}</strong>
-              <span>{{ selectedActiveTask.source }} → {{ selectedActiveTask.destination }}</span>
+              <strong>{{ selectedActiveTask.taskCode || selectedActiveTask.id }}　{{ translateTask(selectedActiveTask.title) }}</strong>
+              <span>{{ translateLocation(dispatchWaypointLabels[selectedActiveTask.source] || selectedActiveTask.source) }} → {{ translateLocation(dispatchWaypointLabels[selectedActiveTask.destination] || selectedActiveTask.destination) }}</span>
               <small>{{ t(`priority.${normalizedPriority(selectedActiveTask.priority)}`) }}</small>
             </article>
-            <p v-else class="empty-task">目前沒有執行中的任務</p>
+            <p v-else class="empty-task">{{ t('liveMap.noRobotRunningTask') }}</p>
             <template v-if="selectedQueuedTasks.length">
-              <p class="drawer-section-label">等待中</p>
+              <p class="drawer-section-label">{{ t('liveMap.queuedRobotTasks') }}</p>
               <button v-for="task in selectedQueuedTasks" :key="task.id" type="button" class="queued-task" @click="previewQueuedTask(task)">
-                <strong>{{ task.taskCode || task.id }}　{{ task.title }}</strong>
+                <strong>{{ task.taskCode || task.id }}　{{ translateTask(task.title) }}</strong>
                 <small>{{ task.startTime.slice(0, 5) }}・{{ t(`priority.${task.priority}`) }}</small>
               </button>
             </template>

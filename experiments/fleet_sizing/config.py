@@ -37,13 +37,13 @@ TASK_PROFILES_PATH = (
 BATCH_ROUTE_RESULTS_PATH = (
     PROJECT_ROOT
     / "ros2_ws"
-    / "batch_route_results.csv"
+    / "batch_route_results_nav2.csv"
 )
 
 BATCH_ROUTE_SUMMARY_PATH = (
     PROJECT_ROOT
     / "ros2_ws"
-    / "batch_route_summary.csv"
+    / "batch_route_summary_nav2.csv"
 )
 
 RESULTS_DIR = (
