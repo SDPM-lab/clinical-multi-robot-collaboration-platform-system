@@ -71,16 +71,20 @@ export function createDemoHistory(tasks,robots,today=dayKey(new Date())) {
 
 // Keep actual execution times separate from the date used to group records.
 export function adaptBackendHistoryTasks(tasks, robots = []) {
+ const now = Date.now()
  const terminalStatuses = new Set(['completed', 'failed', 'cancelled'])
  const labels = Object.fromEntries(Object.entries(TASK_TYPE_BY_LABEL).map(([label, type]) => [type.toLowerCase(), label]))
  const validDate = value => value && Number.isFinite(Date.parse(value)) ? value : null
  return tasks.flatMap(task => {
-  const status = String(task.status || '').toLowerCase()
-  if (!terminalStatuses.has(status)) return []
+  const recordedStatus = String(task.status || '').toLowerCase()
   const scheduledAt = validDate(task.scheduledAt)
   const startedAt = validDate(task.startedAt)
   const finishedAt = validDate(task.finishedAt)
   const createdAt = validDate(task.createdAt)
+  const delayed = recordedStatus === 'pending' && scheduledAt && !startedAt && !finishedAt
+   && Date.parse(scheduledAt) <= now
+  if (!delayed && !terminalStatuses.has(recordedStatus)) return []
+  const status = delayed ? 'delayed' : recordedStatus
   const start = startedAt || finishedAt || scheduledAt || createdAt
   if (!start) return []
   const robotId = task.assignedRobot || ''

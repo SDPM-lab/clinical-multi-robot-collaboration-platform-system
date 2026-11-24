@@ -14,6 +14,8 @@ import { dispatchWaypointLabels } from '@/config/dispatchDestinations.js'
 import { routeDisplayPoints, shortestLanePath, validateDispatchMapping, waypointDisplayPoint } from './dispatchRouteMapping.js'
 import { RotateCcw } from '@lucide/vue'
 import { getRobotVisualTheme } from '@/config/robotVisualThemes.js'
+import { rmfToThree } from '@/config/rmfMapTransform.js'
+import { normalizeFloor } from '@/data/overviewStatusData.js'
 import { robotDisplayCode } from '@/config/robotDisplayCode.js'
 import { defaultDispatchModelPreset, readDispatchCameraPreset, readDispatchModelPreset, storeDispatchCameraPreset, storeDispatchModelPreset, validDispatchCameraPreset, validDispatchModelPreset } from '@/config/dispatchViewPreset.js'
 import { t, translateLocation } from '@/i18n/index.js'
@@ -193,9 +195,9 @@ async function sha256Hex(buffer) {
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
 }
 function projectMarkers() {
-  if (!camera || !model || !mapping.value) return
+  if (!camera || !model) return
   const next = []
-  for (const station of graph.value?.namedWaypoints || []) {
+  for (const station of (mapping.value && graph.value?.namedWaypoints) || []) {
     const name = station.name
     const isSource = props.showSourcePin && props.source === name
     const isDestination = props.showDestinationPin && props.destination === name
@@ -206,26 +208,14 @@ function projectMarkers() {
     const label = dispatchWaypointLabels[name]
     next.push({ name, label, x: (point.x + 1) * size.width / 2, y: (1 - point.y) * size.height / 2, visible: point.z >= -1 && point.z <= 1, source: isSource, destination: isDestination })
   }
-  const positionedRobots = props.robots.filter(robot => robot.hasTelemetry && robot.state !== 'offline').flatMap((robot) => {
-    // The current demo store supplies named waypoints, not a verified live
-    // lane/progress estimate. Never snap a raw ROS position to a nearby lane.
-    const source = graph.value?.namedWaypoints.find((station) => station.name === robot.currentWaypoint || dispatchWaypointLabels[station.name] === robot.currentLocation)
-    const position = source ? waypointDisplayPoint(mapping.value, source.id) : null
-    if (!position) return []
-    const point = mapRoot.localToWorld(new THREE.Vector3(position[0], position[1] + .4, position[2])).project(camera)
-    return [{ id: robot.id, displayCode:robotDisplayCode(robot.id), waypoint:source.id, x: (point.x + 1) * size.width / 2, y: (1 - point.y) * size.height / 2, color: getRobotVisualTheme(robot.id).main, visible: point.z >= -1 && point.z <= 1 }]
-  })
-  const markerGroups = new Map()
-  for (const robot of positionedRobots) {
-    if (!markerGroups.has(robot.waypoint)) markerGroups.set(robot.waypoint, [])
-    markerGroups.get(robot.waypoint).push(robot)
-  }
-  robotMarkers.value = positionedRobots.map(robot => {
-    const group = markerGroups.get(robot.waypoint)
-    const index = group.indexOf(robot)
-    const columns = Math.min(group.length, 3)
-    return { ...robot, x:robot.x + (index % 3 - (columns - 1) / 2) * 36,
-      y:robot.y - Math.floor(index / 3) * 34 }
+  robotMarkers.value = props.robots.flatMap((robot) => {
+    if (!robot.hasTelemetry || robot.state === 'offline' || normalizeFloor(robot.levelName) !== 'floor1'
+      || ![robot.x, robot.y].every(Number.isFinite)) return []
+    const position = rmfToThree(robot)
+    const point = mapRoot.localToWorld(new THREE.Vector3(position.x, position.y + .4, position.z)).project(camera)
+    return [{ id: robot.id, displayCode: robotDisplayCode(robot.id),
+      x: (point.x + 1) * size.width / 2, y: (1 - point.y) * size.height / 2,
+      color: getRobotVisualTheme(robot.id).main, visible: point.z >= -1 && point.z <= 1 }]
   })
   markers.value = next
 }

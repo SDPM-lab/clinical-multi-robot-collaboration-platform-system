@@ -27,6 +27,7 @@ export const historyStatusColors=Object.freeze({
  completed:'#679A7B',
  cancelled:'#6489C7',
  failed:'#C47C70',
+ delayed:'#A87434',
 })
 export const getHistoryTaskColor = name => taskColorMap[String(name||'').trim()] || palettes.other
 export const historyTaskStyle = name => {
@@ -46,5 +47,6 @@ export function summarizeHistory(events) {
  completed:events.filter(event=>event.status==='completed').length,
  cancelled:events.filter(event=>event.status==='cancelled').length,
  failed:events.filter(event=>event.status==='failed').length,
+ delayed:events.filter(event=>event.status==='delayed').length,
  }
 }

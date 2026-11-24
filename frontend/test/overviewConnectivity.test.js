@@ -1,20 +1,40 @@
 import { nextTick } from 'vue'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import NetworkStatusPanel from '@/components/overview/NetworkStatusPanel.vue'
 import RobotConnectionPanel from '@/components/overview/RobotConnectionPanel.vue'
+import ClinicOverviewView from '@/views/ClinicOverviewView.vue'
+import { taskApi } from '@/services/taskApi.js'
 import { setLocale } from '@/i18n/index.js'
 
-afterEach(() => setLocale('zh-TW'))
+afterEach(() => { setLocale('zh-TW'); vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
 describe('overview connectivity', () => {
   it('never infers healthy network state from missing data', async () => {
     setLocale('en')
     const w = mount(NetworkStatusPanel)
     expect(w.text()).toContain('Unavailable')
-    await w.setProps({ status: 'online' }); expect(w.text()).toContain('Online')
-    await w.setProps({ status: 'offline' }); expect(w.text()).toContain('Offline')
-    await w.setProps({ status: 'connected' }); expect(w.text()).toContain('Unavailable')
+    await w.setProps({ status: 'connected' })
+    expect(w.text()).toContain('ROS 2 connected')
+    expect(w.attributes('data-state')).toBe('online')
+    await w.setProps({ status: 'connecting' })
+    expect(w.text()).toContain('ROS 2 connecting')
+    await w.setProps({ status: 'disconnected' })
+    expect(w.text()).toContain('ROS 2 disconnected')
+    expect(w.attributes('data-state')).toBe('offline')
+    w.unmount()
+  })
+  it('uses the robot API for both overview cards even if the task API fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+    vi.spyOn(taskApi, 'getRobotSnapshot').mockResolvedValue({
+      connection: { status: 'connected' },
+      robots: [{ hasTelemetry: true, status: '待命' }, { hasTelemetry: false, status: '離線' }],
+    })
+    vi.spyOn(taskApi, 'getTaskRecords').mockRejectedValue(new Error('Tasks unavailable'))
+    const w = mount(ClinicOverviewView, { global: { stubs: { ClinicOverviewScene: true } } })
+    await flushPromises()
+    expect(w.get('.connectivity-panel[data-state]').attributes('data-state')).toBe('online')
+    expect(w.get('.connection-count').attributes('aria-label')).toBe('1 / 2')
     w.unmount()
   })
   it('counts communication states, handles unknown sources, and updates without animation for reduced motion', async () => {

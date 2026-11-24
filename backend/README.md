@@ -159,6 +159,8 @@
 
 ## 9. 任務派工服務 / Fleet sizing 模型
 
+預約到期時，若有相容機器人正在忙碌、前往充電或充電，且目前無法完成指派，PPO 會保留任務並重新評估。後端保留 `pending`，前端將已到期的待派任務顯示為延遲。成功指派時仍由 PPO 回報，後端才更新為 `assigned`。
+
 Development 預設以 `ws://localhost:9091` 連接 ROS WebSocket adapter，並透過 `POST http://localhost:5050/api/hospital/tasks` 送出派工。可用 `RosBridge__Url` 與 `TaskDispatch__Endpoint` 覆寫連線位址。若要使用後端內建模擬，可設 `TaskDispatch__DevelopmentSimulation__Enabled=true`。
 
 - 派工請求包含 `task_id`、`task_type`、`source`、`destination`、`priority`、`required_capabilities`、`created_at`、`scheduled_at` 與 `note`。HTTP 成功代表 bridge 已接受請求。

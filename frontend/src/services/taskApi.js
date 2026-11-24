@@ -16,10 +16,16 @@ async function responseError(response) {
   let detail = ''
   try {
     const body = JSON.parse(text)
+    if (body.code === 'reschedule_dispatch_cancellation_unsupported') {
+      return new Error(t('dispatchUx.rescheduleUnavailable'))
+    }
     detail = body.errors ? Object.values(body.errors).flat().join(' ') : body.detail || ''
   } catch {
     // Only show plain-text API descriptions, not HTML or raw server status pages.
     if (text.trim() && !/[<>]/.test(text) && !/^(HTTP\s*\d+|Forbidden|Unauthorized|Not Found|Internal Server Error)$/i.test(text.trim())) detail = text
+  }
+  if (response.status === 503 && detail.trim() === '外部派工服務尚未支援撤回舊指派，原任務已保留，暫時無法重新排程。') {
+    return new Error(t('dispatchUx.rescheduleUnavailable'))
   }
   if (detail) return new Error(detail)
   const key = response.status === 403 ? 'requestDenied' : response.status === 401 ? 'signInRequired'

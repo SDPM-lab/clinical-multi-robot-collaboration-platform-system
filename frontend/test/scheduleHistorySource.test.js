@@ -54,3 +54,14 @@ it('keeps a task that failed before its scheduled time visible on its finish dat
  const key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
  expect(eventsOnDay([event],key)).toHaveLength(1)
 })
+
+it('includes overdue pending tasks as delayed and excludes future pending tasks', () => {
+ const pending={...task,status:'pending',startedAt:null,finishedAt:null,assignedRobot:null}
+ const events=adaptBackendHistoryTasks([
+  pending,
+  {...pending,id:'future',scheduledAt:new Date(Date.now()+60000).toISOString()},
+  {...pending,id:'assigned',status:'assigned'},
+ ])
+ expect(events).toHaveLength(1)
+ expect(events[0]).toMatchObject({id:pending.id,status:'delayed',startedAt:null})
+})

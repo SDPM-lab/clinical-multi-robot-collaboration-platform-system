@@ -12,6 +12,20 @@ describe('task API',()=>{
     setLocale('zh-TW')
     await expect(taskApi.getTasks()).rejects.toThrow('伺服器拒絕此操作')
   })
+  it.each([
+    JSON.stringify({ code: 'reschedule_dispatch_cancellation_unsupported' }),
+    '外部派工服務尚未支援撤回舊指派，原任務已保留，暫時無法重新排程。',
+  ])('localizes an unsupported reschedule response (%s)', async (body) => {
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ token: 'test-csrf' }) })
+      .mockResolvedValue({ ok: false, status: 503, text: async () => body }))
+    setLocale('en')
+    await expect(taskApi.updateSchedule('task-1', '2026-11-24T22:00:00+08:00'))
+      .rejects.toThrow('The original task was kept and could not be rescheduled.')
+    setLocale('zh-TW')
+    await expect(taskApi.updateSchedule('task-1', '2026-11-24T22:00:00+08:00'))
+      .rejects.toThrow('原任務已保留，暫時無法重新排程。')
+  })
   it('explains network failures without exposing fetch errors',async()=>{
     vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new TypeError('Failed to fetch')))
     setLocale('en')

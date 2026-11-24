@@ -4,14 +4,14 @@ import { adaptHistoryTasks, filterHistory } from '@/data/scheduleHistory.js'
 import { createRichDemoHistory } from '@/data/historyDemoData.js'
 import { TASK_TYPE_BY_LABEL } from '@/config/taskTypes.js'
 const events=[{title:'藥品配送',priority:'high',status:'completed',start:'2026-09-12T09:00:00',end:'2026-09-12T10:00:00'},{title:'檢體運送',priority:'normal',status:'cancelled',start:'2026-09-12T10:00:00',end:'2026-09-12T10:30:00'},{title:'清潔用品補充',status:'failed',start:'2026-09-12T12:00:00',end:'2026-09-12T12:30:00'}]
-it('keeps the four history summary colors centralized and fixed by semantic category',()=>{
- expect(historyStatusColors).toEqual({all:'var(--theme-primary)',completed:'#679A7B',cancelled:'#6489C7',failed:'#C47C70'})
- expect(new Set(Object.values(historyStatusColors)).size).toBe(4)
+it('keeps history status colors centralized and fixed by semantic category',()=>{
+ expect(historyStatusColors).toEqual({all:'var(--theme-primary)',completed:'#679A7B',cancelled:'#6489C7',failed:'#C47C70',delayed:'#A87434'})
+ expect(new Set(Object.values(historyStatusColors)).size).toBe(5)
 })
 it('computes counts from task status only',()=>{
- expect(summarizeHistory(events)).toEqual({total:3,completed:1,cancelled:1,failed:1})
- expect(summarizeHistory(filterHistory(events,{title:['檢體運送']}))).toEqual({total:1,completed:0,cancelled:1,failed:0})
- expect(summarizeHistory([])).toEqual({total:0,completed:0,cancelled:0,failed:0})
+ expect(summarizeHistory(events)).toEqual({total:3,completed:1,cancelled:1,failed:1,delayed:0})
+ expect(summarizeHistory(filterHistory(events,{title:['檢體運送']}))).toEqual({total:1,completed:0,cancelled:1,failed:0,delayed:0})
+ expect(summarizeHistory([])).toEqual({total:0,completed:0,cancelled:0,failed:0,delayed:0})
 })
 it('maps task names deterministically regardless of priority and has a neutral fallback',()=>{
  expect(historyTaskStyle(events[0].title)).toEqual(historyTaskStyle({...events[0],priority:'low'}.title))

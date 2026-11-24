@@ -1,5 +1,5 @@
 import { expect,it } from 'vitest'
-import { adaptLiveMapSnapshot,buildLiveMapRoutes,buildLiveMapLocationDetails,withPreviewPositions,placeSimulatedRobotsAtRouteStart } from '@/data/liveMapSnapshot.js'
+import { adaptLiveMapSnapshot,orderLiveMapRobots,buildLiveMapRoutes,buildLiveMapLocationDetails,withPreviewPositions,placeSimulatedRobotsAtRouteStart } from '@/data/liveMapSnapshot.js'
 const snapshot={robots:[{id:'robot-a',name:'機器人 A',levelName:'L1',status:'已指派待執行',hasTelemetry:true,x:0,y:0,yaw:0,battery:80},{id:'robot-b',name:'機器人 B',hasTelemetry:false,status:'離線',levelName:'',battery:0}]}
 it('keeps canonical robot and task IDs and does not turn assignment into running',()=>{
  const result=adaptLiveMapSnapshot(snapshot,[{id:'uuid',taskCode:'T0008',taskType:'medication_delivery',source:'pharmacy',destination:'lab',status:'assigned',assignedRobot:'robot-a',scheduledAt:'2026-11-08T10:00:00+08:00',priority:'normal'}])
@@ -45,4 +45,13 @@ it('places only development preview models at the simulated route source',()=>{
  expect(placeSimulatedRobotsAtRouteStart([preview],[route],data)[0]).toMatchObject({x:4,y:6,yaw:0})
  const actual={id:'robot-a',hasPose:true,x:12,y:15}
  expect(placeSimulatedRobotsAtRouteStart([actual],[route],data)[0]).toBe(actual)
+})
+
+it('orders working and assigned robots before idle robots without mutating the roster', () => {
+ const robots = [
+  {id:'C01',state:'idle'}, {id:'W01',state:'assigned'}, {id:'C02',state:'idle'},
+  {id:'W02',state:'busy'}, {id:'W03',state:'assigned'},
+ ]
+ expect(orderLiveMapRobots(robots).map(robot => robot.id)).toEqual(['W02','W01','W03','C01','C02'])
+ expect(robots.map(robot => robot.id)).toEqual(['C01','W01','C02','W02','W03'])
 })

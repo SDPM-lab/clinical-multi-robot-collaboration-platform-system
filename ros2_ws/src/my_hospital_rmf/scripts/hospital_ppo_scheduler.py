@@ -226,6 +226,10 @@ VALID_TASK_TYPES = {
 # Scheduler Node
 # ============================================================
 
+class WaitForAvailableRobot(Exception):
+    """A compatible robot is temporarily unavailable."""
+
+
 class HospitalPpoScheduler(Node):
 
     def __init__(self) -> None:
@@ -1635,137 +1639,55 @@ class HospitalPpoScheduler(Node):
         )
 
 
-    def _scheduled_task_tick(
-        self,
-    ) -> None:
-
-        if not self.pending_scheduled_tasks:
-            return
-
+    def _scheduled_task_tick(self) -> None:
         now = time.time()
-
-        due_task_ids = [
-            task_id
-            for task_id, payload
-            in self.pending_scheduled_tasks.items()
-            if float(
-                payload.get(
-                    "scheduled_at",
-                    0.0,
-                )
-            ) <= now
-        ]
-
-        for task_id in due_task_ids:
-
-            payload = (
-                self.pending_scheduled_tasks.pop(
-                    task_id,
-                    None,
-                )
-            )
-
-            if payload is None:
-                continue
-
-            self.get_logger().info(
-                "[SCHEDULED_TASK_DUE] "
-                f"task={task_id}"
-            )
-
+        due_tasks = sorted(
+            (
+                (task_id, payload)
+                for task_id, payload in self.pending_scheduled_tasks.items()
+                if payload["scheduled_at"] <= now
+            ),
+            key=lambda entry: entry[1]["scheduled_at"],
+        )
+        for task_id, payload in due_tasks:
             try:
-                self._schedule_task(
-                    payload
-                )
-
+                self._schedule_task(payload)
+            except WaitForAvailableRobot:
+                continue
             except Exception as exc:
-
                 self.get_logger().error(
-                    "Scheduled PPO task failed: "
-                    f"task={task_id}, "
-                    f"{type(exc).__name__}: "
-                    f"{exc}"
+                    f"Scheduled PPO task failed: task={task_id}, "
+                    f"{type(exc).__name__}: {exc}"
                 )
+                self._publish_assignment_result(task_id=task_id, assigned=False)
+            self.pending_scheduled_tasks.pop(task_id)
 
-                self._publish_assignment_result(
-                    task_id=task_id,
-                    assigned=False,
-                )
-
-
-    def _task_callback(
-        self,
-        msg: String,
-    ) -> None:
-
+    def _task_callback(self, msg: String) -> None:
         payload = None
-
         try:
-
-            payload = json.loads(
-                msg.data
+            payload = json.loads(msg.data)
+            task_id = str(payload["task_id"])
+            if task_id in self.pending_scheduled_tasks or task_id in self.tasks_by_id:
+                return
+            scheduled_at = payload.get("scheduled_at")
+            if scheduled_at is None:
+                scheduled_at = time.time()
+            payload["scheduled_at"] = float(scheduled_at)
+            if not np.isfinite(payload["scheduled_at"]):
+                raise ValueError("scheduled_at must be finite")
+            self.pending_scheduled_tasks[task_id] = payload
+            self.get_logger().info(
+                f"[SCHEDULED_TASK_WAITING] task={task_id}, "
+                f"scheduled_at={payload['scheduled_at']:.3f}"
             )
-
-            task_id = str(
-                payload["task_id"]
-            )
-
-            scheduled_at = (
-                payload.get(
-                    "scheduled_at"
-                )
-            )
-
-            if scheduled_at is not None:
-
-                scheduled_at = float(
-                    scheduled_at
-                )
-
-                if scheduled_at > time.time():
-
-                    self.pending_scheduled_tasks[
-                        task_id
-                    ] = payload
-
-                    self.get_logger().info(
-                        "[SCHEDULED_TASK_WAITING] "
-                        f"task={task_id}, "
-                        f"scheduled_at="
-                        f"{scheduled_at:.3f}, "
-                        f"delay="
-                        f"{scheduled_at - time.time():.1f}s"
-                    )
-
-                    return
-
-            self._schedule_task(
-                payload
-            )
-
         except Exception as exc:
-
-            self.get_logger().error(
-                "PPO scheduling failed: "
-                f"{type(exc).__name__}: "
-                f"{exc}"
-            )
-
-            if isinstance(payload, dict):
-                task_id = payload.get(
-                    "task_id"
+            self.get_logger().error(f"PPO scheduling failed: {type(exc).__name__}: {exc}")
+            if isinstance(payload, dict) and payload.get("task_id"):
+                self._publish_assignment_result(
+                    task_id=str(payload["task_id"]), assigned=False
                 )
 
-                if task_id:
-                    self._publish_assignment_result(
-                        task_id=str(task_id),
-                        assigned=False,
-                    )
-
-    def _schedule_task(
-        self,
-        payload: dict,
-    ) -> None:
+    def _schedule_task(self, payload: dict) -> None:
 
         task_id = str(
             payload["task_id"]
@@ -1872,49 +1794,6 @@ class HospitalPpoScheduler(Node):
             self._build_robot_states()
         )
 
-        self.get_logger().info(
-            "[PPO_STATE_BEGIN]"
-        )
-
-        for robot in robots:
-            self.get_logger().info(
-                "[PPO_STATE] "
-                f"robot={robot.robot_id}, "
-                f"current_location={robot.current_location}, "
-                f"current_task_id={robot.current_task_id}, "
-                f"current_task_destination="
-                f"{robot.current_task_destination}, "
-                f"queue={list(robot.queued_task_ids)}, "
-                f"future_location={robot.future_location}, "
-                f"status={robot.status}, "
-                f"battery_soc={robot.battery_soc:.3f}"
-            )
-
-        self.get_logger().info(
-            "[PPO_STATE_END]"
-        )
-
-        observation = (
-            self.observation_encoder
-            .encode(
-                task=task,
-
-                robots=robots,
-
-                tasks_by_id=(
-                    self.tasks_by_id
-                ),
-
-                current_time_s=(
-                    current_time_s
-                ),
-
-                travel_time_fn=(
-                    self._travel_time
-                ),
-            )
-        )
-
         mask = (
             self.mask_builder
             .build(
@@ -1952,6 +1831,7 @@ class HospitalPpoScheduler(Node):
         # Offline robots are also explicitly excluded here.
         # ----------------------------------------------------
 
+        temporarily_unavailable = ("busy", "charging", "returning_to_charge")
         if not self.scheduling_only:
             for index, robot in enumerate(robots):
                 runtime_status = (
@@ -1960,20 +1840,8 @@ class HospitalPpoScheduler(Node):
                     .lower()
                 )
 
-                if runtime_status in (
-                    "busy",
-                    "offline",
-                    "error",
-                    "charging",
-                    "returning_to_charge",
-                ):
+                if runtime_status in (*temporarily_unavailable, "offline", "error"):
                     mask[index] = False
-
-        if observation.shape != (98,):
-            raise RuntimeError(
-                "Unexpected PPO observation "
-                f"shape: {observation.shape}"
-            )
 
         if mask.shape != (7,):
             raise RuntimeError(
@@ -1984,10 +1852,66 @@ class HospitalPpoScheduler(Node):
         if not bool(
             np.any(mask)
         ):
+            if not self.scheduling_only and any(
+                task.task_type in robot.capabilities
+                and str(robot.status).strip().lower() in temporarily_unavailable
+                for robot in robots
+            ):
+                self.tasks_by_id.pop(task_id)
+                raise WaitForAvailableRobot()
             raise RuntimeError(
                 "No feasible robot available "
                 f"for task {task_id}"
             )
+
+        observation = (
+            self.observation_encoder
+            .encode(
+                task=task,
+
+                robots=robots,
+
+                tasks_by_id=(
+                    self.tasks_by_id
+                ),
+
+                current_time_s=(
+                    current_time_s
+                ),
+
+                travel_time_fn=(
+                    self._travel_time
+                ),
+            )
+        )
+
+        if observation.shape != (98,):
+            raise RuntimeError(
+                "Unexpected PPO observation "
+                f"shape: {observation.shape}"
+            )
+
+        self.get_logger().info(
+            "[PPO_STATE_BEGIN]"
+        )
+
+        for robot in robots:
+            self.get_logger().info(
+                "[PPO_STATE] "
+                f"robot={robot.robot_id}, "
+                f"current_location={robot.current_location}, "
+                f"current_task_id={robot.current_task_id}, "
+                f"current_task_destination="
+                f"{robot.current_task_destination}, "
+                f"queue={list(robot.queued_task_ids)}, "
+                f"future_location={robot.future_location}, "
+                f"status={robot.status}, "
+                f"battery_soc={robot.battery_soc:.3f}"
+            )
+
+        self.get_logger().info(
+            "[PPO_STATE_END]"
+        )
 
         action, _ = (
             self.model.predict(

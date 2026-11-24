@@ -125,6 +125,7 @@ const statusIcons={completed:Check,running:Activity,failed:AlertCircle,waiting:C
 
 const timelineKeys=['created','received','toSource','pickedUp','toDestination','completed']
 const stageProgress=event=>event.timelineProgress??({completed:6,running:4,waiting:1,failed:5,cancelled:2}[event.status]||6)
+const failedBeforeAssignment = event => event.backendRecord && event.status === 'failed' && !event.robotId && !event.startedAt
 const timeline=computed(()=>{
   const event=selectedEvent.value
   if(!event)return []
@@ -132,7 +133,7 @@ const timeline=computed(()=>{
     return [
       event.createdAt && {key:'created',state:'done',time:event.createdAt,note:''},
       event.startedAt && {key:'started',state:'done',time:event.startedAt,note:event.startLocation},
-      event.finishedAt && {key:event.status,state:event.status==='completed'?'done':'terminal',time:event.finishedAt,note:event.endLocation},
+      event.finishedAt && {key:event.status,state:event.status==='completed'?'done':'terminal',time:event.finishedAt,note:event.status==='completed' ? event.endLocation : ''},
     ].filter(Boolean)
   }
   const start=Date.parse(event.start),end=Date.parse(event.end),span=Math.max(1,end-start)
@@ -203,7 +204,7 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
         <div class="list-content" :aria-busy="loading">
           <SharedLoading :loading="loading && !events.length" :detail="t('common.loading')" :error="!events.length ? error : ''" :error-title="t('history.title')"><template #error-action><button type="button" @click="loadHistory">{{t('common.retry')}}</button></template></SharedLoading>
           <div v-if="!loading&&!error&&!inRange.length" class="history-empty" role="status"><CalendarDays :size="27"/><strong>{{t(hasFilters ? 'historyUx.noMatches' : 'historyUx.noRecords')}}</strong><p>{{t(hasFilters ? 'historyUx.noMatchesHint' : 'historyUx.noRecordsHint')}}</p><button v-if="hasFilters" type="button" @click="resetFilters">{{t('historyUx.resetFilters')}}</button></div>
-          <div v-if="inRange.length && (!error || events.length)" class="history-column-head"><span>{{t('history.name')}}</span><span>{{t('history.actualTime')}}</span><span>{{t('history.delay')}}</span><span>{{t('history.robot')}}</span><span>{{t('history.source')}} → {{t('history.destination')}}</span><span>{{t('history.priority')}}</span><span>{{t('history.status')}}</span><span>{{t('history.duration')}}</span></div>
+          <div v-if="inRange.length && (!error || events.length)" class="history-column-head"><span>{{t('history.name')}}</span><span>{{t('history.actualTime')}}</span><span>{{t('history.delay')}}</span><span>{{t('history.robot')}}</span><span>{{t('history.source')}} → {{t('history.destination')}}</span><span class="priority-heading">{{t('history.priority')}}</span><span>{{t('history.status')}}</span><span>{{t('history.duration')}}</span></div>
           <div v-if="inRange.length && (!error || events.length)" class="history-list-scroll themed-scroll">
             <section v-for="group in groups" :key="group.key" class="date-group">
               <h2>{{formatDate(group.key)}} <small>{{group.events.length}} {{t('common.tasks')}}</small></h2>
@@ -229,6 +230,9 @@ onBeforeUnmount(()=>{loadGeneration++;document.removeEventListener('pointerdown'
         <h2>{{t('history.details')}} <span v-if="selectedEvent">· {{selectedEvent.taskId}}</span></h2>
         <dl v-if="selectedEvent" class="task-record">
           <div><dt>{{t('history.robot')}}</dt><dd>{{selectedEvent.robotId?robotDisplayCode(selectedEvent.robotId):t('dispatch.unassigned')}}</dd></div>
+          <div><dt>{{t('map.source')}}</dt><dd>{{translateLocation(selectedEvent.startLocation)}}</dd></div>
+          <div><dt>{{t('map.destination')}}</dt><dd>{{translateLocation(selectedEvent.endLocation)}}</dd></div>
+          <div><dt>{{t('history.status')}}</dt><dd>{{failedBeforeAssignment(selectedEvent) ? t('historyUx.failedBeforeAssignment') : t(`status.${selectedEvent.status}`)}}</dd></div>
           <div><dt>{{t('history.note')}}</dt><dd>{{selectedEvent.note?.trim()||t('robotStatus.noValue')}}</dd></div>
           <div><dt>{{t('history.requiredCapabilities')}}</dt><dd class="capability-list"><template v-if="selectedEvent.requiredCapabilities?.length"><span v-for="capability in selectedEvent.requiredCapabilities" :key="capability">{{t(`dispatchForm.capabilities.${capability}`)}}</span></template><template v-else>{{t('robotStatus.noValue')}}</template></dd></div>
           <div><dt>{{t('history.createdAt')}}</dt><dd>{{createdAt(selectedEvent.createdAt)}}</dd></div>

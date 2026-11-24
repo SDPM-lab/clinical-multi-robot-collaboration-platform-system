@@ -10,7 +10,7 @@ onMounted(restart)
 </script>
 <template>
   <section class="connectivity-panel overview-tool-panel" :aria-label="t('robotStatus.connection')">
-    <h2>機器人連線</h2>
+    <h2>{{ t('dashboard.robotConnection') }}</h2>
     <div class="connection-count" :aria-label="known ? `${connected} / ${robots.length}` : t('common.unavailable')"><strong>{{ known ? displayed : '—' }}</strong><span v-if="robots">/ {{ robots.length }}</span></div>
     <p aria-live="polite">{{ known ? t('dashboard.robotsConnected', { count: connected }) : t('common.unavailable') }}</p>
   </section>

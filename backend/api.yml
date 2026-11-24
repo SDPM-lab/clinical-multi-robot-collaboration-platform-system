@@ -345,6 +345,17 @@ paths:
           $ref: '#/components/responses/TaskNotFound'
         '503':
           description: 外部分派服務目前不支援撤回舊指派
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [code, detail]
+                properties:
+                  code:
+                    type: string
+                    enum: [reschedule_dispatch_cancellation_unsupported]
+                  detail:
+                    type: string
 
   /api/v1/task/{task_id}/priority:
     patch:

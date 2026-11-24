@@ -20,7 +20,11 @@ const emit=defineEmits(['select'])
 const {displayed,restart}=useCountUp(computed(()=>props.value??0),{duration:850,delay:(props.index||0)*45})
 onMounted(restart)
 const trendIcon=computed(()=>props.trend>0?ArrowUp:props.trend<0?ArrowDown:ArrowRight)
-const trendTone=computed(()=>props.trend>0?'good':props.trend<0?'bad':'flat')
+const trendTone=computed(()=>{
+  if (props.trend === 0) return 'flat'
+  const improvement = props.status === 'delayed' ? props.trend < 0 : props.trend > 0
+  return improvement ? 'good' : 'bad'
+})
 const trendAmount=computed(()=>`${props.trend>0?'+':''}${props.trend}`)
 const sparkPoints=computed(()=>{
   const values=props.series.length?props.series:[0,0]
