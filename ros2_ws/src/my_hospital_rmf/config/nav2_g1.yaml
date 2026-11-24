@@ -231,7 +231,7 @@ global_costmap:
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
-        inflation_radius: 0.35
+        inflation_radius: 0.40
         cost_scaling_factor: 3.0
       always_send_full_costmap: true
 behavior_server:

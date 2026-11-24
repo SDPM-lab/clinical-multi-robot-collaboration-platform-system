@@ -15,6 +15,7 @@ from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node
 
 from ros_gz_sim.actions import GzServer
+from launch.actions import ExecuteProcess
 from ros_gz_bridge.actions import RosGzBridge
 
 from robot_common_launch import get_ros2_control_robot_description
@@ -306,12 +307,16 @@ def launch_setup(context, *args, **kwargs):
 
         )
 
-        gz_server = GzServer(
-            world_sdf_file=world_path,
-            world_sdf_string="",
-            container_name="ros_gz_container",
-            create_own_container=True,
-            use_composition=True,
+        gz_server = ExecuteProcess(
+            cmd=[
+                "gz",
+                "sim",
+                "-s",
+                "-r",
+                world_path,
+                "--verbose",
+            ],
+            output="screen",
         )
 
         gz_bridge_config = os.path.join(
@@ -323,9 +328,8 @@ def launch_setup(context, *args, **kwargs):
         gz_bridge = RosGzBridge(
             bridge_name="ros_gz_bridge",
             config_file=gz_bridge_config,
-            container_name="ros_gz_container",
             create_own_container=False,
-            use_composition=True,
+            use_composition=False,
         )
 
         nodes.extend([
