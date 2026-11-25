@@ -75,30 +75,30 @@ rmf_fleet:
       - 0.0
     hospital_robot_5:
       charger: charging_station_2
-      start_waypoint: center_top_junction
+      start_waypoint: parking_ward_1
       start_pose:
-      - 20.249
-      - -6.349
+      - 11.4
+      - -19.4
       - 0.05
       - 0.0
       - 0.0
       - 0.0
     hospital_robot_6:
       charger: charging_station_2
-      start_waypoint: left_top_junction
+      start_waypoint: parking_ward_2
       start_pose:
-      - 8.925
-      - -6.343
+      - 11.4
+      - -20.7
       - 0.05
       - 0.0
       - 0.0
       - 0.0
     hospital_robot_7:
       charger: charging_station_2
-      start_waypoint: nurse_station_junction
+      start_waypoint: parking_ward_3
       start_pose:
-      - 8.976
-      - -11.616
+      - 11.4
+      - -22.0
       - 0.05
       - 0.0
       - 0.0

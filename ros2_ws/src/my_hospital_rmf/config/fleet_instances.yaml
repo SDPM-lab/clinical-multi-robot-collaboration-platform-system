@@ -57,12 +57,12 @@ robots:
     model: agibot_g1
     enabled: true
     spawn:
-      x: 20.249
-      y: -6.349
+      x: 11.4
+      y: -19.4
       z: 0.2
       yaw: 0.0
     rmf:
-      start_waypoint: center_top_junction
+      start_waypoint: parking_ward_1
       charger: charging_station_2
 
   hospital_robot_6:
@@ -70,12 +70,12 @@ robots:
     model: agibot_g1
     enabled: true
     spawn:
-      x: 8.925
-      y: -6.343
+      x: 11.4
+      y: -20.7
       z: 0.2
       yaw: 0.0
     rmf:
-      start_waypoint: left_top_junction
+      start_waypoint: parking_ward_2
       charger: charging_station_2
 
   hospital_robot_7:
@@ -83,10 +83,10 @@ robots:
     model: agibot_g1
     enabled: true
     spawn:
-      x: 8.976
-      y: -11.616
+      x: 11.4
+      y: -22.0
       z: 0.2
       yaw: 0.0
     rmf:
-      start_waypoint: nurse_station_junction
+      start_waypoint: parking_ward_3
       charger: charging_station_2

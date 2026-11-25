@@ -106,6 +106,12 @@ levels:
       - [25, 24, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], mutex: [1, ""], orientation: [1, ""], speed_limit: [3, 0]}]
       - [24, 26, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], mutex: [1, ""], orientation: [1, ""], speed_limit: [3, 0]}]
       - [24, 5, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], mutex: [1, ""], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [27, 212, {bidirectional: [4, true], demo_mock_floor_name: [1, ''], demo_mock_lift_name: [1, ''], graph_idx: [2, 0], mutex: [1, ''], orientation: [1, ''], speed_limit: [3, 0]}]
+      - [212, 213, {bidirectional: [4, true], demo_mock_floor_name: [1, ''], demo_mock_lift_name: [1, ''], graph_idx: [2, 0], mutex: [1, ''], orientation: [1, ''], speed_limit: [3, 0]}]
+      - [213, 214, {bidirectional: [4, true], demo_mock_floor_name: [1, ''], demo_mock_lift_name: [1, ''], graph_idx: [2, 0], mutex: [1, ''], orientation: [1, ''], speed_limit: [3, 0]}]
+      - [212, 215, {bidirectional: [4, true], demo_mock_floor_name: [1, ''], demo_mock_lift_name: [1, ''], graph_idx: [2, 0], mutex: [1, ''], orientation: [1, ''], speed_limit: [3, 0]}]
+      - [213, 216, {bidirectional: [4, true], demo_mock_floor_name: [1, ''], demo_mock_lift_name: [1, ''], graph_idx: [2, 0], mutex: [1, ''], orientation: [1, ''], speed_limit: [3, 0]}]
+      - [214, 217, {bidirectional: [4, true], demo_mock_floor_name: [1, ''], demo_mock_lift_name: [1, ''], graph_idx: [2, 0], mutex: [1, ''], orientation: [1, ''], speed_limit: [3, 0]}]
     layers:
       {}
     measurements:
@@ -457,6 +463,12 @@ levels:
       - [217.65100000000001, 616.73800000000006, 0, consult_1_2]
       - [727.1352758039415, 389.596, 0, pantry_junction]
       - [835.0, 389.596, 0, pantry]
+      - [342.26885, 698.94902, 0, parking_ward_access_1]
+      - [342.26885, 745.78581, 0, parking_ward_access_2]
+      - [342.26885, 792.6226, 0, parking_ward_access_3]
+      - [410.72262, 698.94902, 0, parking_ward_1]
+      - [410.72262, 745.78581, 0, parking_ward_2]
+      - [410.72262, 792.6226, 0, parking_ward_3]
     walls:
       - [38, 39, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
       - [39, 40, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
