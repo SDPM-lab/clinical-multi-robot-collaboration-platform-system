@@ -450,11 +450,75 @@ class HospitalG1NavigationBridge(Node):
                 f"{robot.right_clearance:.2f}m"
             )
 
-    def cancel_nav2_goal(
-        self,
-        robot_id,
-    ):
-        """Cancel the currently active Nav2 goal for one robot."""
+    def _nav_switch_state(self, robot_id):
+
+        if not hasattr(self, "_nav_switch_states"):
+            self._nav_switch_states = {}
+
+        return self._nav_switch_states.setdefault(
+            robot_id,
+            {
+                "generation": 0,
+                "active": None,
+                "pending": None,
+                "cancel_requested": False,
+            }
+        )
+
+
+    def _apply_pending_nav_path(self, robot_id):
+
+        state = self._nav_switch_state(robot_id)
+
+        if state["active"] is not None:
+            return
+
+        msg = state["pending"]
+
+        if msg is None:
+            return
+
+        state["pending"] = None
+
+        robot = self.robots.get(robot_id)
+
+        if robot is None:
+            return
+
+        robot.receive_path(
+            msg.task_id,
+            msg.path,
+        )
+
+        if not msg.path:
+
+            robot.current_target_index = 0
+            robot.path = []
+
+            self.stop_robot(robot_id)
+
+            self.get_logger().info(
+                f"[NAV_STOPPED] robot={robot_id}"
+            )
+
+            return
+
+        self.get_logger().info(
+            f"[NAV_PATH_APPLIED] "
+            f"robot={robot_id}, task_id={msg.task_id}"
+        )
+
+        self.send_nav2_path(robot)
+
+
+    def cancel_nav2_goal(self, robot_id):
+
+        state = self._nav_switch_state(robot_id)
+
+        generation = state["active"]
+
+        if generation is None:
+            return
 
         goal_handle = self.nav_goal_handles.get(
             robot_id
@@ -463,51 +527,78 @@ class HospitalG1NavigationBridge(Node):
         if goal_handle is None:
             return
 
+        if state["cancel_requested"]:
+            return
+
+        state["cancel_requested"] = True
+
         self.get_logger().info(
-            f"{robot_id}: "
-            "cancelling current Nav2 goal"
+            f"[NAV_CANCEL_REQUEST] "
+            f"robot={robot_id}, generation={generation}"
         )
 
-        future = (
-            goal_handle.cancel_goal_async()
-        )
+        try:
 
-        future.add_done_callback(
-            lambda f, rid=robot_id:
-                self.nav_cancel_done_callback(
-                    rid,
-                    f,
-                )
-        )
+            future = goal_handle.cancel_goal_async()
+
+            future.add_done_callback(
+                lambda f, rid=robot_id, gen=generation:
+                    self.nav_cancel_done_callback(
+                        rid, gen, f
+                    )
+            )
+
+        except Exception as exc:
+
+            state["cancel_requested"] = False
+
+            self.get_logger().error(
+                f"[NAV_CANCEL_ERROR] "
+                f"robot={robot_id}: {exc}"
+            )
 
 
     def nav_cancel_done_callback(
         self,
         robot_id,
+        generation,
         future,
     ):
+
+        state = self._nav_switch_state(robot_id)
+
+        if state["active"] != generation:
+            return
+
         try:
+
             response = future.result()
 
-            cancel_count = len(
-                response.goals_canceling
-            )
+            count = len(response.goals_canceling)
 
             self.get_logger().info(
-                f"{robot_id}: "
-                f"Nav2 cancel response "
-                f"goals_canceling={cancel_count}"
+                f"[NAV_CANCEL_RESPONSE] "
+                f"robot={robot_id}, "
+                f"generation={generation}, "
+                f"goals_canceling={count}"
             )
+
+            if count == 0:
+
+                self.get_logger().warning(
+                    f"{robot_id}: cancellation not "
+                    "confirmed; waiting for terminal result"
+                )
 
         except Exception as exc:
+
             self.get_logger().error(
-                f"{robot_id}: "
-                f"Nav2 cancel failed: {exc}"
+                f"[NAV_CANCEL_ERROR] "
+                f"robot={robot_id}: {exc}"
             )
 
-        self.nav_goal_handles[
-            robot_id
-        ] = None
+        # Never clear the active goal here.
+        # Wait for the terminal action result.
 
 
     def send_nav2_path(
@@ -582,92 +673,182 @@ class HospitalG1NavigationBridge(Node):
             "to Nav2"
         )
 
-        future = client.send_goal_async(
-            goal
+
+        state = self._nav_switch_state(
+            robot.robot_id
         )
 
-        future.add_done_callback(
-            lambda f, rid=robot.robot_id:
-                self.nav_goal_response_callback(
-                    rid,
-                    f,
-                )
+        if state["active"] is not None:
+            return
+
+        state["generation"] += 1
+
+        generation = state["generation"]
+
+        state["active"] = generation
+        state["cancel_requested"] = False
+
+        self.get_logger().info(
+            f"[NAV_GOAL_SENT] "
+            f"robot={robot.robot_id}, "
+            f"generation={generation}"
         )
+
+        try:
+
+            future = client.send_goal_async(goal)
+
+            future.add_done_callback(
+                lambda f, rid=robot.robot_id, gen=generation:
+                    self.nav_goal_response_callback(
+                        rid, gen, f
+                    )
+            )
+
+        except Exception as exc:
+
+            self.get_logger().error(
+                f"[NAV_SEND_ERROR] "
+                f"robot={robot.robot_id}: {exc}"
+            )
 
 
     def nav_goal_response_callback(
         self,
         robot_id,
+        generation,
         future,
     ):
-        robot = self.robots.get(
-            robot_id
-        )
 
-        if robot is None:
-            return
+        state = self._nav_switch_state(robot_id)
 
         try:
+
             goal_handle = future.result()
+
         except Exception as exc:
+
             self.get_logger().error(
-                f"{robot_id}: "
-                f"failed sending Nav2 goal: {exc}"
+                f"[NAV_RESPONSE_ERROR] "
+                f"robot={robot_id}: {exc}"
             )
+
+            return
+
+        if state["active"] != generation:
+
+            if goal_handle.accepted:
+                goal_handle.cancel_goal_async()
+
             return
 
         if not goal_handle.accepted:
+
+            state["active"] = None
+            state["cancel_requested"] = False
+
+            self.nav_goal_handles[robot_id] = None
+
             self.get_logger().error(
-                f"{robot_id}: "
-                "Nav2 goal rejected"
+                f"[NAV_GOAL_REJECTED] "
+                f"robot={robot_id}, "
+                f"generation={generation}"
             )
+
+            self._apply_pending_nav_path(robot_id)
+
             return
 
-        self.nav_goal_handles[
-            robot_id
-        ] = goal_handle
+        self.nav_goal_handles[robot_id] = goal_handle
 
         self.get_logger().info(
-            f"{robot_id}: "
-            "Nav2 goal accepted"
+            f"[NAV_GOAL_ACCEPTED] "
+            f"robot={robot_id}, "
+            f"generation={generation}"
         )
 
-        result_future = (
-            goal_handle.get_result_async()
-        )
+        result_future = goal_handle.get_result_async()
 
         result_future.add_done_callback(
-            lambda f, rid=robot_id:
+            lambda f, rid=robot_id, gen=generation:
                 self.nav_result_callback(
-                    rid,
-                    f,
+                    rid, gen, f
                 )
         )
+
+        if state["pending"] is not None:
+
+            self.cancel_nav2_goal(robot_id)
 
 
     def nav_result_callback(
         self,
         robot_id,
+        generation,
         future,
     ):
-        robot = self.robots.get(
-            robot_id
-        )
+
+        state = self._nav_switch_state(robot_id)
+
+        if state["active"] != generation:
+
+            self.get_logger().info(
+                f"[NAV_STALE_RESULT_IGNORED] "
+                f"robot={robot_id}, "
+                f"generation={generation}"
+            )
+
+            return
+
+        robot = self.robots.get(robot_id)
 
         if robot is None:
             return
 
-        self.nav_goal_handles[
-            robot_id
-        ] = None
-
         try:
+
             wrapped_result = future.result()
+
         except Exception as exc:
+
             self.get_logger().error(
-                f"{robot_id}: "
-                f"Nav2 result failed: {exc}"
+                f"[NAV_RESULT_ERROR] "
+                f"robot={robot_id}: {exc}"
             )
+
+            return
+
+        if wrapped_result.status not in (4, 5, 6):
+
+            self.get_logger().error(
+                f"[NAV_NONTERMINAL_RESULT] "
+                f"robot={robot_id}, "
+                f"status={wrapped_result.status}"
+            )
+
+            return
+
+        self.get_logger().info(
+            f"[NAV_TERMINAL] "
+            f"robot={robot_id}, "
+            f"generation={generation}, "
+            f"status={wrapped_result.status}"
+        )
+
+        state["active"] = None
+        state["cancel_requested"] = False
+
+        self.nav_goal_handles[robot_id] = None
+
+        if state["pending"] is not None:
+
+            self.get_logger().info(
+                f"[NAV_SWITCH_READY] "
+                f"robot={robot_id}"
+            )
+
+            self._apply_pending_nav_path(robot_id)
+
             return
 
         status = wrapped_result.status
@@ -794,26 +975,30 @@ class HospitalG1NavigationBridge(Node):
         # previous Nav2 navigation goal.
         # ----------------------------------------------------
 
-        self.cancel_nav2_goal(
+
+        state = self._nav_switch_state(
             msg.robot_name
         )
 
-        robot.receive_path(
-            msg.task_id,
-            msg.path,
-        )
+        state["pending"] = msg
 
-        # ----------------------------------------------------
-        # Empty path:
-        #   cancel current Nav2 navigation and remain idle.
-        #
-        # Non-empty path:
-        #   delegate the complete RMF path to Nav2.
-        # ----------------------------------------------------
+        if state["active"] is not None:
 
-        if len(msg.path) > 0:
-            self.send_nav2_path(
-                robot
+            self.get_logger().info(
+                f"[NAV_SWITCH_PENDING] "
+                f"robot={msg.robot_name}, "
+                f"task_id={msg.task_id}, "
+                f"active_generation={state['active']}"
+            )
+
+            self.cancel_nav2_goal(
+                msg.robot_name
+            )
+
+        else:
+
+            self._apply_pending_nav_path(
+                msg.robot_name
             )
 
         self.get_logger().info(
@@ -833,17 +1018,6 @@ class HospitalG1NavigationBridge(Node):
                 f"yaw={p.yaw:.3f}, "
                 f"level={p.level_name}, "
                 f"index={p.index}"
-            )
-
-        # Empty path = navigation cancelled / stopped.
-        if len(msg.path) == 0:
-
-            robot.current_target_index = 0
-            robot.path = []
-
-            self.get_logger().info(
-                f"{msg.robot_name}: "
-                "empty PathRequest -> navigation stopped"
             )
 
     # ========================================================
