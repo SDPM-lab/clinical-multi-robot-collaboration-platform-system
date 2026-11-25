@@ -534,28 +534,28 @@ levels:
       - {}
     - - 57
       - 58
-      - {}
+      - mutex: clean_parking_access
     - - 58
       - 57
-      - {}
+      - mutex: clean_parking_access
     - - 58
       - 59
-      - {}
+      - mutex: clean_parking_access
     - - 59
       - 58
-      - {}
+      - mutex: clean_parking_access
     - - 59
       - 60
-      - {}
+      - mutex: clean_parking_access
     - - 60
       - 59
-      - {}
+      - mutex: clean_parking_access
     - - 59
       - 61
-      - {}
+      - mutex: clean_parking_access
     - - 61
       - 59
-      - {}
+      - mutex: clean_parking_access
     - - 3
       - 62
       - {}
@@ -760,9 +760,11 @@ levels:
     - - 19.499999999999996
       - -11.459999999999999
       - name: parking_clean_access_outer
+        mutex: clean_parking_access
     - - 18.05
       - -11.450000000000001
       - name: parking_clean_access_inner
+        mutex: clean_parking_access
     - - 16.4
       - -12.1
       - name: parking_clean_1
