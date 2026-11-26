@@ -543,6 +543,17 @@ def generate_launch_description():
     # LaunchDescription 裡的項目會依序「登記」，但節點是並行啟動的，
     # 不會等前一個完全 ready 才啟動下一個。
     # 順序：參數宣告 → 模擬器/視覺化 → RMF 核心 → 自定義節點 → 地圖
+    # RMF mutex group resource management
+    mutex_group_supervisor = Node(
+        package="rmf_fleet_adapter",
+        executable="mutex_group_supervisor",
+        name="mutex_group_supervisor",
+        output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+        }],
+    )
+
     return LaunchDescription([
         use_sim_time_arg,
         server_uri_arg,
@@ -550,6 +561,8 @@ def generate_launch_description():
         launch_gazebo_gui_arg,
         launch_rviz_arg,
         robots_arg,
+
+        mutex_group_supervisor,
 
         # Phase 1
         g1_fleet_delayed,

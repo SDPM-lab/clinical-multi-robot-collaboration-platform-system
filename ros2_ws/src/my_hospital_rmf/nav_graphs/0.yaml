@@ -2,128 +2,178 @@ building_name: hospital
 doors:
   Pantry_room:
     endpoints:
-    - [22.14953245087889, -11.446140950308507]
-    - [22.14953245087889, -10.181079873321806]
+    - - 22.14953245087889
+      - -11.446140950308507
+    - - 22.14953245087889
+      - -10.181079873321806
     map: L1
   charging_station_door:
     endpoints:
-    - [28.15128662745675, -7.5960564334148435]
-    - [28.192559737761705, -8.773464193425724]
+    - - 28.15128662745675
+      - -7.5960564334148435
+    - - 28.192559737761705
+      - -8.773464193425724
     map: L1
   clothes_return_door:
     endpoints:
-    - [22.152641118232054, -15.454462186669923]
-    - [22.14320409233852, -14.44994629222028]
+    - - 22.152641118232054
+      - -15.454462186669923
+    - - 22.14320409233852
+      - -14.44994629222028
     map: L1
   consult_1_door:
     endpoints:
-    - [7.694368038458655, -19.28639430669779]
-    - [7.701973171090503, -18.058998065409693]
+    - - 7.694368038458655
+      - -19.28639430669779
+    - - 7.701973171090503
+      - -18.058998065409693
     map: L1
   consult_2_door:
     endpoints:
-    - [7.686735149868298, -15.375468728749343]
-    - [7.694368038458655, -14.186181418496014]
+    - - 7.686735149868298
+      - -15.375468728749343
+    - - 7.694368038458655
+      - -14.186181418496014
     map: L1
   ecg_door:
     endpoints:
-    - [32.307630390554095, -9.97243833319918]
-    - [32.31953769675505, -11.196781419051135]
+    - - 32.307630390554095
+      - -9.97243833319918
+    - - 32.31953769675505
+      - -11.196781419051135
     map: L1
   lab_door:
     endpoints:
-    - [12.567009822833716, -5.238770633085657]
-    - [13.742835493209503, -5.250122820116408]
+    - - 12.567009822833716
+      - -5.238770633085657
+    - - 13.742835493209503
+      - -5.250122820116408
     map: L1
   main_entrance:
     endpoints:
-    - [17.413561006209008, -26.319199074061224]
-    - [19.75985544696808, -26.319199074061224]
+    - - 17.413561006209008
+      - -26.319199074061224
+    - - 19.75985544696808
+      - -26.319199074061224
     map: L1
   pharmacy_door:
     endpoints:
-    - [30.334431544091725, -5.217731616534779]
-    - [31.51122867301538, -5.205852066292331]
+    - - 30.334431544091725
+      - -5.217731616534779
+    - - 31.51122867301538
+      - -5.205852066292331
     map: L1
   restroom_men:
     endpoints:
-    - [22.82638925511334, -5.242101348106905]
-    - [24.00723875397951, -5.242101348106905]
+    - - 22.82638925511334
+      - -5.242101348106905
+    - - 24.00723875397951
+      - -5.242101348106905
     map: L1
   restroom_men_1:
     endpoints:
-    - [24.177632583274814, -2.0373706225383934]
-    - [25.284540208669295, -2.0222436251502294]
+    - - 24.177632583274814
+      - -2.0373706225383934
+    - - 25.284540208669295
+      - -2.0222436251502294
     map: L1
   restroom_men_2:
     endpoints:
-    - [25.284540208669295, -2.0222436251502294]
-    - [26.333992999947263, -2.0267678463874232]
+    - - 25.284540208669295
+      - -2.0222436251502294
+    - - 26.333992999947263
+      - -2.0267678463874232
     map: L1
   restroom_men_3:
     endpoints:
-    - [24.198865891535267, -3.779473358443224]
-    - [25.282375243905484, -3.758240050182773]
+    - - 24.198865891535267
+      - -3.779473358443224
+    - - 25.282375243905484
+      - -3.758240050182773
     map: L1
   restroom_men_4:
     endpoints:
-    - [25.282375243905484, -3.758240050182773]
-    - [26.375987765173488, -3.73753410513402]
+    - - 25.282375243905484
+      - -3.758240050182773
+    - - 26.375987765173488
+      - -3.73753410513402
     map: L1
   restroom_women:
     endpoints:
-    - [26.744420358440447, -5.222644421191119]
-    - [27.585509169180895, -5.220534968344329]
+    - - 26.744420358440447
+      - -5.222644421191119
+    - - 27.585509169180895
+      - -5.220534968344329
     map: L1
   restroom_women_1:
     endpoints:
-    - [27.684292625519383, -1.9623462666848006]
-    - [28.843908816125097, -1.9879095044728725]
+    - - 27.684292625519383
+      - -1.9623462666848006
+    - - 28.843908816125097
+      - -1.9879095044728725
     map: L1
   restroom_women_2:
     endpoints:
-    - [28.843908816125097, -1.9879095044728725]
-    - [29.972882428535346, -1.9721718759974798]
+    - - 28.843908816125097
+      - -1.9879095044728725
+    - - 29.972882428535346
+      - -1.9721718759974798
     map: L1
   restroom_women_3:
     endpoints:
-    - [27.94597580235537, -3.6404160063061535]
-    - [29.03942178787231, -3.610384059197908]
+    - - 27.94597580235537
+      - -3.6404160063061535
+    - - 29.03942178787231
+      - -3.610384059197908
     map: L1
   restroom_women_4:
     endpoints:
-    - [29.03942178787231, -3.610384059197908]
-    - [29.98864781296925, -3.5875409053438543]
+    - - 29.03942178787231
+      - -3.610384059197908
+    - - 29.98864781296925
+      - -3.5875409053438543
     map: L1
   therapy_room_door:
     endpoints:
-    - [32.290754767779774, -14.104884216019073]
-    - [32.290754767779774, -15.379798658276965]
+    - - 32.290754767779774
+      - -14.104884216019073
+    - - 32.290754767779774
+      - -15.379798658276965
     map: L1
   ultrasound_door:
     endpoints:
-    - [32.307630390554095, -8.379607142163245]
-    - [32.307630390554095, -7.1671713625122475]
+    - - 32.307630390554095
+      - -8.379607142163245
+    - - 32.307630390554095
+      - -7.1671713625122475
     map: L1
   ward_a_door:
     endpoints:
-    - [7.699974742077755, -4.142937635136823]
-    - [7.694451306334187, -2.9011915632988514]
+    - - 7.699974742077755
+      - -4.142937635136823
+    - - 7.694451306334187
+      - -2.9011915632988514
     map: L1
   ward_b_door:
     endpoints:
-    - [7.692813704782074, -7.8800276449346764]
-    - [7.685708179403414, -6.650799510384892]
+    - - 7.692813704782074
+      - -7.8800276449346764
+    - - 7.685708179403414
+      - -6.650799510384892
     map: L1
   ward_c_door:
     endpoints:
-    - [7.6963109555543845, -11.590777250106166]
-    - [7.700280057621369, -10.372207403624373]
+    - - 7.6963109555543845
+      - -11.590777250106166
+    - - 7.700280057621369
+      - -10.372207403624373
     map: L1
   waste_return_door:
     endpoints:
-    - [28.189090242947906, -15.616529228412107]
-    - [28.20146940044354, -14.512896806121853]
+    - - 28.189090242947906
+      - -15.616529228412107
+    - - 28.20146940044354
+      - -14.512896806121853
     map: L1
 levels:
   L1:
@@ -214,106 +264,128 @@ levels:
       - {}
     - - 17
       - 16
-      - {door_name: consult_1_door}
+      - door_name: consult_1_door
+        mutex: task_consult_1
     - - 16
       - 17
-      - {door_name: consult_1_door}
+      - door_name: consult_1_door
+        mutex: task_consult_1
     - - 18
       - 15
-      - {door_name: consult_2_door}
+      - door_name: consult_2_door
+        mutex: task_consult_2
     - - 15
       - 18
-      - {door_name: consult_2_door}
+      - door_name: consult_2_door
+        mutex: task_consult_2
     - - 19
       - 20
-      - {door_name: ward_c_door}
+      - door_name: ward_c_door
+        mutex: task_consult_3
     - - 20
       - 19
-      - {door_name: ward_c_door}
+      - door_name: ward_c_door
+        mutex: task_consult_3
     - - 21
       - 14
-      - {door_name: ward_b_door}
+      - door_name: ward_b_door
+        mutex: task_ward_b
     - - 14
       - 21
-      - {door_name: ward_b_door}
+      - door_name: ward_b_door
+        mutex: task_ward_b
     - - 22
       - 23
-      - {door_name: ward_a_door}
+      - door_name: ward_a_door
+        mutex: task_ward_a
     - - 23
       - 22
-      - {door_name: ward_a_door}
+      - door_name: ward_a_door
+        mutex: task_ward_a
     - - 23
       - 13
-      - {}
+      - mutex: task_ward_a
     - - 13
       - 23
-      - {}
+      - mutex: task_ward_a
     - - 24
       - 12
-      - {door_name: lab_door}
+      - door_name: lab_door
+        mutex: task_lab
     - - 12
       - 24
-      - {door_name: lab_door}
+      - door_name: lab_door
+        mutex: task_lab
     - - 25
       - 11
-      - {}
+      - mutex: task_blood_draw
     - - 11
       - 25
-      - {}
+      - mutex: task_blood_draw
     - - 26
       - 27
-      - {door_name: pharmacy_door}
+      - door_name: pharmacy_door
+        mutex: task_xray
     - - 27
       - 26
-      - {door_name: pharmacy_door}
+      - door_name: pharmacy_door
+        mutex: task_xray
     - - 27
       - 9
-      - {}
+      - mutex: task_xray
     - - 9
       - 27
-      - {}
+      - mutex: task_xray
     - - 28
       - 7
-      - {door_name: charging_station_door}
+      - door_name: charging_station_door
     - - 7
       - 28
-      - {door_name: charging_station_door}
+      - door_name: charging_station_door
     - - 29
       - 8
-      - {door_name: ultrasound_door}
+      - door_name: ultrasound_door
+        mutex: task_ultrasound
     - - 8
       - 29
-      - {door_name: ultrasound_door}
+      - door_name: ultrasound_door
+        mutex: task_ultrasound
     - - 30
       - 6
-      - {door_name: ecg_door}
+      - door_name: ecg_door
+        mutex: task_ecg
     - - 6
       - 30
-      - {door_name: ecg_door}
+      - door_name: ecg_door
+        mutex: task_ecg
     - - 31
       - 5
-      - {door_name: therapy_room_door}
+      - door_name: therapy_room_door
+        mutex: task_therapy_room
     - - 5
       - 31
-      - {door_name: therapy_room_door}
+      - door_name: therapy_room_door
+        mutex: task_therapy_room
     - - 32
       - 4
-      - {door_name: waste_return_door}
+      - door_name: waste_return_door
+        mutex: task_waste_return
     - - 4
       - 32
-      - {door_name: waste_return_door}
+      - door_name: waste_return_door
+        mutex: task_waste_return
     - - 3
       - 33
-      - {}
+      - mutex: task_pharmacy
     - - 33
       - 3
-      - {}
+      - mutex: task_pharmacy
     - - 33
       - 34
-      - {}
+      - mutex: task_pharmacy
     - - 34
       - 33
-      - {}
+      - mutex: task_pharmacy
     - - 3
       - 1
       - {}
@@ -322,10 +394,12 @@ levels:
       - {}
     - - 35
       - 36
-      - {door_name: clothes_return_door}
+      - door_name: clothes_return_door
+        mutex: task_clothes_return
     - - 36
       - 35
-      - {door_name: clothes_return_door}
+      - door_name: clothes_return_door
+        mutex: task_clothes_return
     - - 10
       - 37
       - {}
@@ -333,17 +407,23 @@ levels:
       - 10
       - {}
     - - 37
+      - 57
+      - {}
+    - - 57
+      - 37
+      - {}
+    - - 57
       - 35
       - {}
     - - 35
-      - 37
+      - 57
       - {}
     - - 37
       - 38
-      - {door_name: Pantry_room}
+      - door_name: Pantry_room
     - - 38
       - 37
-      - {door_name: Pantry_room}
+      - door_name: Pantry_room
     - - 35
       - 1
       - {}
@@ -352,10 +432,10 @@ levels:
       - {}
     - - 36
       - 39
-      - {}
+      - mutex: task_clothes_return
     - - 39
       - 36
-      - {}
+      - mutex: task_clothes_return
     - - 28
       - 40
       - {}
@@ -364,52 +444,52 @@ levels:
       - {}
     - - 32
       - 41
-      - {}
+      - mutex: task_waste_return
     - - 41
       - 32
-      - {}
+      - mutex: task_waste_return
     - - 29
       - 42
-      - {}
+      - mutex: task_ultrasound
     - - 42
       - 29
-      - {}
+      - mutex: task_ultrasound
     - - 30
       - 43
-      - {}
+      - mutex: task_ecg
     - - 43
       - 30
-      - {}
+      - mutex: task_ecg
     - - 22
       - 44
-      - {}
+      - mutex: task_ward_a
     - - 44
       - 22
-      - {}
+      - mutex: task_ward_a
     - - 21
       - 45
-      - {}
+      - mutex: task_ward_b
     - - 45
       - 21
-      - {}
+      - mutex: task_ward_b
     - - 19
       - 46
-      - {}
+      - mutex: task_consult_3
     - - 46
       - 19
-      - {}
+      - mutex: task_consult_3
     - - 18
       - 47
-      - {}
+      - mutex: task_consult_2
     - - 47
       - 18
-      - {}
+      - mutex: task_consult_2
     - - 17
       - 48
-      - {}
+      - mutex: task_consult_1
     - - 48
       - 17
-      - {}
+      - mutex: task_consult_1
     - - 10
       - 9
       - {}
@@ -436,162 +516,322 @@ levels:
       - {}
     - - 49
       - 50
-      - {}
+      - mutex: task_nurse_station
     - - 50
       - 49
+      - mutex: task_nurse_station
+    - - 16
+      - 51
+      - {}
+    - - 51
+      - 16
+      - {}
+    - - 51
+      - 52
+      - {}
+    - - 52
+      - 51
+      - {}
+    - - 52
+      - 53
+      - {}
+    - - 53
+      - 52
+      - {}
+    - - 51
+      - 54
+      - {}
+    - - 54
+      - 51
+      - {}
+    - - 52
+      - 55
+      - {}
+    - - 55
+      - 52
+      - {}
+    - - 53
+      - 56
+      - {}
+    - - 56
+      - 53
+      - {}
+    - - 57
+      - 58
+      - mutex: clean_parking_access
+    - - 58
+      - 57
+      - mutex: clean_parking_access
+    - - 58
+      - 59
+      - mutex: clean_parking_access
+    - - 59
+      - 58
+      - mutex: clean_parking_access
+    - - 59
+      - 60
+      - mutex: clean_parking_access
+    - - 60
+      - 59
+      - mutex: clean_parking_access
+    - - 59
+      - 61
+      - mutex: clean_parking_access
+    - - 61
+      - 59
+      - mutex: clean_parking_access
+    - - 3
+      - 62
+      - {}
+    - - 62
+      - 3
+      - {}
+    - - 62
+      - 63
+      - {}
+    - - 63
+      - 62
+      - {}
+    - - 62
+      - 64
+      - {}
+    - - 64
+      - 62
+      - {}
+    - - 63
+      - 65
+      - {}
+    - - 65
+      - 63
       - {}
     vertices:
     - - 8.953017489029458
       - -16.19954313692292
-      - {name: left_mid_junction}
+      - name: left_mid_junction
     - - 20.120988223146803
       - -16.227743190769477
-      - {name: center_mid_junction}
+      - name: center_mid_junction
     - - 20.13481069048498
       - -18.150426192742927
-      - {name: reception_back}
+      - name: reception_back
     - - 30.32863054876306
       - -16.143670392441496
-      - {name: right_bottom_junction}
+      - name: right_bottom_junction
     - - 30.3092568897228
       - -15.112453265904858
-      - {name: waste_return_junction}
+      - name: waste_return_junction
     - - 30.32863054876306
       - -14.722565316709364
-      - {name: therapy_room_junction}
+      - name: therapy_room_junction
     - - 30.308590746718554
       - -10.65931503845588
-      - {name: ecg_junction}
+      - name: ecg_junction
     - - 30.34864259484905
       - -8.29744950497248
-      - {name: charging_station_junction}
+      - name: charging_station_junction
     - - 30.34864259484905
       - -7.977201255679562
-      - {name: ultrasound_junction}
+      - name: ultrasound_junction
     - - 30.306814365373885
       - -6.274289933191407
-      - {name: right_top_junction}
+      - name: right_top_junction
     - - 20.248915435921205
       - -6.348953461584365
-      - {name: center_top_junction}
+      - name: center_top_junction
     - - 17.318274800642826
       - -6.295856312953983
-      - {name: blood_draw_junction}
+      - name: blood_draw_junction
     - - 13.154964291959377
       - -6.33588040512597
-      - {name: lab_junction}
+      - name: lab_junction
     - - 8.925011726892471
       - -6.342597347085485
-      - {name: left_top_junction}
+      - name: left_top_junction
     - - 8.931617645017944
       - -7.376701093307205
-      - {name: ward_b_junction}
+      - name: ward_b_junction
     - - 8.951629691103937
       - -14.842637593225325
-      - {name: consult_2_junction}
+      - name: consult_2_junction
     - - 8.931617645017944
       - -18.74573599087384
-      - {name: consult_1_junction}
+      - name: consult_1_junction
     - - 6.031869391561633
       - -18.72361449194106
-      - {name: consult_1_1}
+      - name: consult_1_1
+        mutex: task_consult_1
     - - 6.5875159249811945
       - -14.789956783972599
-      - {name: consult_2_1}
+      - name: consult_2_1
+        mutex: task_consult_2
     - - 6.438549695655915
       - -11.044928570040774
-      - {name: consult_3_1}
+      - name: consult_3_1
+        mutex: task_consult_3
     - - 8.97722068485052
       - -11.072268189173512
-      - {name: consult_3_junction}
+      - name: consult_3_junction
     - - 6.5875159249811945
       - -7.406288945079285
-      - {name: ward_b_1}
+      - name: ward_b_1
+        mutex: task_ward_b
     - - 6.511714402289311
       - -3.557508958235609
-      - {name: ward_a_1}
+      - name: ward_a_1
+        mutex: task_ward_a
     - - 8.905471532101153
       - -3.4882023298351577
-      - {name: ward_a_junction}
+      - name: ward_a_junction
+        mutex: task_ward_a
     - - 13.189076364968649
       - -3.5881515364310834
-      - {name: lab}
+      - name: lab
+        mutex: task_lab
     - - 17.281970006911234
       - -3.5416603059261744
-      - {name: blood_draw}
+      - name: blood_draw
+        mutex: task_blood_draw
     - - 30.912338356236624
       - -3.2899970301124393
-      - {name: x-ray}
+      - name: x-ray
+        mutex: task_xray
     - - 30.869039060960414
       - -6.255832220781996
-      - {name: x-ray_junction}
+      - name: x-ray_junction
+        mutex: task_xray
     - - 26.98159502391176
       - -8.367505544252712
-      - {is_charger: false, name: charging_station_1}
+      - is_charger: false
+        name: charging_station_1
     - - 34.01081927262735
       - -7.955884679543581
-      - {name: ultrasound_1}
+      - name: ultrasound_1
+        mutex: task_ultrasound
     - - 33.596644859735264
       - -10.536605945881432
-      - {name: ecg_1}
+      - name: ecg_1
+        mutex: task_ecg
     - - 33.40546181751567
       - -14.742272047251744
-      - {name: therapy_room}
+      - name: therapy_room
+        mutex: task_therapy_room
     - - 26.98159502391176
       - -15.183647299484019
-      - {name: waste_return_1}
+      - name: waste_return_1
+        mutex: task_waste_return
     - - 30.29071590943786
       - -24.45549748392236
-      - {name: pharmacy_juction}
+      - name: pharmacy_juction
+        mutex: task_pharmacy
     - - 31.829506249254056
       - -24.44073131399483
-      - {name: pharmacy}
+      - name: pharmacy
+        mutex: task_pharmacy
     - - 20.120988223146803
       - -14.927515314350108
-      - {name: clothes_return_junction}
+      - name: clothes_return_junction
     - - 23.481291096166068
       - -14.9728963065146
-      - {name: clothes_return_1}
+      - name: clothes_return_1
+        mutex: task_clothes_return
     - - 20.182336546657528
       - -10.813610411815157
-      - {name: pantry_junction}
+      - name: pantry_junction
     - - 23.176225356178335
       - -10.813610411815157
-      - {name: pantry}
+      - name: pantry
     - - 23.52880929713586
       - -12.857670220354555
-      - {name: clothes_return_2}
+      - name: clothes_return_2
+        mutex: task_clothes_return
     - - 26.96474715709595
       - -10.550428413219606
-      - {is_charger: true, name: charging_station_2}
+      - is_charger: true
+        name: charging_station_2
     - - 27.015096465833803
       - -13.538551638573011
-      - {name: waste_return_2}
+      - name: waste_return_2
+        mutex: task_waste_return
     - - 33.96993474574154
       - -6.082246456257997
-      - {name: ultrasound_2}
+      - name: ultrasound_2
+        mutex: task_ultrasound
     - - 33.58004679654605
       - -12.251813157989691
-      - {name: ecg_2}
+      - name: ecg_2
+        mutex: task_ecg
     - - 6.467082821004599
       - -1.6319115806185693
-      - {name: ward_a_2}
+      - name: ward_a_2
+        mutex: task_ward_a
     - - 6.52925616806788
       - -5.735602290421697
-      - {name: ward_b_2}
+      - name: ward_b_2
+        mutex: task_ward_b
     - - 6.421479781172023
       - -9.362806460476904
-      - {name: consult_3_2}
+      - name: consult_3_2
+        mutex: task_consult_3
     - - 6.576663345203631
       - -13.2597152793776
-      - {name: consult_2_2}
+      - name: consult_2_2
+        mutex: task_consult_2
     - - 6.041112125745594
       - -17.118154339782894
-      - {name: consult_1_2}
+      - name: consult_1_2
+        mutex: task_consult_1
     - - 8.976165958427126
       - -11.61572985680701
-      - {name: nurse_station_junction}
+      - name: nurse_station_junction
     - - 13.432940216440965
       - -11.61006764127089
-      - {name: nurse_station}
+      - name: nurse_station
+        mutex: task_nurse_station
+    - - 9.5
+      - -19.4
+      - name: parking_ward_access_1
+    - - 9.5
+      - -20.7
+      - name: parking_ward_access_2
+    - - 9.5
+      - -22.0
+      - name: parking_ward_access_3
+    - - 11.4
+      - -19.4
+      - name: parking_ward_1
+    - - 11.4
+      - -20.7
+      - name: parking_ward_2
+    - - 11.4
+      - -22.0
+      - name: parking_ward_3
+    - - 20.17269730645076
+      - -11.459999999999999
+      - name: parking_clean_junction
+    - - 19.499999999999996
+      - -11.459999999999999
+      - name: parking_clean_access_outer
+        mutex: clean_parking_access
+    - - 18.05
+      - -11.450000000000001
+      - name: parking_clean_access_inner
+        mutex: clean_parking_access
+    - - 16.4
+      - -12.1
+      - name: parking_clean_1
+    - - 16.4
+      - -10.7
+      - name: parking_clean_2
+    - - 27.499999999999996
+      - -19.4
+      - name: parking_medical_access_1
+    - - 27.499999999999996
+      - -20.7
+      - name: parking_medical_access_2
+    - - 25.0
+      - -19.4
+      - name: parking_medical_1
+    - - 25.0
+      - -20.7
+      - name: parking_medical_2
 lifts: {}

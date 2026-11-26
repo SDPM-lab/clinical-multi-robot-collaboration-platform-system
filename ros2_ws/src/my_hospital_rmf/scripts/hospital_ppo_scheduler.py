@@ -234,6 +234,12 @@ class HospitalPpoScheduler(Node):
 
     def __init__(self) -> None:
 
+        from rclpy.qos import (
+            QoSProfile,
+            ReliabilityPolicy,
+            DurabilityPolicy,
+        )
+
         super().__init__(
             "hospital_ppo_scheduler"
         )
@@ -455,6 +461,69 @@ class HospitalPpoScheduler(Node):
             "6=W03/robot_7"
         )
 
+        # Return-to-parking runtime state.
+        self.parking_operations = {}
+
+        from rmf_task_msgs.msg import ApiResponse
+
+        self.parking_api_subscription = (
+            self.create_subscription(
+                ApiResponse,
+                "/task_api_responses",
+                self._parking_api_response_callback,
+                100,
+            )
+        )
+
+
+        from action_msgs.msg import GoalStatusArray
+
+        self.parking_nav_status = {}
+        self.parking_nav_subscriptions = []
+
+        parking_qos = QoSProfile(
+            depth=1,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
+
+        for rid in LOGICAL_ROBOT_IDS:
+
+            robot_name = LOGICAL_TO_RMF[rid]
+
+            for action_name in (
+                "navigate_through_poses",
+                "navigate_to_pose",
+            ):
+
+                topic = (
+                    f"/{robot_name}/"
+                    f"{action_name}/_action/status"
+                )
+
+                subscription = self.create_subscription(
+                    GoalStatusArray,
+                    topic,
+                    lambda msg, logical_id=rid, action=action_name:
+                        self._parking_nav_status_callback(
+                            logical_id,
+                            action,
+                            msg,
+                        ),
+                    parking_qos,
+                )
+
+                self.parking_nav_subscriptions.append(
+                    subscription
+                )
+
+        self.parking_settlement_timer = (
+            self.create_timer(
+                1.0,
+                self._parking_settlement_tick,
+            )
+        )
+
     # ========================================================
     # Fleet state
     # ========================================================
@@ -543,6 +612,17 @@ class HospitalPpoScheduler(Node):
 
                 "status": status,
 
+                "rmf_mode": mode,
+
+                "path_length": len(robot.path),
+
+                "received_at": time.monotonic(),
+
+                "fleet_stamp": (
+                    int(robot.location.t.sec),
+                    int(robot.location.t.nanosec),
+                ),
+
                 "battery_soc": (
                     battery_soc
                 ),
@@ -555,19 +635,20 @@ class HospitalPpoScheduler(Node):
         task_id: str,
     ) -> str:
 
-        if task_id:
-            return "busy"
 
-        # Existing bridge interpretation:
-        # mode 1 = charging
+        if mode in (5, 8):
+            return "error"
+
         if mode == 1:
             return "charging"
 
-        # Moving without a task remains assignable.
-        if mode == 2:
+        if task_id:
             return "busy"
 
-        return "idle"
+        if mode == 0:
+            return "idle"
+
+        return "busy"
 
     # ========================================================
     # Nearest waypoint
@@ -821,6 +902,35 @@ class HospitalPpoScheduler(Node):
                 or queue
             ):
                 status = "busy"
+
+            elif logical_id in self.parking_operations:
+
+                operation = self.parking_operations[logical_id]
+
+                if (
+                    operation["phase"] in (
+                        "requesting",
+                        "returning",
+                    )
+                    and runtime_status in ("idle", "busy")
+                    and data.get("rmf_mode") in (0, 2, 6)
+                    and time.monotonic()
+                        - data.get("received_at", 0.0) <= 30.0
+                    and self._get_runtime_battery_soc(
+                        logical_id
+                    ) >= BATTERY_CHARGE_TRIGGER_SOC
+                    and (
+                        not data.get("task_id")
+                        or data.get("task_id") in (
+                            operation["request_id"],
+                            operation["rmf_task_id"],
+                        )
+                    )
+                ):
+                    status = "idle"
+
+                else:
+                    status = "busy"
 
             else:
                 status = runtime_status
@@ -1093,6 +1203,13 @@ class HospitalPpoScheduler(Node):
                 logical_robot_id
             ]
         )
+
+        if logical_robot_id in self.parking_operations:
+
+            raise RuntimeError(
+                "Cannot dispatch hospital task while "
+                "parking operation is unresolved"
+            )
 
         now = time.time()
 
@@ -1392,6 +1509,9 @@ class HospitalPpoScheduler(Node):
         logical_robot_id: str,
     ) -> None:
 
+        if logical_robot_id in self.parking_operations:
+            return
+
         if logical_robot_id in self.charging_robots:
             return
 
@@ -1474,6 +1594,13 @@ class HospitalPpoScheduler(Node):
         )
 
 
+        if not self.scheduling_only:
+
+            self._dispatch_return_to_parking(
+                logical_robot_id
+            )
+
+
     def _activity_completed_callback(
         self,
         msg: String,
@@ -1520,6 +1647,25 @@ class HospitalPpoScheduler(Node):
         # ----------------------------------------------
         # Return-to-charge completion
         # ----------------------------------------------
+
+        parking = self.parking_operations.get(
+            logical_robot_id
+        )
+
+        if parking is not None:
+
+            if destination == parking["waypoint"]:
+
+                parking["arrival_event_at"] = time.monotonic()
+
+                self.get_logger().info(
+                    "[PARKING_ARRIVAL_EVENT] "
+                    f"robot={rmf_robot_name}, "
+                    f"destination={destination}"
+                )
+
+            # Parking events are not hospital task events.
+            return
 
         if self.returning_to_charge[
             logical_robot_id
@@ -2045,7 +2191,28 @@ class HospitalPpoScheduler(Node):
             ]
         )
 
-        if running_task_id is None:
+        if logical_robot_id in self.parking_operations:
+
+            self.queued_task_ids[
+                logical_robot_id
+            ].append(task_id)
+
+            task.status = "queued"
+
+            self.get_logger().info(
+                "[PPO_ASSIGN_PARKING_PREEMPT] "
+                f"task={task_id}, "
+                f"robot={rmf_robot_name}"
+            )
+
+            self._request_parking_cancel(
+                logical_robot_id
+            )
+
+            # The queued task reserves this robot.
+            # Do not dispatch until parking is settled.
+
+        elif running_task_id is None:
 
             self._start_hospital_task(
                 logical_robot_id=(
@@ -2084,6 +2251,535 @@ class HospitalPpoScheduler(Node):
             assigned=True,
             rmf_robot_name=rmf_robot_name,
         )
+
+
+    def _parking_waypoint(self, logical_robot_id):
+
+        parking_by_rmf = {
+            "hospital_robot_1": ("parking_clean_1", 16.4, -12.1),
+            "hospital_robot_2": ("parking_clean_2", 16.4, -10.7),
+            "hospital_robot_3": ("parking_medical_1", 25.0, -19.4),
+            "hospital_robot_4": ("parking_medical_2", 25.0, -20.7),
+            "hospital_robot_5": ("parking_ward_1", 11.4, -19.4),
+            "hospital_robot_6": ("parking_ward_2", 11.4, -20.7),
+            "hospital_robot_7": ("parking_ward_3", 11.4, -22.0),
+        }
+
+        return parking_by_rmf[
+            LOGICAL_TO_RMF[logical_robot_id]
+        ]
+
+
+    def _is_at_parking(self, logical_robot_id):
+
+        data = self.latest_robot_data.get(
+            logical_robot_id
+        )
+
+        if data is None:
+            return False
+
+        waypoint, x, y = self._parking_waypoint(
+            logical_robot_id
+        )
+
+        distance = (
+            (float(data["x"]) - x) ** 2
+            + (float(data["y"]) - y) ** 2
+        ) ** 0.5
+
+        return distance <= 0.35
+
+
+    def _dispatch_return_to_parking(
+        self,
+        logical_robot_id,
+    ):
+
+        if self.scheduling_only:
+            return
+
+        if logical_robot_id in self.parking_operations:
+            return
+
+        if logical_robot_id in self.charging_robots:
+            return
+
+        if self.returning_to_charge[logical_robot_id]:
+            return
+
+        if self.running_task_ids[logical_robot_id] is not None:
+            return
+
+        if self.queued_task_ids[logical_robot_id]:
+            return
+
+        if self._get_runtime_battery_soc(
+            logical_robot_id
+        ) < BATTERY_CHARGE_TRIGGER_SOC:
+            return
+
+        if self._is_at_parking(logical_robot_id):
+
+            self.get_logger().info(
+                "[PARKING_ALREADY_REACHED] "
+                f"robot={LOGICAL_TO_RMF[logical_robot_id]}"
+            )
+
+            return
+
+        waypoint, _, _ = self._parking_waypoint(
+            logical_robot_id
+        )
+
+        rmf_robot_name = LOGICAL_TO_RMF[
+            logical_robot_id
+        ]
+
+        request_id = (
+            f"parking_{rmf_robot_name}_"
+            f"{time.time_ns()}"
+        )
+
+        payload = {
+            "type": "robot_task_request",
+            "robot": rmf_robot_name,
+            "fleet": RMF_FLEET_NAME,
+            "request": {
+                "category": "compose",
+                "description": {
+                    "category": "return_to_parking",
+                    "detail": waypoint,
+                    "phases": [
+                        {
+                            "activity": {
+                                "category": "go_to_place",
+                                "description": waypoint,
+                            }
+                        }
+                    ],
+                },
+            },
+        }
+
+        operation = {
+            "request_id": request_id,
+            "rmf_task_id": None,
+            "waypoint": waypoint,
+            "phase": "requesting",
+            "cancel_request_id": None,
+            "cancel_accepted": False,
+            "created_at": time.monotonic(),
+            "seen_rmf_task": False,
+            "idle_samples": 0,
+            "last_idle_stamp": None,
+            "idle_position": None,
+            "timeout_reported": False,
+        }
+
+        self.parking_operations[
+            logical_robot_id
+        ] = operation
+
+        msg = ApiRequest()
+        msg.request_id = request_id
+        msg.json_msg = json.dumps(payload)
+
+        self.rmf_task_publisher.publish(msg)
+
+        self.get_logger().info(
+            "[RETURN_TO_PARKING_REQUEST] "
+            f"robot={rmf_robot_name}, "
+            f"waypoint={waypoint}, "
+            f"request_id={request_id}"
+        )
+
+
+    def _request_parking_cancel(
+        self,
+        logical_robot_id,
+    ):
+
+        operation = self.parking_operations.get(
+            logical_robot_id
+        )
+
+        if operation is None:
+            return
+
+        if operation["cancel_request_id"] is not None:
+            return
+
+        if operation["phase"] in (
+            "failed",
+            "cancel_failed",
+        ):
+            return
+
+        if operation["rmf_task_id"] is None:
+
+            operation["phase"] = "preempt_pending"
+
+            return
+
+        request_id = (
+            f"parking_cancel_"
+            f"{LOGICAL_TO_RMF[logical_robot_id]}_"
+            f"{time.time_ns()}"
+        )
+
+        payload = {
+            "type": "cancel_task_request",
+            "task_id": operation["rmf_task_id"],
+            "labels": [
+                "preempt_return_to_parking"
+            ],
+        }
+
+        operation["cancel_request_id"] = request_id
+        operation["phase"] = "canceling"
+        operation["cancel_requested_at"] = time.monotonic()
+
+        msg = ApiRequest()
+        msg.request_id = request_id
+        msg.json_msg = json.dumps(payload)
+
+        self.rmf_task_publisher.publish(msg)
+
+        self.get_logger().info(
+            "[PARKING_CANCEL_REQUEST] "
+            f"robot={LOGICAL_TO_RMF[logical_robot_id]}, "
+            f"rmf_task_id={operation['rmf_task_id']}"
+        )
+
+
+    def _parking_api_response_callback(
+        self,
+        msg,
+    ):
+
+        if msg.type != 2:
+            return
+
+        operation = None
+        logical_robot_id = None
+
+        for rid, item in self.parking_operations.items():
+
+            if msg.request_id in (
+                item["request_id"],
+                item["cancel_request_id"],
+            ):
+                operation = item
+                logical_robot_id = rid
+                break
+
+        if operation is None:
+            return
+
+        try:
+            data = json.loads(msg.json_msg)
+        except Exception as exc:
+
+            self.get_logger().error(
+                f"[PARKING_INVALID_RESPONSE] {exc}"
+            )
+
+            return
+
+        robot = LOGICAL_TO_RMF[
+            logical_robot_id
+        ]
+
+        if msg.request_id == operation["request_id"]:
+
+            if operation["rmf_task_id"] is not None:
+                return
+
+            booking = (
+                data.get("state", {})
+                .get("booking", {})
+            )
+
+            rmf_task_id = booking.get("id")
+
+            if (
+                data.get("success") is False
+                or not rmf_task_id
+            ):
+
+                operation["phase"] = (
+                    "rejected"
+                    if data.get("success") is False
+                    else "failed"
+                )
+
+                self.get_logger().error(
+                    "[PARKING_REQUEST_FAILED] "
+                    f"robot={robot}, response={data}"
+                )
+
+                return
+
+            operation["rmf_task_id"] = str(
+                rmf_task_id
+            )
+
+            should_cancel = (
+                operation["phase"] == "preempt_pending"
+                or bool(
+                    self.queued_task_ids[
+                        logical_robot_id
+                    ]
+                )
+            )
+
+            operation["phase"] = "returning"
+
+            self.get_logger().info(
+                "[PARKING_REQUEST_ACCEPTED] "
+                f"robot={robot}, "
+                f"rmf_task_id={rmf_task_id}"
+            )
+
+            if should_cancel:
+
+                self._request_parking_cancel(
+                    logical_robot_id
+                )
+
+            return
+
+        if msg.request_id == operation["cancel_request_id"]:
+
+            if operation["cancel_accepted"]:
+                return
+
+            if data.get("success") is True:
+
+                operation["cancel_accepted"] = True
+                operation["cancel_accepted_at"] = time.monotonic()
+                operation["phase"] = "waiting_stop"
+
+                self.get_logger().info(
+                    "[PARKING_CANCEL_ACCEPTED] "
+                    f"robot={robot}"
+                )
+
+            else:
+
+                operation["phase"] = "cancel_failed"
+
+                self.get_logger().error(
+                    "[PARKING_CANCEL_FAILED] "
+                    f"robot={robot}, response={data}"
+                )
+
+
+    def _parking_nav_status_callback(
+        self,
+        logical_robot_id,
+        action_name,
+        msg,
+    ):
+
+        self.parking_nav_status[
+            (logical_robot_id, action_name)
+        ] = {
+            "received_at": time.monotonic(),
+
+            # 1=ACCEPTED, 2=EXECUTING, 3=CANCELING
+            "active": any(
+                int(goal.status) in (1, 2, 3)
+                for goal in msg.status_list
+            ),
+        }
+
+
+    def _parking_settlement_tick(self):
+
+        if self.scheduling_only:
+            return
+
+        now = time.monotonic()
+
+        for rid, operation in list(
+            self.parking_operations.items()
+        ):
+
+            robot_name = LOGICAL_TO_RMF[rid]
+
+            data = self.latest_robot_data.get(rid)
+
+            if data is None:
+                continue
+
+            if now - data.get("received_at", 0.0) > 30.0:
+
+                operation["idle_samples"] = 0
+                operation["idle_position"] = None
+
+                continue
+
+            current_rmf_task = data.get("task_id")
+
+            if (
+                current_rmf_task
+                and current_rmf_task in (
+                    operation["request_id"],
+                    operation["rmf_task_id"],
+                )
+            ):
+
+                operation["seen_rmf_task"] = True
+
+            phase = operation["phase"]
+
+            # Do not release an operation when its result
+            # is unknown or cancellation is unresolved.
+            cancellation_ready = (
+                phase == "waiting_stop"
+                and operation["cancel_accepted"]
+            )
+
+            arrival_ready = (
+                phase in ("returning", "cancel_failed")
+                and operation["rmf_task_id"] is not None
+                and self._is_at_parking(rid)
+                and (
+                    operation["seen_rmf_task"]
+                    or "arrival_event_at" in operation
+                )
+            )
+
+            if not cancellation_ready and not arrival_ready:
+
+                if (
+                    now - operation["created_at"] > 1800.0
+                    and not operation["timeout_reported"]
+                ):
+
+                    operation["timeout_reported"] = True
+
+                    self.get_logger().error(
+                        "[PARKING_OPERATION_UNRESOLVED] "
+                        f"robot={robot_name}, "
+                        f"phase={phase}"
+                    )
+
+                continue
+
+            through_status = self.parking_nav_status.get(
+                (rid, "navigate_through_poses")
+            )
+
+            single_status = self.parking_nav_status.get(
+                (rid, "navigate_to_pose")
+            )
+
+            # The bridge uses NavigateThroughPoses.
+            # Require positive evidence that its action
+            # has reached a non-active state.
+            if through_status is None:
+                continue
+
+            nav_active = (
+                through_status["active"]
+                or (
+                    single_status is not None
+                    and single_status["active"]
+                )
+            )
+
+            if cancellation_ready:
+
+                evidence_after = operation[
+                    "cancel_requested_at"
+                ]
+
+            else:
+
+                evidence_after = operation["created_at"]
+
+            fleet_fresh = (
+                data["received_at"] >= evidence_after
+            )
+
+            nav_fresh = (
+                through_status["received_at"]
+                >= evidence_after
+            )
+
+            idle_confirmed = (
+                data.get("rmf_mode") == 0
+                and not current_rmf_task
+                and data.get("path_length") == 0
+                and data.get("level_name") == "L1"
+                and not nav_active
+                and fleet_fresh
+                and nav_fresh
+            )
+
+            if not idle_confirmed:
+
+                operation["idle_samples"] = 0
+                operation["idle_position"] = None
+
+                continue
+
+            stamp = data.get("fleet_stamp")
+
+            if stamp == operation["last_idle_stamp"]:
+                continue
+
+            operation["last_idle_stamp"] = stamp
+
+            position = (
+                float(data["x"]),
+                float(data["y"]),
+            )
+
+            previous = operation["idle_position"]
+
+            if previous is not None:
+
+                displacement = (
+                    (position[0] - previous[0]) ** 2
+                    + (position[1] - previous[1]) ** 2
+                ) ** 0.5
+
+                if displacement > 0.05:
+
+                    operation["idle_samples"] = 0
+
+            operation["idle_position"] = position
+            operation["idle_samples"] += 1
+
+            if operation["idle_samples"] < 2:
+                continue
+
+            reason = (
+                "canceled"
+                if cancellation_ready
+                else "arrived"
+            )
+
+            self.parking_operations.pop(rid)
+
+            self.get_logger().info(
+                "[PARKING_SETTLED] "
+                f"robot={robot_name}, "
+                f"reason={reason}, "
+                f"queue={self.queued_task_ids[rid]}"
+            )
+
+            # Preserve the original charging priority.
+            # If a new task is queued, it will be started
+            # by _start_next_or_charge.
+            self._start_next_or_charge(rid)
+
+            # Do not dispatch a new hospital task here.
+            # An API response does not prove Nav2 has stopped.
 
 
 def main() -> None:
