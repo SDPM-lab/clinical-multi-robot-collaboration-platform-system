@@ -1,3 +1,5 @@
+import { ScheduleHistoryPhaseV1 } from "./ScheduleHistoryPhaseV1";
+import { RobotStatusPhaseV14 } from "./RobotStatusPhaseV14";
 import { RobotStatusPhaseV13 } from "./RobotStatusPhaseV13";
 import { RobotStatusPhaseV12 } from "./RobotStatusPhaseV12";
 import { RobotStatusPhaseV11 } from "./RobotStatusPhaseV11";
@@ -52,6 +54,8 @@ export const RemotionRoot: React.FC = () => {
     <>
       <MyComposition />
       <Composition id="RobotStatusPhaseV13" component={RobotStatusPhaseV13} width={1920} height={1080} fps={30} durationInFrames={345} />
+      <Composition id="RobotStatusPhaseV14" component={RobotStatusPhaseV14} width={1920} height={1080} fps={30} durationInFrames={330} />
+      <Composition id="ScheduleHistoryPhaseV1" component={ScheduleHistoryPhaseV1} width={1920} height={1080} fps={30} durationInFrames={360} />
       <Composition id="RobotStatusPhaseV12" component={RobotStatusPhaseV12} width={1920} height={1080} fps={30} durationInFrames={330} />
       <Composition id="RobotStatusPhaseV11" component={RobotStatusPhaseV11} width={1920} height={1080} fps={30} durationInFrames={240} />
       <Composition id="RobotStatusPhaseV10" component={RobotStatusPhaseV10} width={1920} height={1080} fps={30} durationInFrames={195} />
