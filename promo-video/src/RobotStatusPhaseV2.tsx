@@ -21,14 +21,14 @@ const position=(x:number,y:number,width:number,height:number):CSSProperties=>
   ({position:"absolute",left:x,top:y,width,height});
 const area=({x,y,width,height}:Box)=>position(x,y,width,height);
 
-function NativeCrop({image,box,style,children}:{image:string;box:Box;style?:CSSProperties;children?:React.ReactNode}){
+export function NativeCrop({image,box,style,children}:{image:string;box:Box;style?:CSSProperties;children?:React.ReactNode}){
   return <div style={{...area(box),overflow:"hidden",...style}}>
     <Img src={asset(image+".png")} style={position(-box.x,-box.y,pageWidth,pageHeight)}/>
     {children}
   </div>;
 }
 
-function Robot({f}:{f:number}){
+export function Robot({f,showcase=false}:{f:number;showcase?:boolean}){
   const canvas=useRef<HTMLCanvasElement>(null);
   const scene=useRef<Awaited<ReturnType<typeof createRobotStatusScene>>|null>(null);
   const latest=useRef(f);
@@ -37,7 +37,7 @@ function Robot({f}:{f:number}){
   useEffect(()=>{
     const handle=delayRender("Loading original Agibot GLB");
     let active=true;
-    createRobotStatusScene(canvas.current!,staticFile("ppo-spatial/AGIBOT_A2D.glb"),1.12,1.24).then(value=>{
+    createRobotStatusScene(canvas.current!,staticFile("ppo-spatial/AGIBOT_A2D.glb"),1.12,1.24,showcase).then(value=>{
       if(!active){value.dispose();return;}
       scene.current=value;
       value.draw(latest.current);
@@ -49,11 +49,11 @@ function Robot({f}:{f:number}){
       scene.current=null;
       continueRender(handle);
     };
-  },[continueRender,delayRender]);
-  return <canvas ref={canvas} width={830} height={720} style={{width:"100%",height:"100%",objectFit:"contain",display:"block"}}/>;
+  },[continueRender,delayRender,showcase]);
+  return <canvas ref={canvas} width={showcase?1440:830} height={showcase?800:720} style={{width:"100%",height:"100%",objectFit:"contain",display:"block"}}/>;
 }
 
-function Cursor({x,y,press,opacity=1}:{x:number;y:number;press:number;opacity?:number}){
+export function Cursor({x,y,press,opacity=1}:{x:number;y:number;press:number;opacity?:number}){
   return <svg width="24" height="29" viewBox="0 0 22 27" style={{...position(x,y,24,29),opacity,
     transform:`scale(${1-.17*press})`,transformOrigin:"0 0",pointerEvents:"none",filter:"drop-shadow(0 1px 2px #20171055)"}}>
     <path d="M2 1 2 21 7 17 11 25 15 23 11 15 20 14Z" fill="#22201d" stroke="white" strokeWidth="1.6" strokeLinejoin="round"/>
@@ -70,8 +70,7 @@ const scrollEnd=capture.maxScroll;
 const cropBottom=4;
 const strip={...list,height:list.height-cropBottom};
 
-function FleetScroll({f,source}:{f:number;source:string}){
-  const scroll=scrollEnd*(1-Math.pow(1-ease(f,102,138),2))*(1-ease(f,158,171));
+export function FleetScroll({f,source,scroll=scrollEnd*(1-Math.pow(1-ease(f,102,138),2))*(1-ease(f,158,171)),hover=ease(f,142,152)*(1-ease(f,153,158))}:{f:number;source:string;scroll?:number;hover?:number}){
   const split=Math.max(0,list.height-scroll);
   const areaEnd=Math.max(0,strip.height-split);
   return <>
@@ -82,7 +81,7 @@ function FleetScroll({f,source}:{f:number;source:string}){
       <Img src={asset("c01-scroll.png")} style={position(-list.x,-list.y-split-scroll+scrollEnd,pageWidth,pageHeight)}/>
     </NativeCrop>}
     <div style={{...position(row.x,row.y-scroll,row.width,row.height),borderRadius:9,background:"#e7853a13",
-      opacity:ease(f,142,152)*(1-ease(f,153,158)),pointerEvents:"none"}}/>
+      opacity:hover,pointerEvents:"none"}}/>
   </>;
 }
 

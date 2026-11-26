@@ -1,3 +1,14 @@
+import { RobotStatusPhaseV13 } from "./RobotStatusPhaseV13";
+import { RobotStatusPhaseV12 } from "./RobotStatusPhaseV12";
+import { RobotStatusPhaseV11 } from "./RobotStatusPhaseV11";
+import { RobotStatusPhaseV10 } from "./RobotStatusPhaseV10";
+import { RobotStatusPhaseV9 } from "./RobotStatusPhaseV9";
+import { RobotStatusPhaseV8 } from "./RobotStatusPhaseV8";
+import { RobotStatusPhaseV7 } from "./RobotStatusPhaseV7";
+import { RobotStatusPhaseV6 } from "./RobotStatusPhaseV6";
+import { RobotStatusPhaseV5 } from "./RobotStatusPhaseV5";
+import { RobotStatusPhaseV4 } from "./RobotStatusPhaseV4";
+import { RobotStatusPhaseV3 } from "./RobotStatusPhaseV3";
 import { RobotStatusPhaseV2 } from "./RobotStatusPhaseV2";
 import { RobotStatusPhaseV1 } from "./RobotStatusPhaseV1";
 import { LiveMapPhaseV3_3 } from "./LiveMapPhaseV3_3";
@@ -40,6 +51,17 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       <MyComposition />
+      <Composition id="RobotStatusPhaseV13" component={RobotStatusPhaseV13} width={1920} height={1080} fps={30} durationInFrames={345} />
+      <Composition id="RobotStatusPhaseV12" component={RobotStatusPhaseV12} width={1920} height={1080} fps={30} durationInFrames={330} />
+      <Composition id="RobotStatusPhaseV11" component={RobotStatusPhaseV11} width={1920} height={1080} fps={30} durationInFrames={240} />
+      <Composition id="RobotStatusPhaseV10" component={RobotStatusPhaseV10} width={1920} height={1080} fps={30} durationInFrames={195} />
+      <Composition id="RobotStatusPhaseV9" component={RobotStatusPhaseV9} width={1920} height={1080} fps={30} durationInFrames={195} />
+      <Composition id="RobotStatusPhaseV8" component={RobotStatusPhaseV8} width={1920} height={1080} fps={30} durationInFrames={300} />
+      <Composition id="RobotStatusPhaseV7" component={RobotStatusPhaseV7} width={1920} height={1080} fps={30} durationInFrames={240} />
+      <Composition id="RobotStatusPhaseV6" component={RobotStatusPhaseV6} width={1920} height={1080} fps={30} durationInFrames={180} />
+      <Composition id="RobotStatusPhaseV5" component={RobotStatusPhaseV5} width={1920} height={1080} fps={30} durationInFrames={360} />
+      <Composition id="RobotStatusPhaseV4" component={RobotStatusPhaseV4} width={1920} height={1080} fps={30} durationInFrames={360} />
+      <Composition id="RobotStatusPhaseV3" component={RobotStatusPhaseV3} width={1920} height={1080} fps={30} durationInFrames={360} />
       <Composition id="RobotStatusPhaseV2" component={RobotStatusPhaseV2} width={1920} height={1080} fps={30} durationInFrames={600} />
       <Composition id="RobotStatusPhaseV1" component={RobotStatusPhaseV1} width={1920} height={1080} fps={30} durationInFrames={600} />
       <Composition id="Phase3" component={LiveMapPhaseV3_3}

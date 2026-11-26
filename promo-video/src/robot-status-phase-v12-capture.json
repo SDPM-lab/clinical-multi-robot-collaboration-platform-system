@@ -1,0 +1,24 @@
+{
+  "timing": {
+    "duration": 126,
+    "scrollStart": 13,
+    "scrollEnd": 63,
+    "selectW02": 77,
+    "returnStart": 83,
+    "returnEnd": 103,
+    "selectM01": 115
+  },
+  "targets": {
+    "W02": [
+      372.4325,
+      808.08
+    ],
+    "M01": [
+      372.4325,
+      516.08
+    ]
+  },
+  "width": 696,
+  "height": 1140,
+  "maxScroll": 270
+}

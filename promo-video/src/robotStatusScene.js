@@ -6,15 +6,16 @@ const smooth = (f, a, b) => {
   return t*t*(3-2*t);
 };
 
-export async function createRobotStatusScene(canvas, url, distanceScale=1, wholeViewScale=1) {
+export async function createRobotStatusScene(canvas, url, distanceScale=1, wholeViewScale=1, showcase=false, workspace=false) {
   const renderer = new T.WebGLRenderer({canvas, alpha:true, antialias:true, preserveDrawingBuffer:true});
-  renderer.setSize(830,720,false);
+  const [width,heightPx]=workspace?[1186,996]:showcase?[1440,800]:[830,720];
+  renderer.setSize(width,heightPx,false);
   renderer.toneMapping = T.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.13;
+  renderer.toneMappingExposure = workspace ? 1 : 1.13;
   const scene = new T.Scene();
-  const camera = new T.PerspectiveCamera(35,830/720,.01,100);
-  scene.add(new T.HemisphereLight(0xf7f9ff,0x555c65,1.5));
-  for (const [x,y,z,color,intensity] of [[5,8,5,0xffffff,2.4],[2,4,-6,0xe4ecff,1.25],[-4,2,1,0xffeddc,.7]]) {
+  const camera = new T.PerspectiveCamera(35,width/heightPx,.01,100);
+  scene.add(new T.HemisphereLight(0xf7f9ff,0x555c65,workspace?1.35:1.5));
+  for (const [x,y,z,color,intensity] of (workspace?[[3,5,4,0xffffff,2.2],[-2,2,-4,0xe4ecff,.85]]:[[5,8,5,0xffffff,2.4],[2,4,-6,0xe4ecff,1.25],[-4,2,1,0xffeddc,.7]])) {
     const light = new T.DirectionalLight(color,intensity);
     light.position.set(x,y,z);
     scene.add(light);
@@ -47,8 +48,36 @@ export async function createRobotStatusScene(canvas, url, distanceScale=1, whole
   const height = whole.getSize(new T.Vector3()).y;
   const headTarget = head.getCenter(new T.Vector3()).add(new T.Vector3(0,-height*.035,0));
   const armTarget = arm.getCenter(new T.Vector3());
+  const corners=(showcase||workspace)?[whole.min.x,whole.max.x].flatMap(x=>
+    [whole.min.y,whole.max.y].flatMap(y=>[whole.min.z,whole.max.z].map(z=>new T.Vector3(x,y,z).sub(center)))):[];
   let previous;
+  let previousAngle;
+  let orbitRadius;
+  const orbitDirection = angle => new T.Vector3(Math.cos(angle), .115, Math.sin(angle)).normalize();
+  function calculateOrbitRadius() {
+    const tangent = Math.tan(T.MathUtils.degToRad(camera.fov / 2)) * .88;
+    const bounds = [whole.min.x, whole.max.x].flatMap(x =>
+      [whole.min.y, whole.max.y].flatMap(y =>
+        [whole.min.z, whole.max.z].map(z => new T.Vector3(x, y, z).sub(center))));
+    return Math.max(...Array.from({length: 72}, (_, i) => {
+      const direction = orbitDirection(i * Math.PI / 36);
+      const right = new T.Vector3().crossVectors(camera.up, direction).normalize();
+      const up = new T.Vector3().crossVectors(direction, right);
+      return Math.max(...bounds.map(point => point.dot(direction) + Math.max(
+        Math.abs(point.dot(right)) / (tangent * camera.aspect),
+        Math.abs(point.dot(up)) / tangent,
+      )));
+    }));
+  }
   return {
+    drawOrbit(angle) {
+      if (angle === previousAngle) return;
+      previousAngle = angle;
+      orbitRadius ??= calculateOrbitRadius();
+      camera.position.copy(center).addScaledVector(orbitDirection(angle), orbitRadius);
+      camera.lookAt(center);
+      renderer.render(scene, camera);
+    },
     draw(frame) {
       const f=frame<132?132:frame>209&&frame<453?209:Math.min(frame,549);
       if (previous===f) return;
@@ -57,10 +86,19 @@ export async function createRobotStatusScene(canvas, url, distanceScale=1, whole
       const headFocus=smooth(f,453,477)*(1-smooth(f,484,505));
       const armFocus=smooth(f,484,505)*(1-smooth(f,521,545));
       const wholeReturn=smooth(f,521,549);
-      const angle=T.MathUtils.lerp(T.MathUtils.lerp(.30,.71,orbit),.31,wholeReturn)-headFocus*.38+armFocus*.17;
-      const distance=height*distanceScale*T.MathUtils.lerp(wholeViewScale,1,Math.max(headFocus,armFocus))*(2.12-.08*orbit-.99*headFocus-1.05*armFocus+.08*wholeReturn);
+      const angle=workspace ? T.MathUtils.lerp(.19,.43,orbit) : T.MathUtils.lerp(T.MathUtils.lerp(.30,.71,orbit),.31,wholeReturn)-headFocus*.38+armFocus*.17;
+      let distance=height*distanceScale*T.MathUtils.lerp(wholeViewScale,1,Math.max(headFocus,armFocus))*(2.12-.08*orbit-.99*headFocus-1.05*armFocus+.08*wholeReturn);
       const target=center.clone().lerp(headTarget,headFocus).lerp(armTarget,armFocus);
-      camera.position.copy(target).add(new T.Vector3(Math.cos(angle)*distance,distance*.107,Math.sin(angle)*distance));
+      const direction=new T.Vector3(Math.cos(angle),.107,Math.sin(angle));
+      if(showcase||workspace){
+        direction.normalize();
+        const right=new T.Vector3().crossVectors(camera.up,direction).normalize();
+        const up=new T.Vector3().crossVectors(direction,right);
+        const tangent=Math.tan(T.MathUtils.degToRad(camera.fov/2))*(.86+.07*orbit);
+        distance=(workspace ? .97 : .79)*Math.max(...corners.map(p=>p.dot(direction)+Math.max(
+          Math.abs(p.dot(right))/(tangent*camera.aspect),Math.abs(p.dot(up))/tangent)));
+      }
+      camera.position.copy(target).addScaledVector(direction,distance);
       camera.lookAt(target);
       renderer.render(scene,camera);
     },

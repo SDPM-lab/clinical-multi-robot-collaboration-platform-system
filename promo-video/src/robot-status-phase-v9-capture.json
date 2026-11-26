@@ -1,0 +1,39 @@
+{
+  "box": {
+    "x": 24,
+    "y": 186,
+    "width": 341.4375,
+    "height": 630
+  },
+  "targets": [
+    {
+      "x": 24,
+      "y": 188,
+      "width": 337.4375,
+      "height": 96
+    },
+    {
+      "x": 24,
+      "y": 396,
+      "width": 337.4375,
+      "height": 96
+    }
+  ],
+  "maxScroll": 100,
+  "navbar": {
+    "status": {
+      "x": 997.8125,
+      "y": 14,
+      "width": 93.671875,
+      "height": 34
+    },
+    "map": {
+      "x": 901.21875,
+      "y": 14,
+      "width": 66.59375,
+      "height": 34
+    },
+    "activeClass": "overview-nav__link overview-nav__link--active",
+    "navBottom": 62
+  }
+}
