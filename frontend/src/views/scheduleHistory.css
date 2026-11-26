@@ -286,3 +286,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--theme-prima
 .task-record dd{overflow-wrap:anywhere}
 :global([data-theme='dark']) .history-notice.is-error{color:#ffd3d8;background:#512b33;border-color:#86515c}
 @media(max-width:700px){.history-list-context small{margin-left:0}.history-list-panel{padding:14px}.history-list-context>div{flex-basis:100%}}
+
+/* Orange theme scrollbars for Schedule History (standard + Safari/WebKit). */
+.detail-scroll, .history-list-scroll, .schedule-history-page { scrollbar-width: thin; scrollbar-color: rgba(var(--color-primary-rgb), .55) transparent; }
+.detail-scroll::-webkit-scrollbar, .history-list-scroll::-webkit-scrollbar, .schedule-history-page::-webkit-scrollbar { width: 6px; height: 6px; }
+.detail-scroll::-webkit-scrollbar-track, .history-list-scroll::-webkit-scrollbar-track, .schedule-history-page::-webkit-scrollbar-track { background: transparent; }
+.detail-scroll::-webkit-scrollbar-thumb, .history-list-scroll::-webkit-scrollbar-thumb, .schedule-history-page::-webkit-scrollbar-thumb { background: rgba(var(--color-primary-rgb), .55); border-radius: 6px; }
+.detail-scroll::-webkit-scrollbar-thumb:hover, .history-list-scroll::-webkit-scrollbar-thumb:hover, .schedule-history-page::-webkit-scrollbar-thumb:hover { background: rgba(var(--color-primary-rgb), .8); }
+.detail-scroll::-webkit-scrollbar-button, .history-list-scroll::-webkit-scrollbar-button, .schedule-history-page::-webkit-scrollbar-button { display: none; width: 0; height: 0; }

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { createGltfLoader, runtimeModelUrl } from '@/three/loaders/createGltfLoader.js'
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { BAYMAX_MODEL_URL, baymaxConfig } from '@/config/baymaxNurseConfig.js'
 
@@ -63,7 +63,7 @@ export class BaymaxNurseController {
   constructor({
     actorGroup,
     config = baymaxConfig,
-    loader = new GLTFLoader(),
+    loader = createGltfLoader(),
     animationOffset = 0,
     name = 'Baymax Nurse',
   }) {
@@ -114,7 +114,7 @@ export class BaymaxNurseController {
   }
 
   async load() {
-    const gltf = await this.loader.loadAsync(BAYMAX_MODEL_URL)
+    const gltf = await this.loader.loadAsync(runtimeModelUrl(BAYMAX_MODEL_URL))
 
     console.table(gltf.animations.map(clipSummary))
 

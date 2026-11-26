@@ -6,7 +6,7 @@ import { locale, t, translateTask, translateLocation } from '@/i18n/index.js'
 import { computed, nextTick, onActivated, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
 import { Bot, Camera, Eye, Layers3, LayoutDashboard, LocateFixed, Orbit, RotateCcw, Route, Plus, Minus, X } from '@lucide/vue'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { createGltfLoader, runtimeModelUrl } from '@/three/loaders/createGltfLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { getEmbeddedAssetLayer, SCENE_ASSETS } from '@/config/sceneAssets.js'
 import { NAVIGATION_ASSETS } from '@/config/sceneAssets.js'
@@ -981,10 +981,10 @@ const createScene = () => {
 }
 
 const loadModel = () => {
-  const loader = new GLTFLoader()
+  const loader = createGltfLoader()
 
   loader.load(
-    props.modelUrl,
+    runtimeModelUrl(props.modelUrl),
     (gltf) => {
       if (disposed) {
         disposeObject(gltf.scene)

@@ -56,7 +56,7 @@ const charts = computed(() => ['floor1','floor2','floor3'].map((floorId, floorIn
           <g v-for="(value,robotIndex) in point.values" :key="robotIndex"><rect v-if="value !== null" class="robot-bar" :x="point.x+(robotIndex-3)*(barWidth+barGap)-barWidth/2" :y="chartY(value)" :width="barWidth" :height="baseline-chartY(value)" :fill="`url(#${gradientPrefix}-${chart.floorId}-${robotIndex})`" :style="{'--bar-index':robotIndex,'--hour-index':index}"><title>{{ point.observedTimes[robotIds[robotIndex]] || point.time }} {{ robotIds[robotIndex] }}：{{value}}%</title></rect></g>
           <text v-if="index % Math.max(1, Math.ceil(42 * chart.points.length / (plotSize.width - plotLeft - plotRight))) === 0" :x="point.x" :y="baseline + 16" text-anchor="middle" class="time-label">{{ point.time }}</text>
         </g>
-        <text v-if="!chart.points.length" x="140" y="50" text-anchor="middle">尚無歷史資料</text>
+        <text v-if="!chart.points.length" :x="(plotLeft + plotSize.width - plotRight) / 2" :y="chartY(50) - 6" text-anchor="middle">尚無歷史資料</text>
       </svg>
     </section>
   </div>

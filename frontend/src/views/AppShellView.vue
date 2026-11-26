@@ -356,7 +356,8 @@ onBeforeUnmount(() => {
   left: 0;
   z-index: 50;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
+  column-gap: clamp(16px, 2.5vw, 32px);
   align-items: center;
   min-height: 62px;
   padding: 0 var(--app-page-gutter);
@@ -429,7 +430,7 @@ onBeforeUnmount(() => {
   justify-self: center;
   min-width: 0;
   justify-content: center;
-  gap: 30px;
+  gap: clamp(14px, 2.2vw, 30px);
   margin: 0;
   pointer-events: auto;
 }
@@ -439,6 +440,7 @@ onBeforeUnmount(() => {
   padding: 9px 2px;
   color: var(--text-secondary);
   font-size: var(--navbar-font-size);
+  white-space: nowrap;
   font-weight: 500;
   background: transparent;
   border: 0;
