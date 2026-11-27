@@ -1,0 +1,44 @@
+{
+  "gauge": {
+    "x": 22,
+    "y": 142,
+    "width": 340,
+    "height": 326,
+    "selector": ".completion-panel"
+  },
+  "schedule": {
+    "x": 1228,
+    "y": 130,
+    "width": 350,
+    "height": 449,
+    "selector": ".overview-calendar"
+  },
+  "progress": {
+    "x": 1228,
+    "y": 589,
+    "width": 350,
+    "height": 293,
+    "selector": ".task-progress-panel"
+  },
+  "network": {
+    "x": 20,
+    "y": 589,
+    "width": 239,
+    "height": 140,
+    "selector": ".overview-connectivity > :first-child"
+  },
+  "fleet": {
+    "x": 20,
+    "y": 742,
+    "width": 239,
+    "height": 140,
+    "selector": ".overview-connectivity > :last-child"
+  },
+  "battery": {
+    "x": 271,
+    "y": 589,
+    "width": 943,
+    "height": 293,
+    "selector": ".overview-bottom-main"
+  }
+}

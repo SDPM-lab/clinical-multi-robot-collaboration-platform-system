@@ -1,0 +1,82 @@
+.robot-status-v14 {
+  position: absolute;
+  inset: 0;
+  color: #303232;
+  font: 14px "DejaVu Sans", Arial, sans-serif;
+  background: radial-gradient(ellipse at 12% 5%, #dfe6e7 0, transparent 51%),
+    radial-gradient(ellipse at 73% 7%, #fbfbfb 0, transparent 56%),
+    linear-gradient(129deg, #e8ecec 0%, #f3f4f3 41%, #f5f2eb 45%, #f3f5f4 59%, #eceeed 100%);
+  --text-primary: #303232;
+  --text-secondary: #666868;
+  --text-muted: #818484;
+  --theme-primary: #ff9661;
+  --theme-primary-soft: #ff96611d;
+  --accent-foreground: #a74720;
+  --info-background: #fbfcfc;
+  --info-border: 1px solid #dedfdf;
+  --info-divider: #dddcd8;
+  --info-shadow: 0 8px 22px #37312a0c;
+  --color-primary-rgb: 255, 150, 97;
+  --color-secondary-rgb: 243, 215, 80;
+  --color-secondary: #e6ca54;
+  --color-neutral: #858179;
+}
+.robot-status-v14 .robot-hmi {
+  zoom: 1.2;
+  inset: 64px 0 32px;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 16px;
+}
+.robot-status-v14 .robot-hmi *,
+.robot-status-v14 .robot-hmi *::before,
+.robot-status-v14 .robot-hmi *::after {
+  animation: none !important;
+  transition: none !important;
+}
+.robot-status-v14 .robot-hmi button,
+.robot-status-v14 .robot-hmi input { font-family: inherit; }
+.robot-status-v14 .robot-inspector { margin-top: 35px; }
+.robot-status-v14 .robot-info-card { min-height: 465px; }
+/* Shift all seven native rows together inside the original list's clipping area.
+   A frame-controlled offset is independent of browser scroll events and seek order. */
+.robot-status-v14 .robot-picker {
+  --fleet-row-height: 96px;
+  --fleet-row-gap: 8px;
+  --fleet-content-height: calc(7 * var(--fleet-row-height) + 6 * var(--fleet-row-gap) + 10px);
+  position: relative;
+  flex: 1 1 0;
+  overflow: hidden;
+}
+.robot-status-v14 .v14-fleet-rows {
+  position: absolute;
+  top: calc(2px + min(0px, 100% - var(--fleet-content-height)) * var(--fleet-scroll));
+  left: 0;
+  right: 4px;
+  display: grid;
+  gap: var(--fleet-row-gap);
+}
+.robot-status-v14 .robot-picker .robot-list-item { height: var(--fleet-row-height); }
+.robot-status-v14 .robot-picker .robot-list-item:hover { transform: none; }
+.robot-status-v14 .robot-picker__identity strong { letter-spacing: .02em; }
+.robot-status-v14 .robot-model-cell { display: grid; place-items: center; }
+.robot-status-v14 .robot-viewport { position: absolute; inset: 0; display: grid; place-items: center; }
+.robot-status-v14 .robot-viewport canvas {
+  display: block;
+  width: min(100%, 810px);
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+.robot-status-v14 .v14-reset-view {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  right: 12px;
+  color: var(--text-secondary);
+}
+.robot-status-v14 .v14-cursor {
+  position: absolute;
+  z-index: 15;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px #0004);
+}

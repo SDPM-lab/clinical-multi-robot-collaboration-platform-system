@@ -1,0 +1,6 @@
+<!doctype html><html><body><canvas id="scene"></canvas><script type="module">
+import {makePpoScene} from "/src/ppoSpatialScene.js";
+const node=document.getElementById("scene");
+const model=await makePpoScene(node,name=>"/ppo-spatial/"+name);
+window.takeFrame=frame=>{const points=model.draw(frame);return {points,image:node.toDataURL("image/png").split(",")[1]};};
+</script></body></html>

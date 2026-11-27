@@ -1,0 +1,520 @@
+{
+  "robots": [
+    {
+      "code": "C01",
+      "floor": 1,
+      "connected": true,
+      "color": "#FB9966",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 94
+        },
+        {
+          "time": "09:00",
+          "battery": 92
+        },
+        {
+          "time": "10:00",
+          "battery": 90
+        },
+        {
+          "time": "11:00",
+          "battery": 88
+        }
+      ]
+    },
+    {
+      "code": "C02",
+      "floor": 1,
+      "connected": true,
+      "color": "#FBE251",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 80
+        },
+        {
+          "time": "09:00",
+          "battery": 78
+        },
+        {
+          "time": "10:00",
+          "battery": 76
+        },
+        {
+          "time": "11:00",
+          "battery": 74
+        }
+      ]
+    },
+    {
+      "code": "M01",
+      "floor": 2,
+      "connected": true,
+      "color": "#77746D",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 89
+        },
+        {
+          "time": "09:00",
+          "battery": 87
+        },
+        {
+          "time": "10:00",
+          "battery": 85
+        },
+        {
+          "time": "11:00",
+          "battery": 83
+        }
+      ]
+    },
+    {
+      "code": "M02",
+      "floor": 1,
+      "connected": true,
+      "color": "#5D9DD3",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 98
+        },
+        {
+          "time": "09:00",
+          "battery": 96
+        },
+        {
+          "time": "10:00",
+          "battery": 94
+        },
+        {
+          "time": "11:00",
+          "battery": 92
+        }
+      ]
+    },
+    {
+      "code": "W01",
+      "floor": 3,
+      "connected": true,
+      "color": "#8F79BD",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 72
+        },
+        {
+          "time": "09:00",
+          "battery": 70
+        },
+        {
+          "time": "10:00",
+          "battery": 68
+        },
+        {
+          "time": "11:00",
+          "battery": 66
+        }
+      ]
+    },
+    {
+      "code": "W02",
+      "floor": 1,
+      "connected": true,
+      "color": "#58A691",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 84
+        },
+        {
+          "time": "09:00",
+          "battery": 82
+        },
+        {
+          "time": "10:00",
+          "battery": 80
+        },
+        {
+          "time": "11:00",
+          "battery": 78
+        }
+      ]
+    },
+    {
+      "code": "W03",
+      "floor": 1,
+      "connected": true,
+      "color": "#CE718A",
+      "history": [
+        {
+          "time": "08:00",
+          "battery": 40
+        },
+        {
+          "time": "09:00",
+          "battery": 43
+        },
+        {
+          "time": "10:00",
+          "battery": 46
+        },
+        {
+          "time": "11:00",
+          "battery": 49
+        }
+      ]
+    }
+  ],
+  "overviewTasks": [
+    {
+      "id": "T0151",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "completed",
+      "robot": "C01",
+      "time": "10:40",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0152",
+      "type": "specimen_delivery",
+      "title": "Specimen delivery",
+      "color": "#4F8FD8",
+      "status": "running",
+      "robot": "C02",
+      "time": "10:50",
+      "source": "Blood Draw",
+      "destination": "Lab"
+    },
+    {
+      "id": "T0153",
+      "type": "waste_transport",
+      "title": "Waste transport",
+      "color": "#C96561",
+      "status": "completed",
+      "robot": "M01",
+      "time": "10:54",
+      "source": "Ward A",
+      "destination": "Waste Return"
+    },
+    {
+      "id": "T0154",
+      "type": "clothes_collection",
+      "title": "Clothes collection",
+      "color": "#8C72D8",
+      "status": "running",
+      "robot": "M02",
+      "time": "11:00",
+      "source": "Ward A",
+      "destination": "Clothes Return"
+    },
+    {
+      "id": "T0156",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "running",
+      "robot": "W02",
+      "time": "11:04",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0155",
+      "type": "ward_service",
+      "title": "Ward service",
+      "color": "#4F9F91",
+      "status": "pending",
+      "robot": null,
+      "time": "11:30",
+      "source": "Nurse Station",
+      "destination": "Ward A"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T0151",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "completed",
+      "robot": "C01",
+      "time": "10:40",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0152",
+      "type": "specimen_delivery",
+      "title": "Specimen delivery",
+      "color": "#4F8FD8",
+      "status": "running",
+      "robot": "C02",
+      "time": "10:50",
+      "source": "Blood Draw",
+      "destination": "Lab"
+    },
+    {
+      "id": "T0153",
+      "type": "waste_transport",
+      "title": "Waste transport",
+      "color": "#C96561",
+      "status": "completed",
+      "robot": "M01",
+      "time": "10:54",
+      "source": "Ward A",
+      "destination": "Waste Return"
+    },
+    {
+      "id": "T0154",
+      "type": "clothes_collection",
+      "title": "Clothes collection",
+      "color": "#8C72D8",
+      "status": "running",
+      "robot": "M02",
+      "time": "11:00",
+      "source": "Ward A",
+      "destination": "Clothes Return"
+    },
+    {
+      "id": "T0155",
+      "type": "ward_service",
+      "title": "Ward service",
+      "color": "#4F9F91",
+      "status": "pending",
+      "robot": null,
+      "time": "11:30",
+      "source": "Nurse Station",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0156",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "running",
+      "robot": "W02",
+      "time": "11:04",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0157",
+      "type": "specimen_delivery",
+      "title": "Specimen delivery",
+      "color": "#4F8FD8",
+      "status": "running",
+      "robot": "W03",
+      "time": "11:06",
+      "source": "Blood Draw",
+      "destination": "Lab"
+    },
+    {
+      "id": "T0158",
+      "type": "waste_transport",
+      "title": "Waste transport",
+      "color": "#C96561",
+      "status": "pending",
+      "robot": null,
+      "time": "11:45",
+      "source": "Ward A",
+      "destination": "Waste Return"
+    },
+    {
+      "id": "T0159",
+      "type": "clothes_collection",
+      "title": "Clothes collection",
+      "color": "#8C72D8",
+      "status": "completed",
+      "robot": "C02",
+      "time": "06:00",
+      "source": "Ward A",
+      "destination": "Clothes Return"
+    },
+    {
+      "id": "T0160",
+      "type": "ward_service",
+      "title": "Ward service",
+      "color": "#4F9F91",
+      "status": "completed",
+      "robot": "M01",
+      "time": "06:09",
+      "source": "Nurse Station",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0161",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "completed",
+      "robot": "M02",
+      "time": "06:18",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0162",
+      "type": "specimen_delivery",
+      "title": "Specimen delivery",
+      "color": "#4F8FD8",
+      "status": "completed",
+      "robot": "W01",
+      "time": "06:27",
+      "source": "Blood Draw",
+      "destination": "Lab"
+    },
+    {
+      "id": "T0163",
+      "type": "waste_transport",
+      "title": "Waste transport",
+      "color": "#C96561",
+      "status": "completed",
+      "robot": "W02",
+      "time": "06:36",
+      "source": "Ward A",
+      "destination": "Waste Return"
+    },
+    {
+      "id": "T0164",
+      "type": "clothes_collection",
+      "title": "Clothes collection",
+      "color": "#8C72D8",
+      "status": "completed",
+      "robot": "W03",
+      "time": "06:45",
+      "source": "Ward A",
+      "destination": "Clothes Return"
+    },
+    {
+      "id": "T0165",
+      "type": "ward_service",
+      "title": "Ward service",
+      "color": "#4F9F91",
+      "status": "completed",
+      "robot": "C01",
+      "time": "07:00",
+      "source": "Nurse Station",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0166",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "completed",
+      "robot": "C02",
+      "time": "07:09",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0167",
+      "type": "specimen_delivery",
+      "title": "Specimen delivery",
+      "color": "#4F8FD8",
+      "status": "completed",
+      "robot": "M01",
+      "time": "07:18",
+      "source": "Blood Draw",
+      "destination": "Lab"
+    },
+    {
+      "id": "T0168",
+      "type": "waste_transport",
+      "title": "Waste transport",
+      "color": "#C96561",
+      "status": "completed",
+      "robot": "M02",
+      "time": "07:27",
+      "source": "Ward A",
+      "destination": "Waste Return"
+    },
+    {
+      "id": "T0169",
+      "type": "clothes_collection",
+      "title": "Clothes collection",
+      "color": "#8C72D8",
+      "status": "completed",
+      "robot": "W01",
+      "time": "07:36",
+      "source": "Ward A",
+      "destination": "Clothes Return"
+    },
+    {
+      "id": "T0170",
+      "type": "ward_service",
+      "title": "Ward service",
+      "color": "#4F9F91",
+      "status": "completed",
+      "robot": "W02",
+      "time": "07:45",
+      "source": "Nurse Station",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0171",
+      "type": "medication_delivery",
+      "title": "Medication delivery",
+      "color": "#C96F3B",
+      "status": "completed",
+      "robot": "W03",
+      "time": "08:00",
+      "source": "Pharmacy",
+      "destination": "Ward A"
+    },
+    {
+      "id": "T0172",
+      "type": "specimen_delivery",
+      "title": "Specimen delivery",
+      "color": "#4F8FD8",
+      "status": "completed",
+      "robot": "C01",
+      "time": "08:09",
+      "source": "Blood Draw",
+      "destination": "Lab"
+    },
+    {
+      "id": "T0173",
+      "type": "waste_transport",
+      "title": "Waste transport",
+      "color": "#C96561",
+      "status": "completed",
+      "robot": "C02",
+      "time": "08:18",
+      "source": "Ward A",
+      "destination": "Waste Return"
+    },
+    {
+      "id": "T0174",
+      "type": "clothes_collection",
+      "title": "Clothes collection",
+      "color": "#8C72D8",
+      "status": "completed",
+      "robot": "M01",
+      "time": "08:27",
+      "source": "Ward A",
+      "destination": "Clothes Return"
+    }
+  ],
+  "selected": {
+    "id": "T0152",
+    "type": "specimen_delivery",
+    "title": "Specimen delivery",
+    "color": "#4F8FD8",
+    "status": "running",
+    "robot": "C02",
+    "time": "10:50",
+    "source": "Blood Draw",
+    "destination": "Lab"
+  },
+  "wallTime": "11:10",
+  "network": "Online",
+  "completion": 75
+}

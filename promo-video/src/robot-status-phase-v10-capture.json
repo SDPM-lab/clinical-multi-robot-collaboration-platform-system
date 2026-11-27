@@ -1,0 +1,26 @@
+{
+  "targets": [
+    {
+      "x": 24,
+      "y": 188,
+      "width": 337.4375,
+      "height": 96
+    },
+    {
+      "x": 24,
+      "y": 396,
+      "width": 337.4375,
+      "height": 96
+    }
+  ],
+  "distance": 24,
+  "timing": {
+    "scrollStart": 58,
+    "scrollEnd": 91,
+    "c01": 103,
+    "m01": 129,
+    "c01Telemetry": 18,
+    "m01Telemetry": 44,
+    "frames": 195
+  }
+}
