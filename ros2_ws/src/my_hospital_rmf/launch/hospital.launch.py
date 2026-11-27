@@ -181,6 +181,7 @@ def generate_launch_description():
             # proven to work when hospital_g1_fleet.launch.py
             # is launched manually.
             "start_world": "true",
+            "robot_model": LaunchConfiguration("robot_model"),
             "robots": robots,
         }.items(),
         condition=IfCondition(launch_gazebo),
@@ -555,6 +556,11 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "robot_model",
+            default_value="lightweight",
+            choices=["full", "lightweight"],
+        ),
         use_sim_time_arg,
         server_uri_arg,
         launch_gazebo_arg,
