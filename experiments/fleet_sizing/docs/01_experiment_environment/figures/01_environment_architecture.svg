@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="691.2pt" height="460.08pt" viewBox="0 0 691.2 460.08" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-28T14:47:23.629463</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 460.08 
+L 691.2 460.08 
+L 691.2 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 27.54 157.6656 
+L 328.86 157.6656 
+Q 331.092 157.6656 331.092 155.448 
+L 331.092 83.376 
+Q 331.092 81.1584 328.86 81.1584 
+L 27.54 81.1584 
+Q 25.308 81.1584 25.308 83.376 
+L 25.308 155.448 
+Q 25.308 157.6656 27.54 157.6656 
+z
+" clip-path="url(#p8ccb696412)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 362.34 157.6656 
+L 663.66 157.6656 
+Q 665.892 157.6656 665.892 155.448 
+L 665.892 83.376 
+Q 665.892 81.1584 663.66 81.1584 
+L 362.34 81.1584 
+Q 360.108 81.1584 360.108 83.376 
+L 360.108 155.448 
+Q 360.108 157.6656 362.34 157.6656 
+z
+" clip-path="url(#p8ccb696412)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 122.4 263.0016 
+L 568.8 263.0016 
+Q 571.032 263.0016 571.032 260.784 
+L 571.032 188.712 
+Q 571.032 186.4944 568.8 186.4944 
+L 122.4 186.4944 
+Q 120.168 186.4944 120.168 188.712 
+L 120.168 260.784 
+Q 120.168 263.0016 122.4 263.0016 
+z
+" clip-path="url(#p8ccb696412)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 27.54 365.5656 
+L 328.86 365.5656 
+Q 331.092 365.5656 331.092 363.348 
+L 331.092 296.82 
+Q 331.092 294.6024 328.86 294.6024 
+L 27.54 294.6024 
+Q 25.308 294.6024 25.308 296.82 
+L 25.308 363.348 
+Q 25.308 365.5656 27.54 365.5656 
+z
+" clip-path="url(#p8ccb696412)" style="fill: #ffffff; stroke: #555555; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 362.34 365.5656 
+L 663.66 365.5656 
+Q 665.892 365.5656 665.892 363.348 
+L 665.892 296.82 
+Q 665.892 294.6024 663.66 294.6024 
+L 362.34 294.6024 
+Q 360.108 294.6024 360.108 296.82 
+L 360.108 363.348 
+Q 360.108 365.5656 362.34 365.5656 
+z
+" clip-path="url(#p8ccb696412)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 122.4 445.9536 
+L 568.8 445.9536 
+Q 571.032 445.9536 571.032 443.736 
+L 571.032 393.84 
+Q 571.032 391.6224 568.8 391.6224 
+L 122.4 391.6224 
+Q 120.168 391.6224 120.168 393.84 
+L 120.168 443.736 
+Q 120.168 445.9536 122.4 445.9536 
+z
+" clip-path="url(#p8ccb696412)" style="fill: #ffffff; stroke: #333333; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="178.2" y="106.673816" transform="rotate(-0 178.2 106.673816)">Task Generation</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(98.201562 130.42308)">Workload / Arrival time / Priority</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(99.060937 142.425814)">Task type / Source / Destination</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="513" y="106.673816" transform="rotate(-0 513 106.673816)">Navigation Cost Model</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(443.725 130.42308)">Nav2 empirical travel times</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(454.478906 142.425814)">Directed graph fallback</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="345.6" y="212.009816" transform="rotate(-0 345.6 212.009816)">Event-driven Scheduling Simulator</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(247.707031 235.75908)">Robot state / Task queue / Service time</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(270.525 247.761814)">Battery and charging lifecycle</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #555555" x="178.2" y="318.565496" transform="rotate(-0 178.2 318.565496)">Baseline Schedulers</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="178.2" y="345.987647" transform="rotate(-0 178.2 345.987647)">Random / Nearest / Static / Dynamic</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="513" y="318.565496" transform="rotate(-0 513 318.565496)">Maskable PPO</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="513" y="345.987647" transform="rotate(-0 513 345.987647)">Observation / Action mask / Robot selection</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #333333" x="345.6" y="410.928536" transform="rotate(-0 345.6 410.928536)">Evaluation Metrics</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="345.6" y="431.365247" transform="rotate(-0 345.6 431.365247)">Waiting / Response / Travel / Fairness / Battery</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 180.077426 156.131948 
+Q 220.048582 170.693484 258.549044 184.719243 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 255.167884 181.146043 
+L 258.549044 184.719243 
+L 253.661788 185.280251 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 511.122574 156.131948 
+Q 471.151418 170.693484 432.650956 184.719243 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 437.538212 185.280251 
+L 432.650956 184.719243 
+L 436.032116 181.146043 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 232.28009 261.809288 
+Q 206.0999 277.41606 181.264189 292.221348 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 186.170105 291.858037 
+L 181.264189 292.221348 
+L 183.91709 288.078629 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 458.91991 261.809288 
+Q 485.1001 277.41606 509.935811 292.221348 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 507.28291 288.078629 
+L 509.935811 292.221348 
+L 505.029895 291.858037 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 180.097861 363.976539 
+Q 220.049049 377.207685 258.514357 389.946733 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 255.029121 386.474971 
+L 258.514357 389.946733 
+L 253.645806 390.651865 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 511.102139 363.976539 
+Q 471.150951 377.207685 432.685643 389.946733 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 437.554194 390.651865 
+L 432.685643 389.946733 
+L 436.170879 386.474971 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+  </g>
+  <g id="text_13">
+   <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle" x="334.8" y="24.477187" transform="rotate(-0 334.8 24.477187)">Hospital Scheduling Simulation Architecture</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p8ccb696412">
+   <rect x="10.8" y="61.2" width="669.6" height="388.08"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -1,0 +1,34 @@
+{
+  "source_metadata_sha256": "7c3bfc77df29400d02ddc3bbf40ea37d836dd011e57e4776931ca71d4cb03aa8",
+  "source_runs_sha256": "1ec064d42d94d50c627daa3ad00bf87de1a50fedb67ccc8cfa6e44f21287b8d0",
+  "source_summary_sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe",
+  "analysis_script_sha256": "2f72fd7f63f986db974010e2cc94ef743d6bedd04f9d7c0ee0f6f4136218568c",
+  "comparison_count": 120,
+  "paired_seeds_per_comparison": 30,
+  "bootstrap_iterations": 10000,
+  "bootstrap_seed": 20261127,
+  "bootstrap_method": "Paired percentile bootstrap over evaluation seeds",
+  "difference_direction": "Positive always means PPO better",
+  "confidence_level": 0.95,
+  "confidence_intervals": "Individual, not multiplicity-adjusted",
+  "multiple_testing": "Holm across 120 comparisons per test family",
+  "bootstrap_counts": {
+    "ppo_better": 91,
+    "ci_crosses_zero": 13,
+    "ppo_worse": 16
+  },
+  "best_baseline_comparison": "Descriptive, selected by observed mean",
+  "task_sequence_check": "Equal generated counts verified; full sequences not verified here",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "output_sha256": {
+    "best_baseline_comparison.csv": "62fe13bdb593a15197e56bbbf091e16ac19ab7c86216625057ccb5222a6bbe40",
+    "bootstrap_summary_by_metric.csv": "2f5f0182c63f646df796c4c7a10ac702d97a419edfb2e7ea344b87dda9df47ea",
+    "historical_reproducibility.csv": "50af3fea0f4865d5777aca8ff29b32b5a4dfd0f910ac84bd82287bcd2e28ed3c",
+    "paired_bootstrap_results.csv": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5",
+    "relative_improvements.csv": "536b5ed6e838fbc4f73901eb7bf6a2f775c725be23ed57abfc8788569c87c203"
+  }
+}

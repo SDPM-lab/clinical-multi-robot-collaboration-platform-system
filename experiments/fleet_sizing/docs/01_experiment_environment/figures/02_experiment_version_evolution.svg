@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="691.2pt" height="460.08pt" viewBox="0 0 691.2 460.08" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-28T14:47:24.233760</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 460.08 
+L 691.2 460.08 
+L 691.2 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 24.75 318.4416 
+L 208.89 318.4416 
+Q 211.122 318.4416 211.122 316.224 
+L 211.122 160.992 
+Q 211.122 158.7744 208.89 158.7744 
+L 24.75 158.7744 
+Q 22.518 158.7744 22.518 160.992 
+L 22.518 316.224 
+Q 22.518 318.4416 24.75 318.4416 
+z
+" clip-path="url(#p216f8a605f)" style="fill: #ffffff; stroke: #777777; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 253.53 318.4416 
+L 437.67 318.4416 
+Q 439.902 318.4416 439.902 316.224 
+L 439.902 160.992 
+Q 439.902 158.7744 437.67 158.7744 
+L 253.53 158.7744 
+Q 251.298 158.7744 251.298 160.992 
+L 251.298 316.224 
+Q 251.298 318.4416 253.53 318.4416 
+z
+" clip-path="url(#p216f8a605f)" style="fill: #ffffff; stroke: #6596db; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 482.31 318.4416 
+L 666.45 318.4416 
+Q 668.682 318.4416 668.682 316.224 
+L 668.682 160.992 
+Q 668.682 158.7744 666.45 158.7744 
+L 482.31 158.7744 
+Q 480.078 158.7744 480.078 160.992 
+L 480.078 316.224 
+Q 480.078 318.4416 482.31 318.4416 
+z
+" clip-path="url(#p216f8a605f)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #777777" x="116.82" y="207.574616" transform="rotate(-0 116.82 207.574616)">Historical Fleet Sizing</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(53.109062 254.248736)">Original travel calibration</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(75.678594 266.25147)">Battery disabled</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(116.82 278.253423)"/>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(54.72625 290.256158)">Reference fleet selection</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6596db" x="345.6" y="207.574147" transform="rotate(-0 345.6 207.574147)">Battery-aware V2</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(281.889062 254.248736)">Original travel calibration</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(305.38125 266.25147)">Battery enabled</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(345.6 278.253423)"/>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(288.124219 290.256158)">Early reward screening</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="574.38" y="207.574616" transform="rotate(-0 574.38 207.574616)">Nav2-calibrated V2</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(517.289375 254.248736)">Nav2 travel calibration</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(534.16125 266.25147)">Battery enabled</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(574.38 278.253423)"/>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(503.014375 290.256158)">Final training and evaluation</text>
+   </g>
+   <g id="patch_5">
+    <path d="M 213.67782 238.608 
+Q 231.206801 238.608 247.170535 238.608 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 242.770535 236.408 
+L 247.170535 238.608 
+L 242.770535 240.808 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 442.45782 238.608 
+Q 459.986801 238.608 475.950535 238.608 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 471.550535 236.408 
+L 475.950535 238.608 
+L 471.550535 240.808 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle" x="345.6" y="374.436" transform="rotate(-0 345.6 374.436)">Reference fleet retained: (2, 2, 3)</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="345.6" y="410.472" transform="rotate(-0 345.6 410.472)">Fleet size was not re-optimized after Nav2 calibration.</text>
+   </g>
+  </g>
+  <g id="text_9">
+   <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle" x="334.8" y="24.477187" transform="rotate(-0 334.8 24.477187)">Experimental Environment Evolution</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p216f8a605f">
+   <rect x="10.8" y="61.2" width="669.6" height="388.08"/>
+  </clipPath>
+ </defs>
+</svg>

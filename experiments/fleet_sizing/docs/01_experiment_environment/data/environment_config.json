@@ -1,0 +1,345 @@
+{
+  "ASSIGNMENT_POLICY": "earliest_available_feasible",
+  "BATCH_ROUTE_RESULTS_PATH": "ros2_ws/batch_route_results_nav2.csv",
+  "BATCH_ROUTE_SUMMARY_PATH": "ros2_ws/batch_route_summary_nav2.csv",
+  "BATTERY_CHARGE_RATE_PER_SECOND": 0.0001388888888888889,
+  "BATTERY_CHARGE_TRIGGER_SOC": 0.25,
+  "BATTERY_FULL_CHARGE_TIME_S": 7200.0,
+  "BATTERY_INITIAL_SOC": 1.0,
+  "BATTERY_MIN_RESERVE_SOC": 0.15,
+  "BATTERY_RESUME_SOC": 0.8,
+  "BATTERY_TRAVEL_DRAIN_PER_SECOND": 0.00018518518518518518,
+  "BATTERY_TRAVEL_RUNTIME_FULL_S": 5400.0,
+  "CHARGING_WAYPOINT": "charging_station_2",
+  "CI_RELATIVE_HALF_WIDTH_TARGET": 0.05,
+  "CLOTHES_ARRIVAL_WINDOW": {
+    "start_hour": 9,
+    "end_hour": 17
+  },
+  "CLOTHES_DAILY_PROBABILITY_PER_SOURCE": 0.5,
+  "CLOTHES_DESTINATION": "clothes_return_2",
+  "CLOTHES_SOURCES": [
+    "ward_a_2",
+    "ward_b_2",
+    "x-ray",
+    "ultrasound_2",
+    "ecg_2",
+    "therapy_room"
+  ],
+  "COMPLETION_RATE_THRESHOLD": 0.99,
+  "DEMAND_SENSITIVITY_MULTIPLIERS": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    8.0
+  ],
+  "ENABLE_BATTERY_MODEL": false,
+  "EXPECTED_TOTAL_TASKS_PER_DAY": 58,
+  "FLEET_CANDIDATES": [
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      1,
+      1
+    ],
+    [
+      1,
+      2,
+      1
+    ],
+    [
+      1,
+      1,
+      2
+    ],
+    [
+      2,
+      2,
+      1
+    ],
+    [
+      2,
+      1,
+      2
+    ],
+    [
+      1,
+      2,
+      2
+    ],
+    [
+      2,
+      2,
+      2
+    ]
+  ],
+  "INITIAL_REPLICATIONS": 30,
+  "MEDICATION_DESTINATIONS": [
+    "ward_a_2",
+    "ward_b_2",
+    "consult_1_2",
+    "consult_2_2",
+    "consult_3_2",
+    "nurse_station"
+  ],
+  "MEDICATION_ON_DEMAND_TIME_WEIGHTS": {
+    "(0, 6)": 0.1,
+    "(6, 12)": 0.3,
+    "(12, 18)": 0.35,
+    "(18, 24)": 0.25
+  },
+  "MEDICATION_SCHEDULED_BASE_HOURS": [
+    8,
+    12,
+    18,
+    22
+  ],
+  "MEDICATION_SCHEDULED_FRACTION": 0.5,
+  "MEDICATION_SCHEDULED_JITTER_MINUTES": 30,
+  "MEDICATION_SOURCE": "pharmacy",
+  "MIN_SEED_COMPLETION_RATE_THRESHOLD": 0.99,
+  "NAV_GRAPH_PATH": "ros2_ws/src/my_hospital_rmf/nav_graphs/0.yaml",
+  "NORMAL_WORKLOAD_PER_DAY": {
+    "waste_transport": 11,
+    "clothes_collection": 3,
+    "medication_delivery": 22,
+    "specimen_delivery": 18,
+    "ward_service": 4
+  },
+  "P95_RESPONSE_TIME_THRESHOLD_S": 300.0,
+  "PRIORITY_EMERGENCY": 3,
+  "PRIORITY_HIGH": 2,
+  "PRIORITY_LEVELS": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "PRIORITY_LOW": 0,
+  "PRIORITY_NORMAL": 1,
+  "PROJECT_ROOT": ".",
+  "REFERENCE_CLEAN_COUNT": 2,
+  "REFERENCE_EXPECTED_TASKS_PER_DAY": 232.0,
+  "REFERENCE_FLEET": [
+    2,
+    2,
+    3
+  ],
+  "REFERENCE_MEDICAL_COUNT": 2,
+  "REFERENCE_SCENARIO_DESCRIPTION": "4x base hospital demand with 2 Clean, 2 Medical, and 3 Ward robots",
+  "REFERENCE_SCENARIO_NAME": "reference",
+  "REFERENCE_TOTAL_ROBOTS": 7,
+  "REFERENCE_WARD_COUNT": 3,
+  "REFERENCE_WORKLOAD_MULTIPLIER": 4.0,
+  "RESULTS_DIR": "experiments/fleet_sizing/results",
+  "RETURNING_TO_CHARGE_IS_AVAILABLE": true,
+  "RETURN_TO_CHARGE_WHEN_IDLE": false,
+  "ROBOT_CAPABILITIES": {
+    "clean": [
+      "clothes_collection",
+      "waste_transport"
+    ],
+    "medical": [
+      "medication_delivery",
+      "specimen_delivery"
+    ],
+    "ward": [
+      "medication_delivery",
+      "ward_service"
+    ]
+  },
+  "ROBOT_PROFILES_PATH": "ros2_ws/src/my_hospital_rmf/config/robot_profiles.yaml",
+  "ROBOT_TYPES": [
+    "clean",
+    "medical",
+    "ward"
+  ],
+  "ROBOT_TYPE_CLEAN": "clean",
+  "ROBOT_TYPE_MEDICAL": "medical",
+  "ROBOT_TYPE_WARD": "ward",
+  "SECONDS_PER_DAY": 86400,
+  "SERVICE_TIME_CONFIG": {
+    "waste_transport": {
+      "detect_s": [
+        5,
+        10
+      ],
+      "pick_per_item_s": [
+        8,
+        15
+      ],
+      "drop_per_item_s": [
+        5,
+        10
+      ],
+      "item_count_probabilities": {
+        "1": 0.05,
+        "2": 0.1,
+        "3": 0.2,
+        "4": 0.25,
+        "5": 0.2,
+        "6": 0.08,
+        "7": 0.05,
+        "8": 0.03,
+        "9": 0.02,
+        "10": 0.02
+      }
+    },
+    "clothes_collection": {
+      "detect_s": [
+        5,
+        10
+      ],
+      "pick_per_item_s": [
+        12,
+        20
+      ],
+      "drop_per_item_s": [
+        8,
+        15
+      ],
+      "item_count_probabilities": {
+        "1": 0.1,
+        "2": 0.2,
+        "3": 0.25,
+        "4": 0.2,
+        "5": 0.1,
+        "6": 0.07,
+        "7": 0.05,
+        "8": 0.03
+      }
+    },
+    "medication_delivery": {
+      "load_s": [
+        20,
+        40
+      ],
+      "handoff_s": [
+        10,
+        30
+      ]
+    },
+    "specimen_delivery": {
+      "load_verify_s": [
+        25,
+        45
+      ],
+      "receive_s": [
+        15,
+        30
+      ]
+    },
+    "ward_service": {
+      "vital_sign_s": [
+        212,
+        238
+      ]
+    }
+  },
+  "SIMULATION_DAYS": 7,
+  "SIMULATION_HORIZON_S": 604800,
+  "SPECIMEN_CLINICAL_LOCATIONS": [
+    "ward_a_2",
+    "ward_b_2",
+    "consult_1_2",
+    "consult_2_2",
+    "consult_3_2",
+    "blood_draw"
+  ],
+  "SPECIMEN_CLINICAL_TO_LAB_PROBABILITY": 0.7,
+  "SPECIMEN_LAB": "lab",
+  "SPECIMEN_TIME_WEIGHTS": {
+    "(0, 6)": 0.05,
+    "(6, 12)": 0.4,
+    "(12, 18)": 0.35,
+    "(18, 24)": 0.2
+  },
+  "TASK_CLOTHES": "clothes_collection",
+  "TASK_MEDICATION": "medication_delivery",
+  "TASK_PRIORITY_DISTRIBUTIONS": {
+    "waste_transport": {
+      "0": 0.6,
+      "1": 0.35,
+      "2": 0.05,
+      "3": 0.0
+    },
+    "clothes_collection": {
+      "0": 0.55,
+      "1": 0.4,
+      "2": 0.05,
+      "3": 0.0
+    },
+    "medication_delivery": {
+      "0": 0.05,
+      "1": 0.55,
+      "2": 0.3,
+      "3": 0.1
+    },
+    "specimen_delivery": {
+      "0": 0.05,
+      "1": 0.5,
+      "2": 0.3,
+      "3": 0.15
+    },
+    "ward_service": {
+      "0": 0.05,
+      "1": 0.6,
+      "2": 0.3,
+      "3": 0.05
+    }
+  },
+  "TASK_PROFILES_PATH": "ros2_ws/src/my_hospital_rmf/config/task_profiles.yaml",
+  "TASK_SPECIMEN": "specimen_delivery",
+  "TASK_TYPES": [
+    "waste_transport",
+    "clothes_collection",
+    "medication_delivery",
+    "specimen_delivery",
+    "ward_service"
+  ],
+  "TASK_WARD": "ward_service",
+  "TASK_WASTE": "waste_transport",
+  "UTILIZATION_THRESHOLD": 0.9,
+  "WARD_BASE_HOURS": [
+    8,
+    20
+  ],
+  "WARD_DESTINATIONS": [
+    "ward_a_2",
+    "ward_b_2"
+  ],
+  "WARD_JITTER_MINUTES": 15,
+  "WARD_SOURCE": "nurse_station",
+  "WASTE_ARRIVAL_WINDOW": {
+    "start_hour": 10,
+    "end_hour": 16
+  },
+  "WASTE_DESTINATION": "waste_return_2",
+  "WASTE_SOURCES": [
+    "ward_a_2",
+    "ward_b_2",
+    "consult_1_2",
+    "consult_2_2",
+    "consult_3_2",
+    "nurse_station",
+    "blood_draw",
+    "x-ray",
+    "ultrasound_2",
+    "ecg_2",
+    "therapy_room"
+  ],
+  "WORKLOAD_SCENARIOS": {
+    "base": 1.0,
+    "moderate": 3.0,
+    "reference": 4.0,
+    "high": 5.0,
+    "stress": 8.0
+  }
+}

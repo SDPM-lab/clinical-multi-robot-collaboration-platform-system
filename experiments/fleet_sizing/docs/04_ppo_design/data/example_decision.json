@@ -1,0 +1,53 @@
+{
+  "scenario_seed": 3001,
+  "workload_multiplier": 4.0,
+  "battery_enabled": true,
+  "task_id": "T00153",
+  "task_type": "specimen_delivery",
+  "priority": 1,
+  "source": "consult_3_2",
+  "destination": "lab",
+  "arrival_time_s": 1002.6010848733918,
+  "observation_approach_scale_s": 600.0,
+  "action_mask": [
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0
+  ],
+  "valid_actions": [
+    2,
+    3
+  ],
+  "model_seed": 7101,
+  "reward_configuration": "Nav2 Sweep 12",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "unmasked_action_probabilities": [
+    0.9050467610359192,
+    6.588638643734157e-05,
+    0.02796517312526703,
+    0.006390527356415987,
+    0.0577496699988842,
+    0.0009297129581682384,
+    0.0018522781319916248
+  ],
+  "masked_action_probabilities": [
+    0.0,
+    0.0,
+    0.8139893412590027,
+    0.1860106885433197,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "critic_state_value": -16.746944427490234,
+  "selected_action": 2,
+  "selected_robot_id": "M01",
+  "deterministic": true,
+  "environment_step_executed": false,
+  "model_training_performed": false,
+  "scope": "Current-environment inference example"
+}

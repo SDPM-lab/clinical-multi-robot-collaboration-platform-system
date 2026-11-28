@@ -1,0 +1,330 @@
+{
+  "experiment": "battery_dynamic_calibration_v2",
+  "method": "dynamic_weighted",
+  "created_at_utc": "2026-11-26T11:46:22.770547+00:00",
+  "git_commit": "0924b71f2407529206d75bb7b0200c9ceae59a9d",
+  "git_status": [
+    "?? experiments/fleet_sizing/battery_calibration/",
+    "?? experiments/fleet_sizing/docs/",
+    "?? experiments/fleet_sizing/results/battery_baseline_calibration_v2/",
+    "?? ros2_ws/batch_route_results_nav2_dryrun.csv",
+    "?? ros2_ws/batch_route_summary_nav2_dryrun.csv",
+    "?? ros2_ws/route_calibration_backup/",
+    "?? ros2_ws/src/my_hospital_rmf/experiments/route_calibration/clothes_return_debug.png",
+    "?? ros2_ws/src/my_hospital_rmf/experiments/route_calibration/rmf_nav2_overlay.png"
+  ],
+  "python_version": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "packages": {
+    "numpy": "2.5.4",
+    "torch": "2.14.0+cpu",
+    "gymnasium": "1.3.0",
+    "stable-baselines3": "2.9.0",
+    "sb3-contrib": "2.9.0"
+  },
+  "source_sha256": {
+    "experiments/fleet_sizing/battery_calibration/config.py": "439bf262a4190b63205c1a2a79bb8eecb231fd62cc3a00f6a9fbe3a7029c1cc8",
+    "experiments/fleet_sizing/battery_calibration/evaluation.py": "4b2eb70a3e1aec85428736efa644dd7bc873a6e789644e1a120eed6934b202f1",
+    "experiments/fleet_sizing/battery_calibration/selection.py": "b481834e1f1105184f90fe48da57e517982ef6f3b1d1a1b3f3ec947093d6a1eb",
+    "experiments/fleet_sizing/battery_calibration/run_dynamic_calibration.py": "258cd3e1622a1a99cb533f835931f913a24d6dacd05deeb480cd18e52c812566",
+    "experiments/fleet_sizing/config.py": "e150e42d2ab501bdce284c6ebea37b9d053e4b5a10ba19a6ab39d953dd5cb54e",
+    "experiments/fleet_sizing/scheduling_simulator.py": "2f418bc26cb543bd4ebc679be6d365991c63fb102a8626f5db215291b1b2f9d1",
+    "experiments/fleet_sizing/task_generator.py": "b4fc7ce48c8202d7ce80797ebb8318d5c83d43959ca5a3b23d594ae3475cb1bd",
+    "experiments/fleet_sizing/models.py": "53b27ad0ec7021a3b467fc94d6672b8b60ad546c80ec704ffdeca02a6b116d7e",
+    "experiments/fleet_sizing/travel_time.py": "ea3b834a22d0bab15c01bc8c5e4e906cfe67a6176f489978f3a884fac98b9722",
+    "experiments/fleet_sizing/nav_graph.py": "1f1a4bf493409c0e253bc0b6d73d356bfdea81f2b4a5ef29597550d2ed68ca61",
+    "experiments/fleet_sizing/baseline/common.py": "cf7453a3ce5526a4303e17a336594a29c439fc6eeeec610070747a7bc3e4bdfe",
+    "experiments/fleet_sizing/baseline/dynamic_weighted.py": "14ec25d5aa6d6f9b65784e52e82a66604626c1526227d0ca8efa0a3860c27483",
+    "experiments/fleet_sizing/rl/evaluate_reward_tuned_workload_robustness.py": "5161b138b7428129de2e36c12eb6f0ab437c1b9e7228970e1695e798794eefd4"
+  },
+  "fleet": [
+    2,
+    2,
+    3
+  ],
+  "workload_multiplier": 4.0,
+  "simulation_days": 7,
+  "battery_enabled": true,
+  "battery_config": {
+    "BATTERY_INITIAL_SOC": 1.0,
+    "BATTERY_CHARGE_TRIGGER_SOC": 0.25,
+    "BATTERY_MIN_RESERVE_SOC": 0.15,
+    "BATTERY_RESUME_SOC": 0.8,
+    "BATTERY_TRAVEL_RUNTIME_FULL_S": 5400.0,
+    "BATTERY_TRAVEL_DRAIN_PER_SECOND": 0.00018518518518518518,
+    "BATTERY_FULL_CHARGE_TIME_S": 7200.0,
+    "BATTERY_CHARGE_RATE_PER_SECOND": 0.0001388888888888889
+  },
+  "grid_search": {
+    "step": 0.1,
+    "constraint": "0 <= alpha_min < alpha_max <= 1",
+    "candidate_count": 55,
+    "alpha_ranges": [
+      [
+        0.0,
+        0.1
+      ],
+      [
+        0.0,
+        0.2
+      ],
+      [
+        0.0,
+        0.3
+      ],
+      [
+        0.0,
+        0.4
+      ],
+      [
+        0.0,
+        0.5
+      ],
+      [
+        0.0,
+        0.6
+      ],
+      [
+        0.0,
+        0.7
+      ],
+      [
+        0.0,
+        0.8
+      ],
+      [
+        0.0,
+        0.9
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.1,
+        0.2
+      ],
+      [
+        0.1,
+        0.3
+      ],
+      [
+        0.1,
+        0.4
+      ],
+      [
+        0.1,
+        0.5
+      ],
+      [
+        0.1,
+        0.6
+      ],
+      [
+        0.1,
+        0.7
+      ],
+      [
+        0.1,
+        0.8
+      ],
+      [
+        0.1,
+        0.9
+      ],
+      [
+        0.1,
+        1.0
+      ],
+      [
+        0.2,
+        0.3
+      ],
+      [
+        0.2,
+        0.4
+      ],
+      [
+        0.2,
+        0.5
+      ],
+      [
+        0.2,
+        0.6
+      ],
+      [
+        0.2,
+        0.7
+      ],
+      [
+        0.2,
+        0.8
+      ],
+      [
+        0.2,
+        0.9
+      ],
+      [
+        0.2,
+        1.0
+      ],
+      [
+        0.3,
+        0.4
+      ],
+      [
+        0.3,
+        0.5
+      ],
+      [
+        0.3,
+        0.6
+      ],
+      [
+        0.3,
+        0.7
+      ],
+      [
+        0.3,
+        0.8
+      ],
+      [
+        0.3,
+        0.9
+      ],
+      [
+        0.3,
+        1.0
+      ],
+      [
+        0.4,
+        0.5
+      ],
+      [
+        0.4,
+        0.6
+      ],
+      [
+        0.4,
+        0.7
+      ],
+      [
+        0.4,
+        0.8
+      ],
+      [
+        0.4,
+        0.9
+      ],
+      [
+        0.4,
+        1.0
+      ],
+      [
+        0.5,
+        0.6
+      ],
+      [
+        0.5,
+        0.7
+      ],
+      [
+        0.5,
+        0.8
+      ],
+      [
+        0.5,
+        0.9
+      ],
+      [
+        0.5,
+        1.0
+      ],
+      [
+        0.6,
+        0.7
+      ],
+      [
+        0.6,
+        0.8
+      ],
+      [
+        0.6,
+        0.9
+      ],
+      [
+        0.6,
+        1.0
+      ],
+      [
+        0.7,
+        0.8
+      ],
+      [
+        0.7,
+        0.9
+      ],
+      [
+        0.7,
+        1.0
+      ],
+      [
+        0.8,
+        0.9
+      ],
+      [
+        0.8,
+        1.0
+      ],
+      [
+        0.9,
+        1.0
+      ]
+    ]
+  },
+  "calibration_seeds": [
+    3001,
+    3002,
+    3003,
+    3004,
+    3005,
+    3006,
+    3007,
+    3008,
+    3009,
+    3010
+  ],
+  "expected_runs": 550,
+  "primary_metrics": {
+    "average_waiting_time_s": -1,
+    "p95_waiting_time_s": -1,
+    "high_waiting_time_s": -1,
+    "emergency_waiting_time_s": -1,
+    "total_travel_time_s": -1,
+    "jain_task_fairness": 1
+  },
+  "min_mean_completion_rate": 0.99,
+  "min_seed_completion_rate": 0.99,
+  "tie_break_metrics": [
+    "emergency_waiting_time_s",
+    "high_waiting_time_s",
+    "p95_waiting_time_s",
+    "average_waiting_time_s",
+    "total_travel_time_s",
+    "jain_task_fairness"
+  ],
+  "selection_method": "Completion screening, Pareto front, rank sum",
+  "rank_reference": "All feasible dynamic candidates",
+  "rank_ties": "Average rank for exact ties",
+  "navigation": {
+    "nav_graph": "/home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/nav_graphs/0.yaml",
+    "nav_graph_sha256": "91c491b860ce97036ecceba4cf2460085baf9169d22484c1328cd722dc94bf79",
+    "route_summary": "/home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/batch_route_summary_nav2.csv",
+    "route_summary_sha256": "0baf6a695bacd2dac8f99a9e1b540dbb30901dfff0086afb93a0666acf030399",
+    "route_results_sha256": "2afdbdf57e8f5f0ffe6d318ec689c10b8b638477476ea63e56483b3ef6377b4a"
+  },
+  "frozen_ppo": {
+    "path": "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip",
+    "sha256": "ba278857a1042ed58ae38e9522c7a962d73abd467d539de9479773cf96fe55e0",
+    "used_in_calibration": false
+  }
+}

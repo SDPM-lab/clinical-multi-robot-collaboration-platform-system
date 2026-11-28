@@ -1,0 +1,33 @@
+{
+  "exported_at_utc": "2026-11-26T14:57:52.964663+00:00",
+  "git_commit": "0924b71f2407529206d75bb7b0200c9ceae59a9d",
+  "model_path": "experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip",
+  "model_sha256": "ba278857a1042ed58ae38e9522c7a962d73abd467d539de9479773cf96fe55e0",
+  "model_size_bytes": 291484,
+  "historical_metadata_sha256": "ff941884a9355a25ae249c323e10e9e1d3ef02e80e295438e7bd1a4b3df92283",
+  "current_source_sha256": {
+    "experiments/fleet_sizing/rl/observation.py": "1f60701fab5fdde10a46a8facb6563cac0b123b71e1d64ed2de4c743f5490916",
+    "experiments/fleet_sizing/rl/action_mask.py": "3501ca52f131ebc7168fdd6f46c5bf517be8705a47e9204b925f56844ef52a74",
+    "experiments/fleet_sizing/rl/reward.py": "48d9d4392ea1c5ba93a9bb7fa9aebf4545aafc247333b771f9e9cc14a563f487",
+    "experiments/fleet_sizing/rl/environment.py": "32d68cdc89a4ff7b6141a245d79e548dfb4cab78a6d31f9a4431fca557fa9a30",
+    "experiments/fleet_sizing/rl/train_battery_v2.py": "8879c913eead1325fb31503aff8999172f1ab3aa8cbbdaebc482d95251c19315",
+    "experiments/fleet_sizing/rl/evaluate_battery_v2.py": "4dbe724c4bd8a2f345419ab4e93ae347f2be5223d79b6d6886d436901166f69b",
+    "experiments/fleet_sizing/rl/run_reward_weight_confirmation.py": "ec9cfb7df12a3d6a508cc1ebd2b96d98b613c4d769ff625591fd03d131189807",
+    "experiments/fleet_sizing/rl/run_final_reward_confirmation.py": "9911f473f17502e292a0de079a10d5997123e46401dd1db53d7bf977f071c1e0",
+    "experiments/fleet_sizing/baseline/common.py": "cf7453a3ce5526a4303e17a336594a29c439fc6eeeec610070747a7bc3e4bdfe",
+    "experiments/fleet_sizing/scheduling_simulator.py": "2f418bc26cb543bd4ebc679be6d365991c63fb102a8626f5db215291b1b2f9d1",
+    "experiments/fleet_sizing/config.py": "e150e42d2ab501bdce284c6ebea37b9d053e4b5a10ba19a6ab39d953dd5cb54e"
+  },
+  "current_package_versions": {
+    "numpy": "2.5.4",
+    "torch": "2.14.0+cpu",
+    "gymnasium": "1.3.0",
+    "stable-baselines3": "2.9.0",
+    "sb3-contrib": "2.9.0"
+  },
+  "observation_approach_scale_s_current": 600.0,
+  "historical_observation_scale_recorded": false,
+  "source_hash_scope": "Current inspected source, not historical training snapshot",
+  "model_modified": false,
+  "model_retrained": false
+}

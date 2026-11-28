@@ -1,0 +1,135 @@
+{
+  "created_at": "2026-11-28T15:15:54.386229+08:00",
+  "formal_model": "Nav2 Sweep 12",
+  "model_seed": 7101,
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "observation_size": 98,
+  "action_size": 7,
+  "trainable_parameters": 21512,
+  "actual_timesteps": 200192,
+  "data_files": 10,
+  "figure_groups": 6,
+  "figure_files": 12,
+  "file_count": 22,
+  "historical_backup": "backups/historical_sweep27_seed7104_20261128_150633",
+  "scripts": {
+    "export_model_design.py": "6d0facab869f3fd38d0e49491e9330313e46850bca630fbd26c4e50a0f1e67d6",
+    "plot_model_design.py": "9dd4805e0d65523f84e77e22341a904f633f8bb98af49d0404105c29e8d62bcb",
+    "plot_action_probability.py": "93b964c8fcb35d6a284f578f4b9ad493651031e49f197f569fb28f02e3c6e710"
+  },
+  "files": [
+    {
+      "file": "data/action_mapping.csv",
+      "sha256": "5a9ee989510247a683e8dd845f435902c54b5a070187c7e0b83efc841c324715",
+      "size_bytes": 412
+    },
+    {
+      "file": "data/example_decision.json",
+      "sha256": "3f39b75b7606d64d278fe12d7fdaa6386cc62dffba190c139d7a1e31f685838a",
+      "size_bytes": 1158
+    },
+    {
+      "file": "data/example_observation.csv",
+      "sha256": "b7bc3c509329318c96c10ec00b9040be757f0f98d8f6d082d356e821594e2de9",
+      "size_bytes": 5769
+    },
+    {
+      "file": "data/final_model_metadata.json",
+      "sha256": "ab2592bc73db72db5974e9e752bf84baed5833b3616d1004ade0245b33f30047",
+      "size_bytes": 1500
+    },
+    {
+      "file": "data/model_architecture.json",
+      "sha256": "821ece06c2b983c3cf27f27af6936e831acd65861b066a1d08d0a87d41c10b27",
+      "size_bytes": 1867
+    },
+    {
+      "file": "data/model_integrity.json",
+      "sha256": "de871ac12a2800789864d7dd570e66084f8be34be024e6c3a433a3d6ec87e5db",
+      "size_bytes": 3174
+    },
+    {
+      "file": "data/model_parameters.csv",
+      "sha256": "e07cf8e284ca552e4c4f88b0e198aaf92254289063599891db35a102721a83e6",
+      "size_bytes": 624
+    },
+    {
+      "file": "data/observation_layout.csv",
+      "sha256": "4b8ea15c0cccb4d494696ea762ebafab6264fb406f50de5f6ca7043a55bc5fe0",
+      "size_bytes": 5341
+    },
+    {
+      "file": "data/ppo_hyperparameters.json",
+      "sha256": "7347190d678de81ec9d101adf7ad7228529e94acccaaa1c5bbd3e558eed263b1",
+      "size_bytes": 1647
+    },
+    {
+      "file": "data/reward_config.json",
+      "sha256": "da6b1deaa8781fffc9dbd8358d1119c9e063b5c499a2c99e45f13b1497815ff3",
+      "size_bytes": 321
+    },
+    {
+      "file": "figures/01_rl_environment_flow.png",
+      "sha256": "5c47ba158a3cda15222f4b88f43eb8ef0107e512196ad455806aa54fe122e367",
+      "size_bytes": 360320
+    },
+    {
+      "file": "figures/01_rl_environment_flow.svg",
+      "sha256": "dbf37fb87b57809bba0e90ba81a5830781846acab7fb6527e4320d27560f48dd",
+      "size_bytes": 18866
+    },
+    {
+      "file": "figures/02_observation_structure.png",
+      "sha256": "6d548e919e2bd7d93c08d974b768acf2f5e9f2a070072ee120a254515d8d5be8",
+      "size_bytes": 344674
+    },
+    {
+      "file": "figures/02_observation_structure.svg",
+      "sha256": "de0530ccac7579ad4ff82852ea2cbfeabdd31096ba36045aa7f3a5fb1e83cc87",
+      "size_bytes": 18107
+    },
+    {
+      "file": "figures/03_actor_critic_architecture.png",
+      "sha256": "e7db77a6ac8101104e9881985961766da4a7db3c1bc42c3c6c44afd0c9b3cd69",
+      "size_bytes": 293150
+    },
+    {
+      "file": "figures/03_actor_critic_architecture.svg",
+      "sha256": "8a139ef7cb4d44791ec3cffe6e547e39ecf0886c44c51d205d25a5222efa21dd",
+      "size_bytes": 15493
+    },
+    {
+      "file": "figures/04_action_mask_flow.png",
+      "sha256": "c41e210ba07acf5704e5fcf2d547d18e283b7c18261933b9dc73288450d54c6c",
+      "size_bytes": 255055
+    },
+    {
+      "file": "figures/04_action_mask_flow.svg",
+      "sha256": "3e0aa839135d121cc45964e7018a446ee87d35a72d40514f8ac9f04e2bd87838",
+      "size_bytes": 16479
+    },
+    {
+      "file": "figures/05_reward_structure.png",
+      "sha256": "19e3f20bbcd6b997f48e8c6186fbf3310d2d9ae1789d2f5b48ab46490bdcb256",
+      "size_bytes": 329993
+    },
+    {
+      "file": "figures/05_reward_structure.svg",
+      "sha256": "1de9c930b78ff9e4c440012104dc6ac98d5916f4fabb47e8c98ecf69a4c3ecb7",
+      "size_bytes": 31481
+    },
+    {
+      "file": "figures/06_action_probability_distribution.png",
+      "sha256": "9af8143531f71c810ccac3a6731c6f4be3170aebf45bdfa368ab74a23ae59dbe",
+      "size_bytes": 282038
+    },
+    {
+      "file": "figures/06_action_probability_distribution.svg",
+      "sha256": "12b55554a92379e2fdf74344ca3d4908f7b5e7afdb834d458ccfe88f3c2ede86",
+      "size_bytes": 23944
+    }
+  ],
+  "model_modified": false,
+  "model_retrained": false,
+  "deployment_verified": false
+}

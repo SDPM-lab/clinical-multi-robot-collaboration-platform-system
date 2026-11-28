@@ -1,0 +1,263 @@
+{
+  "created_at": "2026-11-28T14:47:31.958096+08:00",
+  "figure_count": 10,
+  "png_count": 10,
+  "svg_count": 10,
+  "png_dpi": 300,
+  "environment_manifest_sha256": "286087dcf3c2ba03b50e59aaefb29b50fbb26a9ac5c66b070855bd42d7a1205d",
+  "configuration_sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc",
+  "plot_script_sha256": "26da720f761378bc8825b8d83209d520221bdf6e035e154b790f139e83dd1dca",
+  "matplotlib_version": "3.11.2",
+  "figures": [
+    {
+      "name": "01_environment_architecture",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        },
+        {
+          "file": "scripts/scheduling_simulator.py",
+          "sha256": "2f418bc26cb543bd4ebc679be6d365991c63fb102a8626f5db215291b1b2f9d1"
+        },
+        {
+          "file": "scripts/rl/environment.py",
+          "sha256": "32d68cdc89a4ff7b6141a245d79e548dfb4cab78a6d31f9a4431fca557fa9a30"
+        },
+        {
+          "file": "scripts/travel_time.py",
+          "sha256": "ea3b834a22d0bab15c01bc8c5e4e906cfe67a6176f489978f3a884fac98b9722"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/01_environment_architecture.png",
+          "sha256": "59a2396e56ced102e74616746bad957caaae63830241682ee8908375ae04fd66",
+          "size_bytes": 242583
+        },
+        {
+          "file": "figures/01_environment_architecture.svg",
+          "sha256": "8ddc007f5fb221fbc9c3a3862558cafe80f05903279875b5fc93c40194ba3678",
+          "size_bytes": 9015
+        }
+      ]
+    },
+    {
+      "name": "02_experiment_version_evolution",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        },
+        {
+          "file": "data/environment_manifest.json",
+          "sha256": "286087dcf3c2ba03b50e59aaefb29b50fbb26a9ac5c66b070855bd42d7a1205d"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/02_experiment_version_evolution.png",
+          "sha256": "c5893ef8a6825ac7c17c08896cecd458c6f4b2c8a0164ec5d0f9c60aa32061b9",
+          "size_bytes": 158502
+        },
+        {
+          "file": "figures/02_experiment_version_evolution.svg",
+          "sha256": "006e37de60daadfdea50b9a8023df464a29117a6dfdf181ae0c05ba1e78c17a4",
+          "size_bytes": 6120
+        }
+      ]
+    },
+    {
+      "name": "03_robot_capability_matrix",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/03_robot_capability_matrix.png",
+          "sha256": "63eb3b22b099f0feec5d3d9c224dc439e1f10b26dda4c7d8ea14e9fe7157d614",
+          "size_bytes": 126490
+        },
+        {
+          "file": "figures/03_robot_capability_matrix.svg",
+          "sha256": "5d3dec8fd733d425700bf63f1eac13a3055f007a4c5868fbeeac8b2be1f0695b",
+          "size_bytes": 27392
+        }
+      ]
+    },
+    {
+      "name": "04_base_workload_distribution",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/04_base_workload_distribution.png",
+          "sha256": "21fc6fe2f2aeeede5b5d6cf87eebb43d49782a526e5a31d07a82251f054106b6",
+          "size_bytes": 162628
+        },
+        {
+          "file": "figures/04_base_workload_distribution.svg",
+          "sha256": "b0d6337bf3f99a41767ce75d4c5d17803c067b5383963282ea5f343df4600971",
+          "size_bytes": 14833
+        }
+      ]
+    },
+    {
+      "name": "05_temporal_demand_distribution",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/05_temporal_demand_distribution.png",
+          "sha256": "5340ec6ff68af88c37b4acb47d475ff76ac7d73eb6ef01e10eacab72b4114488",
+          "size_bytes": 172238
+        },
+        {
+          "file": "figures/05_temporal_demand_distribution.svg",
+          "sha256": "7d0579a01a8f0061b9f93c823451fbf43b38e986d6c7be42b69f0d2e038b5eec",
+          "size_bytes": 13577
+        }
+      ]
+    },
+    {
+      "name": "06_task_priority_distribution",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/06_task_priority_distribution.png",
+          "sha256": "e445a109dd55af48c1104b6f1ac32b0df6e31acdd286ed1c81804b49bcec57cc",
+          "size_bytes": 175272
+        },
+        {
+          "file": "figures/06_task_priority_distribution.svg",
+          "sha256": "4505347ea41cf871df5cb56b6711793c9898483a8e70221a10ba91d0cd1bcb5f",
+          "size_bytes": 18022
+        }
+      ]
+    },
+    {
+      "name": "07_service_time_model",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        },
+        {
+          "file": "scripts/service_time.py",
+          "sha256": "8e5fc8e1c513b314340efb377be5ae5361753592fe2654425d9e1b43461320bb"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/07_service_time_model.png",
+          "sha256": "ab45c16c70d05eb725df7f5a5bfad30f86c5a2349c8ec45b044cb4a6b80e8332",
+          "size_bytes": 354486
+        },
+        {
+          "file": "figures/07_service_time_model.svg",
+          "sha256": "b311921e24e8f413f241e3c0d9d7a247ffa4f5a4e401ad9b436066e01de8e06a",
+          "size_bytes": 38713
+        }
+      ]
+    },
+    {
+      "name": "08_nav2_route_calibration",
+      "sources": [
+        {
+          "file": "data/nav2_calibration/batch_route_summary_nav2.csv",
+          "sha256": "0baf6a695bacd2dac8f99a9e1b540dbb30901dfff0086afb93a0666acf030399"
+        },
+        {
+          "file": "scripts/travel_time.py",
+          "sha256": "ea3b834a22d0bab15c01bc8c5e4e906cfe67a6176f489978f3a884fac98b9722"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/08_nav2_route_calibration.png",
+          "sha256": "aec253ccc98dcdb63df0c827eadddff03c0829cfff30f0daa70e573370920500",
+          "size_bytes": 485927
+        },
+        {
+          "file": "figures/08_nav2_route_calibration.svg",
+          "sha256": "e41e29cc771326f3ad09c0d5d42e680fa0e782e0c30f9fb935db8abd0b9992a6",
+          "size_bytes": 39686
+        }
+      ]
+    },
+    {
+      "name": "09_battery_aware_lifecycle",
+      "sources": [
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        },
+        {
+          "file": "scripts/scheduling_simulator.py",
+          "sha256": "2f418bc26cb543bd4ebc679be6d365991c63fb102a8626f5db215291b1b2f9d1"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/09_battery_aware_lifecycle.png",
+          "sha256": "855adebc645e0de71dbff742176f1f791996ea4cece130cd7c9b1d969fc42de9",
+          "size_bytes": 230790
+        },
+        {
+          "file": "figures/09_battery_aware_lifecycle.svg",
+          "sha256": "410c561a291a2cb2baab1c273cdb8d1fb3c79103f0958e7578440a4e6e08b21f",
+          "size_bytes": 9985
+        }
+      ]
+    },
+    {
+      "name": "10_evaluation_metric_definitions",
+      "sources": [
+        {
+          "file": "scripts/metrics.py",
+          "sha256": "b3aef0bcbe10c6b365a7f03500568e9baa6aec3e91a46d6aff8220e66311cae5"
+        },
+        {
+          "file": "scripts/scheduling_simulator.py",
+          "sha256": "2f418bc26cb543bd4ebc679be6d365991c63fb102a8626f5db215291b1b2f9d1"
+        },
+        {
+          "file": "scripts/rl/evaluate_reward_tuned_workload_robustness.py",
+          "sha256": "5161b138b7428129de2e36c12eb6f0ab437c1b9e7228970e1695e798794eefd4"
+        },
+        {
+          "file": "data/environment_config.json",
+          "sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/10_evaluation_metric_definitions.png",
+          "sha256": "893dd929c64ceec10272bf9e94389b9c00f8df14fe66307c1df45900eaef4fee",
+          "size_bytes": 253830
+        },
+        {
+          "file": "figures/10_evaluation_metric_definitions.svg",
+          "sha256": "c7340e8fa2b885025602184bf18caa92b9c6f25ce520ef88f7fc8b25c03d6d8c",
+          "size_bytes": 9714
+        }
+      ]
+    }
+  ]
+}

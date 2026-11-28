@@ -1,0 +1,80 @@
+Nav Graph: PASS
+Route Summary: PASS
+Route Results: PASS
+PPO Model: PASS
+Shared experiment configuration: PASS
+[01/21] range=[0.0,0.4] seed=3001 | decisions=1720 | multi=80.41% | equal_load=57.46% | min=41.84% | max=57.46% | mid=0.70% | mean_alpha=0.2313 | PASS
+[02/21] range=[0.0,0.4] seed=3002 | decisions=1921 | multi=84.40% | equal_load=56.15% | min=41.81% | max=56.15% | mid=2.04% | mean_alpha=0.2285 | PASS
+[03/21] range=[0.0,0.4] seed=3003 | decisions=1856 | multi=81.29% | equal_load=57.81% | min=39.92% | max=57.81% | mid=2.26% | mean_alpha=0.2356 | PASS
+[04/21] range=[0.0,1.0] seed=3001 | decisions=1720 | multi=80.41% | equal_load=57.46% | min=41.84% | max=57.46% | mid=0.70% | mean_alpha=0.5783 | PASS
+[05/21] range=[0.0,1.0] seed=3002 | decisions=1921 | multi=84.40% | equal_load=56.15% | min=41.81% | max=56.15% | mid=2.04% | mean_alpha=0.5713 | PASS
+[06/21] range=[0.0,1.0] seed=3003 | decisions=1852 | multi=82.27% | equal_load=58.39% | min=39.00% | max=58.39% | mid=2.61% | mean_alpha=0.5962 | PASS
+[07/21] range=[0.4,0.8] seed=3001 | decisions=1720 | multi=80.41% | equal_load=57.46% | min=41.84% | max=57.46% | mid=0.70% | mean_alpha=0.6313 | PASS
+[08/21] range=[0.4,0.8] seed=3002 | decisions=1921 | multi=84.40% | equal_load=56.15% | min=41.81% | max=56.15% | mid=2.04% | mean_alpha=0.6285 | PASS
+[09/21] range=[0.4,0.8] seed=3003 | decisions=1852 | multi=82.27% | equal_load=58.39% | min=39.08% | max=58.39% | mid=2.54% | mean_alpha=0.6383 | PASS
+[10/21] range=[0.4,1.0] seed=3001 | decisions=1720 | multi=80.41% | equal_load=57.46% | min=41.84% | max=57.46% | mid=0.70% | mean_alpha=0.7470 | PASS
+[11/21] range=[0.4,1.0] seed=3002 | decisions=2008 | multi=84.40% | equal_load=56.36% | min=41.46% | max=56.36% | mid=2.18% | mean_alpha=0.7445 | PASS
+[12/21] range=[0.4,1.0] seed=3003 | decisions=1829 | multi=82.58% | equal_load=58.77% | min=38.34% | max=58.77% | mid=2.90% | mean_alpha=0.7610 | PASS
+[13/21] range=[0.6,0.8] seed=3001 | decisions=1710 | multi=80.91% | equal_load=57.42% | min=41.74% | max=57.42% | mid=0.85% | mean_alpha=0.7157 | PASS
+[14/21] range=[0.6,0.8] seed=3002 | decisions=2269 | multi=85.41% | equal_load=55.69% | min=41.81% | max=55.69% | mid=2.50% | mean_alpha=0.7137 | PASS
+[15/21] range=[0.6,0.8] seed=3003 | decisions=1802 | multi=81.78% | equal_load=57.99% | min=39.83% | max=57.99% | mid=2.18% | mean_alpha=0.7181 | PASS
+[16/21] range=[0.6,1.0] seed=3001 | decisions=1710 | multi=80.91% | equal_load=57.42% | min=41.74% | max=57.42% | mid=0.85% | mean_alpha=0.8314 | PASS
+[17/21] range=[0.6,1.0] seed=3002 | decisions=2120 | multi=85.53% | equal_load=56.31% | min=41.47% | max=56.31% | mid=2.22% | mean_alpha=0.8295 | PASS
+[18/21] range=[0.6,1.0] seed=3003 | decisions=1944 | multi=80.37% | equal_load=57.48% | min=39.77% | max=57.48% | mid=2.75% | mean_alpha=0.8352 | PASS
+[19/21] range=[0.9,1.0] seed=3001 | decisions=2224 | multi=81.23% | equal_load=54.48% | min=43.84% | max=54.48% | mid=1.68% | mean_alpha=0.9553 | PASS
+[20/21] range=[0.9,1.0] seed=3002 | decisions=2043 | multi=84.77% | equal_load=50.42% | min=47.55% | max=50.42% | mid=2.03% | mean_alpha=0.9514 | PASS
+[21/21] range=[0.9,1.0] seed=3003 | decisions=2128 | multi=80.43% | equal_load=51.79% | min=45.00% | max=51.79% | mid=3.20% | mean_alpha=0.9532 | PASS
+
+====================================================================================================
+DYNAMIC BEHAVIOR SUMMARY
+====================================================================================================
+Range       Multi%  EqualLoad%   Min%    Max%    Mid%   MeanAlpha
+[0.0,0.4]     82.033    57.141    41.193    57.141     1.666     0.232
+[0.0,1.0]     82.360    57.334    40.885    57.334     1.781     0.582
+[0.4,0.8]     82.360    57.334    40.910    57.334     1.756     0.633
+[0.4,1.0]     82.463    57.530    40.546    57.530     1.924     0.751
+[0.6,0.8]     82.699    57.034    41.126    57.034     1.840     0.716
+[0.6,1.0]     82.268    57.070    40.993    57.070     1.938     0.832
+[0.9,1.0]     82.142    52.229    45.466    52.229     2.305     0.953
+
+===== DISPATCH SEQUENCE EQUIVALENCE =====
+
+Seed: 3001
+Unique decision sequences: 3
+Sequence 1: [(0.0, 0.4), (0.0, 1.0), (0.4, 0.8), (0.4, 1.0)]
+Sequence 2: [(0.6, 0.8), (0.6, 1.0)]
+Sequence 3: [(0.9, 1.0)]
+
+Seed: 3002
+Unique decision sequences: 5
+Sequence 1: [(0.0, 0.4), (0.0, 1.0), (0.4, 0.8)]
+Sequence 2: [(0.4, 1.0)]
+Sequence 3: [(0.6, 0.8)]
+Sequence 4: [(0.6, 1.0)]
+Sequence 5: [(0.9, 1.0)]
+
+Seed: 3003
+Unique decision sequences: 7
+Sequence 1: [(0.0, 0.4)]
+Sequence 2: [(0.0, 1.0)]
+Sequence 3: [(0.4, 0.8)]
+Sequence 4: [(0.4, 1.0)]
+Sequence 5: [(0.6, 0.8)]
+Sequence 6: [(0.6, 1.0)]
+Sequence 7: [(0.9, 1.0)]
+
+===== FINAL DIAGNOSTIC CHECK =====
+Diagnostic runs: 21
+Reference runs: 21
+Decision records: 39990
+Dynamic alpha formula: PASS
+Weighted cost formula: PASS
+Robot selection rule: PASS
+Wrapper metric equivalence: PASS
+Nav Graph: PASS
+Route Summary: PASS
+Route Results: PASS
+PPO Model: PASS
+Shared experiment configuration: PASS
+DYNAMIC DIAGNOSTICS: COMPLETE
+Output: /home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results/battery_baseline_calibration_v2/diagnostics/dynamic_behavior

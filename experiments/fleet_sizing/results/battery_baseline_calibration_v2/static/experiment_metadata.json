@@ -1,0 +1,91 @@
+{
+  "experiment": "battery_static_calibration_v2",
+  "method": "static_weighted",
+  "created_at_utc": "2026-11-26T11:00:27.565774+00:00",
+  "git_commit": "0924b71f2407529206d75bb7b0200c9ceae59a9d",
+  "git_status": [
+    "?? experiments/fleet_sizing/battery_calibration/",
+    "?? experiments/fleet_sizing/docs/",
+    "?? experiments/fleet_sizing/results/battery_baseline_calibration_v2/",
+    "?? ros2_ws/batch_route_results_nav2_dryrun.csv",
+    "?? ros2_ws/batch_route_summary_nav2_dryrun.csv",
+    "?? ros2_ws/route_calibration_backup/",
+    "?? ros2_ws/src/my_hospital_rmf/experiments/route_calibration/clothes_return_debug.png",
+    "?? ros2_ws/src/my_hospital_rmf/experiments/route_calibration/rmf_nav2_overlay.png"
+  ],
+  "python_version": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "packages": {
+    "numpy": "2.5.4",
+    "torch": "2.14.0+cpu",
+    "gymnasium": "1.3.0",
+    "stable-baselines3": "2.9.0",
+    "sb3-contrib": "2.9.0"
+  },
+  "fleet": [
+    2,
+    2,
+    3
+  ],
+  "workload_multiplier": 4.0,
+  "simulation_days": 7,
+  "battery_enabled": true,
+  "alphas": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "calibration_seeds": [
+    3001,
+    3002,
+    3003,
+    3004,
+    3005,
+    3006,
+    3007,
+    3008,
+    3009,
+    3010
+  ],
+  "expected_runs": 110,
+  "primary_metrics": {
+    "average_waiting_time_s": -1,
+    "p95_waiting_time_s": -1,
+    "high_waiting_time_s": -1,
+    "emergency_waiting_time_s": -1,
+    "total_travel_time_s": -1,
+    "jain_task_fairness": 1
+  },
+  "min_mean_completion_rate": 0.99,
+  "min_seed_completion_rate": 0.99,
+  "tie_break_metrics": [
+    "emergency_waiting_time_s",
+    "high_waiting_time_s",
+    "p95_waiting_time_s",
+    "average_waiting_time_s",
+    "total_travel_time_s",
+    "jain_task_fairness"
+  ],
+  "selection_method": "Completion screening, Pareto front, rank sum",
+  "rank_reference": "All feasible static candidates",
+  "rank_ties": "Average rank for exact ties",
+  "navigation": {
+    "nav_graph": "/home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/src/my_hospital_rmf/nav_graphs/0.yaml",
+    "nav_graph_sha256": "91c491b860ce97036ecceba4cf2460085baf9169d22484c1328cd722dc94bf79",
+    "route_summary": "/home/asus/clinical-multi-robot-collaboration-platform-system/ros2_ws/batch_route_summary_nav2.csv",
+    "route_summary_sha256": "0baf6a695bacd2dac8f99a9e1b540dbb30901dfff0086afb93a0666acf030399",
+    "route_results_sha256": "2afdbdf57e8f5f0ffe6d318ec689c10b8b638477476ea63e56483b3ef6377b4a"
+  },
+  "frozen_ppo": {
+    "path": "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip",
+    "sha256": "ba278857a1042ed58ae38e9522c7a962d73abd467d539de9479773cf96fe55e0",
+    "used_in_calibration": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "approach_weight": 0.3,
+  "queue_weight": 0.15,
+  "imbalance_weight": 0.05,
+  "waiting_weight": 0.5,
+  "approach_scale_s": 600.0,
+  "waiting_scale_s": 600.0,
+  "tasks_ahead_scale": 10.0,
+  "low_priority_weight": 1.0,
+  "normal_priority_weight": 1.5,
+  "high_priority_weight": 2.5,
+  "emergency_priority_weight": 4.0
+}

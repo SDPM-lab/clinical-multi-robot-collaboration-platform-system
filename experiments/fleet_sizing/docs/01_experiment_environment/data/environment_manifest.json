@@ -1,0 +1,149 @@
+{
+  "created_at": "2026-11-28T14:44:02.990030+08:00",
+  "archive_type": "Current environment source snapshot",
+  "historical_training_snapshot": false,
+  "git_branch": "feat/fleet-sizing-experiment",
+  "git_commit": "0924b71f2407529206d75bb7b0200c9ceae59a9d",
+  "git_status": "?? experiments/fleet_sizing/battery_calibration/\n?? experiments/fleet_sizing/docs/\n?? experiments/fleet_sizing/results/battery_baseline_calibration_v2/\n?? experiments/fleet_sizing/results/reward_scale_diagnostics_v2/\n?? experiments/fleet_sizing/rl/analyze_final_nav2_calibrated_baselines.py\n?? experiments/fleet_sizing/rl/analyze_secondary_metrics_nav2.py\n?? experiments/fleet_sizing/rl/evaluate_final_nav2_calibrated_baselines.py\n?? ros2_ws/batch_route_results_nav2_dryrun.csv\n?? ros2_ws/batch_route_summary_nav2_dryrun.csv\n?? ros2_ws/route_calibration_backup/\n?? ros2_ws/src/my_hospital_rmf/experiments/route_calibration/clothes_return_debug.png\n?? ros2_ws/src/my_hospital_rmf/experiments/route_calibration/rmf_nav2_overlay.png",
+  "configuration_count": 82,
+  "configuration_sha256": "05d8c308dde7a75507b3d35b8cca381281ec582bfbbcaffd18d45853457e54fc",
+  "file_count": 19,
+  "files": [
+    {
+      "source": "ros2_ws/src/my_hospital_rmf/config/task_profiles.yaml",
+      "archive": "data/task_profiles.yaml",
+      "sha256": "09cb80f6ee16bb1be3da57d2ad7e57b7eea6e74b34cf3073653362ce8a1e2635",
+      "size_bytes": 1214
+    },
+    {
+      "source": "ros2_ws/src/my_hospital_rmf/nav_graphs/0.yaml",
+      "archive": "data/nav2_calibration/nav_graph.yaml",
+      "sha256": "91c491b860ce97036ecceba4cf2460085baf9169d22484c1328cd722dc94bf79",
+      "size_bytes": 11978
+    },
+    {
+      "source": "ros2_ws/batch_route_results_nav2.csv",
+      "archive": "data/nav2_calibration/batch_route_results_nav2.csv",
+      "sha256": "2afdbdf57e8f5f0ffe6d318ec689c10b8b638477476ea63e56483b3ef6377b4a",
+      "size_bytes": 18954
+    },
+    {
+      "source": "ros2_ws/batch_route_summary_nav2.csv",
+      "archive": "data/nav2_calibration/batch_route_summary_nav2.csv",
+      "sha256": "0baf6a695bacd2dac8f99a9e1b540dbb30901dfff0086afb93a0666acf030399",
+      "size_bytes": 3196
+    },
+    {
+      "source": "experiments/fleet_sizing/config.py",
+      "archive": "scripts/config.py",
+      "sha256": "e150e42d2ab501bdce284c6ebea37b9d053e4b5a10ba19a6ab39d953dd5cb54e",
+      "size_bytes": 21072
+    },
+    {
+      "source": "experiments/fleet_sizing/models.py",
+      "archive": "scripts/models.py",
+      "sha256": "53b27ad0ec7021a3b467fc94d6672b8b60ad546c80ec704ffdeca02a6b116d7e",
+      "size_bytes": 7098
+    },
+    {
+      "source": "experiments/fleet_sizing/task_generator.py",
+      "archive": "scripts/task_generator.py",
+      "sha256": "b4fc7ce48c8202d7ce80797ebb8318d5c83d43959ca5a3b23d594ae3475cb1bd",
+      "size_bytes": 20977
+    },
+    {
+      "source": "experiments/fleet_sizing/service_time.py",
+      "archive": "scripts/service_time.py",
+      "sha256": "8e5fc8e1c513b314340efb377be5ae5361753592fe2654425d9e1b43461320bb",
+      "size_bytes": 5557
+    },
+    {
+      "source": "experiments/fleet_sizing/nav_graph.py",
+      "archive": "scripts/nav_graph.py",
+      "sha256": "1f1a4bf493409c0e253bc0b6d73d356bfdea81f2b4a5ef29597550d2ed68ca61",
+      "size_bytes": 7466
+    },
+    {
+      "source": "experiments/fleet_sizing/travel_time.py",
+      "archive": "scripts/travel_time.py",
+      "sha256": "ea3b834a22d0bab15c01bc8c5e4e906cfe67a6176f489978f3a884fac98b9722",
+      "size_bytes": 5765
+    },
+    {
+      "source": "experiments/fleet_sizing/simulator.py",
+      "archive": "scripts/simulator.py",
+      "sha256": "f54feb9f43cd35099875e7055594d7003312353a95262b467f43d3f8e13c09a6",
+      "size_bytes": 17526
+    },
+    {
+      "source": "experiments/fleet_sizing/scheduling_simulator.py",
+      "archive": "scripts/scheduling_simulator.py",
+      "sha256": "2f418bc26cb543bd4ebc679be6d365991c63fb102a8626f5db215291b1b2f9d1",
+      "size_bytes": 40523
+    },
+    {
+      "source": "experiments/fleet_sizing/metrics.py",
+      "archive": "scripts/metrics.py",
+      "sha256": "b3aef0bcbe10c6b365a7f03500568e9baa6aec3e91a46d6aff8220e66311cae5",
+      "size_bytes": 12402
+    },
+    {
+      "source": "experiments/fleet_sizing/baseline/common.py",
+      "archive": "scripts/baseline/common.py",
+      "sha256": "cf7453a3ce5526a4303e17a336594a29c439fc6eeeec610070747a7bc3e4bdfe",
+      "size_bytes": 53142
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/environment.py",
+      "archive": "scripts/rl/environment.py",
+      "sha256": "32d68cdc89a4ff7b6141a245d79e548dfb4cab78a6d31f9a4431fca557fa9a30",
+      "size_bytes": 39849
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/observation.py",
+      "archive": "scripts/rl/observation.py",
+      "sha256": "1f60701fab5fdde10a46a8facb6563cac0b123b71e1d64ed2de4c743f5490916",
+      "size_bytes": 13001
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/action_mask.py",
+      "archive": "scripts/rl/action_mask.py",
+      "sha256": "3501ca52f131ebc7168fdd6f46c5bf517be8705a47e9204b925f56844ef52a74",
+      "size_bytes": 7720
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/reward.py",
+      "archive": "scripts/rl/reward.py",
+      "sha256": "48d9d4392ea1c5ba93a9bb7fa9aebf4545aafc247333b771f9e9cc14a563f487",
+      "size_bytes": 6002
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/evaluate_reward_tuned_workload_robustness.py",
+      "archive": "scripts/rl/evaluate_reward_tuned_workload_robustness.py",
+      "sha256": "5161b138b7428129de2e36c12eb6f0ab437c1b9e7228970e1695e798794eefd4",
+      "size_bytes": 23979
+    }
+  ],
+  "historical_fleet_sizing": {
+    "battery_enabled": false,
+    "completion_rate": "within seven-day horizon",
+    "utilization_denominator": "seven-day horizon"
+  },
+  "formal_evaluation": {
+    "battery_enabled": true,
+    "fleet": [
+      2,
+      2,
+      3
+    ],
+    "workloads": [
+      3,
+      3.5,
+      4,
+      4.5,
+      5
+    ],
+    "completion_rate": "final completed tasks",
+    "utilization_denominator": "makespan"
+  }
+}

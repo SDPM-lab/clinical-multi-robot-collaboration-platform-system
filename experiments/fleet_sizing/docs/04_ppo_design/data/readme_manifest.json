@@ -1,0 +1,17 @@
+{
+  "verified_at": "2026-11-28T15:21:27.194904+08:00",
+  "readme_sha256": "77161d32f9d3737e2eadbe523e4d0870a60580e3af472a82495bab84331eec68",
+  "model_design_manifest_sha256": "835112b6af74c235e11c138091fcaa36169fb063bb2c4200a1d5210ace6ff9e3",
+  "verification_script_sha256": "8051a9b7c20fa5005d4956c185e9bcf35212808a737f7417e4bd68c519c5c761",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "model_seed": 7101,
+  "sections": 17,
+  "lines": 1659,
+  "embedded_figures": 6,
+  "links_checked": 53,
+  "missing_links": [],
+  "archived_files": 22,
+  "verification_status": "PASS",
+  "deployment_verified": false,
+  "verification_scope": "File integrity, model identity, exported inference data, figure formats, README structure and local links."
+}
