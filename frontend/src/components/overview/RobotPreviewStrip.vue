@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { createGltfLoader, runtimeModelUrl } from '@/three/loaders/createGltfLoader.js'
 import { SCENE_ASSETS } from '@/config/sceneAssets.js'
 
 const props = defineProps({ theme: { type: String, default: 'light' }, count: { type: Number, default: 3 } })
@@ -102,7 +102,7 @@ onMounted(() => {
   resizeObserver.observe(host.value)
   resize()
   const generation = ++loadGeneration
-  new GLTFLoader().load(SCENE_ASSETS.robot, (gltf) => {
+  createGltfLoader().load(runtimeModelUrl(SCENE_ASSETS.robot), (gltf) => {
     if (generation !== loadGeneration) { disposeObject(gltf.scene); return }
     model = gltf.scene
     const box = new THREE.Box3().setFromObject(model)

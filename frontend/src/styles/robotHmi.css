@@ -200,3 +200,43 @@ html[data-theme=dark] .overview-page .robot-info-card__structure button[aria-pre
 .robot-remove-dialog h2{margin:0 0 10px;font-size:16px}.robot-remove-dialog p{margin:0;color:var(--text-secondary);font-size:12px;line-height:1.5}.robot-remove-dialog>div{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
 .robot-remove-dialog button{padding:8px 12px;color:var(--text-primary);background:transparent;border:var(--info-border);border-radius:7px;cursor:pointer}.robot-remove-dialog button:hover{background:var(--theme-primary-soft)}.robot-remove-dialog button.is-danger{color:#fff;background:var(--color-error);border-color:var(--color-error)}.robot-remove-dialog button.is-danger:hover{filter:brightness(.92)}
 @media(prefers-reduced-motion:reduce){.robot-picker .robot-list-item__remove,.robot-sidebar-actions .edit-robots{transition:none}.robot-picker .robot-list-item__remove:hover{transform:none}}
+
+/* Responsive spacing fixes: keep list cards clear of the scrollbar and keep columns from colliding. */
+.robot-picker{scrollbar-gutter:stable;padding-right:10px}
+.robot-picker .robot-list-item{grid-template-columns:52px minmax(0,1fr) minmax(28px,40px)}
+.robot-list-item__battery{min-width:0;justify-self:stretch}
+.robot-list-item__battery strong{white-space:nowrap}
+.robot-list-item__battery i{width:100%;max-width:32px}
+.robot-side-metrics .gauge-heading{gap:8px;padding-right:2px}
+.robot-side-metrics .gauge-heading>span{min-width:0;overflow-wrap:normal;word-break:normal;hyphens:none;line-height:1.25}
+.robot-side-metrics .gauge-heading svg{flex:none}
+.robot-info-card__header h2{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.robot-info-card__connection{flex-wrap:wrap;row-gap:4px;white-space:normal;min-width:0;overflow-wrap:normal!important;word-break:normal}
+.robot-info-card__structure button{overflow:hidden;text-overflow:ellipsis}
+/* Short laptop screens (e.g. 1280x720, 1366x768): shrink the gauges so the info card fits without clipping. */
+@media(min-width:1101px) and (max-height:820px){
+	.robot-inspector{margin-top:0}
+	.robot-side-metrics .hmi-gauge{aspect-ratio:auto;height:clamp(118px,19dvh,150px)}
+	.robot-side-metrics .battery-arc{width:clamp(70px,11dvh,96px)}
+	.thermal-dial{width:clamp(74px,11.5dvh,100px)}
+	.robot-info-card{padding:14px 16px 16px}
+	.robot-info-card__facts{gap:12px 12px;margin-top:12px;padding-top:12px}
+	.robot-info-card__structure{margin-top:12px;padding-top:10px}
+	.robot-picker .robot-list-item{min-height:84px;padding:10px 12px}
+}
+/* Tablet landscape: the list column is narrow, so tighten the card grid instead of letting the battery column overflow. */
+@media(max-width:1100px) and (orientation:landscape){
+	.robot-hmi{grid-template-columns:minmax(190px,21%) minmax(0,1fr) minmax(250px,28%)}
+	.robot-picker{padding-right:8px}
+	.robot-picker .robot-list-item{grid-template-columns:34px minmax(0,1fr) minmax(24px,32px);padding:8px 10px;gap:8px}
+	.robot-list-item__avatar{width:34px;height:48px}
+	.robot-floor-filter button{flex-basis:44px}
+}
+
+/* Orange theme scrollbars for every Robot Status scroll area (standard + Safari/WebKit). */
+.robot-hmi,.robot-picker,.robot-inspector,.robot-inspector-content{scrollbar-width:thin;scrollbar-color:rgba(var(--color-primary-rgb),.55) transparent}
+.robot-hmi::-webkit-scrollbar,.robot-picker::-webkit-scrollbar,.robot-inspector::-webkit-scrollbar,.robot-inspector-content::-webkit-scrollbar{width:6px;height:6px}
+.robot-hmi::-webkit-scrollbar-track,.robot-picker::-webkit-scrollbar-track,.robot-inspector::-webkit-scrollbar-track,.robot-inspector-content::-webkit-scrollbar-track{background:transparent}
+.robot-hmi::-webkit-scrollbar-thumb,.robot-picker::-webkit-scrollbar-thumb,.robot-inspector::-webkit-scrollbar-thumb,.robot-inspector-content::-webkit-scrollbar-thumb{background:rgba(var(--color-primary-rgb),.55);border-radius:6px}
+.robot-hmi::-webkit-scrollbar-thumb:hover,.robot-picker::-webkit-scrollbar-thumb:hover,.robot-inspector::-webkit-scrollbar-thumb:hover,.robot-inspector-content::-webkit-scrollbar-thumb:hover{background:rgba(var(--color-primary-rgb),.8)}
+.robot-hmi::-webkit-scrollbar-button,.robot-picker::-webkit-scrollbar-button,.robot-inspector::-webkit-scrollbar-button,.robot-inspector-content::-webkit-scrollbar-button{display:none;width:0;height:0}

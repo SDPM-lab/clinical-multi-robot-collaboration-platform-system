@@ -71,6 +71,29 @@ def make_controller_yaml(instance_name):
     return path
 
 
+def fixed_upper_body_description(robot_description):
+    root = ET.fromstring(robot_description)
+    drive_wheels = {"left_wheel_joint", "right_wheel_joint"}
+    dynamic_joint_elements = {
+        "mimic", "axis", "limit", "dynamics", "safety_controller", "calibration",
+    }
+
+    for joint in root.findall("joint"):
+        if joint.get("name") in drive_wheels or joint.get("type") == "fixed":
+            continue
+        joint.set("type", "fixed")
+        for element in list(joint):
+            if element.tag in dynamic_joint_elements:
+                joint.remove(element)
+
+    for control in root.findall("ros2_control"):
+        for joint in control.findall("joint"):
+            if joint.get("name") not in drive_wheels:
+                control.remove(joint)
+
+    return ET.tostring(root, encoding="unicode")
+
+
 def patch_robot_description(
     robot_description,
     instance_name,
@@ -270,6 +293,9 @@ def launch_setup(context, *args, **kwargs):
     if robot_description is None:
         raise RuntimeError("Failed generating G1 robot_description")
 
+    if context.launch_configurations["robot_model"] == "lightweight":
+        robot_description = fixed_upper_body_description(robot_description)
+
     robot_description = patch_robot_description(
         robot_description,
         instance_name,
@@ -307,15 +333,21 @@ def launch_setup(context, *args, **kwargs):
 
         )
 
+        render_args = []
+        server_prefix = []
+        if os.getenv("HOSPITAL_GAZEBO_HEADLESS", "1") == "1":
+            server_prefix = ["env", "-u", "DISPLAY", "-u", "LIBGL_ALWAYS_SOFTWARE"]
+            render_args = ["--headless-rendering", "--render-engine-server", "ogre2"]
+
         gz_server = ExecuteProcess(
-            cmd=[
+            cmd=server_prefix + [
                 "gz",
                 "sim",
                 "-s",
                 "-r",
                 world_path,
                 "--verbose",
-            ],
+            ] + render_args,
             output="screen",
         )
 
@@ -524,6 +556,11 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "robot_model",
+            default_value="lightweight",
+            choices=["full", "lightweight"],
+        ),
 
         DeclareLaunchArgument(
             "start_controllers",

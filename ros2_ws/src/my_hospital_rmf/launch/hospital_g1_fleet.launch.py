@@ -257,6 +257,7 @@ def launch_setup(context, *args, **kwargs):
                     robot_launch_path
                 ),
                 launch_arguments={
+                    "robot_model": LaunchConfiguration("robot_model"),
                     "instance_name":
                         robot_id,
 
@@ -385,6 +386,11 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "robot_model",
+            default_value="lightweight",
+            choices=["full", "lightweight"],
+        ),
 
         DeclareLaunchArgument(
             "start_world",

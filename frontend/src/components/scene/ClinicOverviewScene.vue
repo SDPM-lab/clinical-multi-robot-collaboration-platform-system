@@ -4,7 +4,7 @@ import { MapPin } from '@lucide/vue'
 import * as THREE from 'three'
 import { overviewPalette } from '@/styles/overviewTheme.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { createGltfLoader, runtimeModelUrl } from '@/three/loaders/createGltfLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import SharedLoading from '@/components/SharedLoading.vue'
 import { webglProfile } from '@/three/webglProfile.js'
@@ -513,7 +513,7 @@ const loadModel = () => {
   loadError.value = false
   modelProgress.value = 0
   disposeModel()
-  new GLTFLoader().load(clinicOverviewModelUrl, (gltf) => {
+  createGltfLoader().load(runtimeModelUrl(clinicOverviewModelUrl), (gltf) => {
     if (generation !== loadGeneration || graphicsError.value) {
       disposeDetachedScene(gltf.scene)
       return

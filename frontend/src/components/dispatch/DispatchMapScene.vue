@@ -1,7 +1,8 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { createGltfLoader, runtimeModelUrl } from '@/three/loaders/createGltfLoader.js'
+import { COMPRESSED_MODELS } from '@/config/compressedModels.js'
 import { MapControls } from 'three/addons/controls/MapControls.js'
 import { Line2 } from 'three/addons/lines/Line2.js'
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js'
@@ -288,10 +289,10 @@ onMounted(async () => {
       if (!response.ok) throw new Error('mapping')
       return response.json()
     })
-    const response = await fetch(SCENE_ASSETS.dispatchFloor, { signal: abort.signal, cache: 'no-cache' })
+    const response = await fetch(runtimeModelUrl(SCENE_ASSETS.dispatchFloor), { signal: abort.signal, cache: 'no-cache' })
     if (!response.ok) throw new Error(`模型載入失敗 (${response.status})`)
     const glbBuffer = await readModelResponse(response, (progress) => { if (!disposed) modelProgress.value = progress })
-    const gltf = await new GLTFLoader().parseAsync(glbBuffer, '')
+    const gltf = await createGltfLoader().parseAsync(glbBuffer, '')
     modelScenes = gltf.scenes
     if (disposed) { modelScenes.forEach(disposeObject); resources.forEach((resource) => resource.dispose()); resources.clear(); return }
     model = gltf.scene
@@ -320,7 +321,13 @@ onMounted(async () => {
     if (!disposed) {
       const graphSource = 'frontend/public/generated/rmf-navigation.json'
       const modelSource = 'frontend/public/models/L1__flat.glb'
-      if (mapData.source?.[graphSource] !== graphHash || mapData.source?.[modelSource] !== glbHash || !validateDispatchMapping(mapData, graphData)) {
+      // The runtime loads the Draco copy, so check it against the manifest and the manifest's
+      // recorded source hash against the mapping (which is generated from the source GLB).
+      const compressed = COMPRESSED_MODELS['L1__flat.glb']
+      const mappedModelHash = mapData.source?.[modelSource] || ''
+      const modelMatches = mappedModelHash === glbHash
+        || (!!compressed && glbHash.startsWith(compressed.version) && mappedModelHash.startsWith(compressed.source))
+      if (mapData.source?.[graphSource] !== graphHash || !modelMatches || !validateDispatchMapping(mapData, graphData)) {
         graphError.value = '路線對應資料與目前導航圖或 GLB 版本不符，請重新產生對應資料。'
       } else {
         graph.value = graphData; mapping.value = mapData
