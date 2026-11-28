@@ -1,0 +1,10 @@
+.sh-v6 { --sh6-workspace-bottom:46px; }
+.sh-v6 .sh4-stage-brand { top:146px; width:189px; height:41px; object-fit:contain; }
+.sh-v6 .sh4-title { top:218px; }
+.sh-v6 .sh4-title strong { font-size:82px; letter-spacing:-3px; }
+.sh-v6 .sh4-title .sh6-support { margin-top:21px; font-size:33px; font-weight:550; color:#333c37; }
+.sh-v6 .sh4-title .sh6-secondary { margin-top:14px; font-size:24px; color:#5a655e; }
+.sh-v6 .sh-records { bottom:var(--sh6-workspace-bottom); }
+.sh-v6 .sh-details { bottom:var(--sh6-workspace-bottom); display:flex; flex-direction:column; gap:13px; }
+.sh-v6 .sh-facts { flex:none; }
+.sh-v6 .sh-route-timeline { flex:1; min-height:0; margin-top:0; }

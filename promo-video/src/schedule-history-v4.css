@@ -1,0 +1,15 @@
+.sh-v4 .sh4-stage-brand {
+  position:absolute;
+  left:81px;
+  top:64px;
+  width:70px;
+}
+.sh-v4 .sh4-title {
+  left:80px;
+  top:240px;
+}
+.sh-v4 .sh4-title strong { font-size:88px; letter-spacing:-3.5px; }
+.sh-v4 .sh4-title span { margin-top:17px; font-size:27px; }
+.sh-v4 .sh3-metric-slot { height:104px; }
+.sh-v4 .sh-records { transform-origin:left top; }
+.sh-v4 .sh-caption { z-index:4; }
