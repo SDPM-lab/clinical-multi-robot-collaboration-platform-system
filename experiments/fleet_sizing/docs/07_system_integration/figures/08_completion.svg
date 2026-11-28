@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="516.6pt" height="402.413062pt" viewBox="0 0 516.6 402.413062" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-28T23:09:55.455403</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.6.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 402.413062 
+L 516.6 402.413062 
+L 516.6 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 42.354 127.556714 
+L 461.691 127.556714 
+Q 469.224 127.556714 469.224 126.530484 
+L 469.224 78.639761 
+Q 469.224 77.613531 461.691 77.613531 
+L 42.354 77.613531 
+Q 34.821 77.613531 34.821 78.639761 
+L 34.821 126.530484 
+Q 34.821 127.556714 42.354 127.556714 
+z
+" clip-path="url(#p2df1a7bd2e)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 42.354 195.972033 
+L 461.691 195.972033 
+Q 469.224 195.972033 469.224 194.945803 
+L 469.224 147.05508 
+Q 469.224 146.02885 461.691 146.02885 
+L 42.354 146.02885 
+Q 34.821 146.02885 34.821 147.05508 
+L 34.821 194.945803 
+Q 34.821 195.972033 42.354 195.972033 
+z
+" clip-path="url(#p2df1a7bd2e)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 42.354 264.387352 
+L 245.745 264.387352 
+Q 253.278 264.387352 253.278 263.361122 
+L 253.278 215.470399 
+Q 253.278 214.444169 245.745 214.444169 
+L 42.354 214.444169 
+Q 34.821 214.444169 34.821 215.470399 
+L 34.821 263.361122 
+Q 34.821 264.387352 42.354 264.387352 
+z
+" clip-path="url(#p2df1a7bd2e)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 258.3 264.387352 
+L 461.691 264.387352 
+Q 469.224 264.387352 469.224 263.361122 
+L 469.224 215.470399 
+Q 469.224 214.444169 461.691 214.444169 
+L 258.3 214.444169 
+Q 250.767 214.444169 250.767 215.470399 
+L 250.767 263.361122 
+Q 250.767 264.387352 258.3 264.387352 
+z
+" clip-path="url(#p2df1a7bd2e)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 42.354 332.802671 
+L 245.745 332.802671 
+Q 253.278 332.802671 253.278 331.776442 
+L 253.278 283.885718 
+Q 253.278 282.859488 245.745 282.859488 
+L 42.354 282.859488 
+Q 34.821 282.859488 34.821 283.885718 
+L 34.821 331.776442 
+Q 34.821 332.802671 42.354 332.802671 
+z
+" clip-path="url(#p2df1a7bd2e)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 258.3 332.802671 
+L 461.691 332.802671 
+Q 469.224 332.802671 469.224 331.776442 
+L 469.224 283.885718 
+Q 469.224 282.859488 461.691 282.859488 
+L 258.3 282.859488 
+Q 250.767 282.859488 250.767 283.885718 
+L 250.767 331.776442 
+Q 250.767 332.802671 258.3 332.802671 
+z
+" clip-path="url(#p2df1a7bd2e)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="105.344497" transform="rotate(-0 252.0225 105.344497)">Source arrival required</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 258.3 131.268612 
+Q 258.3 137.134737 258.3 141.212007 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 136.812007 
+L 258.3 141.212007 
+L 256.1 136.812007 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_2">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="173.759817" transform="rotate(-0 252.0225 173.759817)">Destination arrival → completed</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 258.3 199.683932 
+Q 258.3 205.550056 258.3 209.627327 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 205.227327 
+L 258.3 209.627327 
+L 256.1 205.227327 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_3">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="144.0495" y="242.175136" transform="rotate(-0 144.0495 242.175136)">RT-11: SOC 100%</text>
+   </g>
+   <g id="text_4">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="359.9955" y="242.175136" transform="rotate(-0 359.9955 242.175136)">RT-12: SOC 20%</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 258.3 268.099251 
+Q 258.3 273.965375 258.3 278.042646 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 273.642646 
+L 258.3 278.042646 
+L 256.1 273.642646 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="144.0495" y="310.590455" transform="rotate(-0 144.0495 310.590455)">Parking request</text>
+   </g>
+   <g id="text_6">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="359.9955" y="310.590455" transform="rotate(-0 359.9955 310.590455)">Charging station request</text>
+   </g>
+   <g id="text_7">
+    <text style="font: 700 17px 'DejaVu Sans'; text-anchor: middle" x="258.3" y="20.117344" transform="rotate(-0 258.3 20.117344)">Task completion and return requests</text>
+   </g>
+  </g>
+  <g id="text_8">
+   <text style="fill: #444444; font: 9px 'DejaVu Sans'; text-anchor: middle" x="250.2" y="393.341344" transform="rotate(-0 250.2 393.341344)">Synthetic completion events; physical return and charging remain unverified.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p2df1a7bd2e">
+   <rect x="7.2" y="32.117344" width="502.2" height="321.552"/>
+  </clipPath>
+ </defs>
+</svg>

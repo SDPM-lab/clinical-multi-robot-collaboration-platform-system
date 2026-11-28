@@ -1,0 +1,124 @@
+{
+  "created_at": "2026-11-28T23:11:40.864484+08:00",
+  "stage": "system_integration_part_a",
+  "status": "DOCUMENTATION_INTEGRITY_VERIFIED",
+  "git_base_commit": "a56156ff94e1470ac1def8f98b42978f54ba34b8",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+  "scheduler_tests_passed": 30,
+  "scheduler_tests_failed": 0,
+  "readme_lines": 187,
+  "referenced_links": 32,
+  "missing_links": 0,
+  "png_count": 8,
+  "svg_count": 8,
+  "historical_files_verified": 19,
+  "plotting_environment": {
+    "python": "/usr/bin/python3",
+    "python_version": "3.12.3",
+    "numpy": "1.26.4",
+    "matplotlib": "3.6.3",
+    "backend": "Agg"
+  },
+  "ros_install_verified": true,
+  "backend_e2e_verified": false,
+  "gazebo_full_system_verified": false,
+  "gpu_update_integrated": false,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "f66428bfd5280aa3c372241b175b961ff91b14e8c2ab0909681414a94efe5c93",
+      "size_bytes": 12614
+    },
+    {
+      "path": "scripts/plot_system_integration.py",
+      "sha256": "028e58c8b9742fe4382157f3ad72a19e98bb7b55901c38223f236ac84ca56c58",
+      "size_bytes": 4680
+    },
+    {
+      "path": "data/ros_install_verification.json",
+      "sha256": "de7ee2640333095d1158f2361c847e48780a450087e749958bd799d9d6c76dbe",
+      "size_bytes": 1966
+    },
+    {
+      "path": "figures/01_system_architecture.png",
+      "sha256": "bcb50ee3bf2bd854ea16dd87c47813ae71baead719b291335f8429fe3e8d0e08",
+      "size_bytes": 85365
+    },
+    {
+      "path": "figures/02_runtime_flow.png",
+      "sha256": "0bb62dd2f9860fc23be326cce5fa78afe06f4c1da37e477aa6d6f2e8680c8ceb",
+      "size_bytes": 82803
+    },
+    {
+      "path": "figures/03_test_results.png",
+      "sha256": "214bd1544b8c2486b05969a38cdba710548606ccffd4977660950b9d4181ba23",
+      "size_bytes": 41997
+    },
+    {
+      "path": "figures/04_stale_mask.png",
+      "sha256": "da5333339f829d08603a46b26136a1fa3540354bf3c9919ee7d3063b64cd10d1",
+      "size_bytes": 40464
+    },
+    {
+      "path": "figures/05_unavailable.png",
+      "sha256": "1de7089881ad03a6a1440f5df6dfc791e5128be5411a8b3c6c54c74253b2e9bb",
+      "size_bytes": 78365
+    },
+    {
+      "path": "figures/06_recovery.png",
+      "sha256": "4b62cf72baa97fe7be3f0ce5506559fdb59386028c5b332bf8912f9c95ec2cf1",
+      "size_bytes": 40734
+    },
+    {
+      "path": "figures/07_concurrent.png",
+      "sha256": "3b6d1c84babcdb9ca21c012cf853d72801178e19f5bc25d63713de5cf4bf3a98",
+      "size_bytes": 46758
+    },
+    {
+      "path": "figures/08_completion.png",
+      "sha256": "512a038f1b1f67e5f3496246966a74bb10201473625a737693921440f363debc",
+      "size_bytes": 68614
+    },
+    {
+      "path": "figures/01_system_architecture.svg",
+      "sha256": "6661384db5bbbd9088c02f5fda31a3788aeab984f6c530a4396d465509ae5c0d",
+      "size_bytes": 7374
+    },
+    {
+      "path": "figures/02_runtime_flow.svg",
+      "sha256": "80be945d56b0e72b4e356a141665c6dc6d42c1b7204f3b093b820e68ddc0d9bb",
+      "size_bytes": 6785
+    },
+    {
+      "path": "figures/03_test_results.svg",
+      "sha256": "c9bdcde14ba1d13d89cc71ad3443964484d0f55c095866b265ad13e786d72dc7",
+      "size_bytes": 7872
+    },
+    {
+      "path": "figures/04_stale_mask.svg",
+      "sha256": "63a00d32cd912f3ed1b81221b7f6f6b1aa561c054781a456fbfd494452bdc448",
+      "size_bytes": 11931
+    },
+    {
+      "path": "figures/05_unavailable.svg",
+      "sha256": "876eebe92d0e44d77ae0cc2024b872920cf03b7d0389f191c18fe456f24809f9",
+      "size_bytes": 7040
+    },
+    {
+      "path": "figures/06_recovery.svg",
+      "sha256": "23e8ed5563f437cfc02ea2de7f55a87bdc1858f08029c4f59ad9f852c1c10475",
+      "size_bytes": 6679
+    },
+    {
+      "path": "figures/07_concurrent.svg",
+      "sha256": "d4b18c42b3a1b0a208235382b332130dc26733cda668f0a94c42ec62db3af454",
+      "size_bytes": 5671
+    },
+    {
+      "path": "figures/08_completion.svg",
+      "sha256": "8dacab2b8d7400305df050769abf1b27c7559b7ccaa25e251655fc3c6bf20d68",
+      "size_bytes": 6388
+    }
+  ]
+}

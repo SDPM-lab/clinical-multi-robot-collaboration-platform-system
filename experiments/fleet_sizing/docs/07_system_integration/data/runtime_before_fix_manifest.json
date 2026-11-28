@@ -1,0 +1,39 @@
+{
+  "created_at": "2026-11-28T17:07:19.148651+08:00",
+  "stage": "runtime_before_fix",
+  "status": "REVIEW_REQUIRED",
+  "git_base_commit": "a56156ff94e1470ac1def8f98b42978f54ba34b8",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_sha256": "39024648626720dd834e4a77bc99f65b241b7baad11703341429c8deaf70aa5d",
+  "total_tests": 12,
+  "passed": 11,
+  "failed": 1,
+  "failed_cases": [
+    "RT-07"
+  ],
+  "defect_id": "DEF-01",
+  "defect": "Stale FleetState accepted for new task assignment",
+  "full_system_verified": false,
+  "files": [
+    {
+      "path": "scripts/test_hospital_ppo_runtime.py",
+      "sha256": "8aa31e87dec3aa906a9dd48f160b1b8b27b4ccb6d80beaff7f51fe3a675dd380",
+      "size_bytes": 22967
+    },
+    {
+      "path": "data/runtime_test_before_fix.json",
+      "sha256": "aa409925be3b4faca875f849804d9c1cb6938ae0d37a60c67f19ca7dc9ea41ce",
+      "size_bytes": 27534
+    },
+    {
+      "path": "logs/runtime_test_before_fix.log",
+      "sha256": "3ed61463969223c7d2c818b1431052dce6d71d52f7ef0a0e660d211b445881f9",
+      "size_bytes": 55885
+    },
+    {
+      "path": "data/scheduler_before_stale_state_fix.py",
+      "sha256": "39024648626720dd834e4a77bc99f65b241b7baad11703341429c8deaf70aa5d",
+      "size_bytes": 71528
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+test_id,task_type,source,destination,priority,observation_size,action_mask,selected_action,selected_robot,assignment_status,result
+TC-08A,waste_transport,ward_a_2,waste_return_2,1,98,"[1, 1, 0, 0, 0, 0, 0]",0,hospital_robot_1,3,PASS
+TC-08B,clothes_collection,ward_b_2,clothes_return_2,1,98,"[1, 1, 0, 0, 0, 0, 0]",0,hospital_robot_1,3,PASS
+TC-08C,specimen_delivery,consult_3_2,lab,1,98,"[0, 0, 1, 1, 0, 0, 0]",2,hospital_robot_3,3,PASS
+TC-08D,medication_delivery,pharmacy,ward_a_2,1,98,"[0, 0, 1, 1, 1, 1, 1]",4,hospital_robot_5,3,PASS
+TC-08E,ward_service,nurse_station,ward_b_2,1,98,"[0, 0, 0, 0, 1, 1, 1]",4,hospital_robot_5,3,PASS
+TC-09A,specimen_delivery,consult_3_2,lab,3,98,"[0, 0, 0, 1, 0, 0, 0]",3,hospital_robot_4,3,PASS
+TC-09B,specimen_delivery,consult_3_2,lab,3,,,,,4,PASS
+TC-10A,specimen_delivery,consult_3_2,lab,1,,,,,,PASS
+TC-10B,medication_delivery,pharmacy,ward_a_2,2,98,"[0, 0, 1, 1, 1, 1, 1]",5,hospital_robot_6,3,PASS
+TC-SAFETY,,,,,,,,,,PASS

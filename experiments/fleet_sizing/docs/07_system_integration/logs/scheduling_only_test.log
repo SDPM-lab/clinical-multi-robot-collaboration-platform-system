@@ -1,0 +1,240 @@
+[INFO] [1795856185.651708614] [hospital_ppo_scheduler]: Loading PPO model: /home/random01/clinical-multi-robot-collaboration-platform-system-liang/experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k/final_model.zip
+[INFO] [1795856186.349618629] [hospital_ppo_scheduler]: [FORMAL_PPO_MODEL_VERIFIED] seed=7101, sha256=1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07, observation=Box(0.0, 1.0, (98,), float32), action=Discrete(7), timesteps=200192, device=cpu
+[INFO] [1795856186.366184099] [hospital_ppo_scheduler]: [PPO_RUNTIME_CONFIGURATION] approach_scale_s=600.0, routes=31, effective_speed_mps=0.3289677419354839, route_summary=/home/random01/clinical-multi-robot-collaboration-platform-system-liang/ros2_ws/batch_route_summary_nav2.csv, nav_graph=/home/random01/clinical-multi-robot-collaboration-platform-system-liang/ros2_ws/src/my_hospital_rmf/nav_graphs/0.yaml
+[INFO] [1795856186.366392661] [hospital_ppo_scheduler]: Scheduling-only mode: True
+[INFO] [1795856186.369393732] [hospital_ppo_scheduler]: Hospital PPO Scheduler ready
+[INFO] [1795856186.369625678] [hospital_ppo_scheduler]: Action mapping: 0=C01/robot_1, 1=C02/robot_2, 2=M01/robot_3, 3=M02/robot_4, 4=W01/robot_5, 5=W02/robot_6, 6=W03/robot_7
+ROS TOPIC DISCOVERY: PASS
+[INFO] [1795856186.383304400] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856186.383778151] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-08A, scheduled_at=1795856186.383
+[INFO] [1795856187.370720855] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856187.371664654] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856187.372507845] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856187.373327623] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856187.374111008] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856187.374616418] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856187.375101979] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856187.375434745] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856187.375863310] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856187.377557662] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856187.377900789] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-08A
+[INFO] [1795856187.378170070] [hospital_ppo_scheduler]: Type: waste_transport
+[INFO] [1795856187.378509189] [hospital_ppo_scheduler]: Route: ward_a_2 -> waste_return_2
+[INFO] [1795856187.378784651] [hospital_ppo_scheduler]: Priority: 1
+[INFO] [1795856187.379058068] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856187.379332371] [hospital_ppo_scheduler]: Action mask: [1, 1, 0, 0, 0, 0, 0]
+[INFO] [1795856187.379610950] [hospital_ppo_scheduler]: PPO action: 0
+[INFO] [1795856187.379890459] [hospital_ppo_scheduler]: Selected logical robot: C01
+[INFO] [1795856187.380174758] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_1
+[INFO] [1795856187.380484037] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856187.380710460] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-08A, assigned=True, robot=hospital_robot_1
+[INFO] [1795856187.381016129] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-08A, robot=hospital_robot_1
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-08A", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_1"}}
+[TEST RESULT] {"test_id": "TC-08A", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-08A", "task_type": "waste_transport", "source": "ward_a_2", "destination": "waste_return_2", "priority": 1, "created_at": 1795856186.3831253, "scheduled_at": 1795856186.3831253}, "expected_mask": [1, 1, 0, 0, 0, 0, 0], "actual_assignment": [{"task_id": "1795856185627085142_TC-08A", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_1"}}], "predictions": [{"observation": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.1830601543188095, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.07866666465997696, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [1, 1, 0, 0, 0, 0, 0], "action": 0, "observation_valid": true, "deterministic": true}], "selected_rmf_robot": "hospital_robot_1"}
+[INFO] [1795856187.381593457] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856187.382055796] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-08B, scheduled_at=1795856187.381
+[INFO] [1795856188.367422453] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856188.367701497] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856188.367933236] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856188.368159936] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856188.368388079] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856188.368611083] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856188.368833906] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856188.369056497] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856188.369281609] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856188.370245502] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856188.370536544] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-08B
+[INFO] [1795856188.370814549] [hospital_ppo_scheduler]: Type: clothes_collection
+[INFO] [1795856188.371093172] [hospital_ppo_scheduler]: Route: ward_b_2 -> clothes_return_2
+[INFO] [1795856188.371377202] [hospital_ppo_scheduler]: Priority: 1
+[INFO] [1795856188.371664153] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856188.371958548] [hospital_ppo_scheduler]: Action mask: [1, 1, 0, 0, 0, 0, 0]
+[INFO] [1795856188.372253636] [hospital_ppo_scheduler]: PPO action: 0
+[INFO] [1795856188.372552157] [hospital_ppo_scheduler]: Selected logical robot: C01
+[INFO] [1795856188.372840469] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_1
+[INFO] [1795856188.373125548] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856188.373340520] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-08B, assigned=True, robot=hospital_robot_1
+[INFO] [1795856188.373646213] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-08B, robot=hospital_robot_1
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-08B", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_1"}}
+[TEST RESULT] {"test_id": "TC-08B", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-08B", "task_type": "clothes_collection", "source": "ward_b_2", "destination": "clothes_return_2", "priority": 1, "created_at": 1795856187.3813944, "scheduled_at": 1795856187.3813944}, "expected_mask": [1, 1, 0, 0, 0, 0, 0], "actual_assignment": [{"task_id": "1795856185627085142_TC-08B", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_1"}}], "predictions": [{"observation": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.1722930371761322, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.05962666496634483, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [1, 1, 0, 0, 0, 0, 0], "action": 0, "observation_valid": true, "deterministic": true}], "selected_rmf_robot": "hospital_robot_1"}
+[INFO] [1795856188.374200138] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856188.374637828] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-08C, scheduled_at=1795856188.374
+[INFO] [1795856189.369953488] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856189.371273497] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856189.371975811] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856189.372539768] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856189.373092387] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856189.373647552] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856189.374194244] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856189.374746187] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856189.375059221] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856189.375882643] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856189.376474389] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-08C
+[INFO] [1795856189.376887225] [hospital_ppo_scheduler]: Type: specimen_delivery
+[INFO] [1795856189.377292582] [hospital_ppo_scheduler]: Route: consult_3_2 -> lab
+[INFO] [1795856189.377667558] [hospital_ppo_scheduler]: Priority: 1
+[INFO] [1795856189.377989068] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856189.378342105] [hospital_ppo_scheduler]: Action mask: [0, 0, 1, 1, 0, 0, 0]
+[INFO] [1795856189.378686827] [hospital_ppo_scheduler]: PPO action: 2
+[INFO] [1795856189.379007102] [hospital_ppo_scheduler]: Selected logical robot: M01
+[INFO] [1795856189.379287214] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_3
+[INFO] [1795856189.379575720] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856189.379769724] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-08C, assigned=True, robot=hospital_robot_3
+[INFO] [1795856189.380071096] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-08C, robot=hospital_robot_3
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-08C", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_3"}}
+[TEST RESULT] {"test_id": "TC-08C", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-08C", "task_type": "specimen_delivery", "source": "consult_3_2", "destination": "lab", "priority": 1, "created_at": 1795856188.3740056, "scheduled_at": 1795856188.3740056}, "expected_mask": [0, 0, 1, 1, 0, 0, 0], "actual_assignment": [{"task_id": "1795856185627085142_TC-08C", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_3"}}], "predictions": [{"observation": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.16383999586105347, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.08070141822099686, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [0, 0, 1, 1, 0, 0, 0], "action": 2, "observation_valid": true, "deterministic": true}], "selected_rmf_robot": "hospital_robot_3"}
+[INFO] [1795856189.380712100] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856189.381136230] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-08D, scheduled_at=1795856189.381
+[INFO] [1795856190.370845298] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856190.371522606] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856190.372090897] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856190.372674084] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856190.373234362] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856190.373996170] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856190.374239391] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856190.374474874] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856190.374727554] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856190.375712780] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856190.375993456] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-08D
+[INFO] [1795856190.376264176] [hospital_ppo_scheduler]: Type: medication_delivery
+[INFO] [1795856190.376541259] [hospital_ppo_scheduler]: Route: pharmacy -> ward_a_2
+[INFO] [1795856190.376816427] [hospital_ppo_scheduler]: Priority: 1
+[INFO] [1795856190.377097912] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856190.377384735] [hospital_ppo_scheduler]: Action mask: [0, 0, 1, 1, 1, 1, 1]
+[INFO] [1795856190.377671269] [hospital_ppo_scheduler]: PPO action: 4
+[INFO] [1795856190.377960578] [hospital_ppo_scheduler]: Selected logical robot: W01
+[INFO] [1795856190.378244695] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_5
+[INFO] [1795856190.378531715] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856190.378748059] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-08D, assigned=True, robot=hospital_robot_5
+[INFO] [1795856190.379051983] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-08D, robot=hospital_robot_5
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-08D", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_5"}}
+[TEST RESULT] {"test_id": "TC-08D", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-08D", "task_type": "medication_delivery", "source": "pharmacy", "destination": "ward_a_2", "priority": 1, "created_at": 1795856189.380508, "scheduled_at": 1795856189.380508}, "expected_mask": [0, 0, 1, 1, 1, 1, 1], "actual_assignment": [{"task_id": "1795856185627085142_TC-08D", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_5"}}], "predictions": [{"observation": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.20074138045310974, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.24449940025806427, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.22325380146503448, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.19393174350261688, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [0, 0, 1, 1, 1, 1, 1], "action": 4, "observation_valid": true, "deterministic": true}], "selected_rmf_robot": "hospital_robot_5"}
+[INFO] [1795856190.379628334] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856190.380064075] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-08E, scheduled_at=1795856190.379
+[INFO] [1795856191.370196832] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856191.371251642] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856191.371977412] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856191.372684748] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856191.373078478] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856191.373395199] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856191.373709297] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856191.374020080] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856191.374342547] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856191.375294813] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856191.375741471] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-08E
+[INFO] [1795856191.376088799] [hospital_ppo_scheduler]: Type: ward_service
+[INFO] [1795856191.376396292] [hospital_ppo_scheduler]: Route: nurse_station -> ward_b_2
+[INFO] [1795856191.376663340] [hospital_ppo_scheduler]: Priority: 1
+[INFO] [1795856191.376935122] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856191.377205087] [hospital_ppo_scheduler]: Action mask: [0, 0, 0, 0, 1, 1, 1]
+[INFO] [1795856191.377483602] [hospital_ppo_scheduler]: PPO action: 4
+[INFO] [1795856191.377766321] [hospital_ppo_scheduler]: Selected logical robot: W01
+[INFO] [1795856191.378047949] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_5
+[INFO] [1795856191.378337701] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856191.378533749] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-08E, assigned=True, robot=hospital_robot_5
+[INFO] [1795856191.378837728] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-08E, robot=hospital_robot_5
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-08E", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_5"}}
+[TEST RESULT] {"test_id": "TC-08E", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-08E", "task_type": "ward_service", "source": "nurse_station", "destination": "ward_b_2", "priority": 1, "created_at": 1795856190.3794348, "scheduled_at": 1795856190.379435}, "expected_mask": [0, 0, 0, 0, 1, 1, 1], "actual_assignment": [{"task_id": "1795856185627085142_TC-08E", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_5"}}], "predictions": [{"observation": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.08564948290586472, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.06440388411283493, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.08152920752763748, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [0, 0, 0, 0, 1, 1, 1], "action": 4, "observation_valid": true, "deterministic": true}], "selected_rmf_robot": "hospital_robot_5"}
+[INFO] [1795856191.379366669] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856191.379790984] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-09A, scheduled_at=1795856191.379
+[INFO] [1795856192.368770735] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856192.369765844] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856192.370600823] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856192.371417066] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=0.100
+[INFO] [1795856192.372222775] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856192.372646542] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856192.372946529] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856192.373241311] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856192.373543220] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856192.374639209] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856192.374992361] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-09A
+[INFO] [1795856192.375335431] [hospital_ppo_scheduler]: Type: specimen_delivery
+[INFO] [1795856192.375685698] [hospital_ppo_scheduler]: Route: consult_3_2 -> lab
+[INFO] [1795856192.376036797] [hospital_ppo_scheduler]: Priority: 3
+[INFO] [1795856192.376401337] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856192.376770411] [hospital_ppo_scheduler]: Action mask: [0, 0, 0, 1, 0, 0, 0]
+[INFO] [1795856192.377114349] [hospital_ppo_scheduler]: PPO action: 3
+[INFO] [1795856192.377393021] [hospital_ppo_scheduler]: Selected logical robot: M02
+[INFO] [1795856192.377678656] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_4
+[INFO] [1795856192.377961901] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856192.378170060] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-09A, assigned=True, robot=hospital_robot_4
+[INFO] [1795856192.378472194] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-09A, robot=hospital_robot_4
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-09A", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_4"}}
+[TEST RESULT] {"test_id": "TC-09A", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-09A", "task_type": "specimen_delivery", "source": "consult_3_2", "destination": "lab", "priority": 3, "created_at": 1795856191.3793766, "scheduled_at": 1795856191.3793766}, "expected_mask": [0, 0, 0, 1, 0, 0, 0], "actual_assignment": [{"task_id": "1795856185627085142_TC-09A", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_4"}}], "predictions": [{"observation": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.16383999586105347, 0.0, 0.10000000149011612, 0.0, 1.0, 1.0, 0.0, 0.0, 0.08070141822099686, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [0, 0, 0, 1, 0, 0, 0], "action": 3, "observation_valid": true, "deterministic": true}], "selected_rmf_robot": "hospital_robot_4"}
+[INFO] [1795856192.379017921] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856192.379456776] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-09B, scheduled_at=1795856192.379
+[ERROR] [1795856193.369228086] [hospital_ppo_scheduler]: Scheduled PPO task failed: task=1795856185627085142_TC-09B, RuntimeError: No feasible robot available for task 1795856185627085142_TC-09B
+[INFO] [1795856193.370453798] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-09B, assigned=False, robot=None
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-09B", "status": 4}
+[TEST RESULT] {"test_id": "TC-09B", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-09B", "task_type": "specimen_delivery", "source": "consult_3_2", "destination": "lab", "priority": 3, "created_at": 1795856192.3790283, "scheduled_at": 1795856192.3790283}, "expected_status": 4, "actual_assignment": [{"task_id": "1795856185627085142_TC-09B", "status": 4}], "ppo_prediction_calls": 0}
+[INFO] [1795856193.372243980] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856193.373412342] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-10A, scheduled_at=1795856193.372
+[INFO] [1795856194.369387334] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856194.370473688] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856194.371207828] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856194.371720111] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856194.372225794] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856194.372740565] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856194.373239172] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856194.373753138] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856194.374256587] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856194.375792800] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856194.376060118] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-10A
+[INFO] [1795856194.376323149] [hospital_ppo_scheduler]: Type: specimen_delivery
+[INFO] [1795856194.376588313] [hospital_ppo_scheduler]: Route: consult_3_2 -> lab
+[INFO] [1795856194.376854719] [hospital_ppo_scheduler]: Priority: 1
+[INFO] [1795856194.377127365] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856194.377410343] [hospital_ppo_scheduler]: Action mask: [0, 0, 1, 1, 0, 0, 0]
+[INFO] [1795856194.377686369] [hospital_ppo_scheduler]: PPO action: 2
+[INFO] [1795856194.377966927] [hospital_ppo_scheduler]: Selected logical robot: M01
+[INFO] [1795856194.378252220] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_3
+[INFO] [1795856194.378539261] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856194.378733227] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-10A, assigned=True, robot=hospital_robot_3
+[INFO] [1795856194.379035614] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-10A, robot=hospital_robot_3
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-10A", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_3"}}
+[TEST RESULT] {"test_id": "TC-10A", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-10A", "task_type": "specimen_delivery", "source": "consult_3_2", "destination": "lab", "priority": 1, "created_at": 1795856193.372276, "scheduled_at": 1795856193.3722765}, "assignment_count": 1, "ppo_prediction_calls": 1, "queue_occurrences": 1}
+[INFO] [1795856196.891183494] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_DEMO_FLEET] initialized=C01,C02,M01,M02,W01,W02,W03
+[INFO] [1795856196.893961574] [hospital_ppo_scheduler]: [SCHEDULED_TASK_WAITING] task=1795856185627085142_TC-10B, scheduled_at=1795856201.891
+[INFO] [1795856202.371232196] [hospital_ppo_scheduler]: [PPO_STATE_BEGIN]
+[INFO] [1795856202.372317510] [hospital_ppo_scheduler]: [PPO_STATE] robot=C01, current_location=charging_station_2, current_task_id=None, current_task_destination=None, queue=[], future_location=charging_station_2, status=idle, battery_soc=1.000
+[INFO] [1795856202.372921762] [hospital_ppo_scheduler]: [PPO_STATE] robot=C02, current_location=nurse_station, current_task_id=None, current_task_destination=None, queue=[], future_location=nurse_station, status=idle, battery_soc=1.000
+[INFO] [1795856202.373370905] [hospital_ppo_scheduler]: [PPO_STATE] robot=M01, current_location=pharmacy, current_task_id=None, current_task_destination=None, queue=[], future_location=pharmacy, status=idle, battery_soc=1.000
+[INFO] [1795856202.373810946] [hospital_ppo_scheduler]: [PPO_STATE] robot=M02, current_location=lab, current_task_id=None, current_task_destination=None, queue=[], future_location=lab, status=idle, battery_soc=1.000
+[INFO] [1795856202.374247804] [hospital_ppo_scheduler]: [PPO_STATE] robot=W01, current_location=ward_a_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_a_2, status=idle, battery_soc=1.000
+[INFO] [1795856202.374688395] [hospital_ppo_scheduler]: [PPO_STATE] robot=W02, current_location=ward_b_2, current_task_id=None, current_task_destination=None, queue=[], future_location=ward_b_2, status=idle, battery_soc=1.000
+[INFO] [1795856202.375126411] [hospital_ppo_scheduler]: [PPO_STATE] robot=W03, current_location=consult_1_2, current_task_id=None, current_task_destination=None, queue=[], future_location=consult_1_2, status=idle, battery_soc=1.000
+[INFO] [1795856202.375601594] [hospital_ppo_scheduler]: [PPO_STATE_END]
+[INFO] [1795856202.376995231] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856202.377260864] [hospital_ppo_scheduler]: Task: 1795856185627085142_TC-10B
+[INFO] [1795856202.377527809] [hospital_ppo_scheduler]: Type: medication_delivery
+[INFO] [1795856202.377806625] [hospital_ppo_scheduler]: Route: pharmacy -> ward_a_2
+[INFO] [1795856202.378108070] [hospital_ppo_scheduler]: Priority: 2
+[INFO] [1795856202.378381347] [hospital_ppo_scheduler]: Observation shape: (98,)
+[INFO] [1795856202.378659660] [hospital_ppo_scheduler]: Action mask: [0, 0, 1, 1, 1, 1, 1]
+[INFO] [1795856202.378937200] [hospital_ppo_scheduler]: PPO action: 5
+[INFO] [1795856202.379211905] [hospital_ppo_scheduler]: Selected logical robot: W02
+[INFO] [1795856202.379494948] [hospital_ppo_scheduler]: Selected RMF robot: hospital_robot_6
+[INFO] [1795856202.379779299] [hospital_ppo_scheduler]: ================================
+[INFO] [1795856202.379985140] [hospital_ppo_scheduler]: [PPO_ASSIGNMENT_PUBLISHED] task=1795856185627085142_TC-10B, assigned=True, robot=hospital_robot_6
+[INFO] [1795856202.380285523] [hospital_ppo_scheduler]: [SCHEDULING_ONLY_ASSIGNED] task=1795856185627085142_TC-10B, robot=hospital_robot_6
+[ASSIGNMENT RECEIVED] {"task_id": "1795856185627085142_TC-10B", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_6"}}
+[TEST RESULT] {"test_id": "TC-10B", "result": "PASS", "task": {"task_id": "1795856185627085142_TC-10B", "task_type": "medication_delivery", "source": "pharmacy", "destination": "ward_a_2", "priority": 2, "created_at": 1795856196.8912864, "scheduled_at": 1795856201.891287}, "early_assignment_count": 0, "early_prediction_count": 0, "received_at": 1795856202.3806124, "actual_assignment": [{"task_id": "1795856185627085142_TC-10B", "status": 3, "assignment": {"is_assigned": true, "expected_robot_name": "hospital_robot_6"}}], "predictions": [{"observation": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.20074138045310974, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.24449940025806427, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.22325380146503448, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.19393174350261688, 0.0, 1.0, 0.0, 0.0], "observation_shape": [98], "observation_dtype": "float32", "action_mask": [0, 0, 1, 1, 1, 1, 1], "action": 5, "observation_valid": true, "deterministic": true}]}
+[TEST RESULT] {"test_id": "TC-SAFETY", "result": "PASS", "rmf_requests": [], "scheduling_only": true}
+
+===== PPO DISPATCH TEST SUMMARY =====
+TC-08A PASS
+TC-08B PASS
+TC-08C PASS
+TC-08D PASS
+TC-08E PASS
+TC-09A PASS
+TC-09B PASS
+TC-10A PASS
+TC-10B PASS
+TC-SAFETY PASS
+Total tests: 10
+Passed: 10
+Failed: 0
+RMF requests: 0
+Result file: /tmp/ppo_dispatch_results_1795856185627085142.json
+PPO DISPATCH TEST: COMPLETE

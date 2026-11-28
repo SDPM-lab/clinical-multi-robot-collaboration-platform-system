@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="516.6pt" height="470.921063pt" viewBox="0 0 516.6 470.921063" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-28T23:09:54.974620</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.6.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 470.921063 
+L 516.6 470.921063 
+L 516.6 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 42.354 125.737996 
+L 461.691 125.737996 
+Q 469.224 125.737996 469.224 124.731323 
+L 469.224 77.753217 
+Q 469.224 76.746544 461.691 76.746544 
+L 42.354 76.746544 
+Q 34.821 76.746544 34.821 77.753217 
+L 34.821 124.731323 
+Q 34.821 125.737996 42.354 125.737996 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 42.354 192.849575 
+L 245.745 192.849575 
+Q 253.278 192.849575 253.278 191.842902 
+L 253.278 144.864796 
+Q 253.278 143.858123 245.745 143.858123 
+L 42.354 143.858123 
+Q 34.821 143.858123 34.821 144.864796 
+L 34.821 191.842902 
+Q 34.821 192.849575 42.354 192.849575 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 258.3 192.849575 
+L 461.691 192.849575 
+Q 469.224 192.849575 469.224 191.842902 
+L 469.224 144.864796 
+Q 469.224 143.858123 461.691 143.858123 
+L 258.3 143.858123 
+Q 250.767 143.858123 250.767 144.864796 
+L 250.767 191.842902 
+Q 250.767 192.849575 258.3 192.849575 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 42.354 259.961154 
+L 461.691 259.961154 
+Q 469.224 259.961154 469.224 258.954481 
+L 469.224 211.976375 
+Q 469.224 210.969702 461.691 210.969702 
+L 42.354 210.969702 
+Q 34.821 210.969702 34.821 211.976375 
+L 34.821 258.954481 
+Q 34.821 259.961154 42.354 259.961154 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 42.354 327.072733 
+L 245.745 327.072733 
+Q 253.278 327.072733 253.278 326.06606 
+L 253.278 279.087954 
+Q 253.278 278.081281 245.745 278.081281 
+L 42.354 278.081281 
+Q 34.821 278.081281 34.821 279.087954 
+L 34.821 326.06606 
+Q 34.821 327.072733 42.354 327.072733 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 258.3 327.072733 
+L 461.691 327.072733 
+Q 469.224 327.072733 469.224 326.06606 
+L 469.224 279.087954 
+Q 469.224 278.081281 461.691 278.081281 
+L 258.3 278.081281 
+Q 250.767 278.081281 250.767 279.087954 
+L 250.767 326.06606 
+Q 250.767 327.072733 258.3 327.072733 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 42.354 394.184312 
+L 461.691 394.184312 
+Q 469.224 394.184312 469.224 393.177638 
+L 469.224 346.199533 
+Q 469.224 345.19286 461.691 345.19286 
+L 42.354 345.19286 
+Q 34.821 345.19286 34.821 346.199533 
+L 34.821 393.177638 
+Q 34.821 394.184312 42.354 394.184312 
+z
+" clip-path="url(#p7471843689)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="104.001645" transform="rotate(-0 252.0225 104.001645)">Frontend / Backend (pending E2E)</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 258.3 129.416845 
+Q 258.3 135.135407 258.3 139.065116 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 134.665116 
+L 258.3 139.065116 
+L 256.1 134.665116 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_2">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="144.0495" y="171.113224" transform="rotate(-0 144.0495 171.113224)">ROS API Bridge</text>
+   </g>
+   <g id="text_3">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="359.9955" y="171.113224" transform="rotate(-0 359.9955 171.113224)">FleetState from RMF</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 258.3 196.528424 
+Q 258.3 202.246986 258.3 206.176695 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 201.776695 
+L 258.3 206.176695 
+L 256.1 201.776695 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_4">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="238.224803" transform="rotate(-0 252.0225 238.224803)">PPO Scheduler: observation + mask + policy</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 258.3 263.640003 
+Q 258.3 269.358565 258.3 273.288274 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 268.888274 
+L 258.3 273.288274 
+L 256.1 268.888274 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="144.0495" y="305.336382" transform="rotate(-0 144.0495 305.336382)">Assignment result</text>
+   </g>
+   <g id="text_6">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="359.9955" y="305.336382" transform="rotate(-0 359.9955 305.336382)">Targeted RMF request</text>
+   </g>
+   <g id="patch_12">
+    <path d="M 258.3 330.751582 
+Q 258.3 336.470144 258.3 340.399852 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 335.999852 
+L 258.3 340.399852 
+L 256.1 335.999852 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="372.447961" transform="rotate(-0 252.0225 372.447961)">RMF / Nav2 / Gazebo (pending live verification)</text>
+   </g>
+   <g id="text_8">
+    <text style="font: 700 17px 'DejaVu Sans'; text-anchor: middle" x="258.3" y="20.117344" transform="rotate(-0 258.3 20.117344)">System integration architecture</text>
+   </g>
+  </g>
+  <g id="text_9">
+   <text style="fill: #444444; font: 9px 'DejaVu Sans'; text-anchor: middle" x="250.2" y="461.849344" transform="rotate(-0 250.2 461.849344)">Design overview; isolated tests do not establish end-to-end success.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p7471843689">
+   <rect x="7.2" y="32.117344" width="502.2" height="382.536"/>
+  </clipPath>
+ </defs>
+</svg>

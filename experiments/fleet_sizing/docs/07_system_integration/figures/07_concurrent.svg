@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="516.6pt" height="265.397063pt" viewBox="0 0 516.6 265.397063" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-28T23:09:55.387847</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.6.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 265.397063 
+L 516.6 265.397063 
+L 516.6 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 42.354 135.235744 
+L 173.763 135.235744 
+Q 181.296 135.235744 181.296 134.126944 
+L 181.296 82.382944 
+Q 181.296 81.274144 173.763 81.274144 
+L 42.354 81.274144 
+Q 34.821 81.274144 34.821 82.382944 
+L 34.821 134.126944 
+Q 34.821 135.235744 42.354 135.235744 
+z
+" clip-path="url(#pa1ab0ec2e4)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 186.318 135.235744 
+L 317.727 135.235744 
+Q 325.26 135.235744 325.26 134.126944 
+L 325.26 82.382944 
+Q 325.26 81.274144 317.727 81.274144 
+L 186.318 81.274144 
+Q 178.785 81.274144 178.785 82.382944 
+L 178.785 134.126944 
+Q 178.785 135.235744 186.318 135.235744 
+z
+" clip-path="url(#pa1ab0ec2e4)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 330.282 135.235744 
+L 461.691 135.235744 
+Q 469.224 135.235744 469.224 134.126944 
+L 469.224 82.382944 
+Q 469.224 81.274144 461.691 81.274144 
+L 330.282 81.274144 
+Q 322.749 81.274144 322.749 82.382944 
+L 322.749 134.126944 
+Q 322.749 135.235744 330.282 135.235744 
+z
+" clip-path="url(#pa1ab0ec2e4)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 42.354 209.155744 
+L 173.763 209.155744 
+Q 181.296 209.155744 181.296 208.046944 
+L 181.296 156.302944 
+Q 181.296 155.194144 173.763 155.194144 
+L 42.354 155.194144 
+Q 34.821 155.194144 34.821 156.302944 
+L 34.821 208.046944 
+Q 34.821 209.155744 42.354 209.155744 
+z
+" clip-path="url(#pa1ab0ec2e4)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 186.318 209.155744 
+L 317.727 209.155744 
+Q 325.26 209.155744 325.26 208.046944 
+L 325.26 156.302944 
+Q 325.26 155.194144 317.727 155.194144 
+L 186.318 155.194144 
+Q 178.785 155.194144 178.785 156.302944 
+L 178.785 208.046944 
+Q 178.785 209.155744 186.318 209.155744 
+z
+" clip-path="url(#pa1ab0ec2e4)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 330.282 209.155744 
+L 461.691 209.155744 
+Q 469.224 209.155744 469.224 208.046944 
+L 469.224 156.302944 
+Q 469.224 155.194144 461.691 155.194144 
+L 330.282 155.194144 
+Q 322.749 155.194144 322.749 156.302944 
+L 322.749 208.046944 
+Q 322.749 209.155744 330.282 209.155744 
+z
+" clip-path="url(#pa1ab0ec2e4)" style="fill: #e9eef5; stroke: #2563eb; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="108.0585" y="111.014319" transform="rotate(-0 108.0585 111.014319)">Specimen task 1</text>
+   </g>
+   <g id="text_2">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="111.014319" transform="rotate(-0 252.0225 111.014319)">Specimen task 2</text>
+   </g>
+   <g id="text_3">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="395.9865" y="111.014319" transform="rotate(-0 395.9865 111.014319)">Specimen task 3</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 258.3 139.08027 
+Q 258.3 145.584544 258.3 150.299965 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 260.5 145.899965 
+L 258.3 150.299965 
+L 256.1 145.899965 
+" style="fill: none; stroke: #2563eb; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_4">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="108.0585" y="184.934319" transform="rotate(-0 108.0585 184.934319)">M01 / Robot 3</text>
+   </g>
+   <g id="text_5">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="252.0225" y="184.934319" transform="rotate(-0 252.0225 184.934319)">M02 / Robot 4</text>
+   </g>
+   <g id="text_6">
+    <text style="font: 10px 'DejaVu Sans'; text-anchor: middle" x="395.9865" y="184.934319" transform="rotate(-0 395.9865 184.934319)">Pending</text>
+   </g>
+   <g id="text_7">
+    <text style="font: 700 17px 'DejaVu Sans'; text-anchor: middle" x="258.3" y="20.117344" transform="rotate(-0 258.3 20.117344)">RT-08: concurrent task assignment</text>
+   </g>
+  </g>
+  <g id="text_8">
+   <text style="fill: #444444; font: 9px 'DejaVu Sans'; text-anchor: middle" x="250.2" y="256.325344" transform="rotate(-0 250.2 256.325344)">Two assigned, one pending; not a concurrent navigation measurement.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pa1ab0ec2e4">
+   <rect x="7.2" y="32.117344" width="502.2" height="199.584"/>
+  </clipPath>
+ </defs>
+</svg>

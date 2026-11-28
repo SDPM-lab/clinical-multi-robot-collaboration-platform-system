@@ -1,0 +1,41 @@
+{
+  "created_at": "2026-11-28T18:17:54.128510+08:00",
+  "test_id": "SYS-01",
+  "test_name": "ROS Install Synchronization",
+  "result": "PASS",
+  "ros_distribution": "jazzy",
+  "package": "my_hospital_rmf",
+  "package_prefix": "/home/random01/clinical-multi-robot-collaboration-platform-system-liang/ros2_ws/install/my_hospital_rmf",
+  "scheduler_functional_tests": 30,
+  "scheduler_identity_verified": true,
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+  "gazebo_started": false,
+  "full_system_verified": false,
+  "components": [
+    {
+      "component": "ppo_scheduler",
+      "source_path": "ros2_ws/src/my_hospital_rmf/scripts/hospital_ppo_scheduler.py",
+      "install_path": "ros2_ws/install/my_hospital_rmf/lib/my_hospital_rmf/hospital_ppo_scheduler",
+      "source_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+      "install_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+      "result": "PASS"
+    },
+    {
+      "component": "hospital_launch",
+      "source_path": "ros2_ws/src/my_hospital_rmf/launch/hospital.launch.py",
+      "install_path": "ros2_ws/install/my_hospital_rmf/share/my_hospital_rmf/launch/hospital.launch.py",
+      "source_sha256": "bf2ded8230b1df8a1319423845e3ce19f0aa538b7fbd1ed8eb5ea4ef3c03bd63",
+      "install_sha256": "bf2ded8230b1df8a1319423845e3ce19f0aa538b7fbd1ed8eb5ea4ef3c03bd63",
+      "result": "PASS"
+    },
+    {
+      "component": "nav_graph",
+      "source_path": "ros2_ws/src/my_hospital_rmf/nav_graphs/0.yaml",
+      "install_path": "ros2_ws/install/my_hospital_rmf/share/my_hospital_rmf/nav_graphs/0.yaml",
+      "source_sha256": "04509ab6bf706a6274d6a88ae2c19f106646e857343e5efc8a223240843900d3",
+      "install_sha256": "04509ab6bf706a6274d6a88ae2c19f106646e857343e5efc8a223240843900d3",
+      "result": "PASS"
+    }
+  ]
+}

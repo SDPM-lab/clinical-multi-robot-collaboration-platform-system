@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import math
 import sys
@@ -145,13 +146,25 @@ MODEL_PATH = (
     / "results_rl"
     / "models"
     / (
-        "reward_confirm_sweep27_"
-        "w50_a30_q15_i05_"
-        "seed7104_200k"
+        "reward_confirm_nav2_sweep12_"
+        "w40_a35_q15_i10_"
+        "seed7101_200k"
     )
     / "final_model.zip"
 )
 
+
+FORMAL_MODEL_SHA256 = (
+    "1972295e176e6907d3bee4d01b301fa"
+    "10526dac40dca38a5e867fe1a63825d07"
+)
+
+FORMAL_MODEL_SEED = 7101
+FORMAL_OBSERVATION_SIZE = 98
+FORMAL_ACTION_COUNT = 7
+FORMAL_TRAINING_TIMESTEPS = 200192
+FORMAL_APPROACH_SCALE_S = 600.0
+FLEET_STATE_MAX_AGE_S = 30.0
 
 LOGICAL_ROBOT_IDS = (
     "C01",
@@ -255,9 +268,59 @@ class HospitalPpoScheduler(Node):
             f"{MODEL_PATH}"
         )
 
+        model_sha256 = hashlib.sha256(
+            MODEL_PATH.read_bytes()
+        ).hexdigest()
+
+        if model_sha256 != FORMAL_MODEL_SHA256:
+            raise RuntimeError(
+                "Formal PPO model SHA256 mismatch: "
+                f"expected={FORMAL_MODEL_SHA256}, "
+                f"actual={model_sha256}"
+            )
+
         self.model = MaskablePPO.load(
             str(MODEL_PATH),
             device="cpu",
+        )
+
+        if self.model.seed != FORMAL_MODEL_SEED:
+            raise RuntimeError(
+                f"Unexpected PPO seed: {self.model.seed}"
+            )
+
+        if (
+            self.model.observation_space.shape
+            != (FORMAL_OBSERVATION_SIZE,)
+        ):
+            raise RuntimeError(
+                "Unexpected PPO observation space: "
+                f"{self.model.observation_space}"
+            )
+
+        if self.model.action_space.n != FORMAL_ACTION_COUNT:
+            raise RuntimeError(
+                "Unexpected PPO action space: "
+                f"{self.model.action_space}"
+            )
+
+        if (
+            self.model.num_timesteps
+            != FORMAL_TRAINING_TIMESTEPS
+        ):
+            raise RuntimeError(
+                "Unexpected PPO training timesteps: "
+                f"{self.model.num_timesteps}"
+            )
+
+        self.get_logger().info(
+            "[FORMAL_PPO_MODEL_VERIFIED] "
+            f"seed={self.model.seed}, "
+            f"sha256={model_sha256}, "
+            f"observation={self.model.observation_space}, "
+            f"action={self.model.action_space}, "
+            f"timesteps={self.model.num_timesteps}, "
+            "device=cpu"
         )
 
         self.nav_graph = NavGraph()
@@ -272,6 +335,7 @@ class HospitalPpoScheduler(Node):
             ObservationEncoder(
                 robot_ids=LOGICAL_ROBOT_IDS,
                 layout=BATTERY_LAYOUT,
+                approach_time_scale_s=FORMAL_APPROACH_SCALE_S,
             )
         )
 
@@ -279,6 +343,26 @@ class HospitalPpoScheduler(Node):
             ActionMaskBuilder(
                 robot_ids=LOGICAL_ROBOT_IDS,
             )
+        )
+
+        if (
+            self.observation_encoder.observation_size
+            != FORMAL_OBSERVATION_SIZE
+        ):
+            raise RuntimeError("Observation encoder size mismatch")
+
+        if self.mask_builder.action_count != FORMAL_ACTION_COUNT:
+            raise RuntimeError("Action mask size mismatch")
+
+        self.get_logger().info(
+            "[PPO_RUNTIME_CONFIGURATION] "
+            f"approach_scale_s="
+            f"{self.observation_encoder.approach_time_scale_s}, "
+            f"routes={len(self.travel_model.route_stats)}, "
+            f"effective_speed_mps="
+            f"{self.travel_model.effective_speed_mps}, "
+            f"route_summary={self.travel_model.summary_csv_path}, "
+            f"nav_graph={self.nav_graph.yaml_path}"
         )
 
         # ----------------------------------------------------
@@ -889,7 +973,24 @@ class HospitalPpoScheduler(Node):
                 data["status"]
             )
 
-            if logical_id in self.charging_robots:
+            received_at = data.get("received_at")
+
+            fleet_state_stale = (
+                not self.scheduling_only
+                and (
+                    received_at is None
+                    or time.monotonic() - received_at
+                        > FLEET_STATE_MAX_AGE_S
+                )
+            )
+
+            if fleet_state_stale:
+                # Exclude stale robots from new assignments.
+                # Do not clear their running tasks, queues,
+                # parking operations or charging state.
+                status = "offline"
+
+            elif logical_id in self.charging_robots:
                 status = "charging"
 
             elif self.returning_to_charge[
@@ -915,7 +1016,7 @@ class HospitalPpoScheduler(Node):
                     and runtime_status in ("idle", "busy")
                     and data.get("rmf_mode") in (0, 2, 6)
                     and time.monotonic()
-                        - data.get("received_at", 0.0) <= 30.0
+                        - data.get("received_at", 0.0) <= FLEET_STATE_MAX_AGE_S
                     and self._get_runtime_battery_soc(
                         logical_id
                     ) >= BATTERY_CHARGE_TRIGGER_SOC
@@ -2059,6 +2160,13 @@ class HospitalPpoScheduler(Node):
             "[PPO_STATE_END]"
         )
 
+        if not self.model.observation_space.contains(
+            observation
+        ):
+            raise RuntimeError(
+                "Observation is outside the formal PPO space"
+            )
+
         action, _ = (
             self.model.predict(
                 observation,
@@ -2614,7 +2722,7 @@ class HospitalPpoScheduler(Node):
             if data is None:
                 continue
 
-            if now - data.get("received_at", 0.0) > 30.0:
+            if now - data.get("received_at", 0.0) > FLEET_STATE_MAX_AGE_S:
 
                 operation["idle_samples"] = 0
                 operation["idle_position"] = None

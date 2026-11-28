@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-11-28T16:59:29.246461+08:00",
+  "stage": "scheduling_only",
+  "status": "COMPLETE",
+  "git_base_commit": "a56156ff94e1470ac1def8f98b42978f54ba34b8",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_sha256": "39024648626720dd834e4a77bc99f65b241b7baad11703341429c8deaf70aa5d",
+  "ros_domain_id": "187",
+  "synthetic_robot_states": true,
+  "gazebo_started": false,
+  "full_system_verified": false,
+  "total_tests": 10,
+  "passed": 10,
+  "failed": 0,
+  "files": [
+    {
+      "path": "scripts/test_hospital_ppo_dispatch.py",
+      "sha256": "4e0ca53a0aaa1cabbc86ea6a4d84748311e20b05db8b5750bd344b9ca222f164",
+      "size_bytes": 14570
+    },
+    {
+      "path": "data/scheduling_only_test_results.json",
+      "sha256": "4fd923269730283bc0170b593627d240db575e9cddbce90ceee96655914b9420",
+      "size_bytes": 22013
+    },
+    {
+      "path": "data/scheduling_only_test_summary.csv",
+      "sha256": "528e4d626eb3f81d4fc10b30910b874422416d15dc6646da14b2dd0969947f0b",
+      "size_bytes": 972
+    },
+    {
+      "path": "logs/scheduling_only_test.log",
+      "sha256": "b13cc2e82bb71be4662c76c77b517feda7cf3c3bd15be18311e4f78389c523f5",
+      "size_bytes": 39000
+    }
+  ]
+}

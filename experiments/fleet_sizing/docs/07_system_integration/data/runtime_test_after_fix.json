@@ -1,0 +1,1366 @@
+{
+  "run_id": "1795857415214128296",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+  "ros_domain_id": "187",
+  "scheduling_only": false,
+  "synthetic_fleet_state": true,
+  "synthetic_completion_events": true,
+  "gazebo_started": false,
+  "rmf_adapter_started": false,
+  "full_system_verified": false,
+  "expected_tests": 12,
+  "executed_tests": 12,
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "test_id": "RT-01",
+      "result": "PASS",
+      "robots": {
+        "C01": {
+          "status": "idle",
+          "soc": 0.75,
+          "location": "charging_station_2",
+          "capabilities": [
+            "waste_transport",
+            "clothes_collection"
+          ]
+        },
+        "C02": {
+          "status": "idle",
+          "soc": 1.0,
+          "location": "nurse_station",
+          "capabilities": [
+            "waste_transport",
+            "clothes_collection"
+          ]
+        },
+        "M01": {
+          "status": "busy",
+          "soc": 1.0,
+          "location": "pharmacy",
+          "capabilities": [
+            "specimen_delivery",
+            "medication_delivery"
+          ]
+        },
+        "M02": {
+          "status": "idle",
+          "soc": 1.0,
+          "location": "lab",
+          "capabilities": [
+            "specimen_delivery",
+            "medication_delivery"
+          ]
+        },
+        "W01": {
+          "status": "charging",
+          "soc": 0.5,
+          "location": "ward_a_2",
+          "capabilities": [
+            "medication_delivery",
+            "ward_service"
+          ]
+        },
+        "W02": {
+          "status": "error",
+          "soc": 1.0,
+          "location": "ward_b_2",
+          "capabilities": [
+            "medication_delivery",
+            "ward_service"
+          ]
+        },
+        "W03": {
+          "status": "idle",
+          "soc": 1.0,
+          "location": "consult_1_2",
+          "capabilities": [
+            "medication_delivery",
+            "ward_service"
+          ]
+        }
+      }
+    },
+    {
+      "test_id": "RT-02",
+      "result": "PASS",
+      "assignments": [
+        {
+          "task_id": "1795857415214128296_RT-02",
+          "status": 3,
+          "assignment": {
+            "is_assigned": true,
+            "expected_robot_name": "hospital_robot_4"
+          }
+        }
+      ],
+      "requests": [
+        {
+          "request_id": "ppo_1795857415214128296_RT-02_1795857416795",
+          "payload": {
+            "type": "robot_task_request",
+            "robot": "hospital_robot_4",
+            "fleet": "hospital_fleet",
+            "request": {
+              "category": "compose",
+              "description": {
+                "category": "hospital_ppo_task",
+                "detail": "specimen_delivery: consult_3_2 -> lab",
+                "phases": [
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "consult_3_2"
+                    }
+                  },
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "lab"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.16383999586105347,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 3
+        }
+      ]
+    },
+    {
+      "test_id": "RT-03",
+      "result": "PASS",
+      "pending": true,
+      "assignments": [],
+      "requests": [],
+      "prediction_count": 0
+    },
+    {
+      "test_id": "RT-04",
+      "result": "PASS",
+      "assignments": [
+        {
+          "task_id": "1795857415214128296_RT-03",
+          "status": 3,
+          "assignment": {
+            "is_assigned": true,
+            "expected_robot_name": "hospital_robot_4"
+          }
+        }
+      ],
+      "requests": [
+        {
+          "request_id": "ppo_1795857415214128296_RT-03_1795857419801",
+          "payload": {
+            "type": "robot_task_request",
+            "robot": "hospital_robot_4",
+            "fleet": "hospital_fleet",
+            "request": {
+              "category": "compose",
+              "description": {
+                "category": "hospital_ppo_task",
+                "detail": "specimen_delivery: consult_3_2 -> lab",
+                "phases": [
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "consult_3_2"
+                    }
+                  },
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "lab"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.16383999586105347,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 3
+        }
+      ]
+    },
+    {
+      "test_id": "RT-05",
+      "result": "PASS",
+      "assignments": [
+        {
+          "task_id": "1795857415214128296_RT-05",
+          "status": 3,
+          "assignment": {
+            "is_assigned": true,
+            "expected_robot_name": "hospital_robot_4"
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 3
+        }
+      ]
+    },
+    {
+      "test_id": "RT-06",
+      "result": "PASS",
+      "assignments": [
+        {
+          "task_id": "1795857415214128296_RT-06",
+          "status": 3,
+          "assignment": {
+            "is_assigned": true,
+            "expected_robot_name": "hospital_robot_4"
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 3
+        }
+      ]
+    },
+    {
+      "test_id": "RT-07",
+      "result": "PASS",
+      "injected_state_age_s": 31.0,
+      "expected_stale_robot_excluded": true,
+      "actual_mask": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "assignments": [
+        {
+          "task_id": "1795857415214128296_RT-07",
+          "status": 3,
+          "assignment": {
+            "is_assigned": true,
+            "expected_robot_name": "hospital_robot_4"
+          }
+        }
+      ],
+      "requests": [
+        {
+          "request_id": "ppo_1795857415214128296_RT-07_1795857422802",
+          "payload": {
+            "type": "robot_task_request",
+            "robot": "hospital_robot_4",
+            "fleet": "hospital_fleet",
+            "request": {
+              "category": "compose",
+              "description": {
+                "category": "hospital_ppo_task",
+                "detail": "specimen_delivery: consult_3_2 -> lab",
+                "phases": [
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "consult_3_2"
+                    }
+                  },
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "lab"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 3
+        }
+      ]
+    },
+    {
+      "test_id": "RT-08",
+      "result": "PASS",
+      "assigned_ids": [
+        "1795857415214128296_RT-08-1",
+        "1795857415214128296_RT-08-2"
+      ],
+      "assigned_robots": [
+        "hospital_robot_3",
+        "hospital_robot_4"
+      ],
+      "pending_ids": [
+        "1795857415214128296_RT-08-3"
+      ],
+      "requests": [
+        {
+          "request_id": "ppo_1795857415214128296_RT-08-1_1795857423801",
+          "payload": {
+            "type": "robot_task_request",
+            "robot": "hospital_robot_3",
+            "fleet": "hospital_fleet",
+            "request": {
+              "category": "compose",
+              "description": {
+                "category": "hospital_ppo_task",
+                "detail": "specimen_delivery: consult_3_2 -> lab",
+                "phases": [
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "consult_3_2"
+                    }
+                  },
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "lab"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "request_id": "ppo_1795857415214128296_RT-08-2_1795857423806",
+          "payload": {
+            "type": "robot_task_request",
+            "robot": "hospital_robot_4",
+            "fleet": "hospital_fleet",
+            "request": {
+              "category": "compose",
+              "description": {
+                "category": "hospital_ppo_task",
+                "detail": "specimen_delivery: consult_3_2 -> lab",
+                "phases": [
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "consult_3_2"
+                    }
+                  },
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "lab"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.16383999586105347,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 2
+        },
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.10000000149011612,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 3
+        }
+      ]
+    },
+    {
+      "test_id": "RT-09",
+      "result": "PASS",
+      "assignments": [
+        {
+          "task_id": "1795857415214128296_RT-09",
+          "status": 3,
+          "assignment": {
+            "is_assigned": true,
+            "expected_robot_name": "hospital_robot_3"
+          }
+        }
+      ],
+      "rmf_payload": {
+        "type": "robot_task_request",
+        "robot": "hospital_robot_3",
+        "fleet": "hospital_fleet",
+        "request": {
+          "category": "compose",
+          "description": {
+            "category": "hospital_ppo_task",
+            "detail": "specimen_delivery: consult_3_2 -> lab",
+            "phases": [
+              {
+                "activity": {
+                  "category": "go_to_place",
+                  "description": "consult_3_2"
+                }
+              },
+              {
+                "activity": {
+                  "category": "go_to_place",
+                  "description": "lab"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "predictions": [
+        {
+          "observation": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.16383999586105347,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.08070141822099686,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "observation_shape": [
+            98
+          ],
+          "action_mask": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "action": 2
+        }
+      ]
+    },
+    {
+      "test_id": "RT-10",
+      "result": "PASS",
+      "task_status": "active",
+      "source_reached": false,
+      "completion_time_s": null
+    },
+    {
+      "test_id": "RT-11",
+      "result": "PASS",
+      "source_confirmed": true,
+      "final_status": "completed",
+      "completion_time_s": 1795857427.4341586,
+      "running_task_id": null,
+      "parking_requested": true
+    },
+    {
+      "test_id": "RT-12",
+      "result": "PASS",
+      "selected_robot": "hospital_robot_3",
+      "battery_soc": 0.2,
+      "returning_to_charge": true,
+      "charge_requests": [
+        {
+          "request_id": "charge_hospital_robot_3_1795857429111",
+          "payload": {
+            "type": "robot_task_request",
+            "robot": "hospital_robot_3",
+            "fleet": "hospital_fleet",
+            "request": {
+              "category": "compose",
+              "description": {
+                "category": "return_to_charge",
+                "detail": "charging_station_2",
+                "phases": [
+                  {
+                    "activity": {
+                      "category": "go_to_place",
+                      "description": "charging_station_2"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

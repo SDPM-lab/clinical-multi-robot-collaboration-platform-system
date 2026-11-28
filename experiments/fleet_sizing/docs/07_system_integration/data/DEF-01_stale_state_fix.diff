@@ -1,0 +1,54 @@
+--- scheduler_before_fix.py
++++ scheduler_after_fix.py
+@@ -164,6 +164,7 @@
+ FORMAL_ACTION_COUNT = 7
+ FORMAL_TRAINING_TIMESTEPS = 200192
+ FORMAL_APPROACH_SCALE_S = 600.0
++FLEET_STATE_MAX_AGE_S = 30.0
+ 
+ LOGICAL_ROBOT_IDS = (
+     "C01",
+@@ -972,7 +973,24 @@
+                 data["status"]
+             )
+ 
+-            if logical_id in self.charging_robots:
++            received_at = data.get("received_at")
++
++            fleet_state_stale = (
++                not self.scheduling_only
++                and (
++                    received_at is None
++                    or time.monotonic() - received_at
++                        > FLEET_STATE_MAX_AGE_S
++                )
++            )
++
++            if fleet_state_stale:
++                # Exclude stale robots from new assignments.
++                # Do not clear their running tasks, queues,
++                # parking operations or charging state.
++                status = "offline"
++
++            elif logical_id in self.charging_robots:
+                 status = "charging"
+ 
+             elif self.returning_to_charge[
+@@ -998,7 +1016,7 @@
+                     and runtime_status in ("idle", "busy")
+                     and data.get("rmf_mode") in (0, 2, 6)
+                     and time.monotonic()
+-                        - data.get("received_at", 0.0) <= 30.0
++                        - data.get("received_at", 0.0) <= FLEET_STATE_MAX_AGE_S
+                     and self._get_runtime_battery_soc(
+                         logical_id
+                     ) >= BATTERY_CHARGE_TRIGGER_SOC
+@@ -2704,7 +2722,7 @@
+             if data is None:
+                 continue
+ 
+-            if now - data.get("received_at", 0.0) > 30.0:
++            if now - data.get("received_at", 0.0) > FLEET_STATE_MAX_AGE_S:
+ 
+                 operation["idle_samples"] = 0
+                 operation["idle_position"] = None

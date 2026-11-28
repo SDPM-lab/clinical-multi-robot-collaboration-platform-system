@@ -1,0 +1,63 @@
+{
+  "created_at": "2026-11-28T17:18:31.389782+08:00",
+  "defect_id": "DEF-01",
+  "status": "ORIGINAL_REGRESSION_PASSED",
+  "fleet_state_max_age_s": 30.0,
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_before_sha256": "39024648626720dd834e4a77bc99f65b241b7baad11703341429c8deaf70aa5d",
+  "scheduler_after_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+  "runtime_before": {
+    "passed": 11,
+    "failed": 1
+  },
+  "runtime_after": {
+    "passed": 12,
+    "failed": 0
+  },
+  "scheduling_only_after": {
+    "passed": 10,
+    "failed": 0
+  },
+  "regression_total": 22,
+  "regression_passed": 22,
+  "model_retrained": false,
+  "gazebo_started": false,
+  "full_system_verified": false,
+  "files": [
+    {
+      "path": "data/runtime_test_after_fix.json",
+      "sha256": "1d036c945fc34208c85531dec91561bdd80dca38211ff34b267d904ccfd7f7fe",
+      "size_bytes": 27518
+    },
+    {
+      "path": "data/scheduling_only_test_after_fix.json",
+      "sha256": "1515bd2623237fa6b5dec6126a5362dd44211c9242279121418c54550809ce13",
+      "size_bytes": 22016
+    },
+    {
+      "path": "logs/runtime_test_after_fix.log",
+      "sha256": "0d9058277acb6662584a790f2410a1eaaab54aeb25e8700344d721470c8bb02f",
+      "size_bytes": 55861
+    },
+    {
+      "path": "logs/scheduling_only_test_after_fix.log",
+      "sha256": "e019cb232fe1578b9ea28346f908db71e88cf489739558a760ac3c78bcc1529d",
+      "size_bytes": 39003
+    },
+    {
+      "path": "data/scheduler_after_stale_state_fix.py",
+      "sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+      "size_bytes": 72163
+    },
+    {
+      "path": "data/DEF-01_stale_state_fix.diff",
+      "sha256": "cee8a12a15844cd8642ed2bdae4f68de04c7b51766b44e39fa6cc14a4613cee7",
+      "size_bytes": 1869
+    },
+    {
+      "path": "data/runtime_regression_summary.csv",
+      "sha256": "92a66619c297fe5ec6771035194ed2386193a185db522cfd0e90a6883c671689",
+      "size_bytes": 313
+    }
+  ]
+}

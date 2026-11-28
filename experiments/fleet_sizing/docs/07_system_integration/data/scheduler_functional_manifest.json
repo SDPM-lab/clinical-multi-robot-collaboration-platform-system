@@ -1,0 +1,79 @@
+{
+  "created_at": "2026-11-28T17:21:25.014861+08:00",
+  "stage": "scheduler_functional_verification",
+  "status": "COMPLETE",
+  "model": "Nav2 Sweep 12 Seed 7101",
+  "model_sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+  "scheduler_sha256": "eec1ad5bd06d84db696e513a39bda0fef9a21c0d76ac857e2ef25f1b88321a67",
+  "fleet_state_max_age_s": 30.0,
+  "test_suites": [
+    {
+      "suite": "scheduling_only",
+      "total": 10,
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "suite": "runtime",
+      "total": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "suite": "runtime_extended",
+      "total": 8,
+      "passed": 8,
+      "failed": 0
+    }
+  ],
+  "total_unique_tests": 30,
+  "passed": 30,
+  "failed": 0,
+  "defect_01_regression_passed": true,
+  "observed_unavailable_behavior": {
+    "busy": "pending",
+    "charging": "pending",
+    "stale": "failed",
+    "offline": "failed",
+    "error": "failed"
+  },
+  "observed_recovery_delay_s": 0.2428873479948379,
+  "recovery_delay_sample_count": 1,
+  "synthetic_robot_states": true,
+  "synthetic_completion_events": true,
+  "model_retrained": false,
+  "gazebo_started": false,
+  "full_system_verified": false,
+  "files": [
+    {
+      "path": "scripts/test_hospital_ppo_runtime_extended.py",
+      "sha256": "d87810eb683a6d49e9fa29ea3df496465527610e77b59a47e3a707ac0168e607",
+      "size_bytes": 19662
+    },
+    {
+      "path": "data/runtime_extended_test_results.json",
+      "sha256": "840bcd1323e16949371b54dd68352cf008fd7d9f21d995e5ffd5fbc252d730d7",
+      "size_bytes": 14404
+    },
+    {
+      "path": "logs/runtime_extended_test.log",
+      "sha256": "127a603304086165fc12c3329fd32a943b2f048727073d3eaef0a5490fd3eea9",
+      "size_bytes": 29538
+    },
+    {
+      "path": "data/scheduling_only_test_after_fix.json",
+      "sha256": "1515bd2623237fa6b5dec6126a5362dd44211c9242279121418c54550809ce13",
+      "size_bytes": 22016
+    },
+    {
+      "path": "data/runtime_test_after_fix.json",
+      "sha256": "1d036c945fc34208c85531dec91561bdd80dca38211ff34b267d904ccfd7f7fe",
+      "size_bytes": 27518
+    },
+    {
+      "path": "data/scheduler_functional_test_summary.csv",
+      "sha256": "68853a3d38c4c4dc57511ea86709300361874b26b640cd407a400c9559791b1c",
+      "size_bytes": 1904
+    }
+  ]
+}
