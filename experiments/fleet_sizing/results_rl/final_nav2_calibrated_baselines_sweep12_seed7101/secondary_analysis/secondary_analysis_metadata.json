@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-11-27T19:43:56.978003+08:00",
+  "scope": "Exploratory secondary metrics",
+  "source_runs_sha256": "1ec064d42d94d50c627daa3ad00bf87de1a50fedb67ccc8cfa6e44f21287b8d0",
+  "source_summary_sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe",
+  "primary_analysis_metadata_sha256": "66f27b4428c94d25a2e6410ecd83b3d166c44807135662ee8394ba6204e0ac75",
+  "analysis_script_sha256": "3e260d5df9dcb636ebcbd25c022e5add3fda639bdd9269ceaa47f5cb3be0fc23",
+  "evaluation_episodes": 750,
+  "secondary_metric_count": 15,
+  "derived_metric_count": 4,
+  "secondary_inference_metric_count": 7,
+  "comparison_count": 140,
+  "summary_values_verified": 1125,
+  "bootstrap_iterations": 10000,
+  "bootstrap_seed": 20261128,
+  "paired_seeds_per_comparison": 30,
+  "confidence_level": 0.95,
+  "confidence_intervals": "Individual, unadjusted",
+  "difference_direction": "Positive means PPO better for seven inference metrics",
+  "travel_decomposition_direction": "PPO minus baseline; positive means additional travel",
+  "multiple_testing": "Separate Holm family of 140 comparisons per test",
+  "wilcoxon_interpretation": "Two-sided signed-rank test; significance and median direction reported separately",
+  "best_baseline": "Descriptive selection using observed means",
+  "task_sequence_check": "Equal task counts verified; full sequence not established by this script",
+  "battery_reserve_soc": 0.15,
+  "bootstrap_counts": {
+    "ppo_better": 93,
+    "ppo_worse": 16,
+    "ci_includes_zero": 31
+  },
+  "primary_results_modified": false,
+  "new_simulations": 0,
+  "models_retrained": false,
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "output_sha256": {
+    "battery_charging_summary.csv": "969f2e44e49a9996feb1767ed3afeb4ad479768c1c44dcda9a293926c17a39f7",
+    "derived_episode_metrics.csv": "d594599a9ce1d7577a9656539aa192b043d4ff833580934908a4a06d0c51ecdc",
+    "priority_waiting_summary.csv": "87b5803185221bafca00e27bf05568ca56014cc3c614a9dedd03504ab9b60bc6",
+    "secondary_best_baseline.csv": "56ca91a7ae05182d2c07fd12772077faa9f7cec05f13fa1e940c9e8e5284e119",
+    "secondary_bootstrap_counts.csv": "38688318c7fcb772ccf5951a689ff826e42379f9ae2e25c40b227194716ac06d",
+    "secondary_descriptive_summary.csv": "537b4d2ba36184f527f0b45c2243ceb9e34d660b792837ebb910a788d7c210a7",
+    "secondary_paired_bootstrap.csv": "3b1af5bbfb041c79ca10eaa70838eb163d8e1abf9c28d5adb07681c7bedbf52d",
+    "travel_decomposition.csv": "26cbd7965b48182f52d6d3b74bcb2af113e54d49b02484da72660f3f882ef7f1",
+    "utilization_summary.csv": "5db4a9d1fffb063b4cbec611a45a8d6b11c505dc2ef7ece329698dd56632b4e9"
+  }
+}

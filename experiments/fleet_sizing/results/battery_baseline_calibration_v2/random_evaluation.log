@@ -1,0 +1,80 @@
+================================================================================
+BATTERY-AWARE RANDOM_FEASIBLE EVALUATION V2
+Method: random_feasible
+================================================================================
+Nav Graph: PASS
+Route Summary: PASS
+Route Results: PASS
+PPO Model: PASS
+Shared experiment configuration: PASS
+Weighted baseline reference: PASS
+[01/10] method=random_feasible seed=3001 | completion=100.0000% | avg=135.64 | p95=454.99 | emergency=107.88 | jain=0.8669 | soc=0.1902
+[02/10] method=random_feasible seed=3002 | completion=100.0000% | avg=158.02 | p95=570.00 | emergency=74.88 | jain=0.8634 | soc=0.1837
+[03/10] method=random_feasible seed=3003 | completion=100.0000% | avg=207.76 | p95=810.39 | emergency=166.84 | jain=0.8425 | soc=0.1880
+[04/10] method=random_feasible seed=3004 | completion=100.0000% | avg=138.53 | p95=502.02 | emergency=84.19 | jain=0.8591 | soc=0.1895
+[05/10] method=random_feasible seed=3005 | completion=100.0000% | avg=147.40 | p95=617.38 | emergency=50.14 | jain=0.8847 | soc=0.1882
+[06/10] method=random_feasible seed=3006 | completion=100.0000% | avg=134.12 | p95=527.29 | emergency=98.68 | jain=0.8751 | soc=0.1904
+[07/10] method=random_feasible seed=3007 | completion=100.0000% | avg=166.70 | p95=890.78 | emergency=127.42 | jain=0.8687 | soc=0.1868
+[08/10] method=random_feasible seed=3008 | completion=100.0000% | avg=143.50 | p95=600.29 | emergency=49.25 | jain=0.8655 | soc=0.1850
+[09/10] method=random_feasible seed=3009 | completion=100.0000% | avg=223.57 | p95=1250.85 | emergency=198.22 | jain=0.8872 | soc=0.1895
+[10/10] method=random_feasible seed=3010 | completion=100.0000% | avg=241.86 | p95=1939.94 | emergency=162.39 | jain=0.8820 | soc=0.1876
+
+Total elapsed seconds: 9.47
+
+===== RUN MATRIX VALIDATION =====
+Expected runs: 10
+Actual runs: 10
+Duplicates: 0
+Missing runs: 0
+Seed consistency: PASS
+Task population consistency: PASS
+Battery enabled: PASS
+Global minimum SoC: 0.18367600326131264
+Reserve threshold: 0.15
+Reserve violations: 0
+Run matrix: PASS
+Nav Graph: PASS
+Route Summary: PASS
+Route Results: PASS
+PPO Model: PASS
+Shared experiment configuration: PASS
+Source integrity: PASS
+
+================================================================================
+RANDOM_FEASIBLE EVALUATION SUMMARY
+================================================================================
+Method: random_feasible
+Runs: 10
+generated_tasks: mean=1636.600000 | std=31.209614
+completed_tasks: mean=1636.600000 | std=31.209614
+completion_rate: mean=1.000000 | std=0.000000
+average_waiting_time_s: mean=169.709623 | std=37.793484
+p95_waiting_time_s: mean=816.392321 | std=437.803127
+high_waiting_time_s: mean=113.341386 | std=39.175060
+emergency_waiting_time_s: mean=111.989202 | std=48.298906
+total_travel_time_s: mean=247184.045633 | std=4493.855337
+jain_task_fairness: mean=0.869499 | std=0.012762
+jain_utilization_fairness: mean=0.964938 | std=0.007847
+average_response_time_s: mean=252.140966 | std=37.917401
+p95_response_time_s: mean=897.824065 | std=445.110666
+emergency_p95_wait_s: mean=236.326397 | std=76.528527
+high_emergency_avg_wait_s: mean=113.197985 | std=39.846210
+high_emergency_p95_wait_s: mean=318.427879 | std=85.097678
+average_robot_utilization: mean=0.087296 | std=0.001598
+max_robot_utilization: mean=0.116508 | std=0.003893
+total_charging_count: mean=75.900000 | std=1.374773
+total_return_to_charge_count: mean=75.900000 | std=1.374773
+minimum_robot_soc: mean=0.187882 | std=0.002107
+average_final_soc: mean=0.603457 | std=0.053318
+
+Minimum completion rate: 1.0
+Completion threshold met: True
+Minimum observed SOC: 0.18367600326131264
+Reserve violations: 0
+
+Output directory: /home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results/battery_baseline_calibration_v2/random
+Saved: runs.csv
+Saved: summary.csv
+Saved: experiment_metadata.json
+
+RANDOM_FEASIBLE EVALUATION: COMPLETE

@@ -1,0 +1,7 @@
+metric,ppo_better,ppo_worse,ci_crosses_zero
+average_waiting_time_s,20,0,0
+p95_waiting_time_s,11,1,8
+high_waiting_time_s,20,0,0
+emergency_waiting_time_s,20,0,0
+total_travel_time_s,0,15,5
+jain_task_fairness,20,0,0

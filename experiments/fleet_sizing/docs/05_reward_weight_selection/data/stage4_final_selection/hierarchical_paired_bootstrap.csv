@@ -1,0 +1,7 @@
+metric,direction,difference_positive_means,observed_difference,ci95_low,ci95_high,sweep25_model_seed_wins,sweep12_model_seed_wins,ties,conclusion
+average_waiting_time_s,lower,sweep25_better,4.5226583851465225,-6.562538629483719,16.317265999590713,3,2,0,ci_crosses_zero
+p95_waiting_time_s,lower,sweep25_better,33.343785094640225,-39.34831583316277,124.38976132852565,2,3,0,ci_crosses_zero
+high_waiting_time_s,lower,sweep25_better,2.8023382474915346,-6.395015119573763,13.012816994728137,2,3,0,ci_crosses_zero
+emergency_waiting_time_s,lower,sweep25_better,-8.199538092781742,-17.424665066789473,-0.2262355468138452,0,5,0,sweep12_better
+total_travel_time_s,lower,sweep25_better,262.5984770263999,-211.4697054740849,720.3385110748425,3,2,0,ci_crosses_zero
+jain_task_fairness,higher,sweep25_better,0.01855187224055725,-0.03374880661390735,0.07946234605174164,4,1,0,ci_crosses_zero

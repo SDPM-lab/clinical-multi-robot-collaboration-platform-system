@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="691.2pt" height="460.08pt" viewBox="0 0 691.2 460.08" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-27T20:10:41.442037</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 460.08 
+L 691.2 460.08 
+L 691.2 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 122.4 147.6864 
+L 568.8 147.6864 
+Q 572.148 147.6864 572.148 144.36 
+L 572.148 83.376 
+Q 572.148 80.0496 568.8 80.0496 
+L 122.4 80.0496 
+Q 119.052 80.0496 119.052 83.376 
+L 119.052 144.36 
+Q 119.052 147.6864 122.4 147.6864 
+z
+" clip-path="url(#p703ef473ff)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 33.12 269.6544 
+L 328.86 269.6544 
+Q 332.208 269.6544 332.208 266.328 
+L 332.208 183.168 
+Q 332.208 179.8416 328.86 179.8416 
+L 33.12 179.8416 
+Q 29.772 179.8416 29.772 183.168 
+L 29.772 266.328 
+Q 29.772 269.6544 33.12 269.6544 
+z
+" clip-path="url(#p703ef473ff)" style="fill: #ffffff; stroke: #555555; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 362.34 269.6544 
+L 658.08 269.6544 
+Q 661.428 269.6544 661.428 266.328 
+L 661.428 183.168 
+Q 661.428 179.8416 658.08 179.8416 
+L 362.34 179.8416 
+Q 358.992 179.8416 358.992 183.168 
+L 358.992 266.328 
+Q 358.992 269.6544 362.34 269.6544 
+z
+" clip-path="url(#p703ef473ff)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 122.4 369.4464 
+L 568.8 369.4464 
+Q 572.148 369.4464 572.148 366.12 
+L 572.148 305.136 
+Q 572.148 301.8096 568.8 301.8096 
+L 122.4 301.8096 
+Q 119.052 301.8096 119.052 305.136 
+L 119.052 366.12 
+Q 119.052 369.4464 122.4 369.4464 
+z
+" clip-path="url(#p703ef473ff)" style="fill: #ffffff; stroke: #333333; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 122.4 447.0624 
+L 568.8 447.0624 
+Q 572.148 447.0624 572.148 443.736 
+L 572.148 391.068 
+Q 572.148 387.7416 568.8 387.7416 
+L 122.4 387.7416 
+Q 119.052 387.7416 119.052 391.068 
+L 119.052 443.736 
+Q 119.052 447.0624 122.4 447.0624 
+z
+" clip-path="url(#p703ef473ff)" style="fill: #ffffff; stroke: #333333; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="345.6" y="103.569176" transform="rotate(-0 345.6 103.569176)">Nav2-Calibrated Scheduling Environment</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #111111" x="345.6" y="127.465042" transform="rotate(-0 345.6 127.465042)">7 robots (2, 2, 3) | Battery model enabled</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #555555" x="180.99" y="209.570456" transform="rotate(-0 180.99 209.570456)">Four Baseline Schedulers</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(111.011875 230.312113)">Random / Projected Nearest</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(135.924375 242.314847)">Static alpha = 0.6</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(113.139219 254.317581)">Dynamic alpha = [0.4, 0.9]</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="510.21" y="209.570456" transform="rotate(-0 510.21 209.570456)">Maskable PPO</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(423.4225 236.335355)">Nav2 Sweep 12 | Model seed 7101</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(412.534219 248.338089)">Reward: W/A/Q/I = 0.40/0.35/0.15/0.10</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #333333" x="345.6" y="325.329176" transform="rotate(-0 345.6 325.329176)">750 Evaluation Episodes</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(253.991406 343.2018)">5 methods x 5 workloads x 30 seeds</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(272.564844 355.204534)">Evaluation seeds: 9601-9630</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #333333" x="345.6" y="408.932696" transform="rotate(-0 345.6 408.932696)">Primary and Exploratory Secondary Analysis</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(247.326562 423.47892)">22 original metrics + 4 derived metrics</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #111111" transform="translate(234.285156 435.481654)">120 primary + 140 exploratory comparisons</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 343.645944 144.780647 
+Q 261.901218 162.377738 181.686685 179.645425 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 186.451133 180.870186 
+L 181.686685 179.645425 
+L 185.525162 176.568724 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 347.554056 144.780647 
+Q 429.298782 162.377738 509.513315 179.645425 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 505.674838 176.568724 
+L 509.513315 179.645425 
+L 504.748867 180.870186 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 180.154056 266.748647 
+Q 261.898782 284.345738 342.113315 301.613425 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 338.274838 298.536724 
+L 342.113315 301.613425 
+L 337.348867 302.838186 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 511.045944 266.748647 
+Q 429.301218 284.345738 349.086685 301.613425 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 353.851133 302.838186 
+L 349.086685 301.613425 
+L 352.925162 298.536724 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 345.6 368.120496 
+Q 345.6 377.205876 345.6 384.726009 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 347.8 380.326009 
+L 345.6 384.726009 
+L 343.4 380.326009 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+  </g>
+  <g id="text_11">
+   <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #111111" x="334.8" y="24.477187" transform="rotate(-0 334.8 24.477187)">Final Evaluation Framework</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p703ef473ff">
+   <rect x="10.8" y="61.2" width="669.6" height="388.08"/>
+  </clipPath>
+ </defs>
+</svg>

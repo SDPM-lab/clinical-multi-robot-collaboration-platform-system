@@ -1,0 +1,3 @@
+case,reward_scale,evaluation_observation_scale,episodes,completion_rate,avg_waiting_time_s,p95_waiting_time_s,high_waiting_time_s,emergency_waiting_time_s,total_travel,jain_fairness,historical_metrics_matched
+corrected_behavior,150,600,150,1.0,111.15840408825377,587.5945702849871,64.54557444735649,40.20659608071829,247182.90442742434,0.8545888935485817,1050
+reference_control,600,600,150,1.0,96.13312529101881,477.9250565665838,54.181429772572955,26.90862264701018,247073.51973198546,0.8794132920302031,1050

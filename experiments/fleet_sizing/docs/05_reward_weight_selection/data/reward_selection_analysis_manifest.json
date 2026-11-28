@@ -1,0 +1,127 @@
+{
+  "analysis_script_sha256": "3f1614ca359ae4f0cef4a7e713d80a8e6ff56ab168727574d8e3c41adc8ba870",
+  "analysis_type": "Retrospective analysis of archived experiments",
+  "archive_manifest_sha256": "e71ecaac5d20d1bc64ef476e412e0c28673ba73a4c66484b76c3abf722e425db",
+  "generated_files": {
+    "data/stage1_initial_sweep/pareto_analysis.csv": {
+      "rows": 33,
+      "sha256": "d54874ed7edf3e7bc8491f371fdc48d102f3a15b0e419039439f11a00d80bf56"
+    },
+    "data/stage2_pareto_confirmation/pareto_analysis.csv": {
+      "rows": 15,
+      "sha256": "456fcdc2b2f594733f108f717fd50102c7b990f3374b1923e0cb2c1614d001c5"
+    },
+    "data/stage3_nav2_confirmation/model_ranking.csv": {
+      "rows": 35,
+      "sha256": "e53e5ab66e1ddc106b648921429bc3b7913fbe81b635613cb62e13a7fc74cc84"
+    },
+    "data/stage3_nav2_confirmation/pareto_analysis.csv": {
+      "rows": 7,
+      "sha256": "51d14dba332d5fbc7dd4c1ddc6611f852a3ddd4fb78fb0d369b1d4ef43e750ec"
+    },
+    "data/stage4_final_selection/emergency_wait_by_seed.csv": {
+      "rows": 5,
+      "sha256": "19e07ac81599bc5cd2750f52b70cad35eb67b2b3493563fb6320e9eee42aa75c"
+    },
+    "data/stage4_final_selection/final_candidate_statistics.csv": {
+      "rows": 6,
+      "sha256": "d183bdcbf044bd02ad8b5a07735a023eb672c3c4f3d41dd444d512499efb4396"
+    },
+    "data/stage4_final_selection/representative_model_selection.csv": {
+      "rows": 5,
+      "sha256": "ebf057ff33e17de9f3d4c5278c9202cf188dfda880278b4bf713adb436759de7"
+    }
+  },
+  "limitations": [
+    "Stage1 and Stage2 use the preliminary environment.",
+    "Only seven configurations were retrained under Nav2.",
+    "Final candidate comparison has five model seeds.",
+    "Crossed bootstrap intervals are pointwise.",
+    "Candidate selection is retrospective.",
+    "Seed7101 representativeness analysis is retrospective.",
+    "Formal evaluation model deployment remains unverified."
+  ],
+  "scope": "33 -> 15 -> 7 -> 2 -> 1",
+  "stage1": {
+    "configurations": 33,
+    "environment": "preliminary",
+    "episodes": 660,
+    "models": 33,
+    "pareto": [
+      "sweep03",
+      "sweep04",
+      "sweep06",
+      "sweep09",
+      "sweep10",
+      "sweep12",
+      "sweep13",
+      "sweep17",
+      "sweep19",
+      "sweep21",
+      "sweep23",
+      "sweep25",
+      "sweep27",
+      "sweep30",
+      "sweep33"
+    ]
+  },
+  "stage2": {
+    "configurations": 15,
+    "environment": "preliminary",
+    "episodes": 1500,
+    "models": 75,
+    "pareto": [
+      "sweep03",
+      "sweep04",
+      "sweep06",
+      "sweep12",
+      "sweep21",
+      "sweep25",
+      "sweep27"
+    ]
+  },
+  "stage3": {
+    "configurations": 7,
+    "environment": "nav2_calibrated",
+    "episodes": 1050,
+    "final_candidates": [
+      "sweep25",
+      "sweep12"
+    ],
+    "models": 35,
+    "pareto": [
+      "sweep03",
+      "sweep06",
+      "sweep12",
+      "sweep21",
+      "sweep25",
+      "sweep27"
+    ]
+  },
+  "stage4": {
+    "best_performance_seed": 7104,
+    "closest_to_config_mean_seed": 7101,
+    "deployment_verified": false,
+    "formal_baseline_model_seed": 7101,
+    "selected_config": "sweep12",
+    "selection_basis": "Medical emergency-task priority; descriptive paired improvement, not robust statistical superiority"
+  },
+  "statistics": {
+    "bootstrap_repetitions": 10000,
+    "bootstrap_rng_seed": 20261127,
+    "bootstrap_type": "Crossed paired model/scenario resampling",
+    "confidence_level": 0.95,
+    "holm_correction": "Separate six-metric families for paired t and Wilcoxon tests",
+    "objectives": [
+      "average_waiting_time_s",
+      "p95_waiting_time_s",
+      "high_waiting_time_s",
+      "emergency_waiting_time_s",
+      "total_travel_time_s",
+      "jain_task_fairness"
+    ],
+    "rank_sum": "Equal metric ranks",
+    "rank_tie_method": "average",
+    "representative_distance": "Root mean square of standardized metric deviations"
+  }
+}

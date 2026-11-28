@@ -1,0 +1,1141 @@
+{
+  "created_at": "2026-11-27T02:47:34.759867+08:00",
+  "scope": "Reward selection: 33 -> 15 -> 7 -> 2 -> 1",
+  "formal_model": {
+    "config": "sweep12",
+    "model_seed": 7101,
+    "path": "experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k/final_model.zip",
+    "sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+    "deployment_verified": false
+  },
+  "file_count": 161,
+  "files": [
+    {
+      "stage": "stage1",
+      "source": "experiments/fleet_sizing/results_rl/reward_weight_sweep_validation/50k/reward_sweep_validation_runs.csv",
+      "archive": "data/stage1_initial_sweep/reward_sweep_validation_runs.csv",
+      "sha256": "36a2d5f5f5894d1e04ec119aa902a9b390531d387b4542b374c9e86d8fef7b56",
+      "size_bytes": 320031
+    },
+    {
+      "stage": "stage1",
+      "source": "experiments/fleet_sizing/results_rl/reward_weight_sweep_validation/50k/reward_sweep_validation_summary.csv",
+      "archive": "data/stage1_initial_sweep/reward_sweep_validation_summary.csv",
+      "sha256": "8c594cabfbfc53c52ea21f5d9320523251c0cce3436346120ff14b0154b35826",
+      "size_bytes": 44127
+    },
+    {
+      "stage": "stage2",
+      "source": "experiments/fleet_sizing/results_rl/pareto_15_config_validation/confirmation_episode_runs.csv",
+      "archive": "data/stage2_pareto_confirmation/confirmation_episode_runs.csv",
+      "sha256": "d289b30a360e5172ec677d7a3c44c6994af72a95838ef56466c9dd7885adcf82",
+      "size_bytes": 675563
+    },
+    {
+      "stage": "stage2",
+      "source": "experiments/fleet_sizing/results_rl/pareto_15_config_validation/confirmation_model_summary.csv",
+      "archive": "data/stage2_pareto_confirmation/confirmation_model_summary.csv",
+      "sha256": "19c638049fb2cf9e14c9fb6dc27b154de7bfe18c79db9626b937cceaa7d6495e",
+      "size_bytes": 11141
+    },
+    {
+      "stage": "stage2",
+      "source": "experiments/fleet_sizing/results_rl/pareto_15_config_validation/confirmation_config_summary.csv",
+      "archive": "data/stage2_pareto_confirmation/confirmation_config_summary.csv",
+      "sha256": "af223ff92489aa22e241ab5849f4ea04438a8334761e72c8c49a4c383b1b373b",
+      "size_bytes": 4277
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/reward_weight_confirmation_validation/confirmation_episode_runs.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/first_5_configs/confirmation_episode_runs.csv",
+      "sha256": "c16bfa56e97281268fac805c4a8b8b1b696a154dfc03822dbbe333914cb16de3",
+      "size_bytes": 228170
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/reward_weight_confirmation_validation/confirmation_model_summary.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/first_5_configs/confirmation_model_summary.csv",
+      "sha256": "331fd3cf3b7b6655682a0da2d3adc35c73318158686936bb581fab6f8d00e0ea",
+      "size_bytes": 3892
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/reward_weight_confirmation_validation/confirmation_config_summary.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/first_5_configs/confirmation_config_summary.csv",
+      "sha256": "38fcce3fa4100f32495932855f615c727ee0ec39ffc6e35c7adb6cbc84364700",
+      "size_bytes": 1732
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/reward_weight_confirmation_validation/confirmation_statistics.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/first_5_configs/confirmation_statistics.csv",
+      "sha256": "190714b44c4d15bc8932a59cc7a5b742bdd504ff9199f8814d123247b3088051",
+      "size_bytes": 5474
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/pareto_reward_confirmation_validation/confirmation_episode_runs.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/remaining_10_configs/confirmation_episode_runs.csv",
+      "sha256": "e333826f7f809059133956a9c41f70199d2286c52add856aec73e69003ce4f70",
+      "size_bytes": 456124
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/pareto_reward_confirmation_validation/confirmation_model_summary.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/remaining_10_configs/confirmation_model_summary.csv",
+      "sha256": "f2c445f44866b1e5c44aa951e421424157e947faef887971cd6777b9da51f930",
+      "size_bytes": 7585
+    },
+    {
+      "stage": "stage2_source_batch",
+      "source": "experiments/fleet_sizing/results_rl/pareto_reward_confirmation_validation/confirmation_config_summary.csv",
+      "archive": "data/stage2_pareto_confirmation/source_batches/remaining_10_configs/confirmation_config_summary.csv",
+      "sha256": "61e9db927aa4294c39fec3a3de503eb6da53fa549133838484bb6a0019d297bb",
+      "size_bytes": 3036
+    },
+    {
+      "stage": "stage3",
+      "source": "experiments/fleet_sizing/results_rl/pareto_reward_confirmation_nav2_validation/confirmation_episode_runs.csv",
+      "archive": "data/stage3_nav2_confirmation/confirmation_episode_runs.csv",
+      "sha256": "4ba40e49cfccea01789d4c9a0218b45c50d000dd42ac2eaf6bc9f44b42e00d33",
+      "size_bytes": 477332
+    },
+    {
+      "stage": "stage3",
+      "source": "experiments/fleet_sizing/results_rl/pareto_reward_confirmation_nav2_validation/confirmation_model_summary.csv",
+      "archive": "data/stage3_nav2_confirmation/confirmation_model_summary.csv",
+      "sha256": "90311977beccb2c8ebefebb4069347a5d8f11397342d5128b544c60f5f92e35d",
+      "size_bytes": 5387
+    },
+    {
+      "stage": "stage3",
+      "source": "experiments/fleet_sizing/results_rl/pareto_reward_confirmation_nav2_validation/confirmation_config_summary.csv",
+      "archive": "data/stage3_nav2_confirmation/confirmation_config_summary.csv",
+      "sha256": "4e27f899b3936b065f5d2558d908cd454da4723a84aa5e966eec1c62484f7efb",
+      "size_bytes": 2254
+    },
+    {
+      "stage": "stage4",
+      "source": "experiments/fleet_sizing/results_rl/nav2_final_reward_candidates/hierarchical_paired_bootstrap.csv",
+      "archive": "data/stage4_final_selection/hierarchical_paired_bootstrap.csv",
+      "sha256": "92b960698158d24d020875237d1031dc1aac67568ccd353909e4d68b3e28d4b5",
+      "size_bytes": 883
+    },
+    {
+      "stage": "nav2_calibration",
+      "source": "ros2_ws/batch_route_results_nav2.csv",
+      "archive": "data/nav2_calibration/batch_route_results_nav2.csv",
+      "sha256": "2afdbdf57e8f5f0ffe6d318ec689c10b8b638477476ea63e56483b3ef6377b4a",
+      "size_bytes": 18954
+    },
+    {
+      "stage": "nav2_calibration",
+      "source": "ros2_ws/batch_route_summary_nav2.csv",
+      "archive": "data/nav2_calibration/batch_route_summary_nav2.csv",
+      "sha256": "0baf6a695bacd2dac8f99a9e1b540dbb30901dfff0086afb93a0666acf030399",
+      "size_bytes": 3196
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_01_w35_a25_q25_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_01_w35_a25_q25_i15_50k.json",
+      "sha256": "eb046026b51a5872953faece5ea0a0510e0231f2ed4affee90ae05aec0e1c3bc",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_02_w35_a30_q20_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_02_w35_a30_q20_i15_50k.json",
+      "sha256": "c34efbc791a41c53cf12a42287c8281b4dea0424588743133dd4e96bc04b8c05",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_03_w35_a30_q25_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_03_w35_a30_q25_i10_50k.json",
+      "sha256": "9960727b6b41b15a70d982096eccbc146b7602d706a189c12b5042665c3fa8e6",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_04_w35_a35_q15_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_04_w35_a35_q15_i15_50k.json",
+      "sha256": "8b0aa631876af0840a64a369d63c9b8c384757655255d4e58e52893cbcb94c32",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_05_w35_a35_q20_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_05_w35_a35_q20_i10_50k.json",
+      "sha256": "e2f974ab020f30d33e52233b95145bbe910ae2dcf31d94f8cdb72cebb67f1deb",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_06_w35_a35_q25_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_06_w35_a35_q25_i05_50k.json",
+      "sha256": "41d9e98cd31f20979c40a8abf06feaa5abb2611dcafee1d88dd8d9a42ef2ec21",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_07_w40_a25_q20_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_07_w40_a25_q20_i15_50k.json",
+      "sha256": "b2c18354dbb37ee6a8dbf9fa6f7d568d808c845b078b30758d75f1d288414c8e",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_08_w40_a25_q25_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_08_w40_a25_q25_i10_50k.json",
+      "sha256": "d447cb3e380b2326037926821f61c9984e169e2b8b6cc006216dc3d306096be9",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_09_w40_a30_q15_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_09_w40_a30_q15_i15_50k.json",
+      "sha256": "d726f23ed6ad50020ef1193a03c25125209064c76bbf31c745ed7b76d90de2cf",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_10_w40_a30_q20_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_10_w40_a30_q20_i10_50k.json",
+      "sha256": "70e92d3089160b363fb73c9572748c458c98716ab99c4619bb25c1b645c063f5",
+      "size_bytes": 1475
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_11_w40_a30_q25_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_11_w40_a30_q25_i05_50k.json",
+      "sha256": "370a55b79dc001827c3cb8d384dbdfec935d4e634bae5e049d6ba088b7d801d5",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_12_w40_a35_q15_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_12_w40_a35_q15_i10_50k.json",
+      "sha256": "80b91d199e8a4812669113811a611534141e8d0fd63035c18512bba907aa6d8a",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_13_w40_a35_q20_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_13_w40_a35_q20_i05_50k.json",
+      "sha256": "5285eeea197c16b3673b3ed2fb7cb05b2735d3d3eb506bb4d0db760ad09e31f1",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_14_w45_a20_q20_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_14_w45_a20_q20_i15_50k.json",
+      "sha256": "9619aee6dc7d85e1505bae0cdf28b36926d85333e96d4bb1eea555d59a5c87d2",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_15_w45_a25_q15_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_15_w45_a25_q15_i15_50k.json",
+      "sha256": "09c2a88710fb3ad9612a80983f2365cda1d8e2bd682362d3e045d76aaf493fa6",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_16_w45_a25_q20_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_16_w45_a25_q20_i10_50k.json",
+      "sha256": "6111984349d88535e053ad9baa05d1635e8401f5fd386f585262c88ea4ccf841",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_17_w45_a25_q25_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_17_w45_a25_q25_i05_50k.json",
+      "sha256": "88e19e98758691ab0d12cd279a7c38c7ebc0955f8cacaee2ca00e384adedab90",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_18_w45_a30_q15_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_18_w45_a30_q15_i10_50k.json",
+      "sha256": "3e22edc2b2c2c726fb8097a0ac7d3f7d3a88023492ef198cb070d7f33b04c24c",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_19_w45_a30_q20_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_19_w45_a30_q20_i05_50k.json",
+      "sha256": "963a010e184ff9869574b2161b5121c8b145dc01b1414ec3c523dd1d6006518c",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_20_w45_a35_q10_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_20_w45_a35_q10_i10_50k.json",
+      "sha256": "0c23b74a9a5a064f0095d288f2e56c9a177faa92b65c34c3a4820847a938cd0b",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_21_w45_a35_q15_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_21_w45_a35_q15_i05_50k.json",
+      "sha256": "dfb24ad43bc9129108037ea60a5a409ef754dd88983b419f253950c34ab791ad",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_22_w50_a20_q15_i15_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_22_w50_a20_q15_i15_50k.json",
+      "sha256": "eef21e60510d8564715ee1b14af383df2926781ebac3306711d3e0c6c4dbc510",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_23_w50_a20_q20_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_23_w50_a20_q20_i10_50k.json",
+      "sha256": "91ecf290cde8fe119e3a272c2012829ce40816229a9eec98810ee3ba3d87d970",
+      "size_bytes": 1475
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_24_w50_a25_q15_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_24_w50_a25_q15_i10_50k.json",
+      "sha256": "a15522dcd49be25757ba869f09297ced7d1101228fc9f8cee62a1a3e473dcb59",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_25_w50_a25_q20_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_25_w50_a25_q20_i05_50k.json",
+      "sha256": "fd6134b937f0d2eaeade70901cdf933a876a3e5ae714c3cbc1f67f76ae4fcaf3",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_26_w50_a30_q10_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_26_w50_a30_q10_i10_50k.json",
+      "sha256": "927e0a76874555cc69065327037ac5a21526c770645bf7585a8fbd2a8d05c44a",
+      "size_bytes": 1475
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_27_w50_a30_q15_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_27_w50_a30_q15_i05_50k.json",
+      "sha256": "a4cc482c0e474b2245c1e7af6015bebd24e271d783d8c2dc2c0d5e6a76ae051e",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_28_w50_a35_q10_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_28_w50_a35_q10_i05_50k.json",
+      "sha256": "01b03d6c93dcd939a38329b78ce82d266ad79b2380b55f57952c3c16a22b5aba",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_29_w55_a20_q15_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_29_w55_a20_q15_i10_50k.json",
+      "sha256": "ed55ac00ab2c129c5c59065faa1dd84f631c9cf709644b93cbae02d143025882",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_30_w55_a20_q20_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_30_w55_a20_q20_i05_50k.json",
+      "sha256": "38b463dba9e6819b1695d440d3ba17212ff10fc75f6eb01f9b4bfcf9973976c4",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_31_w55_a25_q10_i10_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_31_w55_a25_q10_i10_50k.json",
+      "sha256": "a763d909f869cb713e879e4675bf6b4b3228caf512700050fa4447f3a27297b2",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_32_w55_a25_q15_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_32_w55_a25_q15_i05_50k.json",
+      "sha256": "bf2b65168b5e713ea4660066e1b8758ba60e80434fac5c571e875c263d2d888c",
+      "size_bytes": 1479
+    },
+    {
+      "stage": "stage1_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_sweep_33_w55_a30_q10_i05_50k.json",
+      "archive": "data/stage1_initial_sweep/training_metadata/reward_sweep_33_w55_a30_q10_i05_50k.json",
+      "sha256": "7d2ea10001bde6568b0f978db3f8298d032516ae2d5d0291e13e60ee77845d33",
+      "size_bytes": 1477
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7001_200k.json",
+      "sha256": "a7031397a7894acb98bf44f5dee6e4e01b2627842854563889319bf5368df2ba",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7101_200k.json",
+      "sha256": "7f24cb0026f42e937c6b61b45a9c0273754c265016f31b1a95a1104aafabd57e",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7102_200k.json",
+      "sha256": "6d7cbef34c5a56efb0c72e6822d2c5d9b40183c95cca6e37cc18fc5c40aff2c3",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7103_200k.json",
+      "sha256": "a756a7dfedb34b1a166afd0b6c44fb0e78cf6fceae1173d1b9e47622a2216b5c",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep03_w35_a30_q25_i10_seed7104_200k.json",
+      "sha256": "45e82ab5dd543693e547ce91ceeec4b44c0b3d25cf309ddcc992c68a7313611c",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7001_200k.json",
+      "sha256": "d2275fcedb5bfd6f74d8d5898dc6e2fd3d34e29ac7e06b949ae1cfc6095275a6",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7101_200k.json",
+      "sha256": "23bca25627bb0a24694d9fb8778c9d0d9f5fb47f14b6c1042180734714969597",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7102_200k.json",
+      "sha256": "1f7aba14a841271cd1586469775385e720b7a5378e8743badb5d0698f893fdb4",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7103_200k.json",
+      "sha256": "e18d07a51fad70510f9ab26629e915c3eb6131043b03399b898c9a94ec8a882b",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep04_w35_a35_q15_i15_seed7104_200k.json",
+      "sha256": "7bd0b230241aa811e15f4f8d51d65992c97297f4c5ce709461255d5cee1b32d2",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7001_200k.json",
+      "sha256": "5c7e073460d14567e10b2b07ef821a5952be14168f9e50d2886e79c822d26676",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7101_200k.json",
+      "sha256": "61a711785be5218ac1fded0ec1f6002c6c41d0f4286fc28b2b89c2c6eef0ca6a",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7102_200k.json",
+      "sha256": "3f9b9caf5235e2eb49000d56f379b602be09e0d2214c03df577e883acff10562",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7103_200k.json",
+      "sha256": "45e031017a13db4d71c70b4d4ee7f84ccc33301786a787740acfbdc82e874213",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep06_w35_a35_q25_i05_seed7104_200k.json",
+      "sha256": "db1079c22fe349a3185d6c4c7a9ed2925489f66b785f1971101afeec86f75abf",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7001_200k.json",
+      "sha256": "a7d427a44047c9d2a8b16dafe4382133809164488591dc2a39cd13ecd9577587",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7101_200k.json",
+      "sha256": "48cb404efc42bcd75fd1c770ce013787fa3128bb3f272a7afcf91d1d71886a3e",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7102_200k.json",
+      "sha256": "d4abd9367b7038984c99471eaec58fc86ba6be4b510c614efb93b5e091473c05",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7103_200k.json",
+      "sha256": "cb74583266e58739d11e56d72e3c6d8a6951fdce2d0150210ed21907f7e6c9dd",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep09_w40_a30_q15_i15_seed7104_200k.json",
+      "sha256": "ce69431b68ecfa4fd33abb11ee9b2a72930bda84faceb5ade01bb11ea108caf4",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7001_200k.json",
+      "sha256": "7b58740432e5b9f632e65b1afcacf153027236e51c84a63c3d2d8ca138d3daad",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7101_200k.json",
+      "sha256": "6b89caf83afc4fd6eda85e6df619506d858212f0f51f54ff2b92ded824a92db9",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7102_200k.json",
+      "sha256": "2114b49a9d2ac813e3ffc998962452a20b4ff4c4ffed84da5fed98ff47e1ec16",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7103_200k.json",
+      "sha256": "c62f85ba28804e7ea8f0ccf54beb73d78bb682b0a188aa835aad3017bc43c8fa",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep10_w40_a30_q20_i10_seed7104_200k.json",
+      "sha256": "f2a6f4e1f149b16421334ddd33bbc42772e1d5c6dd04ad08cc386bd937c4906b",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7001_200k.json",
+      "sha256": "649255c77bd0c88f76ffa3fa5444f9108c7e80d357bf3280663f09388688f963",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7101_200k.json",
+      "sha256": "bf9673bc31c14024b76dfc5673fb16c76f931bec8620e6fda30167e44e2e24a4",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7102_200k.json",
+      "sha256": "adfafd90022272f9a9dbb71c12809653b656346df51cf9aef0881de9799445bb",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7103_200k.json",
+      "sha256": "97f2499c970f43d9234743f1926fa3d6d9dfa25e9bbdefb436164bddfbb7b2ee",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep12_w40_a35_q15_i10_seed7104_200k.json",
+      "sha256": "f65604ec935b7b09948b0916c50eb3be42860c7342e03c7ec18c6a39dc9f7977",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7001_200k.json",
+      "sha256": "6ff5f3e4ccfc05f0f9edc7e7d0fe6c2efb4ad7ca405c52fdb4429334dade3610",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7101_200k.json",
+      "sha256": "8169660765916c2571317293b09c049934095da93c429135c4c417ca36088930",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7102_200k.json",
+      "sha256": "6cbbd0f261e5a3827a7942468516f94306497c434766e52cc5700f7bb9ca8c89",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7103_200k.json",
+      "sha256": "d3c6c9b751f826cdd0b0aaa5896109cbd3fd04f559b0872ba5059636a2e29f6c",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep13_w40_a35_q20_i05_seed7104_200k.json",
+      "sha256": "0f4b7b4af1d5ce737a00bed8e8931ff5db839b9cff4374abab28854673a5fa07",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7001_200k.json",
+      "sha256": "2dfcdfcbab5effa8831cf7900ce9a7df753e09de1ed34a25e2af69b1552f148c",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7101_200k.json",
+      "sha256": "b1847ec470a03be196f21fef7195d1b62155d784969bea44d1e0c1959a4f07e1",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7102_200k.json",
+      "sha256": "df71ea2e8052ce3d771c71bd62dad071b540cedb9ef83fc152e902b0e3ac99af",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7103_200k.json",
+      "sha256": "f28b8372b36f09f18226eeabb5891cfd1983ffd39b680338a52b256475f8e8ae",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep17_w45_a25_q25_i05_seed7104_200k.json",
+      "sha256": "eb76ebd169ba8671586bd60439bdab36761ec2a6c961eb40bbe0c89bb6dc056d",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7001_200k.json",
+      "sha256": "5f44a8ccc37e7fc32b7f1da7104ccc43b6d79d5df3d0a2f47da986e9f26a42e0",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7101_200k.json",
+      "sha256": "b81a68e71bfd7f0ddef7f99062d82873c212ab935f9d319bc5160115bcf9971b",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7102_200k.json",
+      "sha256": "6a9d9e3c80af09d2efde736d85cc43769eee707e6531d6117e24b6f49fd0914e",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7103_200k.json",
+      "sha256": "125cce68ba664a90afa81330fed40d55a4d192ef423126c41d466b23b490541c",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep19_w45_a30_q20_i05_seed7104_200k.json",
+      "sha256": "2dcac224fa7c06b2789fe583eb084d0e985496e9d1ae8f51e5df7e8794a7f77b",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7001_200k.json",
+      "sha256": "a03618a1067a022e5d03803793ebe59e230686a877b6048a8030ee484a86529f",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7101_200k.json",
+      "sha256": "604cd502d501e7f581d82acde4d79e32d904a07dc1d9bf9e82398204b90238a3",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7102_200k.json",
+      "sha256": "89a222b02ab267ef28c6caa7bc00899195f645e5c73b37974d4390cd797edb98",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7103_200k.json",
+      "sha256": "345c07d63e53e12ace6e5488e96ee6dfe694f98427d084badad2210cdc62aaa5",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep21_w45_a35_q15_i05_seed7104_200k.json",
+      "sha256": "54f198b9aacb4d365936620ea28b74c36fdc279ecf18371978671ff42f09623e",
+      "size_bytes": 1497
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7001_200k.json",
+      "sha256": "c93fbf91e2231716cfba63390ebe00a468f05a36dccb9aa5a66ae5bd06daddd6",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7101_200k.json",
+      "sha256": "1d4cfdbd5c03193feb17995cbf531ebabee7df0b92b11db8b59ccc75ed036c8b",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7102_200k.json",
+      "sha256": "1d6b4ff0e82c051b63fb8ec5ab1224b41ab68d4c1d451652992c090330d860d9",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7103_200k.json",
+      "sha256": "b1a7d0fe81e7aea37a7c8e20d261637051a4eaa57e2be2c040823f4f8e2cd4b5",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep23_w50_a20_q20_i10_seed7104_200k.json",
+      "sha256": "c43b1f83efcc13350d4187c3881a062a6f1f6183b2303f94444297c2accef953",
+      "size_bytes": 1493
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7001_200k.json",
+      "sha256": "02f8209fb2eca585cf2ea1ac3a71263945709110fd37e6a37513d54e73d1880c",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7101_200k.json",
+      "sha256": "fd3a3c817a3d35faea756fe01e81823ce062a27a9412e8dbe12f5123ae25bf80",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7102_200k.json",
+      "sha256": "0eb539346fe0f2a6eb40620121979f63b6e22f1c5ed40191b67717a3ffb882c4",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7103_200k.json",
+      "sha256": "2f72c2e6dc51f7ed305f52e9c44b389358603c18fce6a8d085d927371b03be87",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep25_w50_a25_q20_i05_seed7104_200k.json",
+      "sha256": "1119916b9aa0eb54ecabd459f374d6748ec0255971664be1d7bfdbbe4e78f301",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7001_200k.json",
+      "sha256": "629bf8458529a80b03d9a13d7233d9becdf48e5b02215502cf380e74fa75b606",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7101_200k.json",
+      "sha256": "61abe720338ff738ca19b34ac112853e4959402a3bc081ae39a507efe6475e1e",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7102_200k.json",
+      "sha256": "88f57bbd2fd5404d496ed851a6c4b7dcc1a60ae6453bbcb53a381d754af10c0a",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7103_200k.json",
+      "sha256": "8d6945aa37d9e64b2843b0488d33019c631731166896927abefee4eeab427730",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep27_w50_a30_q15_i05_seed7104_200k.json",
+      "sha256": "ff941884a9355a25ae249c323e10e9e1d3ef02e80e295438e7bd1a4b3df92283",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7001_200k.json",
+      "sha256": "d1c26892b5d1843d8b13554c52fa9c34ac0eab04d763853fc07809abf4f70cbd",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7101_200k.json",
+      "sha256": "a14e93b590b5e561a1ee3f3e873898257de4c5fbf70b3a851b3e9fe9f5c332fb",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7102_200k.json",
+      "sha256": "dbf42a37008689e06710019cb6914b44d1e35c8d6a3dc8d56829ca3dcf208be6",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7103_200k.json",
+      "sha256": "0a41bb5f2778f1caefd168486bcd441506d658591e32eb9fca38f31ddd164621",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep30_w55_a20_q20_i05_seed7104_200k.json",
+      "sha256": "64f65759dd0dafd4598e17fea44779dd4398044ebd160e68a36a94fcd70c6387",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7001_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7001_200k.json",
+      "sha256": "9857c29daa331022d7ffc0ca7b7eea5cb40638a4e0f9447659ffb03f73898f36",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7101_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7101_200k.json",
+      "sha256": "c720f83af89b61805292553dfa72c390c7215082521362a30e329a807f15a8bf",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7102_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7102_200k.json",
+      "sha256": "df257126e6cd2df5bee77b8e1fc9681ef749e3026a088392e46dc31336dfb306",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7103_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7103_200k.json",
+      "sha256": "ebc04a6ebfbc8f3c41cefaae255b4d5aea51b41a8f9194242cd3eb7967597cb9",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage2_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7104_200k.json",
+      "archive": "data/stage2_pareto_confirmation/training_metadata/reward_confirm_sweep33_w55_a30_q10_i05_seed7104_200k.json",
+      "sha256": "36435522d59b32e47ac277d1d9f2c548b036cb79a019ef2b0494e5cb6c7c9b8e",
+      "size_bytes": 1495
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7001_200k.json",
+      "sha256": "97b34292c6f98c341c24a00453e5227eeaf7e6b2d362a967dcbef0e72d8f4a48",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7101_200k.json",
+      "sha256": "22a837bfcde87aee34344cb900cd551e15dab14c64fed25e01f14c74987dba55",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7102_200k.json",
+      "sha256": "476abf2fa2938c4449b8ac609fb0bedb75c9e8eb3b7b0937d1b5678906094d03",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7103_200k.json",
+      "sha256": "fdccaa2a28237f31829f4da5225f162f2a5c08c44a730a22b39da1d5b344b8a3",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep03_w35_a30_q25_i10_seed7104_200k.json",
+      "sha256": "659b27e8cd85a7ae55c8039070a49c0afec2a8a9511c8d91d27529dd9ad3f6df",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7001_200k.json",
+      "sha256": "d00868278b50c179b2056720aa89ccca62655ef809a187c91762b7fc2f22f4e8",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7101_200k.json",
+      "sha256": "1608b375e0a371c02a1682a4088ed697a9c23f35ffaa4a8888623b7852791d79",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7102_200k.json",
+      "sha256": "795e66453592be38d94dafcf2941c27ac5933eb29f26ad06cda809144f342473",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7103_200k.json",
+      "sha256": "e3cc85857dc00220d8eb2357128ed69f731002d81f7c704d4294e91d5b4a1f53",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep04_w35_a35_q15_i15_seed7104_200k.json",
+      "sha256": "2d62a9493cc47cd7ab0b749ac27a62fde1b9ca0f7648e0cc0273005b0d7ea061",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7001_200k.json",
+      "sha256": "b7da9691fff897d07c0abf69b788309645dade8053185bb7088a701023a6af21",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7101_200k.json",
+      "sha256": "c681aeb51fee9c8d44976ac03e99da439245f16d5d71316ad4d5df340b4f6da8",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7102_200k.json",
+      "sha256": "aa28d2d2b6f0ebfbcb50c4582a866f2fff7fba42cc125975a41eeefae5e0e1cd",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7103_200k.json",
+      "sha256": "42f36bbeec9b7da6b1ff64894f73a2c524756e5be1d66908b6a87bf71128eebc",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep06_w35_a35_q25_i05_seed7104_200k.json",
+      "sha256": "7fdc6a82b461344193ed31b460a72b489528115d96df4a98e0fe75d3b4964c4c",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7001_200k.json",
+      "sha256": "c42364cb28f7916270ac806eca8edcf0c5ba9bea5bd89cd58e70d5fee9dd47b6",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k.json",
+      "sha256": "ab2592bc73db72db5974e9e752bf84baed5833b3616d1004ade0245b33f30047",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7102_200k.json",
+      "sha256": "898278c828fd943001ef98bed0672da93e52928eaebd50b0507b24858705bc52",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7103_200k.json",
+      "sha256": "624be00b678224ecf188edc6e8cc39177b2b2923446e17710fbf59f35a0d90a3",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7104_200k.json",
+      "sha256": "15b6b33cf150c370249994a7c8a9288816c44230e1098b1b8dacfbf1ff44e2cb",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7001_200k.json",
+      "sha256": "976805f2c3bc4bbd7a39cb4feae311dcd33c1ab0a36d5ccfcdf027a63cda413d",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7101_200k.json",
+      "sha256": "ab9c1b515b42299f5f71eb835eb747dbf455ca1f9f1c8d1e52a4385edba5eeed",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7102_200k.json",
+      "sha256": "bedb06a1ac6e8373590548fafc8733b50fb2b27bd27f90fb5737b4a058ec4d68",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7103_200k.json",
+      "sha256": "9de10df1cdb92ee5e599bff859106b83525b4fa6b84cd42cec1389d4eec69ae8",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep21_w45_a35_q15_i05_seed7104_200k.json",
+      "sha256": "e004557890c0597c214f48c3c46530a17df0870c7577279521337baec8f49828",
+      "size_bytes": 1502
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7001_200k.json",
+      "sha256": "47cf2b1ae273e41961ae4c57cfb9cb08a031c47dd5cf866f27b597a40434c0d4",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7101_200k.json",
+      "sha256": "6594355ad52da1c88bc222e202dea06bad7046989a1266a9cc5cba64dd723911",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7102_200k.json",
+      "sha256": "d3c5c07075fc651c6436cf87889823b2630029bfb7649e82d473a1d2fbd27b7f",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7103_200k.json",
+      "sha256": "a23888fd6d10df0d974d2fc89333de92e63465338dbf7201be9df037e7bd7552",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep25_w50_a25_q20_i05_seed7104_200k.json",
+      "sha256": "27e2ee51264f8f9bddbe7f172803953c50a1a413262d213dc1c4706b9f5cef66",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7001_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7001_200k.json",
+      "sha256": "35c9885872febd9c180e3beb69a36751b0ae368d994e232b43688335bbf8615d",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7101_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7101_200k.json",
+      "sha256": "397a51d0eb7a2e527fcfb67209a94845b918e2f910b60fac4f34b316a5001b8d",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7102_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7102_200k.json",
+      "sha256": "75fe560738c170f0f48586c14c0ac7aa8f86bbb958e00c3f88e0d27c6b309611",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7103_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7103_200k.json",
+      "sha256": "a49e64a80799b57b5843346e445cf0f6b9346631310aeb36d94bc694a038ab74",
+      "size_bytes": 1500
+    },
+    {
+      "stage": "stage3_metadata",
+      "source": "experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k.json",
+      "archive": "data/stage3_nav2_confirmation/training_metadata/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k.json",
+      "sha256": "e5e8f2a3733f1969ed6fcb2b8b74087e73f272b16b90018edecd376ea7819a4e",
+      "size_bytes": 1500
+    }
+  ]
+}

@@ -1,0 +1,307 @@
+{
+  "created_at_utc": "2026-11-26T17:07:33.964970+00:00",
+  "historical_experiments": 4,
+  "historical_training_models": 29,
+  "historical_episode_records": 1020,
+  "pilot_diagnostic_episodes": 18,
+  "full_reproduction_episodes": 300,
+  "full_reproduction_metric_matches": 2100,
+  "full_reproduction_mismatches": 0,
+  "numeric_values_verified": 5859,
+  "retained_reward_approach_scale_s": 600,
+  "retained_observation_approach_scale_s": 600,
+  "copied_files": 48,
+  "historical_files_modified": false,
+  "new_model_training": false,
+  "new_simulation_runs": 0,
+  "files": [
+    {
+      "source": "experiments/fleet_sizing/results_rl/scale_sensitivity_eval/episode_results.csv",
+      "archive": "sensitivity/episode_results.csv",
+      "sha256": "6c0fe0da2ea84e9befd0d50f7005efc3b36dd4e7593f5825b526a39c9c6f5dd7",
+      "size_bytes": 15079
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/scale_sensitivity_eval/summary.csv",
+      "archive": "sensitivity/summary.csv",
+      "sha256": "443fbab36e11712f46edd53c954a2f0f55b6bf01d5d2a0ae1d65804d78e4347a",
+      "size_bytes": 612
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/scale_confirmation_eval/episode_results.csv",
+      "archive": "confirmation/episode_results.csv",
+      "sha256": "8bfa40b7e21a87feb6b7cedde176c01abdaa4100fe925d07b990aafa62967596",
+      "size_bytes": 39045
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/scale_confirmation_eval/model_seed_summary.csv",
+      "archive": "confirmation/model_seed_summary.csv",
+      "sha256": "430202645d66ab400688971125858b6e1484de9b74650be8404494d09b0b13f1",
+      "size_bytes": 1397
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/scale_confirmation_eval/aggregate_summary.csv",
+      "archive": "confirmation/aggregate_summary.csv",
+      "sha256": "cecce894bd75de8886e68a250f13ba3cd98213a48854dbb72e81b5215f190e02",
+      "size_bytes": 868
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/decoupled_reward_scale_eval/episode_results.csv",
+      "archive": "decoupled_reward/episode_results.csv",
+      "sha256": "257ac21fb26675a1ef418bb082c2f70395a70ed4d99b687d06a8cbe15872cb8d",
+      "size_bytes": 40247
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/decoupled_reward_scale_eval/model_seed_summary.csv",
+      "archive": "decoupled_reward/model_seed_summary.csv",
+      "sha256": "ec4fab4ef8905050e9fe25962839ef6c186f0ac1ebe310b45bd4e5bd838655a9",
+      "size_bytes": 1457
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/decoupled_reward_scale_eval/aggregate_summary.csv",
+      "archive": "decoupled_reward/aggregate_summary.csv",
+      "sha256": "9cb244f6fc19d4f6191d2fb835a132f27ebdcdf5e8193b46fe1fd39eb8f301a5",
+      "size_bytes": 903
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/decoupled_observation_scale_eval/episode_results.csv",
+      "archive": "decoupled_observation/episode_results.csv",
+      "sha256": "11edb3a916d3f8ac129dd9dd9af80d5aed5f89191d75f0f21494cdec4a1c0424",
+      "size_bytes": 40296
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/decoupled_observation_scale_eval/model_seed_summary.csv",
+      "archive": "decoupled_observation/model_seed_summary.csv",
+      "sha256": "acf0011b17f0f4d57f2e4c4d613a4bcc70109a492602676a8a9f8c4cf11765a8",
+      "size_bytes": 1464
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/decoupled_observation_scale_eval/aggregate_summary.csv",
+      "archive": "decoupled_observation/aggregate_summary.csv",
+      "sha256": "831bf050a230735381f3ba4ebf47ed61b5f0d06d8c11941c8c4e9f76a0528478",
+      "size_bytes": 904
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/pilot/episode_results.csv",
+      "archive": "diagnostics/pilot/episode_results.csv",
+      "sha256": "b1d98d2d2c01ec6e2fcdda7f08401ca80ca3e9ba7fb2d7bc0ffdb8c2cd4753da",
+      "size_bytes": 3108
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/pilot/historical_comparison.csv",
+      "archive": "diagnostics/pilot/historical_comparison.csv",
+      "sha256": "a74d2e7ac327fea0587fb075eedef649f6379636798264be594ee2b9de78cff3",
+      "size_bytes": 11983
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/pilot/summary.csv",
+      "archive": "diagnostics/pilot/summary.csv",
+      "sha256": "2525e8a42bb9d1c8b8eb1103b558d0a39b9d65db0315475674b18ef1de3fa9ac",
+      "size_bytes": 653
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/pilot/diagnostic_metadata.json",
+      "archive": "diagnostics/pilot/diagnostic_metadata.json",
+      "sha256": "742c8534624cda71de456b1424495bd3783da1981bd349f6bf3e50920ba1fc4b",
+      "size_bytes": 3629
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/full_reproduction/episode_results.csv",
+      "archive": "diagnostics/full_reproduction/episode_results.csv",
+      "sha256": "755dc683d750f08b33861d75ee8bb07557d525c5c2828519137af41102f6aa65",
+      "size_bytes": 47667
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/full_reproduction/historical_comparison.csv",
+      "archive": "diagnostics/full_reproduction/historical_comparison.csv",
+      "sha256": "1eb273581a0fd43fda788b044f2919f45181c93e187e507dbf27750eff916abb",
+      "size_bytes": 187470
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/full_reproduction/summary.csv",
+      "archive": "diagnostics/full_reproduction/summary.csv",
+      "sha256": "b94593e86ee09f956f8b2bd811517857971a9655f20ed984da4d1f319c4fd394",
+      "size_bytes": 513
+    },
+    {
+      "source": "experiments/fleet_sizing/results/reward_scale_diagnostics_v2/full_reproduction/diagnostic_metadata.json",
+      "archive": "diagnostics/full_reproduction/diagnostic_metadata.json",
+      "sha256": "c3fcb4f3c417adbd44b482ae5ca543f9e9914fc06b505343e5ed9a460674e9bb",
+      "size_bytes": 6562
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7101_50k.json",
+      "archive": "training_metadata/decoupled_r150_o600_seed7101_50k.json",
+      "sha256": "5b089d6a37c598ce47523c90a1b2d023bf4a959623cce28f771b57a4d42a6d2c",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7102_50k.json",
+      "archive": "training_metadata/decoupled_r150_o600_seed7102_50k.json",
+      "sha256": "89d4f62447daf1f953d7433009b1dafe5dad0ec3a1c17494b4286dbf7bc4fcef",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7103_50k.json",
+      "archive": "training_metadata/decoupled_r150_o600_seed7103_50k.json",
+      "sha256": "0d42d5beb2ff27306bbae0a58d1e4d0c5d9c122ad741d837714af3cf6cd3358c",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7104_50k.json",
+      "archive": "training_metadata/decoupled_r150_o600_seed7104_50k.json",
+      "sha256": "7b538a722163273369edcc65c8df9ada4a08ca0517c1d20a24e6d97c77a049f3",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7105_50k.json",
+      "archive": "training_metadata/decoupled_r150_o600_seed7105_50k.json",
+      "sha256": "a8898a12706a6101a83dcccce5a77e29cc3f2699beb7ea7e773f63d89ca277ef",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o150_seed7101_50k.json",
+      "archive": "training_metadata/decoupled_r600_o150_seed7101_50k.json",
+      "sha256": "bd5da8343b2f97b06983ab63ad4130f87007240b5b05cdb85c53b47b7c5decd2",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o150_seed7102_50k.json",
+      "archive": "training_metadata/decoupled_r600_o150_seed7102_50k.json",
+      "sha256": "a7f41612c1006a108ec1fcb41bddea21a1ec1b317793c5fc588981e8b08aba14",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o150_seed7103_50k.json",
+      "archive": "training_metadata/decoupled_r600_o150_seed7103_50k.json",
+      "sha256": "3ede635839fa83b7644cffea62c254c8fd07310d9c7cfd71e2a3ba9193fbbac4",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o150_seed7104_50k.json",
+      "archive": "training_metadata/decoupled_r600_o150_seed7104_50k.json",
+      "sha256": "f66b9344ccfc956cc6a970a21114e896a7bb41b07ab35efd50a38b3fe89295ed",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o150_seed7105_50k.json",
+      "archive": "training_metadata/decoupled_r600_o150_seed7105_50k.json",
+      "sha256": "86ca7ed122faa2d5ca455119bd4707dc1843cb459de2456bd6cdb8dadb70a993",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7101_50k.json",
+      "archive": "training_metadata/decoupled_r600_o600_seed7101_50k.json",
+      "sha256": "77fe9a7511fada32fac2cdecb7b1f0a3789f34932b7d9445daacc3e85326af60",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7102_50k.json",
+      "archive": "training_metadata/decoupled_r600_o600_seed7102_50k.json",
+      "sha256": "99fd2b3d86b9c1fe91f7920440a3fcfe097aa295823fa95792a764b9e87bf1f9",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7103_50k.json",
+      "archive": "training_metadata/decoupled_r600_o600_seed7103_50k.json",
+      "sha256": "bffddbc5281a10f96d3fef78f1e1d7fbd04089b7a05f4ca455b1817cd912226d",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7104_50k.json",
+      "archive": "training_metadata/decoupled_r600_o600_seed7104_50k.json",
+      "sha256": "a29242ee7c2f12ae1a0a42582d0d1efb9c8c5f1ef4ca9fa8e3073eae8445b288",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7105_50k.json",
+      "archive": "training_metadata/decoupled_r600_o600_seed7105_50k.json",
+      "sha256": "f8f21e9833bf24b21e1479f8b1c8546b2654b03c0048db33d7d6f398c6fe2fe1",
+      "size_bytes": 1515
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a150_seed7101_50k.json",
+      "archive": "training_metadata/scale_confirm_a150_seed7101_50k.json",
+      "sha256": "3ef0a80069c8b7d2fb9cc87249eed38394e33fcb397fdf230d2977b3cd4250dc",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a150_seed7102_50k.json",
+      "archive": "training_metadata/scale_confirm_a150_seed7102_50k.json",
+      "sha256": "60d36547f12668de341d5337841faf73153c15764e01b9a7381617ca13ed4dff",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a150_seed7103_50k.json",
+      "archive": "training_metadata/scale_confirm_a150_seed7103_50k.json",
+      "sha256": "899b5667a85a1833d662168a7a136ce2501b8130178b97e985226190b1652b91",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a150_seed7104_50k.json",
+      "archive": "training_metadata/scale_confirm_a150_seed7104_50k.json",
+      "sha256": "b3b16e9274b13bb539f13eafcbb4a95dd2d6c67822313f1745559adcf6265e4f",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a150_seed7105_50k.json",
+      "archive": "training_metadata/scale_confirm_a150_seed7105_50k.json",
+      "sha256": "b68ac942d418f5257488054b7e42e4142c73c6bc7676d650e63c4774c99022ab",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a200_seed7101_50k.json",
+      "archive": "training_metadata/scale_confirm_a200_seed7101_50k.json",
+      "sha256": "65e829664ce4c202c3b9deb1af5ad125bd671ebe07f0d9852636d66b4a60e364",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a200_seed7102_50k.json",
+      "archive": "training_metadata/scale_confirm_a200_seed7102_50k.json",
+      "sha256": "ecce563f4737303110e3dde4678388c9531ef9b0e657042b7632c91d0280648d",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a200_seed7103_50k.json",
+      "archive": "training_metadata/scale_confirm_a200_seed7103_50k.json",
+      "sha256": "7352502ac24a151faf13c202a168d28b784894029c090f3bc6fc974b752d33cf",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a200_seed7104_50k.json",
+      "archive": "training_metadata/scale_confirm_a200_seed7104_50k.json",
+      "sha256": "9c3321106089bd65070ca49fcc6d2500e1745d134a86756195f5ffc0cd366681",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_confirm_a200_seed7105_50k.json",
+      "archive": "training_metadata/scale_confirm_a200_seed7105_50k.json",
+      "sha256": "1596c08ed23dbe3d519ee2efc5ac5fd8e040073efd785c9fa16f19f64f77922b",
+      "size_bytes": 1473
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_sensitivity_a150_seed7001_50k.json",
+      "archive": "training_metadata/scale_sensitivity_a150_seed7001_50k.json",
+      "sha256": "712025b660addfcb08ca98090d20d99dc32eb088e53b3e9bab27fdae14505174",
+      "size_bytes": 1477
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_sensitivity_a200_seed7001_50k.json",
+      "archive": "training_metadata/scale_sensitivity_a200_seed7001_50k.json",
+      "sha256": "f09a84fff759cf9e23a439441625a84ecd618127f346fe563d325659a14e1ed1",
+      "size_bytes": 1477
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_sensitivity_a300_seed7001_50k.json",
+      "archive": "training_metadata/scale_sensitivity_a300_seed7001_50k.json",
+      "sha256": "aef2ec4463a3068f6f9a9ed63b4f2fb3838dd223396e90aeba413332864af53f",
+      "size_bytes": 1477
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/metadata/scale_sensitivity_a600_seed7001_50k.json",
+      "archive": "training_metadata/scale_sensitivity_a600_seed7001_50k.json",
+      "sha256": "5310e210402913a708889f71a402b52dd17c9f822fadbcc94a9dd76bfa5dbdd2",
+      "size_bytes": 1477
+    }
+  ]
+}

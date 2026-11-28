@@ -1,0 +1,48 @@
+{
+  "created_at": "2026-11-16T19:19:57.577548+08:00",
+  "algorithm": "MaskablePPO",
+  "policy": "MlpPolicy",
+  "observation_size": 98,
+  "battery_model_enabled": true,
+  "experiment_version": "battery_v2",
+  "action_size": 7,
+  "training_seed_start": 7001,
+  "training_seed_end": 7100,
+  "training_seed_count": 100,
+  "fleet_configuration": [
+    2,
+    2,
+    3
+  ],
+  "workload_multiplier": 4.0,
+  "model_seed": 7102,
+  "total_timesteps": 50000,
+  "ppo_config": {
+    "learning_rate": 0.0003,
+    "n_steps": 512,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "n_epochs": 10
+  },
+  "observation_approach_scale_s": 150.0,
+  "reward_config": {
+    "approach_weight": 0.3,
+    "queue_weight": 0.15,
+    "imbalance_weight": 0.05,
+    "waiting_weight": 0.5,
+    "approach_scale_s": 600.0,
+    "waiting_scale_s": 600.0,
+    "tasks_ahead_scale": 10.0,
+    "low_priority_weight": 1.0,
+    "normal_priority_weight": 1.5,
+    "high_priority_weight": 2.5,
+    "emergency_priority_weight": 4.0
+  },
+  "model_path": "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/decoupled_r600_o150_seed7102_50k/final_model",
+  "notes": "Battery v2 formal MaskablePPO training. Battery-aware action masking, queue repair, charging lifecycle, and 98-dimensional battery-aware observation are enabled. PPO hyperparameters are retained from v1 for controlled comparison."
+}

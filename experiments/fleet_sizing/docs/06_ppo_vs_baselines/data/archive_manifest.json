@@ -1,0 +1,201 @@
+{
+  "created_at": "2026-11-27T20:00:06.922069+08:00",
+  "experiment": "Final Nav2 PPO vs Calibrated Baselines",
+  "evaluation_episodes": 750,
+  "summary_groups": 25,
+  "primary_metric_count": 7,
+  "secondary_metric_count": 15,
+  "derived_metric_count": 4,
+  "primary_comparisons": 120,
+  "secondary_comparisons": 140,
+  "fleet": [
+    2,
+    2,
+    3
+  ],
+  "baseline_parameters": {
+    "static_alpha": 0.6,
+    "dynamic_alpha_min": 0.4,
+    "dynamic_alpha_max": 0.9
+  },
+  "formal_model": {
+    "config": "sweep12",
+    "model_seed": 7101,
+    "path": "experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k/final_model.zip",
+    "sha256": "1972295e176e6907d3bee4d01b301fa10526dac40dca38a5e867fe1a63825d07",
+    "deployment_verified": false
+  },
+  "primary_bootstrap_counts": {
+    "ppo_better": 91,
+    "ci_crosses_zero": 13,
+    "ppo_worse": 16
+  },
+  "secondary_bootstrap_counts": {
+    "ppo_better": 93,
+    "ppo_worse": 16,
+    "ci_includes_zero": 31
+  },
+  "statistical_agreement": {
+    "both_holm_better": 84,
+    "all_three_better": 84
+  },
+  "battery": {
+    "lowest_observed_soc": 0.1811605764250451,
+    "episodes_below_reserve": 0
+  },
+  "identical_task_travel_pairs": 600,
+  "nav2_summary_sha256": "0baf6a695bacd2dac8f99a9e1b540dbb30901dfff0086afb93a0666acf030399",
+  "file_count": 25,
+  "files": [
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/full/comparison_runs.csv",
+      "archive": "data/evaluation/comparison_runs.csv",
+      "sha256": "1ec064d42d94d50c627daa3ad00bf87de1a50fedb67ccc8cfa6e44f21287b8d0",
+      "size_bytes": 307022
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/full/comparison_summary.csv",
+      "archive": "data/evaluation/comparison_summary.csv",
+      "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe",
+      "size_bytes": 31330
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/full/runtime_nav2_checks.csv",
+      "archive": "data/evaluation/runtime_nav2_checks.csv",
+      "sha256": "f5db4ba56853db7c6833d073272f0664bedeeee31df590349ccbb09b545f550a",
+      "size_bytes": 26020
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/full/experiment_metadata.json",
+      "archive": "data/evaluation/experiment_metadata.json",
+      "sha256": "7c3bfc77df29400d02ddc3bbf40ea37d836dd011e57e4776931ca71d4cb03aa8",
+      "size_bytes": 16516
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/analysis/best_baseline_comparison.csv",
+      "archive": "data/analysis/best_baseline_comparison.csv",
+      "sha256": "62fe13bdb593a15197e56bbbf091e16ac19ab7c86216625057ccb5222a6bbe40",
+      "size_bytes": 10584
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/analysis/bootstrap_summary_by_metric.csv",
+      "archive": "data/analysis/bootstrap_summary_by_metric.csv",
+      "sha256": "2f5f0182c63f646df796c4c7a10ac702d97a419edfb2e7ea344b87dda9df47ea",
+      "size_bytes": 212
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/analysis/historical_reproducibility.csv",
+      "archive": "data/analysis/historical_reproducibility.csv",
+      "sha256": "50af3fea0f4865d5777aca8ff29b32b5a4dfd0f910ac84bd82287bcd2e28ed3c",
+      "size_bytes": 1395
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/analysis/paired_bootstrap_results.csv",
+      "archive": "data/analysis/paired_bootstrap_results.csv",
+      "sha256": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5",
+      "size_bytes": 41406
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/analysis/relative_improvements.csv",
+      "archive": "data/analysis/relative_improvements.csv",
+      "sha256": "536b5ed6e838fbc4f73901eb7bf6a2f775c725be23ed57abfc8788569c87c203",
+      "size_bytes": 13999
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/analysis/analysis_metadata.json",
+      "archive": "data/analysis/analysis_metadata.json",
+      "sha256": "66f27b4428c94d25a2e6410ecd83b3d166c44807135662ee8394ba6204e0ac75",
+      "size_bytes": 1709
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/battery_charging_summary.csv",
+      "archive": "data/secondary_analysis/battery_charging_summary.csv",
+      "sha256": "969f2e44e49a9996feb1767ed3afeb4ad479768c1c44dcda9a293926c17a39f7",
+      "size_bytes": 4731
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/derived_episode_metrics.csv",
+      "archive": "data/secondary_analysis/derived_episode_metrics.csv",
+      "sha256": "d594599a9ce1d7577a9656539aa192b043d4ff833580934908a4a06d0c51ecdc",
+      "size_bytes": 77577
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/priority_waiting_summary.csv",
+      "archive": "data/secondary_analysis/priority_waiting_summary.csv",
+      "sha256": "87b5803185221bafca00e27bf05568ca56014cc3c614a9dedd03504ab9b60bc6",
+      "size_bytes": 8677
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/secondary_best_baseline.csv",
+      "archive": "data/secondary_analysis/secondary_best_baseline.csv",
+      "sha256": "56ca91a7ae05182d2c07fd12772077faa9f7cec05f13fa1e940c9e8e5284e119",
+      "size_bytes": 11754
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/secondary_bootstrap_counts.csv",
+      "archive": "data/secondary_analysis/secondary_bootstrap_counts.csv",
+      "sha256": "38688318c7fcb772ccf5951a689ff826e42379f9ae2e25c40b227194716ac06d",
+      "size_bytes": 240
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/secondary_descriptive_summary.csv",
+      "archive": "data/secondary_analysis/secondary_descriptive_summary.csv",
+      "sha256": "537b4d2ba36184f527f0b45c2243ceb9e34d660b792837ebb910a788d7c210a7",
+      "size_bytes": 68832
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/secondary_paired_bootstrap.csv",
+      "archive": "data/secondary_analysis/secondary_paired_bootstrap.csv",
+      "sha256": "3b1af5bbfb041c79ca10eaa70838eb163d8e1abf9c28d5adb07681c7bedbf52d",
+      "size_bytes": 46968
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/travel_decomposition.csv",
+      "archive": "data/secondary_analysis/travel_decomposition.csv",
+      "sha256": "26cbd7965b48182f52d6d3b74bcb2af113e54d49b02484da72660f3f882ef7f1",
+      "size_bytes": 3057
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/utilization_summary.csv",
+      "archive": "data/secondary_analysis/utilization_summary.csv",
+      "sha256": "5db4a9d1fffb063b4cbec611a45a8d6b11c505dc2ef7ece329698dd56632b4e9",
+      "size_bytes": 3628
+    },
+    {
+      "source": "experiments/fleet_sizing/results_rl/final_nav2_calibrated_baselines_sweep12_seed7101/secondary_analysis/secondary_analysis_metadata.json",
+      "archive": "data/secondary_analysis/secondary_analysis_metadata.json",
+      "sha256": "dff4b3093d82e41a20ea23d38b836bc01d7464277662e9130f93130ca2ea1939",
+      "size_bytes": 2658
+    },
+    {
+      "source": "experiments/fleet_sizing/results/battery_baseline_calibration_v2/static/selected_parameters.json",
+      "archive": "data/configuration/static_selected_parameters.json",
+      "sha256": "5f861974ac565aebdbc846de5559b1cc0030b7328a72d3e84b02cf4caaaebc80",
+      "size_bytes": 5629
+    },
+    {
+      "source": "experiments/fleet_sizing/results/battery_baseline_calibration_v2/dynamic/selected_parameters.json",
+      "archive": "data/configuration/dynamic_selected_parameters.json",
+      "sha256": "4fa9c6c8d468db99843700a5faa6eef1945e36cdcf7cd71e86f464f10bf1df00",
+      "size_bytes": 5720
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/evaluate_final_nav2_calibrated_baselines.py",
+      "archive": "scripts/evaluate_final_nav2_calibrated_baselines.py",
+      "sha256": "e6796ef398d6de87bdc4ce189c66075974b2fbacc365e0acb2af7ffc935dfc2f",
+      "size_bytes": 18994
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/analyze_final_nav2_calibrated_baselines.py",
+      "archive": "scripts/analyze_final_nav2_calibrated_baselines.py",
+      "sha256": "2f72fd7f63f986db974010e2cc94ef743d6bedd04f9d7c0ee0f6f4136218568c",
+      "size_bytes": 17175
+    },
+    {
+      "source": "experiments/fleet_sizing/rl/analyze_secondary_metrics_nav2.py",
+      "archive": "scripts/analyze_secondary_metrics_nav2.py",
+      "sha256": "3e260d5df9dcb636ebcbd25c022e5add3fda639bdd9269ceaa47f5cb3be0fc23",
+      "size_bytes": 27985
+    }
+  ]
+}

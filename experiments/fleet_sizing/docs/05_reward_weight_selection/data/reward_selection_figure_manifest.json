@@ -1,0 +1,146 @@
+{
+  "figure_count": 13,
+  "png_count": 13,
+  "svg_count": 13,
+  "analysis_manifest_sha256": "a674499fb75973c9ebfacbab0307f52e0c6a0e6dac2b57f17533c4583324c97c",
+  "plot_script_sha256": "133d5830aa5e34495d5dddb21836c7943388032c0d09f1cb622c26d2229da4e9",
+  "matplotlib_version": "3.11.2",
+  "style": {
+    "background": "white",
+    "primary_color": "#3276D5",
+    "comparison_color": "#B8BEC7",
+    "png_dpi": 300
+  },
+  "files": [
+    {
+      "file": "figures/overview/01_reward_selection_workflow.png",
+      "sha256": "d2d18e16b02ea22d19fe22d6bf065fd35f891e31cf5b85c33cccaf3333338826",
+      "size_bytes": 289486
+    },
+    {
+      "file": "figures/overview/01_reward_selection_workflow.svg",
+      "sha256": "b9a89460eef975537285e5d81a917efb8de1ce2574f69fab1d213090701a94dc",
+      "size_bytes": 79763
+    },
+    {
+      "file": "figures/stage1/02_reward_weight_configurations.png",
+      "sha256": "68b7bc3cae7ab9f58fd2211f40bd7c51143480bfca185076c25d830d466f3077",
+      "size_bytes": 199683
+    },
+    {
+      "file": "figures/stage1/02_reward_weight_configurations.svg",
+      "sha256": "e7955a99b6fa591aae42afc565d3d5ecd6a75f0be1ca43d8819aa19b5d7780f9",
+      "size_bytes": 85673
+    },
+    {
+      "file": "figures/stage1/03_stage1_performance.png",
+      "sha256": "458b70efbe2e65a57df1520ca3c14a410ab44f95835066c7c5ea9a2c481699df",
+      "size_bytes": 532643
+    },
+    {
+      "file": "figures/stage1/03_stage1_performance.svg",
+      "sha256": "eff2a09520e4a85e6e8dc8ad6e81876b05dc4811589989c4152cd0b268cc25d7",
+      "size_bytes": 242423
+    },
+    {
+      "file": "figures/stage1/04_stage1_pareto_analysis.png",
+      "sha256": "45d2849bb1ce0762a309048b776c63d5d387eafcdd8585c10829536c3f36d69e",
+      "size_bytes": 298606
+    },
+    {
+      "file": "figures/stage1/04_stage1_pareto_analysis.svg",
+      "sha256": "27bc20df459a07f4db11e4a26642af7edee3ec44a9d53bd95c67e6182da72dee",
+      "size_bytes": 110441
+    },
+    {
+      "file": "figures/stage2/05_stage2_multiseed_performance.png",
+      "sha256": "dffa7ac1d35be6cc957f3dc069c0816e32f0b88151fb814c581c87e76fe02033",
+      "size_bytes": 474953
+    },
+    {
+      "file": "figures/stage2/05_stage2_multiseed_performance.svg",
+      "sha256": "f2145ae10a8c09865e27469366b7d5428e260dd0d85451f9026dfdb1afd7344f",
+      "size_bytes": 193700
+    },
+    {
+      "file": "figures/stage2/06_stage2_pareto_analysis.png",
+      "sha256": "e4d7dacc27edb1d076395559131a16d6201134bd3f9d640c2eaa9b1d3e46f06a",
+      "size_bytes": 176868
+    },
+    {
+      "file": "figures/stage2/06_stage2_pareto_analysis.svg",
+      "sha256": "65468090d5ebf1630434581f61ea096e90862fbea06c3937baf1a58d07b0315c",
+      "size_bytes": 72396
+    },
+    {
+      "file": "figures/stage3/07_nav2_route_calibration.png",
+      "sha256": "778889302b95d11f85e1fd6f670d2dc5bb9e48c49564d70ef537228c355a16b3",
+      "size_bytes": 474588
+    },
+    {
+      "file": "figures/stage3/07_nav2_route_calibration.svg",
+      "sha256": "470e827fd936fcafdf60c93f162794b7933b0ac3dfb4ac787f81c223ee2de63e",
+      "size_bytes": 136579
+    },
+    {
+      "file": "figures/stage3/08_stage3_nav2_performance.png",
+      "sha256": "fd1e76afa1084c291e8761c422169e9a60bb294159b3f55501b867f5d817c460",
+      "size_bytes": 422626
+    },
+    {
+      "file": "figures/stage3/08_stage3_nav2_performance.svg",
+      "sha256": "ab9726e8ad7a5fa294ffbe5f4619dc8601d95cfdf77e0f165cd3be1cb92020e1",
+      "size_bytes": 137899
+    },
+    {
+      "file": "figures/stage3/09_stage3_rank_sum.png",
+      "sha256": "e611169a7381362fb8cf6221721510bac512feb6f602bfbdecb69241a1a0ba5a",
+      "size_bytes": 121953
+    },
+    {
+      "file": "figures/stage3/09_stage3_rank_sum.svg",
+      "sha256": "a5ed11d798dc880be568f7be1d15e0f6a55218ea504fea17e532368e0076050f",
+      "size_bytes": 47714
+    },
+    {
+      "file": "figures/stage4/10_final_candidate_comparison.png",
+      "sha256": "92905888bbac7e2a1e59cf89a1d5931520205f47cf8ddff58e20f57d5c8f0b5d",
+      "size_bytes": 367328
+    },
+    {
+      "file": "figures/stage4/10_final_candidate_comparison.svg",
+      "sha256": "03d0ac680177a690bc40c8e8f73c4b53e73c3745be94dbac8f0fb378b45f63f4",
+      "size_bytes": 103093
+    },
+    {
+      "file": "figures/stage4/11_emergency_wait_by_model_seed.png",
+      "sha256": "b5edbe863cdc899c4e6c390114dac78ed387998d7566bf0afd76d0b413f85a9e",
+      "size_bytes": 156802
+    },
+    {
+      "file": "figures/stage4/11_emergency_wait_by_model_seed.svg",
+      "sha256": "7e2538f9aa87e263ed26028228b06ace498dfb8b14c514c40148e85c19095433",
+      "size_bytes": 54752
+    },
+    {
+      "file": "figures/stage4/12_bootstrap_confidence_intervals.png",
+      "sha256": "c252809b707b913a45aee0f6fbb1c6b130001a639d1bf6879fce53449049b9f8",
+      "size_bytes": 400200
+    },
+    {
+      "file": "figures/stage4/12_bootstrap_confidence_intervals.svg",
+      "sha256": "96f34d6790b80f039f68dc90ba64247d8d8c7f06faa657faf44bd34ff462b979",
+      "size_bytes": 123423
+    },
+    {
+      "file": "figures/stage4/13_representative_model_selection.png",
+      "sha256": "a99e2b08e865c90a273626f2fecf3d47a84f8c35c8fc9b2dcbb7cdbfb99ba174",
+      "size_bytes": 186984
+    },
+    {
+      "file": "figures/stage4/13_representative_model_selection.svg",
+      "sha256": "5c0f2ee0e5a4dba36bb0b6142e88d03cc92653ff0dde396f15c4219f38b16ce8",
+      "size_bytes": 69688
+    }
+  ]
+}

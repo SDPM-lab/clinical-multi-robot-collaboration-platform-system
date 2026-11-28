@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="691.2pt" height="507.96pt" viewBox="0 0 691.2 507.96" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-28T14:47:31.156854</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 507.96 
+L 691.2 507.96 
+L 691.2 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 206.1 127.1736 
+L 485.1 127.1736 
+Q 487.332 127.1736 487.332 124.956 
+L 487.332 77.832 
+Q 487.332 75.6144 485.1 75.6144 
+L 206.1 75.6144 
+Q 203.868 75.6144 203.868 77.832 
+L 203.868 124.956 
+Q 203.868 127.1736 206.1 127.1736 
+z
+" clip-path="url(#p61635925a9)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 206.1 202.0176 
+L 485.1 202.0176 
+Q 487.332 202.0176 487.332 199.8 
+L 487.332 149.904 
+Q 487.332 147.6864 485.1 147.6864 
+L 206.1 147.6864 
+Q 203.868 147.6864 203.868 149.904 
+L 203.868 199.8 
+Q 203.868 202.0176 206.1 202.0176 
+z
+" clip-path="url(#p61635925a9)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 206.1 282.4056 
+L 485.1 282.4056 
+Q 487.332 282.4056 487.332 280.188 
+L 487.332 230.292 
+Q 487.332 228.0744 485.1 228.0744 
+L 206.1 228.0744 
+Q 203.868 228.0744 203.868 230.292 
+L 203.868 280.188 
+Q 203.868 282.4056 206.1 282.4056 
+z
+" clip-path="url(#p61635925a9)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 24.75 365.5656 
+L 303.75 365.5656 
+Q 305.982 365.5656 305.982 363.348 
+L 305.982 313.452 
+Q 305.982 311.2344 303.75 311.2344 
+L 24.75 311.2344 
+Q 22.518 311.2344 22.518 313.452 
+L 22.518 363.348 
+Q 22.518 365.5656 24.75 365.5656 
+z
+" clip-path="url(#p61635925a9)" style="fill: #ffffff; stroke: #555555; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 387.45 365.5656 
+L 666.45 365.5656 
+Q 668.682 365.5656 668.682 363.348 
+L 668.682 313.452 
+Q 668.682 311.2344 666.45 311.2344 
+L 387.45 311.2344 
+Q 385.218 311.2344 385.218 313.452 
+L 385.218 363.348 
+Q 385.218 365.5656 387.45 365.5656 
+z
+" clip-path="url(#p61635925a9)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 387.45 445.9536 
+L 666.45 445.9536 
+Q 668.682 445.9536 668.682 443.736 
+L 668.682 393.84 
+Q 668.682 391.6224 666.45 391.6224 
+L 387.45 391.6224 
+Q 385.218 391.6224 385.218 393.84 
+L 385.218 443.736 
+Q 385.218 445.9536 387.45 445.9536 
+z
+" clip-path="url(#p61635925a9)" style="fill: #ffffff; stroke: #2563eb; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 24.75 338.4 
+L 13.59 338.4 
+L 13.59 101.6712 
+L 203.31 101.6712 
+" clip-path="url(#p61635925a9)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #777777; stroke-width: 1.5"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 666.45 418.788 
+L 677.61 418.788 
+L 677.61 101.6712 
+L 487.89 101.6712 
+" clip-path="url(#p61635925a9)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #2563eb; stroke-width: 1.5"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="345.6" y="94.144376" transform="rotate(-0 345.6 94.144376)">Idle / Available</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="345.6" y="113.416847" transform="rotate(-0 345.6 113.416847)">Initial SOC = 100%</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="345.6" y="166.992536" transform="rotate(-0 345.6 166.992536)">Execute Task</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="345.6" y="187.429247" transform="rotate(-0 345.6 187.429247)">Reserve approach and task travel energy</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="345.6" y="247.380536" transform="rotate(-0 345.6 247.380536)">Task Completion</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="345.6" y="267.817247" transform="rotate(-0 345.6 267.817247)">Check remaining SOC</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #555555" x="164.25" y="330.540536" transform="rotate(-0 164.25 330.540536)">Remain Available</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="164.25" y="350.977247" transform="rotate(-0 164.25 350.977247)">Post-task SOC &gt;= 25%</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="526.95" y="330.540536" transform="rotate(-0 526.95 330.540536)">Return to Charging Station</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="526.95" y="350.977247" transform="rotate(-0 526.95 350.977247)">Post-task SOC &lt; 25%</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2563eb" x="526.95" y="410.928536" transform="rotate(-0 526.95 410.928536)">Charging</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="526.95" y="431.365247" transform="rotate(-0 526.95 431.365247)">Restore availability at 80%</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 345.6 126.956496 
+Q 345.6 136.041876 345.6 143.562009 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 347.8 139.162009 
+L 345.6 143.562009 
+L 343.4 139.162009 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 345.6 201.799819 
+Q 345.6 213.659925 345.6 223.954782 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 347.8 219.554782 
+L 345.6 223.954782 
+L 343.4 219.554782 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 287.857439 280.659785 
+Q 227.025061 295.433985 167.713714 309.838777 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 172.508635 310.9382 
+L 167.713714 309.838777 
+L 171.470206 306.662494 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 403.342561 280.659785 
+Q 464.174939 295.433985 523.486286 309.838777 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 519.729794 306.662494 
+L 523.486286 309.838777 
+L 518.691365 310.9382 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 526.95 365.347819 
+Q 526.95 377.207925 526.95 387.502782 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 529.15 383.102782 
+L 526.95 387.502782 
+L 524.75 383.102782 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 194.152179 101.6712 
+Q 198.567151 101.6712 201.416875 101.6712 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 197.016875 99.4712 
+L 201.416875 101.6712 
+L 197.016875 103.8712 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 499.837412 101.6712 
+Q 494.026031 101.6712 489.779897 101.6712 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 494.179897 103.8712 
+L 489.779897 101.6712 
+L 494.179897 99.4712 
+" style="fill: none; stroke: #555555; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(92.944531 409.84068)">Task feasibility reserve: 15%</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(88.944531 421.843414)">Navigation energy model only</text>
+   </g>
+  </g>
+  <g id="text_14">
+   <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle" x="334.8" y="24.477187" transform="rotate(-0 334.8 24.477187)">Battery-aware Robot Lifecycle</text>
+  </g>
+  <g id="text_15">
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #555555" x="334.8" y="494.997891" transform="rotate(-0 334.8 494.997891)">Post-task charging branch only; additional queue-repair conditions are not shown.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p61635925a9">
+   <rect x="10.8" y="61.2" width="669.6" height="388.08"/>
+  </clipPath>
+ </defs>
+</svg>

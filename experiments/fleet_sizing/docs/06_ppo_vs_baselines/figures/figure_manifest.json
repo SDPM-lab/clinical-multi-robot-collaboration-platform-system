@@ -1,0 +1,514 @@
+{
+  "created_at": "2026-11-27T20:11:11.815825+08:00",
+  "figure_count": 23,
+  "png_count": 23,
+  "svg_count": 23,
+  "png_dpi": 300,
+  "matplotlib_version": "3.11.2",
+  "archive_manifest_sha256": "ff89ef7eeb470fbe64c72d3d08f4b195e183f49a0ad79ee57a5f839ea15eabb8",
+  "plot_script_sha256": "5c5fedd224fea2e2e979e50b3a5a2160cf357fdf45aae8a4a10af825193be679",
+  "style": {
+    "background": "white",
+    "text": "black",
+    "ppo": "#2563EB",
+    "baselines": "grayscale",
+    "language": "English"
+  },
+  "figures": [
+    {
+      "name": "01_experimental_setup",
+      "sources": [
+        {
+          "file": "data/archive_manifest.json",
+          "sha256": "ff89ef7eeb470fbe64c72d3d08f4b195e183f49a0ad79ee57a5f839ea15eabb8"
+        },
+        {
+          "file": "data/evaluation/experiment_metadata.json",
+          "sha256": "7c3bfc77df29400d02ddc3bbf40ea37d836dd011e57e4776931ca71d4cb03aa8"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/overview/01_experimental_setup.png",
+          "sha256": "5046cb1bbc3bb98fb24624aefb8d31d6cae78f1a2155fa0165acd5114b003b95",
+          "size_bytes": 244167
+        },
+        {
+          "file": "figures/overview/01_experimental_setup.svg",
+          "sha256": "73994f0458b23f8c4351cf0aadc5b9ada46943cfbc91d704a17f793347cd6c9b",
+          "size_bytes": 8229
+        }
+      ]
+    },
+    {
+      "name": "02_average_waiting_time_s",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/02_average_waiting_time_s.png",
+          "sha256": "e8c004069eef0f73cdc576b518fd6526780dd7cff73ca880a16ea3577e2331d6",
+          "size_bytes": 248031
+        },
+        {
+          "file": "figures/primary_metrics/02_average_waiting_time_s.svg",
+          "sha256": "f2d82e20b3b1b95c28c552e3d05d0891d70214c32add4b6cf243062a8039a5ef",
+          "size_bytes": 31994
+        }
+      ]
+    },
+    {
+      "name": "03_p95_waiting_time_s",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/03_p95_waiting_time_s.png",
+          "sha256": "37f808bd03e60716ea4323f32bad83d200ae3c8b2321e2367fbbee98217fab04",
+          "size_bytes": 248578
+        },
+        {
+          "file": "figures/primary_metrics/03_p95_waiting_time_s.svg",
+          "sha256": "f7a0a0d843d86b39e87a0594080e3f01ba9379b3f653e1c7edddf2dc0f92251c",
+          "size_bytes": 34054
+        }
+      ]
+    },
+    {
+      "name": "04_high_waiting_time_s",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/04_high_waiting_time_s.png",
+          "sha256": "c1e0a22dec589cb063d99b2d4c348463547fbaa43ef71c3d932d06b28192e6fa",
+          "size_bytes": 228558
+        },
+        {
+          "file": "figures/primary_metrics/04_high_waiting_time_s.svg",
+          "sha256": "6147d4d2efc1a72ad27825c381b14ff3e806fb811356ded662b7fe3db853a3ff",
+          "size_bytes": 32019
+        }
+      ]
+    },
+    {
+      "name": "05_emergency_waiting_time_s",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/05_emergency_waiting_time_s.png",
+          "sha256": "be38ad499d4b7c27ff473de6bb89f3c25ce88d7e52bb4181d800617f94ee2b84",
+          "size_bytes": 233056
+        },
+        {
+          "file": "figures/primary_metrics/05_emergency_waiting_time_s.svg",
+          "sha256": "80070d9fba4e3aa1f8b77b109a56985a8f583608e647f55c0c2b7e58c531d853",
+          "size_bytes": 34050
+        }
+      ]
+    },
+    {
+      "name": "06_total_travel_time_s",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        },
+        {
+          "file": "data/analysis/paired_bootstrap_results.csv",
+          "sha256": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/06_total_travel_time_s.png",
+          "sha256": "f421a1081ba0ff670a84dfea4c12e3fdbba7e3e1daf4c04db6ae833a898bce63",
+          "size_bytes": 418153
+        },
+        {
+          "file": "figures/primary_metrics/06_total_travel_time_s.svg",
+          "sha256": "46785d17399498a888a815fed140b49dcc300685ae452af078b1afb17fb054aa",
+          "size_bytes": 51329
+        }
+      ]
+    },
+    {
+      "name": "07_jain_task_fairness",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/07_jain_task_fairness.png",
+          "sha256": "646fd874bcf8820e9e459919a0c5ea785de5f8d1346a79680820ad0b8f6c7fe7",
+          "size_bytes": 218782
+        },
+        {
+          "file": "figures/primary_metrics/07_jain_task_fairness.svg",
+          "sha256": "7a4e72f01349d5095aa39f1a5095e26aa7429eb539b5fe3506c7fa1d52d65189",
+          "size_bytes": 33335
+        }
+      ]
+    },
+    {
+      "name": "08_completion_rate",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_runs.csv",
+          "sha256": "1ec064d42d94d50c627daa3ad00bf87de1a50fedb67ccc8cfa6e44f21287b8d0"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/primary_metrics/08_completion_rate.png",
+          "sha256": "291e7bcf85f97eca8eb3cfa333b7054964e008e4544a37bed4b314498b92cc20",
+          "size_bytes": 141509
+        },
+        {
+          "file": "figures/primary_metrics/08_completion_rate.svg",
+          "sha256": "9623d8dd24b297476602c32d1aed96e8b36c3f9d3b4ea197d23e03013fc76080",
+          "size_bytes": 12476
+        }
+      ]
+    },
+    {
+      "name": "09_primary_relative_improvement",
+      "sources": [
+        {
+          "file": "data/analysis/paired_bootstrap_results.csv",
+          "sha256": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/09_primary_relative_improvement.png",
+          "sha256": "dc86f844201f793d3b5916ed070679d9cdce6924f8783b9c1439dc53b923a28b",
+          "size_bytes": 889064
+        },
+        {
+          "file": "figures/statistical_analysis/09_primary_relative_improvement.svg",
+          "sha256": "0798280fc4ef941486c09458b0a58ff48ef90203021893ac7a9e295d187a7e8c",
+          "size_bytes": 86490
+        }
+      ]
+    },
+    {
+      "name": "10_best_baseline_comparison",
+      "sources": [
+        {
+          "file": "data/analysis/best_baseline_comparison.csv",
+          "sha256": "62fe13bdb593a15197e56bbbf091e16ac19ab7c86216625057ccb5222a6bbe40"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/10_best_baseline_comparison.png",
+          "sha256": "1a54ba7a8165f7bdbdb3ce44e1dc1ef8eb2e51e653db61192e84905035a2b8f2",
+          "size_bytes": 275118
+        },
+        {
+          "file": "figures/statistical_analysis/10_best_baseline_comparison.svg",
+          "sha256": "791eca981b9438eee867ed7e11f2534ba7df03d904e8ea90e35285d101b35879",
+          "size_bytes": 34395
+        }
+      ]
+    },
+    {
+      "name": "11_primary_bootstrap_results",
+      "sources": [
+        {
+          "file": "data/analysis/paired_bootstrap_results.csv",
+          "sha256": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/11_primary_bootstrap_results.png",
+          "sha256": "2619d209e2a5765618f3afe178db5bd56f5591115dafa3d3148d539de506407d",
+          "size_bytes": 178279
+        },
+        {
+          "file": "figures/statistical_analysis/11_primary_bootstrap_results.svg",
+          "sha256": "db20f98f1f673c8c091e744d2b5e8c68596a11edf8aa310957ab6d83b9d3a672",
+          "size_bytes": 18485
+        }
+      ]
+    },
+    {
+      "name": "12_holm_corrected_results",
+      "sources": [
+        {
+          "file": "data/analysis/paired_bootstrap_results.csv",
+          "sha256": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/12_holm_corrected_results.png",
+          "sha256": "e895d791d37b6d63ef5f1140f31a87797bcf1792ad6ec9c23dbcc9e2ddbd7900",
+          "size_bytes": 148877
+        },
+        {
+          "file": "figures/statistical_analysis/12_holm_corrected_results.svg",
+          "sha256": "747d970fae035b32c5bac5c9424fd3a38c54f9747c97d2bed2ef2fc4432e6802",
+          "size_bytes": 14022
+        }
+      ]
+    },
+    {
+      "name": "13_paired_confidence_intervals",
+      "sources": [
+        {
+          "file": "data/analysis/paired_bootstrap_results.csv",
+          "sha256": "bee90c2c9fd9ad25e6e75a73f25ddf42d9513e661cf5425372100420602831c5"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/13_paired_confidence_intervals.png",
+          "sha256": "71af693136143d10e0a956beb95da18ea7ffae2f68b561de04cd32d5f35fa273",
+          "size_bytes": 459321
+        },
+        {
+          "file": "figures/statistical_analysis/13_paired_confidence_intervals.svg",
+          "sha256": "ee2394c65360fdea27c2f485e8f2c90790fca09ab2bbd392a9ef735b82576dad",
+          "size_bytes": 66282
+        }
+      ]
+    },
+    {
+      "name": "14_performance_tradeoff",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/14_performance_tradeoff.png",
+          "sha256": "0d94cbc45e2bb96e8627fda88714d3f30e0e72ca7c0c3f65ff785660cc5599a7",
+          "size_bytes": 299285
+        },
+        {
+          "file": "figures/statistical_analysis/14_performance_tradeoff.svg",
+          "sha256": "58eb0050d960e54c9cb48633167473ad545278a868b62eb49b6f1f012a72e1ec",
+          "size_bytes": 26652
+        }
+      ]
+    },
+    {
+      "name": "15_historical_reproducibility",
+      "sources": [
+        {
+          "file": "data/analysis/historical_reproducibility.csv",
+          "sha256": "50af3fea0f4865d5777aca8ff29b32b5a4dfd0f910ac84bd82287bcd2e28ed3c"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/reproducibility/15_historical_reproducibility.png",
+          "sha256": "9995d700854b7cb786fff8c8bdaab5fadb56c8c7b0426a73ba80f42f67fa3bd5",
+          "size_bytes": 188230
+        },
+        {
+          "file": "figures/reproducibility/15_historical_reproducibility.svg",
+          "sha256": "88e8961766c42011739bafedf6e382147252b7cb558a6275b267d2caf7862faa",
+          "size_bytes": 21099
+        }
+      ]
+    },
+    {
+      "name": "16_waiting_time_by_priority",
+      "sources": [
+        {
+          "file": "data/secondary_analysis/priority_waiting_summary.csv",
+          "sha256": "87b5803185221bafca00e27bf05568ca56014cc3c614a9dedd03504ab9b60bc6"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/16_waiting_time_by_priority.png",
+          "sha256": "1d1dca886906e98ba9a897d28b0149bf3566662d4219e1fc7552281b3174f4dd",
+          "size_bytes": 409970
+        },
+        {
+          "file": "figures/secondary_metrics/16_waiting_time_by_priority.svg",
+          "sha256": "b849ab0550d174ba5cf0a69e3a43fd017a3bb50d9720d07ae80c6204feed39b1",
+          "size_bytes": 66158
+        }
+      ]
+    },
+    {
+      "name": "17_response_time_analysis",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/17_response_time_analysis.png",
+          "sha256": "91a275b98e606d9b086ce6338c833ea7faa45ecc14420eb5c5a5c740ecbc5556",
+          "size_bytes": 362544
+        },
+        {
+          "file": "figures/secondary_metrics/17_response_time_analysis.svg",
+          "sha256": "886cbdc330dd5ee4336f79b2327e01c5af409e25f10c7de00aff78ef17b0f3d7",
+          "size_bytes": 57327
+        }
+      ]
+    },
+    {
+      "name": "18_total_time_analysis",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/18_total_time_analysis.png",
+          "sha256": "60a04c73435c22a2573fff3c8964a5f413fd40c18233ba3414774bc27933bd9f",
+          "size_bytes": 360689
+        },
+        {
+          "file": "figures/secondary_metrics/18_total_time_analysis.svg",
+          "sha256": "c51eaec6e973b86f9f62b73e1185c241d423db3bda00e118b95265216ab5883d",
+          "size_bytes": 56639
+        }
+      ]
+    },
+    {
+      "name": "19_travel_time_decomposition",
+      "sources": [
+        {
+          "file": "data/evaluation/comparison_summary.csv",
+          "sha256": "ccbfda20fe8d946cc422e91575fb04dbcd718a230324b9c788d993ad21d1effe"
+        },
+        {
+          "file": "data/secondary_analysis/travel_decomposition.csv",
+          "sha256": "26cbd7965b48182f52d6d3b74bcb2af113e54d49b02484da72660f3f882ef7f1"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/19_travel_time_decomposition.png",
+          "sha256": "1b7c1b4c61c854c74cce4784ba94d20dcadda8c248686ad6af1428764f4e6ab9",
+          "size_bytes": 282180
+        },
+        {
+          "file": "figures/secondary_metrics/19_travel_time_decomposition.svg",
+          "sha256": "61dba9bead7534dee684aa269c491fa3f3cd12036ebe1c74c311ade33e23120c",
+          "size_bytes": 30666
+        }
+      ]
+    },
+    {
+      "name": "20_robot_utilization_analysis",
+      "sources": [
+        {
+          "file": "data/secondary_analysis/utilization_summary.csv",
+          "sha256": "5db4a9d1fffb063b4cbec611a45a8d6b11c505dc2ef7ece329698dd56632b4e9"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/20_robot_utilization_analysis.png",
+          "sha256": "f91dd07deeb494684d55ee8ce6bf75f8f21b85450ec376ce0e9700377a8eceb9",
+          "size_bytes": 597823
+        },
+        {
+          "file": "figures/secondary_metrics/20_robot_utilization_analysis.svg",
+          "sha256": "dbda304efddf39f800e931c7ac7d007dc93861ab88979052d388fb938ab196a3",
+          "size_bytes": 62588
+        }
+      ]
+    },
+    {
+      "name": "21_battery_charging_analysis",
+      "sources": [
+        {
+          "file": "data/secondary_analysis/battery_charging_summary.csv",
+          "sha256": "969f2e44e49a9996feb1767ed3afeb4ad479768c1c44dcda9a293926c17a39f7"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/21_battery_charging_analysis.png",
+          "sha256": "8451ba3ddf28b064d822314539a6ac3659712cb177f07399978c7fdacada1231",
+          "size_bytes": 655240
+        },
+        {
+          "file": "figures/secondary_metrics/21_battery_charging_analysis.svg",
+          "sha256": "5105aae1a1c2ae88c9da7dde814d8519daeab592750a5e4e0ccc38acf44d37ad",
+          "size_bytes": 61679
+        }
+      ]
+    },
+    {
+      "name": "22_secondary_relative_improvement",
+      "sources": [
+        {
+          "file": "data/secondary_analysis/secondary_best_baseline.csv",
+          "sha256": "56ca91a7ae05182d2c07fd12772077faa9f7cec05f13fa1e940c9e8e5284e119"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/secondary_metrics/22_secondary_relative_improvement.png",
+          "sha256": "b2438799bac00e349b8b04145c1ed1c8df7437ebdce073efe049101bafe73265",
+          "size_bytes": 289036
+        },
+        {
+          "file": "figures/secondary_metrics/22_secondary_relative_improvement.svg",
+          "sha256": "7c7083bd840aafe40720a825ab0bd30e183911ad7394f475e91291163b218486",
+          "size_bytes": 35897
+        }
+      ]
+    },
+    {
+      "name": "23_secondary_statistical_analysis",
+      "sources": [
+        {
+          "file": "data/secondary_analysis/secondary_paired_bootstrap.csv",
+          "sha256": "3b1af5bbfb041c79ca10eaa70838eb163d8e1abf9c28d5adb07681c7bedbf52d"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "figures/statistical_analysis/23_secondary_statistical_analysis.png",
+          "sha256": "e1a8c7bf5679a5427f3fd525453a9015278f402407f7dee04c95c4b91f0c4f77",
+          "size_bytes": 272284
+        },
+        {
+          "file": "figures/statistical_analysis/23_secondary_statistical_analysis.svg",
+          "sha256": "a7c6c30f480118aaacad8fce4c5808e44673b1d56e6e0d8280104e89c74cdfd4",
+          "size_bytes": 35095
+        }
+      ]
+    }
+  ]
+}

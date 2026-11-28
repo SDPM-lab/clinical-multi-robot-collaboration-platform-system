@@ -1,0 +1,8 @@
+action,robot_id,capabilities,observation_start_index,observation_end_index
+0,C01,clothes_collection|waste_transport,41,48
+1,C02,clothes_collection|waste_transport,49,56
+2,M01,medication_delivery|specimen_delivery,57,64
+3,M02,medication_delivery|specimen_delivery,65,72
+4,W01,medication_delivery|ward_service,73,80
+5,W02,medication_delivery|ward_service,81,88
+6,W03,medication_delivery|ward_service,89,96

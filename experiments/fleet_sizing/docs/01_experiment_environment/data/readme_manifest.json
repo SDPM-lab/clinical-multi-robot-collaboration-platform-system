@@ -1,0 +1,17 @@
+{
+  "verified_at": "2026-11-28T14:50:22.630617+08:00",
+  "readme_sha256": "618e922ff6acd7d5df1966bbf14ce901eed65edaae6b5d4a125df897f9893d61",
+  "environment_manifest_sha256": "286087dcf3c2ba03b50e59aaefb29b50fbb26a9ac5c66b070855bd42d7a1205d",
+  "figure_manifest_sha256": "79e918625feec12b6abf91a21f2806325726c5d34963b06f1fc649e856ed4028",
+  "verification_script_sha256": "87aad3e36c93b73e8417b4b4483aceddbfabe4c1be06e4a176045b02650d4273",
+  "sections": 17,
+  "lines": 334,
+  "embedded_figures": 10,
+  "links_checked": 62,
+  "archived_source_files": 19,
+  "configuration_values": 82,
+  "missing_links": [],
+  "visual_review": "Contact sheet inspection",
+  "verification_status": "PASS",
+  "verification_scope": "File integrity, README structure, embedded figures and local links."
+}

@@ -1,0 +1,71 @@
+{
+  "experiment": "battery_four_baseline_comparison_v2",
+  "scope": "Calibration-scenario preliminary comparison",
+  "methods": [
+    "random_feasible",
+    "projected_nearest",
+    "static_weighted",
+    "dynamic_weighted"
+  ],
+  "parameters": {
+    "random_feasible": {},
+    "projected_nearest": {},
+    "static_weighted": {
+      "alpha": 0.6
+    },
+    "dynamic_weighted": {
+      "alpha_min": 0.4,
+      "alpha_max": 0.9
+    }
+  },
+  "fleet": [
+    2,
+    2,
+    3
+  ],
+  "workload_multiplier": 4.0,
+  "simulation_days": 7,
+  "battery_enabled": true,
+  "battery_reserve_soc": 0.15,
+  "seeds": [
+    3001,
+    3002,
+    3003,
+    3004,
+    3005,
+    3006,
+    3007,
+    3008,
+    3009,
+    3010
+  ],
+  "original_calibration_and_evaluation_runs": 680,
+  "comparison_runs": 40,
+  "summary_values_verified": 368,
+  "primary_metrics": {
+    "average_waiting_time_s": -1,
+    "p95_waiting_time_s": -1,
+    "high_waiting_time_s": -1,
+    "emergency_waiting_time_s": -1,
+    "total_travel_time_s": -1,
+    "jain_task_fairness": 1
+  },
+  "independent_test": false,
+  "new_simulations": 0,
+  "source_data_sha256": {
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/random/runs.csv": "8546a8105d5ab48f0b1837342cba922194bb011baf4ac429881aba0d2880ed63",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/random/summary.csv": "c5172afc83aae00d544d9a776fb179acccd5072700ab17233785d72315849187",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/random/experiment_metadata.json": "cfc06966ffa18841caae0f5317d9dcb70c85f7f37de134e241c8de2657061b2a",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/nearest/runs.csv": "038942923322c3878868ead32532a60acdc46dbc39026b7fd0c9772b8e7d11ed",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/nearest/summary.csv": "e9ebfe2e53e2a49024eefe8e17190529f2fd7fc8b4c9e02cc26d826d836cb7a8",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/nearest/experiment_metadata.json": "610baa8568cb801b3f0fe843765620f3fb4bfadd9bcda3dc10f8255717b4c668",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/static/runs.csv": "764879d87399474b7dcf8b6058c5cf944d669b0c734b7530d45a93c08d236c17",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/static/summary.csv": "45a1cfc12b498b78db508b9efe56569c13d4d8f066ddf29a2485aa42d90ea62a",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/static/experiment_metadata.json": "9a5e291feff88be765d1ec37a9847ab0ef6d7109441347d6c767d0c5010bc8eb",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/dynamic/runs.csv": "3730f70d85dd06ea62c05e525126ca83049d7597693bf660d185a2959eac7a69",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/dynamic/summary.csv": "d0c105ce3dbf9a2ea13d33f0d8314b894ccffae2265cce43e2c20574684eba76",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/dynamic/experiment_metadata.json": "31aa39e5a23b0f2aaa5d54a490a4b98c5a8b0454dc10a113c4aab2cecf873ce4",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/static/selected_parameters.json": "5f861974ac565aebdbc846de5559b1cc0030b7328a72d3e84b02cf4caaaebc80",
+    "experiments/fleet_sizing/results/battery_baseline_calibration_v2/dynamic/selected_parameters.json": "4fa9c6c8d468db99843700a5faa6eef1945e36cdcf7cd71e86f464f10bf1df00"
+  }
+}

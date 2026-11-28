@@ -1,0 +1,99 @@
+index,group,robot_id,feature,encoding,value
+0,task_type,,waste_transport,one_hot,0.0
+1,task_type,,clothes_collection,one_hot,0.0
+2,task_type,,specimen_delivery,one_hot,1.0
+3,task_type,,medication_delivery,one_hot,0.0
+4,task_type,,ward_service,one_hot,0.0
+5,priority,,0,one_hot,0.0
+6,priority,,1,one_hot,1.0
+7,priority,,2,one_hot,0.0
+8,priority,,3,one_hot,0.0
+9,source,,charging_station_2,one_hot,0.0
+10,source,,ward_a_2,one_hot,0.0
+11,source,,ward_b_2,one_hot,0.0
+12,source,,consult_1_2,one_hot,0.0
+13,source,,consult_2_2,one_hot,0.0
+14,source,,consult_3_2,one_hot,1.0
+15,source,,nurse_station,one_hot,0.0
+16,source,,blood_draw,one_hot,0.0
+17,source,,x-ray,one_hot,0.0
+18,source,,ultrasound_2,one_hot,0.0
+19,source,,ecg_2,one_hot,0.0
+20,source,,therapy_room,one_hot,0.0
+21,source,,waste_return_2,one_hot,0.0
+22,source,,clothes_return_2,one_hot,0.0
+23,source,,pharmacy,one_hot,0.0
+24,source,,lab,one_hot,0.0
+25,destination,,charging_station_2,one_hot,0.0
+26,destination,,ward_a_2,one_hot,0.0
+27,destination,,ward_b_2,one_hot,0.0
+28,destination,,consult_1_2,one_hot,0.0
+29,destination,,consult_2_2,one_hot,0.0
+30,destination,,consult_3_2,one_hot,0.0
+31,destination,,nurse_station,one_hot,0.0
+32,destination,,blood_draw,one_hot,0.0
+33,destination,,x-ray,one_hot,0.0
+34,destination,,ultrasound_2,one_hot,0.0
+35,destination,,ecg_2,one_hot,0.0
+36,destination,,therapy_room,one_hot,0.0
+37,destination,,waste_return_2,one_hot,0.0
+38,destination,,clothes_return_2,one_hot,0.0
+39,destination,,pharmacy,one_hot,0.0
+40,destination,,lab,one_hot,1.0
+41,robot,C01,capability_match,binary: task type in robot capabilities,0.0
+42,robot,C01,assignable,binary: status is idle or busy,1.0
+43,robot,C01,busy,binary: active task exists,0.0
+44,robot,C01,observable_load,"min(load / 10.0, 1)",0.0
+45,robot,C01,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.0
+46,robot,C01,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+47,robot,C01,battery_soc,"continuous battery fraction [0,1]",1.0
+48,robot,C01,battery_unavailable,binary: charging or returning_to_charge,0.0
+49,robot,C02,capability_match,binary: task type in robot capabilities,0.0
+50,robot,C02,assignable,binary: status is idle or busy,1.0
+51,robot,C02,busy,binary: active task exists,0.0
+52,robot,C02,observable_load,"min(load / 10.0, 1)",0.0
+53,robot,C02,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.0
+54,robot,C02,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+55,robot,C02,battery_soc,"continuous battery fraction [0,1]",1.0
+56,robot,C02,battery_unavailable,binary: charging or returning_to_charge,0.0
+57,robot,M01,capability_match,binary: task type in robot capabilities,1.0
+58,robot,M01,assignable,binary: status is idle or busy,1.0
+59,robot,M01,busy,binary: active task exists,0.0
+60,robot,M01,observable_load,"min(load / 10.0, 1)",0.0
+61,robot,M01,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.1920562982559204
+62,robot,M01,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+63,robot,M01,battery_soc,"continuous battery fraction [0,1]",1.0
+64,robot,M01,battery_unavailable,binary: charging or returning_to_charge,0.0
+65,robot,M02,capability_match,binary: task type in robot capabilities,1.0
+66,robot,M02,assignable,binary: status is idle or busy,1.0
+67,robot,M02,busy,binary: active task exists,0.0
+68,robot,M02,observable_load,"min(load / 10.0, 1)",0.0
+69,robot,M02,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.1920562982559204
+70,robot,M02,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+71,robot,M02,battery_soc,"continuous battery fraction [0,1]",1.0
+72,robot,M02,battery_unavailable,binary: charging or returning_to_charge,0.0
+73,robot,W01,capability_match,binary: task type in robot capabilities,0.0
+74,robot,W01,assignable,binary: status is idle or busy,1.0
+75,robot,W01,busy,binary: active task exists,0.0
+76,robot,W01,observable_load,"min(load / 10.0, 1)",0.0
+77,robot,W01,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.0
+78,robot,W01,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+79,robot,W01,battery_soc,"continuous battery fraction [0,1]",1.0
+80,robot,W01,battery_unavailable,binary: charging or returning_to_charge,0.0
+81,robot,W02,capability_match,binary: task type in robot capabilities,0.0
+82,robot,W02,assignable,binary: status is idle or busy,1.0
+83,robot,W02,busy,binary: active task exists,0.0
+84,robot,W02,observable_load,"min(load / 10.0, 1)",0.0
+85,robot,W02,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.0
+86,robot,W02,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+87,robot,W02,battery_soc,"continuous battery fraction [0,1]",1.0
+88,robot,W02,battery_unavailable,binary: charging or returning_to_charge,0.0
+89,robot,W03,capability_match,binary: task type in robot capabilities,0.0
+90,robot,W03,assignable,binary: status is idle or busy,1.0
+91,robot,W03,busy,binary: active task exists,0.0
+92,robot,W03,observable_load,"min(load / 10.0, 1)",0.0
+93,robot,W03,projected_approach,"min(approach_time_s / 600.0, 1); zero if no placement evaluation",0.0
+94,robot,W03,tasks_ahead,"min(tasks_ahead / 10.0, 1); zero if no placement evaluation",0.0
+95,robot,W03,battery_soc,"continuous battery fraction [0,1]",1.0
+96,robot,W03,battery_unavailable,binary: charging or returning_to_charge,0.0
+97,global,,load_imbalance,(max_load - min_load) / max_load; zero when all loads are zero,0.0

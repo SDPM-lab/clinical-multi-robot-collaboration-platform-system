@@ -1,0 +1,13 @@
+branch,parameter_name,shape,parameter_count,trainable
+actor,mlp_extractor.policy_net.0.weight,64x98,6272,True
+actor,mlp_extractor.policy_net.0.bias,64,64,True
+actor,mlp_extractor.policy_net.2.weight,64x64,4096,True
+actor,mlp_extractor.policy_net.2.bias,64,64,True
+critic,mlp_extractor.value_net.0.weight,64x98,6272,True
+critic,mlp_extractor.value_net.0.bias,64,64,True
+critic,mlp_extractor.value_net.2.weight,64x64,4096,True
+critic,mlp_extractor.value_net.2.bias,64,64,True
+actor,action_net.weight,7x64,448,True
+actor,action_net.bias,7,7,True
+critic,value_net.weight,1x64,64,True
+critic,value_net.bias,1,1,True

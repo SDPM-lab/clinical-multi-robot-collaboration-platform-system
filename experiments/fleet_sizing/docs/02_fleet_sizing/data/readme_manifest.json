@@ -1,0 +1,15 @@
+{
+  "verified_at": "2026-11-28T14:56:46.529521+08:00",
+  "section": "02_fleet_sizing",
+  "readme_sha256": "c703eac3700d392a8dc7039db8997f2ccb7a18ad2558a528fc176eeb277f9f2f",
+  "previous_readme_sha256": "49f5dcede2ee85c88905b138327e3c80eb3e3209ab8dbd7147713a1b49225149",
+  "previous_readme": "backups/README_before_environment_sync_DIL1.md",
+  "section_count": 14,
+  "line_count": 659,
+  "embedded_figures": 4,
+  "historical_tables_preserved": 23,
+  "links_checked": 33,
+  "missing_links": [],
+  "verification_status": "PASS",
+  "verification_scope": "README structure, links, historical tables and figure references; not a new independent audit of all experiment data."
+}

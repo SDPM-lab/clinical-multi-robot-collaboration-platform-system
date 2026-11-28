@@ -137,3 +137,9 @@ experiments/fleet_sizing/results_rl/models/*
 
 !experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k/
 !experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep27_w50_a30_q15_i05_seed7104_200k/final_model.zip
+
+# Formal Nav2 PPO model selected for research evaluation
+!experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k/
+experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k/*
+!experiments/fleet_sizing/results_rl/models/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k/final_model.zip
+!experiments/fleet_sizing/results_rl/metadata/reward_confirm_nav2_sweep12_w40_a35_q15_i10_seed7101_200k.json

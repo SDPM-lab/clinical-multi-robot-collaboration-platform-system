@@ -1,0 +1,20 @@
+{
+  "algorithm": "MaskablePPO",
+  "policy_class": "MaskableActorCriticPolicy",
+  "observation_shape": [
+    98
+  ],
+  "observation_dtype": "float32",
+  "action_count": 7,
+  "feature_extractor": "FlattenExtractor(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n)",
+  "actor_network": "Sequential(\n  (0): Linear(in_features=98, out_features=64, bias=True)\n  (1): Tanh()\n  (2): Linear(in_features=64, out_features=64, bias=True)\n  (3): Tanh()\n)",
+  "actor_output": "Linear(in_features=64, out_features=7, bias=True)",
+  "critic_network": "Sequential(\n  (0): Linear(in_features=98, out_features=64, bias=True)\n  (1): Tanh()\n  (2): Linear(in_features=64, out_features=64, bias=True)\n  (3): Tanh()\n)",
+  "critic_output": "Linear(in_features=64, out_features=1, bias=True)",
+  "complete_policy": "MaskableActorCriticPolicy(\n  (features_extractor): FlattenExtractor(\n    (flatten): Flatten(start_dim=1, end_dim=-1)\n  )\n  (pi_features_extractor): FlattenExtractor(\n    (flatten): Flatten(start_dim=1, end_dim=-1)\n  )\n  (vf_features_extractor): FlattenExtractor(\n    (flatten): Flatten(start_dim=1, end_dim=-1)\n  )\n  (mlp_extractor): MlpExtractor(\n    (policy_net): Sequential(\n      (0): Linear(in_features=98, out_features=64, bias=True)\n      (1): Tanh()\n      (2): Linear(in_features=64, out_features=64, bias=True)\n      (3): Tanh()\n    )\n    (value_net): Sequential(\n      (0): Linear(in_features=98, out_features=64, bias=True)\n      (1): Tanh()\n      (2): Linear(in_features=64, out_features=64, bias=True)\n      (3): Tanh()\n    )\n  )\n  (action_net): Linear(in_features=64, out_features=7, bias=True)\n  (value_net): Linear(in_features=64, out_features=1, bias=True)\n)",
+  "actor_parameters": 10951,
+  "critic_parameters": 10561,
+  "total_parameters": 21512,
+  "trainable_parameters": 21512,
+  "action_mask_is_separate_input": true
+}

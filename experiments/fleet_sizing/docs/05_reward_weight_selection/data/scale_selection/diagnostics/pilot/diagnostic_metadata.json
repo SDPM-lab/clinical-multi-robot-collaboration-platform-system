@@ -1,0 +1,55 @@
+{
+  "experiment": "reward_scale_diagnostic_pilot",
+  "model_seeds": [
+    7101,
+    7104
+  ],
+  "evaluation_seeds": [
+    9501,
+    9502,
+    9503
+  ],
+  "cases": [
+    [
+      "historical_behavior",
+      150,
+      150
+    ],
+    [
+      "corrected_behavior",
+      150,
+      600
+    ],
+    [
+      "reference_control",
+      600,
+      600
+    ]
+  ],
+  "fleet": [
+    2,
+    2,
+    3
+  ],
+  "workload": 4.0,
+  "battery_enabled": true,
+  "episodes": 18,
+  "model_retrained": false,
+  "source_sha256": {
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/decoupled_reward_scale_eval/episode_results.csv": "257ac21fb26675a1ef418bb082c2f70395a70ed4d99b687d06a8cbe15872cb8d",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/rl/evaluate_scale_sensitivity.py": "a57c7ea8f74866990a5197b19461944f42caa93bb1fcac88c4cb02aedd2a7dc1",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/rl/evaluate_decoupled_reward_scale.py": "7e3230207fc34a4cc7cbdd75c064e2708d998314219444e1e0a43d3acae4dee0",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/rl/environment.py": "32d68cdc89a4ff7b6141a245d79e548dfb4cab78a6d31f9a4431fca557fa9a30",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/rl/observation.py": "1f60701fab5fdde10a46a8facb6563cac0b123b71e1d64ed2de4c743f5490916",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/rl/reward.py": "48d9d4392ea1c5ba93a9bb7fa9aebf4545aafc247333b771f9e9cc14a563f487",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/config.py": "e150e42d2ab501bdce284c6ebea37b9d053e4b5a10ba19a6ab39d953dd5cb54e",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/decoupled_r150_o600_seed7101_50k/final_model.zip": "66771b5bf0fb77406b6fed3bd3cc3db6d1821847d5b4a8e559810f1a80ffbbe9",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7101_50k.json": "5b089d6a37c598ce47523c90a1b2d023bf4a959623cce28f771b57a4d42a6d2c",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/decoupled_r150_o600_seed7104_50k/final_model.zip": "abbce5640b7b46b0d6423d4606755d52e5d0ed71d745d5c993b66062df76dbe6",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/metadata/decoupled_r150_o600_seed7104_50k.json": "7b538a722163273369edcc65c8df9ada4a08ca0517c1d20a24e6d97c77a049f3",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/decoupled_r600_o600_seed7101_50k/final_model.zip": "bdf195498e6cfdc8f309d3de9cc791add0df0ec9e28215dc54ec70f8a3438ba7",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7101_50k.json": "77fe9a7511fada32fac2cdecb7b1f0a3789f34932b7d9445daacc3e85326af60",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/models/decoupled_r600_o600_seed7104_50k/final_model.zip": "be5b831e79f1bdc586ae8dccae60b162ca7c87c7f24ee54b4b1b3fde6b524f9f",
+    "/home/asus/clinical-multi-robot-collaboration-platform-system/experiments/fleet_sizing/results_rl/metadata/decoupled_r600_o600_seed7104_50k.json": "a29242ee7c2f12ae1a0a42582d0d1efb9c8c5f1ef4ca9fa8e3073eae8445b288"
+  }
+}

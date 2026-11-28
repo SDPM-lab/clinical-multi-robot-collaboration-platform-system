@@ -1,0 +1,15 @@
+{
+  "verified_at": "2026-11-28T14:56:46.537830+08:00",
+  "section": "03_baseline",
+  "readme_sha256": "6b4e1c8ed33767db67b639be15c2169426f7187f5e04e2def3a5896df8abd38c",
+  "previous_readme_sha256": "80a94efb03a3c04fcb3c03411272f00d49fb98c0230da41ea15915a3e6c6e326",
+  "previous_readme": "backups/README_before_environment_sync_DIL1.md",
+  "section_count": 17,
+  "line_count": 1409,
+  "embedded_figures": 21,
+  "historical_tables_preserved": 27,
+  "links_checked": 79,
+  "missing_links": [],
+  "verification_status": "PASS",
+  "verification_scope": "README structure, links, historical tables and figure references; not a new independent audit of all experiment data."
+}

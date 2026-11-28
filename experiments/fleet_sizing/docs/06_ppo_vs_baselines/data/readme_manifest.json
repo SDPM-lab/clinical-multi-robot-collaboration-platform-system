@@ -1,0 +1,15 @@
+{
+  "verified_at": "2026-11-28T14:56:31.266087+08:00",
+  "generation_method": "Downloaded standalone Markdown",
+  "readme_sha256": "c449199bde9cc591b3edc1a800aa498c1e89f1613999414dd4ef4948ec93f0d1",
+  "archive_manifest_sha256": "ff89ef7eeb470fbe64c72d3d08f4b195e183f49a0ad79ee57a5f839ea15eabb8",
+  "figure_manifest_sha256": "4005a208727b23e8306ba65bef235eec822de30f5f96d1322f02ca8d4a2cb062",
+  "verification_script_sha256": "3a4cd7b6792853e964923e54ef6a760f0a3374e77793d3840a15d35d65545097",
+  "line_count": 726,
+  "section_count": 18,
+  "embedded_figures": 23,
+  "links_checked": 108,
+  "missing_links": [],
+  "verification_status": "PASS",
+  "verification_scope": "File integrity, research result counts, README structure and local links; not independent verification of every README statement"
+}
